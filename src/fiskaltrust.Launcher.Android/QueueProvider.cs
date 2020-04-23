@@ -1,23 +1,25 @@
-﻿using fiskaltrust.Middleware.Storage.SQLite;
+﻿using fiskaltrust.ifPOS.v1;
+using fiskaltrust.Middleware.Queue.SQLite;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace fiskaltrust.Launcher.Android.Storage
+namespace fiskaltrust.Launcher.Android
 {
-    public class SqliteStorageProvider
+    public class QueueProvider
     {
-        public async Task InitializeAsync(string workingDir, Dictionary<string, object> configuration)
+        public async Task<IPOS> CreatePos(string workingDir, Dictionary<string, object> configuration)
         {
             var queues = JsonConvert.DeserializeObject<List<object>>(JsonConvert.SerializeObject(configuration["ftQueues"]));
             var queue = JsonConvert.DeserializeObject<Dictionary<string, object>>(JsonConvert.SerializeObject(queues[0]));
-            
             var queueConfiguration = JsonConvert.DeserializeObject<Dictionary<string, object>>(JsonConvert.SerializeObject(queue["Configuration"]));
-            queueConfiguration.Add("servicefolder", workingDir);
+            queueConfiguration["servicefolder"] = workingDir;
+
+            var queueId = Guid.Parse(queue["Id"].ToString());
             
-            var sqliteBootstrapper = new SQLiteStorageBootstrapper();
-            await sqliteBootstrapper.InitAsync(Guid.Parse(queue["Id"].ToString()), queueConfiguration);
+            var bootstrapper = new PosBootstrapper();
+            return await bootstrapper.CreatePosInstanceAsync(queueId, queueConfiguration);
         }
     }
 }

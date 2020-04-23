@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Linq.Expressions;
 using fiskaltrust.Launcher.Android.Storage;
+using fiskaltrust.Middleware.Queue.SQLite;
 
 namespace fiskaltrust.Launcher.Android
 {
@@ -50,16 +51,22 @@ namespace fiskaltrust.Launcher.Android
 
         private void FabOnClick(object sender, EventArgs eventArgs)
         {
-            // Initialize the SQLite storage - this creates the database and applies the schema
-            var streamReader = new StreamReader(Assets.Open("configuration.json"));
+            using var streamReader = new StreamReader(Assets.Open("configuration.json"));
             var configuration = JsonConvert.DeserializeObject<Dictionary<string, object>>(streamReader.ReadToEnd());
-            string workingDir = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
-            new SqliteStorageProvider().InitializeAsync(workingDir, configuration).Wait();
 
+            var queueProvider = new QueueProvider();
+            var pos = queueProvider.CreatePos(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), configuration).Result;
+            var response = pos.EchoAsync(new ifPOS.v1.EchoRequest { Message = "Hello World!" }).Result;
 
             View view = (View) sender;
-            Snackbar.Make(view, "Replace with your own action", Snackbar.LengthLong)
+            Snackbar.Make(view, $"Echo response: {response.Message}", Snackbar.LengthLong)
                 .SetAction("Action", (View.IOnClickListener)null).Show();
+
+
+            // Not really required, but interesting for testing: initialize the SQLite storage - this creates the database and applies the schema
+            // This is done by the PosBootstrapper
+            // string workingDir = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+            // new SqliteStorageProvider().InitializeAsync(workingDir, configuration).Wait();
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
