@@ -28,5 +28,6 @@ steps:
   inputs:
     contents: '**/*.apk'
     targetFolder: '$(build.artifactStagingDirectory)'
+    flattenFolders: true
 
 - task: PublishBuildArtifacts@1
