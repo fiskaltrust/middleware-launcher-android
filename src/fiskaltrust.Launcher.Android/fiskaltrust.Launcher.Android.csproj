@@ -69,6 +69,13 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\configuration.json" />
+    <Content Include="lib\android\arm64-v8a\libWormAPI.so" />
+    <Content Include="lib\android\armeabi-v7a\libWormAPI.so" />
+    <Content Include="lib\android\x86\libWormAPI.so" />
+    <Content Include="lib\android\x86_64\libWormAPI.so" />
+    <Content Include="lib\arm\libWormAPI.so" />
+    <Content Include="lib\linux32\libWormAPI.so" />
+    <Content Include="lib\linux64\libWormAPI.so" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Properties\AndroidManifest.xml" />
     <None Include="Assets\AboutAssets.txt" />
@@ -127,6 +134,10 @@
     <PackageReference Include="Xamarin.Android.Support.Core.Utils" Version="28.0.0.3" />
     <PackageReference Include="Xamarin.Android.Support.CustomTabs" Version="28.0.0.3" />
     <PackageReference Include="Xamarin.Essentials" Version="1.3.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\win32\WormAPI.dll" />
+    <Content Include="lib\win64\WormAPI.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
