@@ -25,12 +25,17 @@ namespace fiskaltrust.Launcher.Android
             _grpcHost = new GrpcHost();
         }
 
-        public async Task RunAsync()
+        public async Task StartAsync()
         {
             var configuration = await _configurationProvider.GetCashboxConfigurationAsync(_cashboxId);
 
             await InitializeScuAsync(configuration);
             await InitializeQueueAsync(configuration);
+        }
+
+        public IPOS GetPOS()
+        {
+            return GrpcHelper.GetClient<IPOS>("localhost:10300");
         }
 
         private async Task InitializeScuAsync(Dictionary<string, object> configuration)

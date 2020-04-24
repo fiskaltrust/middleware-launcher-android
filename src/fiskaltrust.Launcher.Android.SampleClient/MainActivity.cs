@@ -5,29 +5,28 @@ using Android.Runtime;
 using Android.Support.Design.Widget;
 using Android.Support.V7.App;
 using Android.Views;
-using Android.Support.V7.Widget;
 using Android.Content.PM;
-using System.Collections.Generic;
-using Newtonsoft.Json;
-using System.IO;
 using System.Threading.Tasks;
+using fiskaltrust.ifPOS.v1;
+using Android.Widget;
 
 namespace fiskaltrust.Launcher.Android.SampleClient
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
     public class MainActivity : AppCompatActivity
     {
+        private AndroidLauncher _launcher;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
 
-            Toolbar toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
-            SetSupportActionBar(toolbar);
-
-            FloatingActionButton fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
-            fab.Click += FabOnClick;
+            Button btnInit = FindViewById<Button>(Resource.Id.btnInitLauncher);
+            btnInit.Click += ButtonInitOnClick;
+            Button btnEchoReq = FindViewById<Button>(Resource.Id.btnSendEchoRequest);
+            btnEchoReq.Click += ButtonEchoRequestOnClick;
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)
@@ -47,20 +46,28 @@ namespace fiskaltrust.Launcher.Android.SampleClient
             return base.OnOptionsItemSelected(item);
         }
 
-        private void FabOnClick(object sender, EventArgs eventArgs)
+        private void ButtonInitOnClick(object sender, EventArgs eventArgs)
         {
-            var launcher = new AndroidLauncher(Guid.Empty);
-            Task.Run(() => launcher.RunAsync()).Wait();
+            _launcher = new AndroidLauncher(Guid.Empty);
+            _launcher.StartAsync().Wait();
 
-            View view = (View) sender;
-            Snackbar.Make(view, $"Echo response: a", Snackbar.LengthLong)
-                .SetAction("Action", (View.IOnClickListener)null).Show();
+            Toast.MakeText(Application.Context, "fiskaltrust Android launcher started.", ToastLength.Long).Show();
+        }
 
+        private void ButtonEchoRequestOnClick(object sender, EventArgs eventArgs)
+        {
+            TextView txt = FindViewById<TextView>(Resource.Id.txtResult);
 
-            // Not really required, but interesting for testing: initialize the SQLite storage - this creates the database and applies the schema
-            // This is done by the PosBootstrapper
-            // string workingDir = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
-            // new SqliteStorageProvider().InitializeAsync(workingDir, configuration).Wait();
+            if (_launcher == null)
+            {
+                txt.Text = "Please initialize launcher before sending requests.";
+                return;
+            }
+
+            var pos = _launcher.GetPOS();
+            var response = Task.Run(() => pos.EchoAsync(new EchoRequest { Message = $"Hello World, it's {DateTime.Now}!" })).Result;
+
+            txt.Text = response.Message;
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
