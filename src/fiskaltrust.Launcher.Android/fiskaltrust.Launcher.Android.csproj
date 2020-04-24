@@ -59,6 +59,18 @@
     <Compile Include="Services\SCU\IScuProvider.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedNativeLibrary Include="lib\arm64-v8a\libcom.fiskaly.client-v1.1.400.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedNativeLibrary>
+    <EmbeddedNativeLibrary Include="lib\armeabi-v7a\libcom.fiskaly.client-v1.1.400.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedNativeLibrary>
+    <EmbeddedNativeLibrary Include="lib\x86\libcom.fiskaly.client-v1.1.400.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedNativeLibrary>
+    <EmbeddedNativeLibrary Include="lib\x86_64\libcom.fiskaly.client-v1.1.400.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedNativeLibrary>
     <None Include="Resources\AboutResources.txt" />
   </ItemGroup>
   <ItemGroup>

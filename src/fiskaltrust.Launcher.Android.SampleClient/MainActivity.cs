@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using fiskaltrust.ifPOS.v1;
 using Android.Widget;
 using Newtonsoft.Json;
+using Android.Media;
 
 namespace fiskaltrust.Launcher.Android.SampleClient
 {
@@ -49,6 +50,7 @@ namespace fiskaltrust.Launcher.Android.SampleClient
 
         private void ButtonInitOnClick(object sender, EventArgs eventArgs)
         {
+            var x = System.Text.Encoding.Default;
             _launcher = new AndroidLauncher(Guid.Empty);
             Task.Run(() => _launcher.StartAsync()).Wait();
 

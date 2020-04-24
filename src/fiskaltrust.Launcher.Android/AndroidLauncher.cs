@@ -1,14 +1,10 @@
 ﻿using fiskaltrust.ifPOS.v1;
 using fiskaltrust.Launcher.Android.Services.Configuration;
 using fiskaltrust.Launcher.Android.Services.SCU;
-using fiskaltrust.Middleware.SCU.DE.Fiskaly;
-using fiskaltrust.Middleware.SCU.DE.Swissbit;
-using Java.Util;
+using Java.Lang;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace fiskaltrust.Launcher.Android
@@ -28,6 +24,8 @@ namespace fiskaltrust.Launcher.Android
             _configurationProvider = new StaticConfigurationProvider();
             _posHost = new GrpcHost();
             _scuHost = new GrpcHost();
+
+            //JavaSystem.LoadLibrary("com.fiskaly.client-v1.1.400");
         }
 
         public async Task StartAsync()
