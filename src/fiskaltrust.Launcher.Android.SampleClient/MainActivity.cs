@@ -10,11 +10,9 @@ using Android.Content.PM;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.IO;
-using System.Linq.Expressions;
-using fiskaltrust.Launcher.Android.Storage;
-using fiskaltrust.Middleware.Queue.SQLite;
+using System.Threading.Tasks;
 
-namespace fiskaltrust.Launcher.Android
+namespace fiskaltrust.Launcher.Android.SampleClient
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
     public class MainActivity : AppCompatActivity
@@ -51,15 +49,11 @@ namespace fiskaltrust.Launcher.Android
 
         private void FabOnClick(object sender, EventArgs eventArgs)
         {
-            using var streamReader = new StreamReader(Assets.Open("configuration.json"));
-            var configuration = JsonConvert.DeserializeObject<Dictionary<string, object>>(streamReader.ReadToEnd());
-
-            var queueProvider = new QueueProvider();
-            var pos = queueProvider.CreatePos(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), configuration).Result;
-            var response = pos.EchoAsync(new ifPOS.v1.EchoRequest { Message = "Hello World!" }).Result;
+            var launcher = new AndroidLauncher(Guid.Empty);
+            Task.Run(() => launcher.RunAsync()).Wait();
 
             View view = (View) sender;
-            Snackbar.Make(view, $"Echo response: {response.Message}", Snackbar.LengthLong)
+            Snackbar.Make(view, $"Echo response: a", Snackbar.LengthLong)
                 .SetAction("Action", (View.IOnClickListener)null).Show();
 
 
