@@ -55,6 +55,7 @@
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Configuration\StaticConfigurationProvider.cs" />
+    <Compile Include="Services\SCU\FiskalyScuProvider.cs" />
     <Compile Include="Services\SCU\IScuProvider.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -65,7 +66,7 @@
       <Version>1.3.0-rc4-20114-29567</Version>
     </PackageReference>
     <PackageReference Include="fiskaltrust.Middleware.SCU.DE.Fiskaly">
-      <Version>1.3.0-rc2-20114-29574</Version>
+      <Version>1.3.0-rc2-20115-29610</Version>
     </PackageReference>
     <PackageReference Include="fiskaltrust.Middleware.SCU.DE.Swissbit">
       <Version>1.3.0-rc2-20114-29566</Version>

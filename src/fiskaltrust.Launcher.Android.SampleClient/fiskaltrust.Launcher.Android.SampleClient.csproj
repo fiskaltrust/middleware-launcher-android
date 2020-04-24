@@ -66,6 +66,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidNativeLibrary Include="lib\arm64-v8a\libcom.fiskaly.client-v1.1.400.so" />
+    <AndroidNativeLibrary Include="lib\armeabi-v7a\libcom.fiskaly.client-v1.1.400.so" />
+    <AndroidNativeLibrary Include="lib\x86\libcom.fiskaly.client-v1.1.400.so" />
+    <AndroidNativeLibrary Include="lib\x86_64\libcom.fiskaly.client-v1.1.400.so" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Properties\AndroidManifest.xml" />
     <None Include="Assets\AboutAssets.txt" />
