@@ -1,6 +1,6 @@
 ﻿using fiskaltrust.ifPOS.v1;
 using fiskaltrust.Launcher.Android.Services.Configuration;
-using fiskaltrust.Middleware.SCU.DE.Swissbit;
+using fiskaltrust.Middleware.SCU.DE.SwissbitAndroid;
 using Java.Util;
 using Newtonsoft.Json;
 using System;
@@ -40,18 +40,17 @@ namespace fiskaltrust.Launcher.Android
 
         private async Task InitializeScuAsync(Dictionary<string, object> configuration)
         {
-            //var scuConfig = new Dictionary<string, object>()
-            //{
-            //    { "devicePath", "T:" },
-            //    { "libraryFile", "WormAPI" }
-            //};
+            var scuConfig = new Dictionary<string, object>()
+            {
+                { "devicePath", "T:" }
+            };
 
-            //using (var scu = new SwissbitSCU(scuConfig))
-            //{
-            //    scu.WaitForInitialization().Wait();
-            //    var tseInfo = scu.GetTseInfoAsync().Result;
-            //}
-            
+            using (var scu = new SwissbitSCU(scuConfig))
+            {
+                scu.WaitForInitialization().Wait();
+                var tseInfo = scu.GetTseInfoAsync().Result;
+            }
+
             await Task.CompletedTask;
         }
 
