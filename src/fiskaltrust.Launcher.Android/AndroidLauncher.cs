@@ -29,7 +29,15 @@ namespace fiskaltrust.Launcher.Android
         {
             var configuration = await _configurationProvider.GetCashboxConfigurationAsync(_cashboxId);
 
-            await InitializeScu(configuration);
+            await InitializeScuAsync(configuration);
+            await InitializeQueueAsync(configuration);
+        }
+
+        public async Task StartFiskalyDemoAsync()
+        {
+            var configuration = await _configurationProvider.GetCashboxConfigurationAsync(_cashboxId);
+
+            await InitializeFiskalyScuAsync(configuration);
             await InitializeQueueAsync(configuration);
         }
 
@@ -38,16 +46,25 @@ namespace fiskaltrust.Launcher.Android
             return GrpcHelper.GetClient<IPOS>("localhost:10300");
         }
 
-        private async Task InitializeScu(Dictionary<string, object> configuration)
+        private async Task InitializeScuAsync(Dictionary<string, object> configuration)
         {
             var scus = JsonConvert.DeserializeObject<List<object>>(JsonConvert.SerializeObject(configuration["ftSignaturCreationDevices"]));
             var scuConfiguration = JsonConvert.DeserializeObject<Dictionary<string, object>>(JsonConvert.SerializeObject(scus[0]));
             var url = (scuConfiguration["Url"] as Newtonsoft.Json.Linq.JArray)[0].ToString();
 
             var scuProvider = new SwissbitScuProvider();
-            //var scuProvider = new FiskalyScuProvider();
             var scu = await scuProvider.CreateScuAsync(scuConfiguration);
-            var info = await scu.GetTseInfoAsync();
+            _scuHost.StartService(url, scu);
+        }
+
+        private async Task InitializeFiskalyScuAsync(Dictionary<string, object> configuration)
+        {
+            var scus = JsonConvert.DeserializeObject<List<object>>(JsonConvert.SerializeObject(configuration["ftSignaturCreationDevices"]));
+            var scuConfiguration = JsonConvert.DeserializeObject<Dictionary<string, object>>(JsonConvert.SerializeObject(scus[0]));
+            var url = (scuConfiguration["Url"] as Newtonsoft.Json.Linq.JArray)[0].ToString();
+
+            var scuProvider = new FiskalyScuProvider();
+            var scu = await scuProvider.CreateScuAsync(scuConfiguration);
             _scuHost.StartService(url, scu);
         }
 

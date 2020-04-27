@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -9,11 +9,26 @@
     tools:showIn="@layout/activity_main"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btnInitLauncher"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Initialize Launcher"/>
+    <LinearLayout
+    android:layout_height="wrap_content" 
+    android:layout_width="match_parent" 
+    android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btnInitLauncher"
+        android:layout_width="match_parent" 
+        android:layout_height="wrap_content" 
+        android:layout_weight="1" android:text="Init Swissbit"/>
+
+        <Button
+            android:id="@+id/btnInitFiskalyLauncher"
+        android:layout_width="match_parent" 
+        android:layout_height="wrap_content" 
+        android:layout_weight="1" android:text="Init fiskaly (Demo)"/>
+    </LinearLayout>
+
+
+
     <Button
         android:id="@+id/btnSendEchoRequest"
         android:layout_width="match_parent"

@@ -23,10 +23,11 @@ namespace fiskaltrust.Launcher.Android.SampleClient
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
 
-            FindViewById<Button>(Resource.Id.btnInitLauncher).Click += ButtonInitOnClick;
-            FindViewById<Button>(Resource.Id.btnSendEchoRequest).Click += ButtonEchoRequestOnClick;
-            FindViewById<Button>(Resource.Id.btnSendSignRequest).Click += ButtonSignRequestOnClick;
-            FindViewById<Button>(Resource.Id.btnSendStartReceipt).Click += ButtonStartReceiptOnClick;
+            FindViewById<Button>(Resource.Id.btnInitLauncher).Click += new EventHandler(async (s, e) => await ButtonInitOnClickAsync());
+            FindViewById<Button>(Resource.Id.btnInitFiskalyLauncher).Click += new EventHandler(async (s, e) => await ButtonInitFiskalyOnClickAsync());
+            FindViewById<Button>(Resource.Id.btnSendEchoRequest).Click += new EventHandler(async (s, e) => await ButtonEchoRequestOnClickAsync());
+            FindViewById<Button>(Resource.Id.btnSendSignRequest).Click += new EventHandler(async (s, e) => await ButtonSignRequestOnClickAsync());
+            FindViewById<Button>(Resource.Id.btnSendStartReceipt).Click += new EventHandler(async (s, e) => await ButtonStartReceiptOnClickAsync());
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)
@@ -46,16 +47,23 @@ namespace fiskaltrust.Launcher.Android.SampleClient
             return base.OnOptionsItemSelected(item);
         }
 
-        private void ButtonInitOnClick(object sender, EventArgs eventArgs)
+        private async Task ButtonInitOnClickAsync()
         {
-            var x = System.Text.Encoding.Default;
             _launcher = new AndroidLauncher(Guid.Empty);
-            Task.Run(() => _launcher.StartAsync()).Wait();
+            await _launcher.StartAsync();
 
-            Toast.MakeText(Application.Context, "fiskaltrust Android launcher started.", ToastLength.Long).Show();
+            Toast.MakeText(Application.Context, "fiskaltrust Android launcher started (Swissbit).", ToastLength.Long).Show();
         }
 
-        private void ButtonEchoRequestOnClick(object sender, EventArgs eventArgs)
+        private async Task ButtonInitFiskalyOnClickAsync()
+        {
+            _launcher = new AndroidLauncher(Guid.Empty);
+            await _launcher.StartFiskalyDemoAsync();
+
+            Toast.MakeText(Application.Context, "fiskaltrust Android launcher started (fiskaly).", ToastLength.Long).Show();
+        }
+
+        private async Task ButtonEchoRequestOnClickAsync()
         {
             TextView txt = FindViewById<TextView>(Resource.Id.txtResult);
 
@@ -66,12 +74,12 @@ namespace fiskaltrust.Launcher.Android.SampleClient
             }
 
             var pos = _launcher.GetPOS();
-            var response = Task.Run(() => pos.EchoAsync(new EchoRequest { Message = $"Hello World, it's {DateTime.Now}!" })).Result;
+            var response = await pos.EchoAsync(new EchoRequest { Message = $"Hello World, it's {DateTime.Now}!" });
 
             txt.Text = response.Message;
         }
 
-        private void ButtonSignRequestOnClick(object sender, EventArgs eventArgs)
+        private async Task ButtonSignRequestOnClickAsync()
         {
             var receiptRequest = new ReceiptRequest
             {
@@ -90,12 +98,12 @@ namespace fiskaltrust.Launcher.Android.SampleClient
             }
 
             var pos = _launcher.GetPOS();
-            var response = Task.Run(() => pos.SignAsync(receiptRequest)).Result;
+            var response = await pos.SignAsync(receiptRequest);
 
             txt.Text = JsonConvert.SerializeObject(response);
         }
 
-        private void ButtonStartReceiptOnClick(object sender, EventArgs eventArgs)
+        private async Task ButtonStartReceiptOnClickAsync()
         {
             var receiptRequest = new ReceiptRequest
             {
@@ -122,7 +130,7 @@ namespace fiskaltrust.Launcher.Android.SampleClient
             }
 
             var pos = _launcher.GetPOS();
-            var response = Task.Run(() => pos.SignAsync(receiptRequest)).Result;
+            var response = await pos.SignAsync(receiptRequest);
 
             txt.Text = JsonConvert.SerializeObject(response);
         }
