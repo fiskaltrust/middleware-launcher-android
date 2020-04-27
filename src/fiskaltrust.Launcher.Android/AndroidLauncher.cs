@@ -46,7 +46,7 @@ namespace fiskaltrust.Launcher.Android
 
             var scuProvider = new SwissbitScuProvider();
             //var scuProvider = new FiskalyScuProvider();
-            var scu = scuProvider.CreateScu(scuConfiguration);
+            var scu = await scuProvider.CreateScuAsync(scuConfiguration);
             var info = await scu.GetTseInfoAsync();
             _scuHost.StartService(url, scu);
         }

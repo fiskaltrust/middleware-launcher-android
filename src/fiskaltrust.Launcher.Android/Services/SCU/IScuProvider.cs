@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using fiskaltrust.ifPOS.v1.de;
 
 namespace fiskaltrust.Launcher.Android.Services.SCU
 {
     interface IScuProvider
     {
-        IDESSCD CreateScu(Dictionary<string, object> scuConfiguration);
+        Task<IDESSCD> CreateScuAsync(Dictionary<string, object> scuConfiguration);
     }
 }
