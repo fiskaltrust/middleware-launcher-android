@@ -9,7 +9,7 @@ namespace fiskaltrust.Launcher.Android
 {
     public class QueueProvider
     {
-        public async Task<IPOS> CreatePos(string workingDir, Dictionary<string, object> queueConfiguration)
+        public async Task<IPOS> CreatePosAsync(string workingDir, Dictionary<string, object> queueConfiguration)
         {
             var queueId = Guid.Parse(queueConfiguration["Id"].ToString());
             var config = JsonConvert.DeserializeObject<Dictionary<string, object>>(JsonConvert.SerializeObject(queueConfiguration["Configuration"]));

@@ -2,13 +2,13 @@
 using Android.App;
 using Android.OS;
 using Android.Runtime;
-using Android.Support.Design.Widget;
 using Android.Support.V7.App;
 using Android.Views;
 using Android.Content.PM;
 using System.Threading.Tasks;
 using fiskaltrust.ifPOS.v1;
 using Android.Widget;
+using Newtonsoft.Json;
 
 namespace fiskaltrust.Launcher.Android.SampleClient
 {
@@ -23,10 +23,11 @@ namespace fiskaltrust.Launcher.Android.SampleClient
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
 
-            Button btnInit = FindViewById<Button>(Resource.Id.btnInitLauncher);
-            btnInit.Click += ButtonInitOnClick;
-            Button btnEchoReq = FindViewById<Button>(Resource.Id.btnSendEchoRequest);
-            btnEchoReq.Click += ButtonEchoRequestOnClick;
+            FindViewById<Button>(Resource.Id.btnInitLauncher).Click += new EventHandler(async (s, e) => await ButtonInitOnClickAsync());
+            FindViewById<Button>(Resource.Id.btnInitFiskalyLauncher).Click += new EventHandler(async (s, e) => await ButtonInitFiskalyOnClickAsync());
+            FindViewById<Button>(Resource.Id.btnSendEchoRequest).Click += new EventHandler(async (s, e) => await ButtonEchoRequestOnClickAsync());
+            FindViewById<Button>(Resource.Id.btnSendSignRequest).Click += new EventHandler(async (s, e) => await ButtonSignRequestOnClickAsync());
+            FindViewById<Button>(Resource.Id.btnSendStartReceipt).Click += new EventHandler(async (s, e) => await ButtonStartReceiptOnClickAsync());
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)
@@ -46,15 +47,23 @@ namespace fiskaltrust.Launcher.Android.SampleClient
             return base.OnOptionsItemSelected(item);
         }
 
-        private void ButtonInitOnClick(object sender, EventArgs eventArgs)
+        private async Task ButtonInitOnClickAsync()
         {
             _launcher = new AndroidLauncher(Guid.Empty);
-            _launcher.StartAsync().Wait();
+            await _launcher.StartAsync();
 
-            Toast.MakeText(Application.Context, "fiskaltrust Android launcher started.", ToastLength.Long).Show();
+            Toast.MakeText(Application.Context, "fiskaltrust Android launcher started (Swissbit).", ToastLength.Long).Show();
         }
 
-        private void ButtonEchoRequestOnClick(object sender, EventArgs eventArgs)
+        private async Task ButtonInitFiskalyOnClickAsync()
+        {
+            _launcher = new AndroidLauncher(Guid.Empty);
+            await _launcher.StartFiskalyDemoAsync();
+
+            Toast.MakeText(Application.Context, "fiskaltrust Android launcher started (fiskaly).", ToastLength.Long).Show();
+        }
+
+        private async Task ButtonEchoRequestOnClickAsync()
         {
             TextView txt = FindViewById<TextView>(Resource.Id.txtResult);
 
@@ -65,9 +74,65 @@ namespace fiskaltrust.Launcher.Android.SampleClient
             }
 
             var pos = _launcher.GetPOS();
-            var response = Task.Run(() => pos.EchoAsync(new EchoRequest { Message = $"Hello World, it's {DateTime.Now}!" })).Result;
+            var response = await pos.EchoAsync(new EchoRequest { Message = $"Hello World, it's {DateTime.Now}!" });
 
             txt.Text = response.Message;
+        }
+
+        private async Task ButtonSignRequestOnClickAsync()
+        {
+            var receiptRequest = new ReceiptRequest
+            {
+                ftCashBoxID = "82d3d0ed-ff0b-4aeb-9f1b-389f7d6b5b14",
+                ftReceiptCase = 0x4445_0001_0000_0000,
+                cbReceiptReference = Guid.NewGuid().ToString(),
+                cbChargeItems = Array.Empty<ChargeItem>(),
+                cbPayItems = Array.Empty<PayItem>()
+            };
+            TextView txt = FindViewById<TextView>(Resource.Id.txtSignResult);
+
+            if (_launcher == null)
+            {
+                txt.Text = "Please initialize launcher before sending requests.";
+                return;
+            }
+
+            var pos = _launcher.GetPOS();
+            var response = await pos.SignAsync(receiptRequest);
+
+            txt.Text = JsonConvert.SerializeObject(response);
+        }
+
+        private async Task ButtonStartReceiptOnClickAsync()
+        {
+            var receiptRequest = new ReceiptRequest
+            {
+                ftCashBoxID = "82d3d0ed-ff0b-4aeb-9f1b-389f7d6b5b14",
+                ftQueueID = "b80af2a1-b7f8-4aa4-938f-9043b3a5ae40",
+                ftPosSystemId = "d4a62055-ca6c-4372-ae4d-f835a88e4a5d",
+                cbTerminalID = "T1",
+                cbReceiptReference = "2020020120152812",
+                cbReceiptMoment = DateTime.UtcNow,
+                ftReceiptCaseData = "",
+                cbUser = "Receptionist",
+                cbArea = "System",
+                cbSettlement = "",
+                ftReceiptCase = 4919338172267102211,
+                cbChargeItems = Array.Empty<ChargeItem>(),
+                cbPayItems = Array.Empty<PayItem>()
+            };
+            TextView txt = FindViewById<TextView>(Resource.Id.txtStartReceiptResult);
+
+            if (_launcher == null)
+            {
+                txt.Text = "Please initialize launcher before sending requests.";
+                return;
+            }
+
+            var pos = _launcher.GetPOS();
+            var response = await pos.SignAsync(receiptRequest);
+
+            txt.Text = JsonConvert.SerializeObject(response);
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
@@ -76,5 +141,5 @@ namespace fiskaltrust.Launcher.Android.SampleClient
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-	}
+    }
 }

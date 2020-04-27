@@ -1,11 +1,9 @@
 ﻿using fiskaltrust.ifPOS.v1;
 using fiskaltrust.Launcher.Android.Services.Configuration;
-using fiskaltrust.Middleware.SCU.DE.SwissbitAndroid;
-using Java.Util;
+using fiskaltrust.Launcher.Android.Services.SCU;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace fiskaltrust.Launcher.Android
@@ -14,7 +12,8 @@ namespace fiskaltrust.Launcher.Android
     {
         private readonly Guid _cashboxId;
         private IConfigurationProvider _configurationProvider;
-        private readonly GrpcHost _grpcHost;
+        private readonly GrpcHost _posHost;
+        private readonly GrpcHost _scuHost;
 
         public AndroidLauncher(Guid cashboxId)
         {
@@ -22,7 +21,8 @@ namespace fiskaltrust.Launcher.Android
 
             // TODO: Get cashbox config from helipad or package server, based on cashbox ID. For now, just load the attached one.
             _configurationProvider = new StaticConfigurationProvider();
-            _grpcHost = new GrpcHost();
+            _posHost = new GrpcHost();
+            _scuHost = new GrpcHost();
         }
 
         public async Task StartAsync()
@@ -33,6 +33,14 @@ namespace fiskaltrust.Launcher.Android
             await InitializeQueueAsync(configuration);
         }
 
+        public async Task StartFiskalyDemoAsync()
+        {
+            var configuration = await _configurationProvider.GetCashboxConfigurationAsync(_cashboxId);
+
+            await InitializeFiskalyScuAsync(configuration);
+            await InitializeQueueAsync(configuration);
+        }
+
         public IPOS GetPOS()
         {
             return GrpcHelper.GetClient<IPOS>("localhost:10300");
@@ -40,18 +48,24 @@ namespace fiskaltrust.Launcher.Android
 
         private async Task InitializeScuAsync(Dictionary<string, object> configuration)
         {
-            var scuConfig = new Dictionary<string, object>()
-            {
-                { "devicePath", "T:" }
-            };
+            var scus = JsonConvert.DeserializeObject<List<object>>(JsonConvert.SerializeObject(configuration["ftSignaturCreationDevices"]));
+            var scuConfiguration = JsonConvert.DeserializeObject<Dictionary<string, object>>(JsonConvert.SerializeObject(scus[0]));
+            var url = (scuConfiguration["Url"] as Newtonsoft.Json.Linq.JArray)[0].ToString();
 
-            using (var scu = new SwissbitSCU(scuConfig))
-            {
-                scu.WaitForInitialization().Wait();
-                var tseInfo = scu.GetTseInfoAsync().Result;
-            }
+            var scuProvider = new SwissbitScuProvider();
+            var scu = await scuProvider.CreateScuAsync(scuConfiguration);
+            _scuHost.StartService(url, scu);
+        }
 
-            await Task.CompletedTask;
+        private async Task InitializeFiskalyScuAsync(Dictionary<string, object> configuration)
+        {
+            var scus = JsonConvert.DeserializeObject<List<object>>(JsonConvert.SerializeObject(configuration["ftSignaturCreationDevices"]));
+            var scuConfiguration = JsonConvert.DeserializeObject<Dictionary<string, object>>(JsonConvert.SerializeObject(scus[0]));
+            var url = (scuConfiguration["Url"] as Newtonsoft.Json.Linq.JArray)[0].ToString();
+
+            var scuProvider = new FiskalyScuProvider();
+            var scu = await scuProvider.CreateScuAsync(scuConfiguration);
+            _scuHost.StartService(url, scu);
         }
 
         private async Task InitializeQueueAsync(Dictionary<string, object> configuration)
@@ -61,9 +75,9 @@ namespace fiskaltrust.Launcher.Android
             var url = (queueConfiguration["Url"] as Newtonsoft.Json.Linq.JArray)[0].ToString();
             
             var queueProvider = new QueueProvider();
-            var pos = await queueProvider.CreatePos(Environment.GetFolderPath(Environment.SpecialFolder.Personal), queueConfiguration);
+            var pos = await queueProvider.CreatePosAsync(Environment.GetFolderPath(Environment.SpecialFolder.Personal), queueConfiguration);
 
-            _grpcHost.StartService(url, pos);
+            _posHost.StartService(url, pos);
         }
     }
 }
