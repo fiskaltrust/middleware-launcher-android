@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "fiskaltrust.ConsoleTool.SwissbitPlatformTest": {
+      "commandName": "Project",
+      "commandLineArgs": "t:"
+    }
+  }
+}

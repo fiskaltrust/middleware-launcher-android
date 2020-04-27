@@ -1,5 +1,7 @@
 ﻿using fiskaltrust.ifPOS.v1;
 using fiskaltrust.Launcher.Android.Services.Configuration;
+using fiskaltrust.Middleware.SCU.DE.SwissbitAndroid;
+using Java.Util;
 using fiskaltrust.Launcher.Android.Services.SCU;
 using Java.Lang;
 using Newtonsoft.Json;
@@ -43,6 +45,20 @@ namespace fiskaltrust.Launcher.Android
 
         private async Task InitializeScu(Dictionary<string, object> configuration)
         {
+            //var scuConfig = new Dictionary<string, object>()
+            //{
+            //    { "devicePath", "T:" }
+            //};
+
+            //using (var scu = new SwissbitSCU(scuConfig))
+            //{
+            //    scu.WaitForInitialization().Wait();
+            //    var tseInfo = scu.GetTseInfoAsync().Result;
+            //}
+
+            //await Task.CompletedTask;
+
+
             var scus = JsonConvert.DeserializeObject<List<object>>(JsonConvert.SerializeObject(configuration["ftSignaturCreationDevices"]));
             var scuConfiguration = JsonConvert.DeserializeObject<Dictionary<string, object>>(JsonConvert.SerializeObject(scus[0]));
             var url = (scuConfiguration["Url"] as Newtonsoft.Json.Linq.JArray)[0].ToString();
