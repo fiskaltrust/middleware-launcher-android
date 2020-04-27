@@ -72,29 +72,21 @@
     <EmbeddedNativeLibrary Include="lib\x86_64\libcom.fiskaly.client-v1.1.400.so">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedNativeLibrary>
-    <EmbeddedNativeLibrary Include="lib\arm64-v8a\libWormAPI.so">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedNativeLibrary>
-    <EmbeddedNativeLibrary Include="lib\armeabi-v7a\libWormAPI.so">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedNativeLibrary>
-    <EmbeddedNativeLibrary Include="lib\x86\libWormAPI.so">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedNativeLibrary>
-    <EmbeddedNativeLibrary Include="lib\x86_64\libWormAPI.so">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedNativeLibrary>
+    <None Include="lib\arm64-v8a\libWormAPI.so" />
+    <None Include="lib\armeabi-v7a\libWormAPI.so" />
+    <None Include="lib\x86\libWormAPI.so" />
+    <None Include="lib\x86_64\libWormAPI.so" />
     <None Include="Resources\AboutResources.txt" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="fiskaltrust.Middleware.Queue.SQLite">
       <Version>1.3.0-rc4-20114-29567</Version>
     </PackageReference>
-    <PackageReference Include="fiskaltrust.Middleware.SCU.DE.SwissbitAndroid">
-      <Version>0.0.0-local-20200025080421</Version>
-    </PackageReference>
     <PackageReference Include="fiskaltrust.Middleware.SCU.DE.Fiskaly">
       <Version>1.3.0-rc2-20115-29610</Version>
+    </PackageReference>
+    <PackageReference Include="fiskaltrust.Middleware.SCU.DE.SwissbitAndroid">
+      <Version>0.0.0-local-20200025080421</Version>
     </PackageReference>
     <PackageReference Include="Google.Protobuf">
       <Version>3.11.4</Version>
