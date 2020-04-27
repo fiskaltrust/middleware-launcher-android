@@ -2,7 +2,6 @@
 using Android.App;
 using Android.OS;
 using Android.Runtime;
-using Android.Support.Design.Widget;
 using Android.Support.V7.App;
 using Android.Views;
 using Android.Content.PM;
@@ -10,7 +9,6 @@ using System.Threading.Tasks;
 using fiskaltrust.ifPOS.v1;
 using Android.Widget;
 using Newtonsoft.Json;
-using Android.Media;
 
 namespace fiskaltrust.Launcher.Android.SampleClient
 {
@@ -96,7 +94,6 @@ namespace fiskaltrust.Launcher.Android.SampleClient
 
             txt.Text = JsonConvert.SerializeObject(response);
         }
-
 
         private void ButtonStartReceiptOnClick(object sender, EventArgs eventArgs)
         {
