@@ -14,7 +14,7 @@ namespace fiskaltrust.Launcher.Android.Services.SCU
                 { "devicePath", "T:" }
             };
             var scu = new SwissbitSCU(scuConfig);
-            await scu.WaitForInitialization();
+            await scu.WaitForInitializationAsync();
 
             return scu;
         }
