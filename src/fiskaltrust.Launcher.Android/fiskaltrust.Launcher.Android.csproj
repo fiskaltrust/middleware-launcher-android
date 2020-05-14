@@ -57,6 +57,7 @@
     <Compile Include="Services\Configuration\StaticConfigurationProvider.cs" />
     <Compile Include="Services\SCU\FiskalyScuProvider.cs" />
     <Compile Include="Services\SCU\IScuProvider.cs" />
+    <Compile Include="Exceptions\RemountRequiredException.cs" />
     <Compile Include="Services\SCU\SwissbitScuProvider.cs" />
   </ItemGroup>
   <ItemGroup>

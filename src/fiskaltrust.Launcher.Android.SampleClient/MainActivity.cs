@@ -1,14 +1,13 @@
 ﻿using System;
 using Android.App;
 using Android.OS;
-using Android.Runtime;
 using Android.Support.V7.App;
 using Android.Views;
-using Android.Content.PM;
 using System.Threading.Tasks;
 using fiskaltrust.ifPOS.v1;
 using Android.Widget;
 using Newtonsoft.Json;
+using fiskaltrust.Launcher.Android.Exceptions;
 
 namespace fiskaltrust.Launcher.Android.SampleClient
 {
@@ -49,27 +48,39 @@ namespace fiskaltrust.Launcher.Android.SampleClient
 
         private async Task ButtonInitOnClickAsync()
         {
-            _launcher = new AndroidLauncher(Guid.Empty);
-            await _launcher.StartAsync();
-
-            Toast.MakeText(Application.Context, "fiskaltrust Android launcher started (Swissbit).", ToastLength.Long).Show();
+            SetButtonEnabled(false);
+            try
+            {
+                _launcher = new AndroidLauncher(Guid.Empty);
+                await _launcher.StartAsync();
+                Toast.MakeText(Application.Context, "fiskaltrust Android launcher started (Swissbit).", ToastLength.Long).Show();
+            }
+            catch (RemountRequiredException ex)
+            {
+                Toast.MakeText(Application.Context, ex.Message, ToastLength.Long).Show();
+            }
+            SetButtonEnabled(true);
         }
 
         private async Task ButtonInitFiskalyOnClickAsync()
         {
+            SetButtonEnabled(false);
             _launcher = new AndroidLauncher(Guid.Empty);
             await _launcher.StartFiskalyDemoAsync();
 
             Toast.MakeText(Application.Context, "fiskaltrust Android launcher started (fiskaly).", ToastLength.Long).Show();
+            SetButtonEnabled(true);
         }
 
         private async Task ButtonEchoRequestOnClickAsync()
         {
+            SetButtonEnabled(false);
             TextView txt = FindViewById<TextView>(Resource.Id.txtResult);
 
             if (_launcher == null)
             {
                 txt.Text = "Please initialize launcher before sending requests.";
+                SetButtonEnabled(true);
                 return;
             }
 
@@ -77,10 +88,12 @@ namespace fiskaltrust.Launcher.Android.SampleClient
             var response = await pos.EchoAsync(new EchoRequest { Message = $"Hello World, it's {DateTime.Now}!" });
 
             txt.Text = response.Message;
+            SetButtonEnabled(true);
         }
 
         private async Task ButtonSignRequestOnClickAsync()
         {
+            SetButtonEnabled(false);
             var receiptRequest = new ReceiptRequest
             {
                 ftCashBoxID = "82d3d0ed-ff0b-4aeb-9f1b-389f7d6b5b14",
@@ -94,6 +107,7 @@ namespace fiskaltrust.Launcher.Android.SampleClient
             if (_launcher == null)
             {
                 txt.Text = "Please initialize launcher before sending requests.";
+                SetButtonEnabled(true);
                 return;
             }
 
@@ -101,10 +115,12 @@ namespace fiskaltrust.Launcher.Android.SampleClient
             var response = await pos.SignAsync(receiptRequest);
 
             txt.Text = JsonConvert.SerializeObject(response);
+            SetButtonEnabled(true);
         }
 
         private async Task ButtonStartReceiptOnClickAsync()
         {
+            SetButtonEnabled(false);
             var receiptRequest = new ReceiptRequest
             {
                 ftCashBoxID = "82d3d0ed-ff0b-4aeb-9f1b-389f7d6b5b14",
@@ -126,6 +142,7 @@ namespace fiskaltrust.Launcher.Android.SampleClient
             if (_launcher == null)
             {
                 txt.Text = "Please initialize launcher before sending requests.";
+                SetButtonEnabled(true);
                 return;
             }
 
@@ -133,13 +150,16 @@ namespace fiskaltrust.Launcher.Android.SampleClient
             var response = await pos.SignAsync(receiptRequest);
 
             txt.Text = JsonConvert.SerializeObject(response);
+            SetButtonEnabled(true);
         }
 
-        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
+        private void SetButtonEnabled(bool state)
         {
-            Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-
-            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            FindViewById<Button>(Resource.Id.btnInitLauncher).Enabled = state;
+            FindViewById<Button>(Resource.Id.btnInitFiskalyLauncher).Enabled = state;
+            FindViewById<Button>(Resource.Id.btnSendEchoRequest).Enabled = state;
+            FindViewById<Button>(Resource.Id.btnSendSignRequest).Enabled = state;
+            FindViewById<Button>(Resource.Id.btnSendStartReceipt).Enabled = state;
         }
     }
 }

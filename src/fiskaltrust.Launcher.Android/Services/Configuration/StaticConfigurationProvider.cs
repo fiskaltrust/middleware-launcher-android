@@ -57,7 +57,7 @@ namespace fiskaltrust.Launcher.Android.Services.Configuration
             ""ftQueueDEId"": ""b80af2a1-b7f8-4aa4-938f-9043b3a5ae40"",
             ""ftSignaturCreationUnitDEId"": ""471c6b4f-03dc-4dd5-a216-d76e8776ec85"",
             ""LastHash"": null,
-            ""CashBoxIdentification"": ""475a8a11-6b88-49b7-98be-1f72852be1e6"",
+            ""CashBoxIdentification"": ""E1HKfn68Pkms5zsZsvKONw"",
             ""TimeStamp"": 637173618228639776
           }
         ],
