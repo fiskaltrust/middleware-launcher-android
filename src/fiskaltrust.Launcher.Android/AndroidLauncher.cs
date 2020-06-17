@@ -1,6 +1,9 @@
 ﻿using fiskaltrust.ifPOS.v1;
 using fiskaltrust.Launcher.Android.Services.Configuration;
+using fiskaltrust.Launcher.Android.Services.Queue;
 using fiskaltrust.Launcher.Android.Services.SCU;
+using fiskaltrust.Middleware.Interface.Client.Grpc;
+using Java.Lang;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -28,54 +31,56 @@ namespace fiskaltrust.Launcher.Android
         public async Task StartAsync()
         {
             var configuration = await _configurationProvider.GetCashboxConfigurationAsync(_cashboxId);
-
-            await InitializeScuAsync(configuration);
-            await InitializeQueueAsync(configuration);
+            InitializeScu(configuration);
+            InitializeQueue(configuration);
         }
 
         public async Task StartFiskalyDemoAsync()
         {
             var configuration = await _configurationProvider.GetCashboxConfigurationAsync(_cashboxId);
 
-            await InitializeFiskalyScuAsync(configuration);
-            await InitializeQueueAsync(configuration);
+            InitializeFiskalyScu(configuration);
+            InitializeQueue(configuration);
         }
 
-        public IPOS GetPOS()
+        public async Task<IPOS> GetPOS()
         {
-            return GrpcHelper.GetClient<IPOS>("localhost:10300");
+            return await GrpcPosFactory.CreatePosAsync(new GrpcClientOptions
+            {
+                Url = new Uri("localhost:10300")
+            });
         }
 
-        private async Task InitializeScuAsync(Dictionary<string, object> configuration)
+        private void InitializeScu(Dictionary<string, object> configuration)
         {
             var scus = JsonConvert.DeserializeObject<List<object>>(JsonConvert.SerializeObject(configuration["ftSignaturCreationDevices"]));
             var scuConfiguration = JsonConvert.DeserializeObject<Dictionary<string, object>>(JsonConvert.SerializeObject(scus[0]));
             var url = (scuConfiguration["Url"] as Newtonsoft.Json.Linq.JArray)[0].ToString();
 
             var scuProvider = new SwissbitScuProvider();
-            var scu = await scuProvider.CreateScuAsync(scuConfiguration);
+            var scu = scuProvider.CreateSCU(scuConfiguration);
             _scuHost.StartService(url, scu);
         }
 
-        private async Task InitializeFiskalyScuAsync(Dictionary<string, object> configuration)
+        private void InitializeFiskalyScu(Dictionary<string, object> configuration)
         {
             var scus = JsonConvert.DeserializeObject<List<object>>(JsonConvert.SerializeObject(configuration["ftSignaturCreationDevices"]));
             var scuConfiguration = JsonConvert.DeserializeObject<Dictionary<string, object>>(JsonConvert.SerializeObject(scus[0]));
             var url = (scuConfiguration["Url"] as Newtonsoft.Json.Linq.JArray)[0].ToString();
 
             var scuProvider = new FiskalyScuProvider();
-            var scu = await scuProvider.CreateScuAsync(scuConfiguration);
+            var scu = scuProvider.CreateSCU(scuConfiguration);
             _scuHost.StartService(url, scu);
         }
 
-        private async Task InitializeQueueAsync(Dictionary<string, object> configuration)
+        private void InitializeQueue(Dictionary<string, object> configuration)
         {
             var queues = JsonConvert.DeserializeObject<List<object>>(JsonConvert.SerializeObject(configuration["ftQueues"]));
             var queueConfiguration = JsonConvert.DeserializeObject<Dictionary<string, object>>(JsonConvert.SerializeObject(queues[0]));
             var url = (queueConfiguration["Url"] as Newtonsoft.Json.Linq.JArray)[0].ToString();
-            
+
             var queueProvider = new QueueProvider();
-            var pos = await queueProvider.CreatePosAsync(Environment.GetFolderPath(Environment.SpecialFolder.Personal), queueConfiguration);
+            var pos = queueProvider.CreatePOS(Environment.GetFolderPath(Environment.SpecialFolder.Personal), queueConfiguration);
 
             _posHost.StartService(url, pos);
         }

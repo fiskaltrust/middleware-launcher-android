@@ -8,6 +8,7 @@ using fiskaltrust.ifPOS.v1;
 using Android.Widget;
 using Newtonsoft.Json;
 using fiskaltrust.Launcher.Android.Exceptions;
+using Java.Lang;
 
 namespace fiskaltrust.Launcher.Android.SampleClient
 {
@@ -48,6 +49,7 @@ namespace fiskaltrust.Launcher.Android.SampleClient
 
         private async Task ButtonInitOnClickAsync()
         {
+            JavaSystem.LoadLibrary("WormAPI");
             SetButtonEnabled(false);
             try
             {
@@ -84,7 +86,7 @@ namespace fiskaltrust.Launcher.Android.SampleClient
                 return;
             }
 
-            var pos = _launcher.GetPOS();
+            var pos = await _launcher.GetPOS();
             var response = await pos.EchoAsync(new EchoRequest { Message = $"Hello World, it's {DateTime.Now}!" });
 
             txt.Text = response.Message;
@@ -111,7 +113,7 @@ namespace fiskaltrust.Launcher.Android.SampleClient
                 return;
             }
 
-            var pos = _launcher.GetPOS();
+            var pos = await _launcher.GetPOS();
             var response = await pos.SignAsync(receiptRequest);
 
             txt.Text = JsonConvert.SerializeObject(response);
@@ -146,7 +148,7 @@ namespace fiskaltrust.Launcher.Android.SampleClient
                 return;
             }
 
-            var pos = _launcher.GetPOS();
+            var pos = await _launcher.GetPOS();
             var response = await pos.SignAsync(receiptRequest);
 
             txt.Text = JsonConvert.SerializeObject(response);

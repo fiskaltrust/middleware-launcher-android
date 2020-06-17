@@ -24,14 +24,6 @@ namespace fiskaltrust.Launcher.Android
             server.Start();
             return server;
         }
-
-        public static T GetClient<T>(string url) where T : class
-        {
-            var channel = new Channel(url, ChannelCredentials.Insecure);
-            channel.ConnectAsync(DateTime.UtcNow.AddSeconds(30)).Wait();
-
-            return channel.CreateGrpcService<T>();
-        }
     }
 
     internal class RemoveMethodVersionPrefixBinder : ServiceBinder
