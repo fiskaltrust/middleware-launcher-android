@@ -31,8 +31,9 @@ namespace fiskaltrust.Launcher.Android
         public async Task StartAsync()
         {
             var configuration = await _configurationProvider.GetCashboxConfigurationAsync(_cashboxId);
+            // Async initialization of the SCU is not possible, because JavaSystem.LoadLibrary("WormAPI") fails when not running on the UI thread..
             InitializeScu(configuration);
-            InitializeQueue(configuration);
+            Task.Run(() => InitializeQueue(configuration)).Wait();
         }
 
         public async Task StartFiskalyDemoAsync()
@@ -47,7 +48,7 @@ namespace fiskaltrust.Launcher.Android
         {
             return await GrpcPosFactory.CreatePosAsync(new GrpcClientOptions
             {
-                Url = new Uri("localhost:10300")
+                Url = new Uri("grpc://localhost:10300")
             });
         }
 
