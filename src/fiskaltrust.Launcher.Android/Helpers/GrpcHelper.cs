@@ -1,11 +1,10 @@
 ﻿using System;
 using Grpc.Core;
 using ProtoBuf.Grpc.Server;
-using ProtoBuf.Grpc.Client;
 using ProtoBuf.Grpc.Configuration;
 using System.Reflection;
 
-namespace fiskaltrust.Launcher.Android
+namespace fiskaltrust.AndroidLauncher
 {
     public static class GrpcHelper
     {
@@ -14,7 +13,7 @@ namespace fiskaltrust.Launcher.Android
             var baseAddresse = new Uri(url);
             var server = new Server();
             server.Ports.Add(new ServerPort(baseAddresse.Host, baseAddresse.Port, ServerCredentials.Insecure));
-            
+
             // We use versioned names in our OperationContracts, e.g. v1/Sign. This works fine in C#, but not with regular .proto files, 
             // as they don't support special characters. To work around this issue, we register the methods twice with different 
             // behavior - once with the v1/ prefix, and once without it.

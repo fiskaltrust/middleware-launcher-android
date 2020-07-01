@@ -1,24 +1,26 @@
-﻿using fiskaltrust.ifPOS.v1;
-using fiskaltrust.Launcher.Android.Services.Configuration;
-using fiskaltrust.Launcher.Android.Services.Queue;
-using fiskaltrust.Launcher.Android.Services.SCU;
+﻿using Android.App;
+using Android.Content;
+using Android.Runtime;
+using fiskaltrust.AndroidLauncher.Services.Configuration;
+using fiskaltrust.AndroidLauncher.Services.Queue;
+using fiskaltrust.AndroidLauncher.Services.SCU;
+using fiskaltrust.ifPOS.v1;
 using fiskaltrust.Middleware.Interface.Client.Grpc;
-using Java.Lang;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace fiskaltrust.Launcher.Android
+namespace fiskaltrust.AndroidLauncher
 {
-    public class AndroidLauncher
+    public class MiddlewareLauncher
     {
         private readonly Guid _cashboxId;
         private IConfigurationProvider _configurationProvider;
         private readonly GrpcHost _posHost;
         private readonly GrpcHost _scuHost;
 
-        public AndroidLauncher(Guid cashboxId)
+        public MiddlewareLauncher(Guid cashboxId)
         {
             _cashboxId = cashboxId;
 

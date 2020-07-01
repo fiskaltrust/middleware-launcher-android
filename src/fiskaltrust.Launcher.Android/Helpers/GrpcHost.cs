@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace fiskaltrust.Launcher.Android
+namespace fiskaltrust.AndroidLauncher
 {
     public class GrpcHost : IDisposable
     {

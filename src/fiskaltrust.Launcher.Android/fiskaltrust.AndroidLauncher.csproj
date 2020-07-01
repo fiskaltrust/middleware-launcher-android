@@ -10,14 +10,14 @@
     <TemplateGuid>{9ef11e43-1701-4396-8835-8392d57abb70}</TemplateGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>fiskaltrust.Launcher.Android</RootNamespace>
-    <AssemblyName>fiskaltrust.Launcher.Android</AssemblyName>
+    <RootNamespace>fiskaltrust.AndroidLauncher</RootNamespace>
+    <AssemblyName>fiskaltrust.AndroidLauncher</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <Deterministic>True</Deterministic>
     <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
-    <TargetFrameworkVersion>v9.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v10.0</TargetFrameworkVersion>
     <AndroidUseAapt2>true</AndroidUseAapt2>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -47,11 +47,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AndroidLauncher.cs" />
-    <Compile Include="GrpcHelper.cs" />
-    <Compile Include="GrpcHost.cs" />
+    <Compile Include="MiddlewareLauncher.cs" />
+    <Compile Include="Helpers\GrpcHelper.cs" />
+    <Compile Include="Helpers\GrpcHost.cs" />
+    <Compile Include="MiddlewareLauncherService.cs" />
     <Compile Include="Services\Configuration\IConfigurationProvider.cs" />
     <Compile Include="Services\Hosting\DESSCDClientFactory.cs" />
+    <Compile Include="Services\IPOSProvider.cs" />
+    <Compile Include="Services\POSProvider.cs" />
+    <Compile Include="Services\POSProviderBinder.cs" />
     <Compile Include="Services\Queue\QueueProvider.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

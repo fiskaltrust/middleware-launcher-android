@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace fiskaltrust.Launcher.Android.Services.Configuration
+namespace fiskaltrust.AndroidLauncher.Services.Configuration
 {
     class StaticConfigurationProvider : IConfigurationProvider
     {

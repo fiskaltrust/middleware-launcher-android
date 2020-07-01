@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace fiskaltrust.Launcher.Android
+namespace fiskaltrust.AndroidLauncher.Services.Configuration
 {
     internal interface IConfigurationProvider
     {

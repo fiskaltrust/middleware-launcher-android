@@ -3,17 +3,17 @@ using System.IO;
 using System.Linq;
 using Android.App;
 using Android.Support.V4.Content;
+using fiskaltrust.AndroidLauncher.Exceptions;
 using fiskaltrust.ifPOS.v1.de;
-using fiskaltrust.Launcher.Android.Exceptions;
 using fiskaltrust.Middleware.SCU.DE.SwissbitAndroid;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace fiskaltrust.Launcher.Android.Services.SCU
+namespace fiskaltrust.AndroidLauncher.Services.SCU
 {
     class SwissbitScuProvider : IScuProvider
     {
         public IDESSCD CreateSCU(Dictionary<string, object> scuConfiguration)
-        {        
+        {
             var dir = InitializeTseAsync();
 
             var scuConfig = new Dictionary<string, object>()

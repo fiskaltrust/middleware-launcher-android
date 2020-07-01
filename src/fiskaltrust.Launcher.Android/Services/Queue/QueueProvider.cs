@@ -1,7 +1,7 @@
 ﻿using Android.App;
+using fiskaltrust.AndroidLauncher.Services.Hosting;
 using fiskaltrust.ifPOS.v1;
 using fiskaltrust.ifPOS.v1.de;
-using fiskaltrust.Launcher.Android.Services.Hosting;
 using fiskaltrust.Middleware.Abstractions;
 using fiskaltrust.Middleware.Queue.SQLite;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
-namespace fiskaltrust.Launcher.Android.Services.Queue
+namespace fiskaltrust.AndroidLauncher.Services.Queue
 {
     public class QueueProvider
     {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using fiskaltrust.ifPOS.v1.de;
 
-namespace fiskaltrust.Launcher.Android.Services.SCU
+namespace fiskaltrust.AndroidLauncher.Services.SCU
 {
     interface IScuProvider
     {

@@ -4,7 +4,7 @@ using fiskaltrust.Middleware.Interface.Client;
 using fiskaltrust.Middleware.Interface.Client.Grpc;
 using System;
 
-namespace fiskaltrust.Launcher.Android.Services.Hosting
+namespace fiskaltrust.AndroidLauncher.Services.Hosting
 {
     internal class DESSCDClientFactory : IClientFactory<IDESSCD>
     {

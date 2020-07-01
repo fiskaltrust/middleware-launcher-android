@@ -8,9 +8,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: global::Android.Runtime.ResourceDesignerAttribute("fiskaltrust.Launcher.Android.Resource", IsApplication=false)]
+[assembly: global::Android.Runtime.ResourceDesignerAttribute("fiskaltrust.AndroidLauncher.Resource", IsApplication=false)]
 
-namespace fiskaltrust.Launcher.Android
+namespace fiskaltrust.AndroidLauncher
 {
 	
 	

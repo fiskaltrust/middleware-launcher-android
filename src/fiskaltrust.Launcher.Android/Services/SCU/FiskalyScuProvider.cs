@@ -4,7 +4,7 @@ using fiskaltrust.Middleware.SCU.DE.Fiskaly;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
-namespace fiskaltrust.Launcher.Android.Services.SCU
+namespace fiskaltrust.AndroidLauncher.Services.SCU
 {
     class FiskalyScuProvider : IScuProvider
     {

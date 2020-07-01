@@ -7,15 +7,17 @@ using System.Threading.Tasks;
 using fiskaltrust.ifPOS.v1;
 using Android.Widget;
 using Newtonsoft.Json;
-using fiskaltrust.Launcher.Android.Exceptions;
 using Java.Lang;
+using fiskaltrust.AndroidLauncher.Exceptions;
+using Android.Content;
 
-namespace fiskaltrust.Launcher.Android.SampleClient
+namespace fiskaltrust.AndroidLauncher.SampleClient
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
     public class MainActivity : AppCompatActivity
     {
-        private AndroidLauncher _launcher;
+        private MiddlewareLauncher _launcher;
+        private MiddlewareServiceConnection _serviceConnection;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -28,6 +30,16 @@ namespace fiskaltrust.Launcher.Android.SampleClient
             FindViewById<Button>(Resource.Id.btnSendEchoRequest).Click += new EventHandler(async (s, e) => await ButtonEchoRequestOnClickAsync());
             FindViewById<Button>(Resource.Id.btnSendSignRequest).Click += new EventHandler(async (s, e) => await ButtonSignRequestOnClickAsync());
             FindViewById<Button>(Resource.Id.btnSendStartReceipt).Click += new EventHandler(async (s, e) => await ButtonStartReceiptOnClickAsync());
+
+
+            if (_serviceConnection == null)
+            {
+                _serviceConnection = new MiddlewareServiceConnection(this);
+            }
+
+            Intent serviceToStart = new Intent(this, typeof(MiddlewareLauncherService));
+            BindService(serviceToStart, _serviceConnection, Bind.AutoCreate);
+            this.StartForegroundServiceCompat<MiddlewareLauncherService>();
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)
@@ -47,13 +59,27 @@ namespace fiskaltrust.Launcher.Android.SampleClient
             return base.OnOptionsItemSelected(item);
         }
 
+        public void UpdateUiForUnboundService()
+        {
+            var label = FindViewById<TextView>(Resource.Id.txtServiceStatus);
+            label.SetTextColor(Android.Graphics.Color.Red);
+            label.Text = "Not connected to Middleware service.";
+        }
+
+        public void UpdateUiForBoundService()
+        {
+            var label = FindViewById<TextView>(Resource.Id.txtServiceStatus);
+            label.SetTextColor(Android.Graphics.Color.DarkGreen);
+            label.Text = "Connected to Middleware service.";
+        }
+
         private async Task ButtonInitOnClickAsync()
         {
             JavaSystem.LoadLibrary("WormAPI");
             SetButtonEnabled(false);
             try
             {
-                _launcher = new AndroidLauncher(Guid.Empty);
+                _launcher = new MiddlewareLauncher(Guid.Empty);
                 await _launcher.StartAsync();
                 Toast.MakeText(Application.Context, "fiskaltrust Android launcher started (Swissbit).", ToastLength.Long).Show();
             }
@@ -67,10 +93,13 @@ namespace fiskaltrust.Launcher.Android.SampleClient
         private async Task ButtonInitFiskalyOnClickAsync()
         {
             SetButtonEnabled(false);
-            _launcher = new AndroidLauncher(Guid.Empty);
-            await _launcher.StartFiskalyDemoAsync();
+            var pos = await _serviceConnection.GetPOSAsync();
+            var ec = await pos.EchoAsync(new EchoRequest { Message = "hi" });
+            Toast.MakeText(Application.Context, ec.Message, ToastLength.Long).Show();
+            //_launcher = new MiddlewareLauncher(Guid.Empty);
+            //await _launcher.StartFiskalyDemoAsync();
 
-            Toast.MakeText(Application.Context, "fiskaltrust Android launcher started (fiskaly).", ToastLength.Long).Show();
+            //Toast.MakeText(Application.Context, "fiskaltrust Android launcher started (fiskaly).", ToastLength.Long).Show();
             SetButtonEnabled(true);
         }
 
