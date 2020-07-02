@@ -37,25 +37,24 @@ namespace fiskaltrust.AndroidLauncher
         public override StartCommandResult OnStartCommand(Intent intent, [GeneratedEnum] StartCommandFlags flags, int startId)
         {
             var channelId = CreateNotificationChannel();
-            var notification = new Notification.Builder(this, channelId)
+            var builder = new Notification.Builder(this, channelId)
                .SetContentTitle(Resources.GetString(Resource.String.app_name))
-               .SetContentText("The fiskaltrust Middleware.Launcher is running in the background.")
-               //.SetSmallIcon(Resource.Drawable.ic_stat_name)
-               //.SetContentIntent(BuildIntentToShowMainActivity())
-               .SetOngoing(true)
-               //.AddAction(BuildRestartTimerAction())
-               //.AddAction(BuildStopServiceAction())
-               .Build();
+               .SetContentText("The fiskaltrust Middleware.Launcher is running.")
+               .SetCategory(Notification.CategoryService)
+               .SetSmallIcon(Resource.Drawable.ft_notification)
+               .SetOngoing(true);
 
-            // Enlist this instance of the service as a foreground service
-            StartForeground(SERVICE_RUNNING_NOTIFICATION_ID, notification);
+            StartForeground(SERVICE_RUNNING_NOTIFICATION_ID, builder.Build());
 
             return base.OnStartCommand(intent, flags, startId);
         }
 
         private string CreateNotificationChannel()
         {
-            NotificationChannel chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "fiskaltrust Middleware", NotificationImportance.High);
+            NotificationChannel chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "fiskaltrust Middleware", NotificationImportance.Default)
+            {
+                Description = "The fiskaltrust Middleware"
+            };
             NotificationManager manager = (NotificationManager)this.GetSystemService(NotificationService);
             manager.CreateNotificationChannel(chan);
 

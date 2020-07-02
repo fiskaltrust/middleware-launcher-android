@@ -1799,46 +1799,49 @@ namespace fiskaltrust.AndroidLauncher
 			public static int abc_vector_test = 2131099731;
 			
 			// aapt resource value: 0x7F060054
-			public static int notification_action_background = 2131099732;
+			public static int ft_notification = 2131099732;
 			
 			// aapt resource value: 0x7F060055
-			public static int notification_bg = 2131099733;
+			public static int notification_action_background = 2131099733;
 			
 			// aapt resource value: 0x7F060056
-			public static int notification_bg_low = 2131099734;
+			public static int notification_bg = 2131099734;
 			
 			// aapt resource value: 0x7F060057
-			public static int notification_bg_low_normal = 2131099735;
+			public static int notification_bg_low = 2131099735;
 			
 			// aapt resource value: 0x7F060058
-			public static int notification_bg_low_pressed = 2131099736;
+			public static int notification_bg_low_normal = 2131099736;
 			
 			// aapt resource value: 0x7F060059
-			public static int notification_bg_normal = 2131099737;
+			public static int notification_bg_low_pressed = 2131099737;
 			
 			// aapt resource value: 0x7F06005A
-			public static int notification_bg_normal_pressed = 2131099738;
+			public static int notification_bg_normal = 2131099738;
 			
 			// aapt resource value: 0x7F06005B
-			public static int notification_icon_background = 2131099739;
+			public static int notification_bg_normal_pressed = 2131099739;
 			
 			// aapt resource value: 0x7F06005C
-			public static int notification_template_icon_bg = 2131099740;
+			public static int notification_icon_background = 2131099740;
 			
 			// aapt resource value: 0x7F06005D
-			public static int notification_template_icon_low_bg = 2131099741;
+			public static int notification_template_icon_bg = 2131099741;
 			
 			// aapt resource value: 0x7F06005E
-			public static int notification_tile_bg = 2131099742;
+			public static int notification_template_icon_low_bg = 2131099742;
 			
 			// aapt resource value: 0x7F06005F
-			public static int notify_panel_notification_icon_bg = 2131099743;
+			public static int notification_tile_bg = 2131099743;
 			
 			// aapt resource value: 0x7F060060
-			public static int tooltip_frame_dark = 2131099744;
+			public static int notify_panel_notification_icon_bg = 2131099744;
 			
 			// aapt resource value: 0x7F060061
-			public static int tooltip_frame_light = 2131099745;
+			public static int tooltip_frame_dark = 2131099745;
+			
+			// aapt resource value: 0x7F060062
+			public static int tooltip_frame_light = 2131099746;
 			
 			static Drawable()
 			{

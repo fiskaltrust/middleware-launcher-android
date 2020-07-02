@@ -16,7 +16,6 @@ namespace fiskaltrust.AndroidLauncher.SampleClient
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
     public class MainActivity : AppCompatActivity
     {
-        private MiddlewareLauncher _launcher;
         private MiddlewareServiceConnection _serviceConnection;
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -25,11 +24,10 @@ namespace fiskaltrust.AndroidLauncher.SampleClient
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
 
-            FindViewById<Button>(Resource.Id.btnInitLauncher).Click += new EventHandler(async (s, e) => await ButtonInitOnClickAsync());
-            FindViewById<Button>(Resource.Id.btnInitFiskalyLauncher).Click += new EventHandler(async (s, e) => await ButtonInitFiskalyOnClickAsync());
             FindViewById<Button>(Resource.Id.btnSendEchoRequest).Click += new EventHandler(async (s, e) => await ButtonEchoRequestOnClickAsync());
             FindViewById<Button>(Resource.Id.btnSendSignRequest).Click += new EventHandler(async (s, e) => await ButtonSignRequestOnClickAsync());
             FindViewById<Button>(Resource.Id.btnSendStartReceipt).Click += new EventHandler(async (s, e) => await ButtonStartReceiptOnClickAsync());
+            FindViewById<Button>(Resource.Id.btnSendZeroReceipt).Click += new EventHandler(async (s, e) => await ButtonZeroReceiptOnClickAsync());
 
 
             if (_serviceConnection == null)
@@ -64,6 +62,7 @@ namespace fiskaltrust.AndroidLauncher.SampleClient
             var label = FindViewById<TextView>(Resource.Id.txtServiceStatus);
             label.SetTextColor(Android.Graphics.Color.Red);
             label.Text = "Not connected to Middleware service.";
+            SetButtonsEnabled(false);
         }
 
         public void UpdateUiForBoundService()
@@ -71,60 +70,25 @@ namespace fiskaltrust.AndroidLauncher.SampleClient
             var label = FindViewById<TextView>(Resource.Id.txtServiceStatus);
             label.SetTextColor(Android.Graphics.Color.DarkGreen);
             label.Text = "Connected to Middleware service.";
-        }
-
-        private async Task ButtonInitOnClickAsync()
-        {
-            JavaSystem.LoadLibrary("WormAPI");
-            SetButtonEnabled(false);
-            try
-            {
-                _launcher = new MiddlewareLauncher(Guid.Empty);
-                await _launcher.StartAsync();
-                Toast.MakeText(Application.Context, "fiskaltrust Android launcher started (Swissbit).", ToastLength.Long).Show();
-            }
-            catch (RemountRequiredException ex)
-            {
-                Toast.MakeText(Application.Context, ex.Message, ToastLength.Long).Show();
-            }
-            SetButtonEnabled(true);
-        }
-
-        private async Task ButtonInitFiskalyOnClickAsync()
-        {
-            SetButtonEnabled(false);
-            var pos = await _serviceConnection.GetPOSAsync();
-            var ec = await pos.EchoAsync(new EchoRequest { Message = "hi" });
-            Toast.MakeText(Application.Context, ec.Message, ToastLength.Long).Show();
-            //_launcher = new MiddlewareLauncher(Guid.Empty);
-            //await _launcher.StartFiskalyDemoAsync();
-
-            //Toast.MakeText(Application.Context, "fiskaltrust Android launcher started (fiskaly).", ToastLength.Long).Show();
-            SetButtonEnabled(true);
+            SetButtonsEnabled(true);
         }
 
         private async Task ButtonEchoRequestOnClickAsync()
         {
-            SetButtonEnabled(false);
+            SetButtonsEnabled(false);
             TextView txt = FindViewById<TextView>(Resource.Id.txtResult);
+             
 
-            if (_launcher == null)
-            {
-                txt.Text = "Please initialize launcher before sending requests.";
-                SetButtonEnabled(true);
-                return;
-            }
-
-            var pos = await _launcher.GetPOS();
+            var pos = await _serviceConnection.GetPOSAsync();
             var response = await pos.EchoAsync(new EchoRequest { Message = $"Hello World, it's {DateTime.Now}!" });
 
             txt.Text = response.Message;
-            SetButtonEnabled(true);
+            SetButtonsEnabled(true);
         }
 
         private async Task ButtonSignRequestOnClickAsync()
         {
-            SetButtonEnabled(false);
+            SetButtonsEnabled(false);
             var receiptRequest = new ReceiptRequest
             {
                 ftCashBoxID = "82d3d0ed-ff0b-4aeb-9f1b-389f7d6b5b14",
@@ -135,23 +99,16 @@ namespace fiskaltrust.AndroidLauncher.SampleClient
             };
             TextView txt = FindViewById<TextView>(Resource.Id.txtSignResult);
 
-            if (_launcher == null)
-            {
-                txt.Text = "Please initialize launcher before sending requests.";
-                SetButtonEnabled(true);
-                return;
-            }
-
-            var pos = await _launcher.GetPOS();
+            var pos = await _serviceConnection.GetPOSAsync();
             var response = await pos.SignAsync(receiptRequest);
 
-            txt.Text = JsonConvert.SerializeObject(response);
-            SetButtonEnabled(true);
+            txt.Text = JsonConvert.SerializeObject(response, Formatting.Indented);
+            SetButtonsEnabled(true);
         }
 
         private async Task ButtonStartReceiptOnClickAsync()
         {
-            SetButtonEnabled(false);
+            SetButtonsEnabled(false);
             var receiptRequest = new ReceiptRequest
             {
                 ftCashBoxID = "82d3d0ed-ff0b-4aeb-9f1b-389f7d6b5b14",
@@ -164,33 +121,53 @@ namespace fiskaltrust.AndroidLauncher.SampleClient
                 cbUser = "Receptionist",
                 cbArea = "System",
                 cbSettlement = "",
-                ftReceiptCase = 4919338172267102211,
+                ftReceiptCase = 0x4445_0001_0000_0003,
                 cbChargeItems = Array.Empty<ChargeItem>(),
                 cbPayItems = Array.Empty<PayItem>()
             };
-            TextView txt = FindViewById<TextView>(Resource.Id.txtStartReceiptResult);
+            TextView txt = FindViewById<TextView>(Resource.Id.txtSpecialReceiptResult);
 
-            if (_launcher == null)
-            {
-                txt.Text = "Please initialize launcher before sending requests.";
-                SetButtonEnabled(true);
-                return;
-            }
-
-            var pos = await _launcher.GetPOS();
+            var pos = await _serviceConnection.GetPOSAsync();
             var response = await pos.SignAsync(receiptRequest);
 
-            txt.Text = JsonConvert.SerializeObject(response);
-            SetButtonEnabled(true);
+            txt.Text = JsonConvert.SerializeObject(response, Formatting.Indented);
+            SetButtonsEnabled(true);
         }
 
-        private void SetButtonEnabled(bool state)
+        private async Task ButtonZeroReceiptOnClickAsync()
         {
-            FindViewById<Button>(Resource.Id.btnInitLauncher).Enabled = state;
-            FindViewById<Button>(Resource.Id.btnInitFiskalyLauncher).Enabled = state;
+            SetButtonsEnabled(false);
+            var receiptRequest = new ReceiptRequest
+            {
+                ftCashBoxID = "82d3d0ed-ff0b-4aeb-9f1b-389f7d6b5b14",
+                ftQueueID = "b80af2a1-b7f8-4aa4-938f-9043b3a5ae40",
+                ftPosSystemId = "d4a62055-ca6c-4372-ae4d-f835a88e4a5d",
+                cbTerminalID = "T1",
+                cbReceiptReference = "2020020120152812",
+                cbReceiptMoment = DateTime.UtcNow,
+                ftReceiptCaseData = "",
+                cbUser = "Receptionist",
+                cbArea = "System",
+                cbSettlement = "",
+                ftReceiptCase = 0x4445_0001_0000_0002,
+                cbChargeItems = Array.Empty<ChargeItem>(),
+                cbPayItems = Array.Empty<PayItem>()
+            };
+            TextView txt = FindViewById<TextView>(Resource.Id.txtSpecialReceiptResult);
+
+            var pos = await _serviceConnection.GetPOSAsync();
+            var response = await pos.SignAsync(receiptRequest);
+
+            txt.Text = JsonConvert.SerializeObject(response, Formatting.Indented);
+            SetButtonsEnabled(true);
+        }
+
+        private void SetButtonsEnabled(bool state)
+        {
             FindViewById<Button>(Resource.Id.btnSendEchoRequest).Enabled = state;
             FindViewById<Button>(Resource.Id.btnSendSignRequest).Enabled = state;
             FindViewById<Button>(Resource.Id.btnSendStartReceipt).Enabled = state;
+            FindViewById<Button>(Resource.Id.btnSendZeroReceipt).Enabled = state;
         }
     }
 }

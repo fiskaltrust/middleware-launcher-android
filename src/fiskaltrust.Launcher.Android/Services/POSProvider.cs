@@ -1,4 +1,5 @@
 ﻿using fiskaltrust.ifPOS.v1;
+using Java.Lang;
 using System;
 using System.Threading.Tasks;
 
@@ -16,9 +17,9 @@ namespace fiskaltrust.AndroidLauncher.Services
 
         public async Task<IPOS> GetPOSAsync()
         {
-            if(_pos == null)
+            if (_pos == null)
             {
-                await Task.Run(() => _launcher.StartFiskalyDemoAsync());
+                await _launcher.StartAsync();
                 _pos = await _launcher.GetPOS();
             }
 
