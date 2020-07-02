@@ -1,4 +1,5 @@
 ﻿using fiskaltrust.AndroidLauncher.Services.Configuration;
+using fiskaltrust.AndroidLauncher.Services.Helpers;
 using fiskaltrust.AndroidLauncher.Services.Queue;
 using fiskaltrust.AndroidLauncher.Services.SCU;
 using fiskaltrust.ifPOS.v1;
@@ -61,6 +62,8 @@ namespace fiskaltrust.AndroidLauncher
                     _defaultUrl = GetGrpcUrl(queueConfig);
                 await InitializeQueueAsync(queueConfig);
             }
+
+            await InitializeHelipadHelperAsync(configuration);
         }
 
         // If no URL is specified, the URL of the first queue is taken
@@ -107,6 +110,14 @@ namespace fiskaltrust.AndroidLauncher
             var pos = await Task.Run(() => queueProvider.CreatePOS(Environment.GetFolderPath(Environment.SpecialFolder.Personal), packageConfig));
 
             _posHost.StartService(url, pos);
+        }
+
+        private async Task InitializeHelipadHelperAsync(ftCashBoxConfiguration configuration)
+        {
+            var helipadHelperProvider = new HelipadHelperProvider();
+            var helper = await Task.Run(() => helipadHelperProvider.CreateHelper(configuration, _accessToken));
+            helper.StartBegin();
+            helper.StartEnd();
         }
 
         private static string GetGrpcUrl(PackageConfiguration packageConfig)
