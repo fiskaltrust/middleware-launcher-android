@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using fiskaltrust.storage.serialization.V0;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace fiskaltrust.AndroidLauncher.Services.Configuration
@@ -79,9 +79,9 @@ namespace fiskaltrust.AndroidLauncher.Services.Configuration
   ""TimeStamp"": 637173893392226560
 }";
 
-        public async Task<Dictionary<string, object>> GetCashboxConfigurationAsync(Guid cashboxId)
+        public Task<ftCashBoxConfiguration> GetCashboxConfigurationAsync(Guid cashboxId, string accessToken)
         {
-            return JsonConvert.DeserializeObject<Dictionary<string, object>>(CONFIG);
+            return Task.FromResult(JsonConvert.DeserializeObject<ftCashBoxConfiguration>(CONFIG));
         }
     }
 }

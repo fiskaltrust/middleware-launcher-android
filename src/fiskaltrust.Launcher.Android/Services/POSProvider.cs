@@ -1,5 +1,4 @@
 ﻿using fiskaltrust.ifPOS.v1;
-using Java.Lang;
 using System;
 using System.Threading.Tasks;
 
@@ -10,9 +9,9 @@ namespace fiskaltrust.AndroidLauncher.Services
         private readonly MiddlewareLauncher _launcher;
         private IPOS _pos;
 
-        public POSProvider()
+        public POSProvider(Guid cashboxId, string accessToken)
         {
-            _launcher = new MiddlewareLauncher(Guid.Empty);
+            _launcher = new MiddlewareLauncher(cashboxId, accessToken);
         }
 
         public async Task<IPOS> GetPOSAsync()

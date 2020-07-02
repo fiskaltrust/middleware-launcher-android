@@ -1,29 +1,25 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using Android.App;
 using Android.Support.V4.Content;
 using fiskaltrust.AndroidLauncher.Exceptions;
 using fiskaltrust.ifPOS.v1.de;
 using fiskaltrust.Middleware.SCU.DE.SwissbitAndroid;
+using fiskaltrust.storage.serialization.V0;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace fiskaltrust.AndroidLauncher.Services.SCU
 {
     class SwissbitScuProvider : IScuProvider
     {
-        public IDESSCD CreateSCU(Dictionary<string, object> scuConfiguration)
+        public IDESSCD CreateSCU(PackageConfiguration scuConfiguration)
         {
             var dir = InitializeTseAsync();
-
-            var scuConfig = new Dictionary<string, object>()
-            {
-                { "devicePath", dir }
-            };
+            scuConfiguration.Configuration["devicePath"] = dir;
 
             var bootstrapper = new ScuBootstrapper
             {
-                Configuration = scuConfig,
+                Configuration = scuConfiguration.Configuration,
             };
 
             var serviceCollection = new ServiceCollection();

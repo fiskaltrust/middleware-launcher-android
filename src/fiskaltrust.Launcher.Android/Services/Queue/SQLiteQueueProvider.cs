@@ -1,37 +1,39 @@
 ﻿using Android.App;
+using fiskaltrust.AndroidLauncher.Helpers;
 using fiskaltrust.AndroidLauncher.Services.Hosting;
 using fiskaltrust.ifPOS.v1;
 using fiskaltrust.ifPOS.v1.de;
 using fiskaltrust.Middleware.Abstractions;
 using fiskaltrust.Middleware.Queue.SQLite;
+using fiskaltrust.storage.serialization.V0;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 using System.IO;
 using System.Reflection;
 
 namespace fiskaltrust.AndroidLauncher.Services.Queue
 {
-    public class QueueProvider
+    public class SQLiteQueueProvider
     {
-        public IPOS CreatePOS(string workingDir, Dictionary<string, object> queueConfiguration)
+        public IPOS CreatePOS(string workingDir, PackageConfiguration queueConfiguration)
         {
             CopyMigrationsToDataDir();
 
-            var queueId = Guid.Parse(queueConfiguration["Id"].ToString());
-            var config = JsonConvert.DeserializeObject<Dictionary<string, object>>(JsonConvert.SerializeObject(queueConfiguration["Configuration"]));
-            config["servicefolder"] = workingDir;
+            queueConfiguration.Configuration["servicefolder"] = workingDir;
 
             var bootstrapper = new PosBootstrapper
             {
-                Configuration = config,
-                Id = queueId
+                Configuration = queueConfiguration.Configuration,
+                Id = queueConfiguration.Id
             };
 
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddSingleton<IClientFactory<IDESSCD>, DESSCDClientFactory>();
-            serviceCollection.AddLogging();
+            serviceCollection.AddLogging(builder =>
+            {
+                builder.Services.AddSingleton<ILoggerProvider, AndroidLoggerProvider>();
+            });
+
             bootstrapper.ConfigureServices(serviceCollection);
             return serviceCollection.BuildServiceProvider().GetRequiredService<IPOS>();
         }

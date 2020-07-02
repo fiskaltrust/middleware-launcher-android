@@ -2,9 +2,9 @@
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
-using Android.Util;
 using fiskaltrust.AndroidLauncher.Services;
 using fiskaltrust.ifPOS.v1;
+using System;
 using System.Threading.Tasks;
 
 namespace fiskaltrust.AndroidLauncher
@@ -19,16 +19,22 @@ namespace fiskaltrust.AndroidLauncher
         private IPOSProvider _posProvider;
 
         public IBinder Binder { get; private set; }
-        public override void OnCreate()
-        {
-            base.OnCreate();
-            Log.Debug(TAG, "OnCreate");
-            _posProvider = new POSProvider();
-        }
 
         public override IBinder OnBind(Intent intent)
         {
-            Log.Debug(TAG, "OnBind");
+            var cashboxIdString = intent.GetStringExtra("cashboxid");
+            var accesstoken = intent.GetStringExtra("accesstoken");
+
+            if(string.IsNullOrEmpty(cashboxIdString) || !Guid.TryParse(cashboxIdString, out var cashboxId))
+            {
+                throw new ArgumentException("The extra 'cashboxid' needs to be set in this intent.", "cashboxid");
+            }
+            if(string.IsNullOrEmpty(accesstoken))
+            {
+                throw new ArgumentException("The extra 'accesstoken' needs to be set in this intent.", "accesstoken");
+            }
+
+            _posProvider = new POSProvider(cashboxId, accesstoken);
             Binder = new POSProviderBinder(this);
             return Binder;
         }

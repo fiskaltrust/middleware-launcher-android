@@ -47,16 +47,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\AndroidLogger.cs" />
+    <Compile Include="Helpers\AndroidLoggerProvider.cs" />
     <Compile Include="MiddlewareLauncher.cs" />
     <Compile Include="Helpers\GrpcHelper.cs" />
     <Compile Include="Helpers\GrpcHost.cs" />
     <Compile Include="MiddlewareLauncherService.cs" />
+    <Compile Include="Services\Configuration\HelipadConfigurationProvider.cs" />
     <Compile Include="Services\Configuration\IConfigurationProvider.cs" />
     <Compile Include="Services\Hosting\DESSCDClientFactory.cs" />
     <Compile Include="Services\IPOSProvider.cs" />
     <Compile Include="Services\POSProvider.cs" />
     <Compile Include="Services\POSProviderBinder.cs" />
-    <Compile Include="Services\Queue\QueueProvider.cs" />
+    <Compile Include="Services\Queue\SQLiteQueueProvider.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Configuration\StaticConfigurationProvider.cs" />

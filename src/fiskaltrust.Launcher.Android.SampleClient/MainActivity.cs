@@ -16,6 +16,9 @@ namespace fiskaltrust.AndroidLauncher.SampleClient
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
     public class MainActivity : AppCompatActivity
     {
+        private const string CASHBOX_ID = "4481f82c-a167-4578-832f-a0948c22c3c4";
+        private const string ACCESS_TOKEN = "BDnVd83nE4yHdla1e92ecyGuFyMeyAVLt78ttMLPjsvPgUTzyjUlzX6LIP1wc14Bbsj2LVH3Dzqwucc763lGVDE=";
+
         private MiddlewareServiceConnection _serviceConnection;
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -35,8 +38,11 @@ namespace fiskaltrust.AndroidLauncher.SampleClient
                 _serviceConnection = new MiddlewareServiceConnection(this);
             }
 
-            Intent serviceToStart = new Intent(this, typeof(MiddlewareLauncherService));
-            BindService(serviceToStart, _serviceConnection, Bind.AutoCreate);
+            // Setup the Middleware background service
+            Intent intent = new Intent(this, typeof(MiddlewareLauncherService));
+            intent.PutExtra("cashboxid", CASHBOX_ID);
+            intent.PutExtra("accesstoken", ACCESS_TOKEN);
+            BindService(intent, _serviceConnection, Bind.AutoCreate);
             this.StartForegroundServiceCompat<MiddlewareLauncherService>();
         }
 
@@ -77,7 +83,7 @@ namespace fiskaltrust.AndroidLauncher.SampleClient
         {
             SetButtonsEnabled(false);
             TextView txt = FindViewById<TextView>(Resource.Id.txtResult);
-             
+
 
             var pos = await _serviceConnection.GetPOSAsync();
             var response = await pos.EchoAsync(new EchoRequest { Message = $"Hello World, it's {DateTime.Now}!" });
@@ -91,7 +97,7 @@ namespace fiskaltrust.AndroidLauncher.SampleClient
             SetButtonsEnabled(false);
             var receiptRequest = new ReceiptRequest
             {
-                ftCashBoxID = "82d3d0ed-ff0b-4aeb-9f1b-389f7d6b5b14",
+                ftCashBoxID = CASHBOX_ID,
                 ftReceiptCase = 0x4445_0001_0000_0000,
                 cbReceiptReference = Guid.NewGuid().ToString(),
                 cbChargeItems = Array.Empty<ChargeItem>(),
@@ -99,10 +105,17 @@ namespace fiskaltrust.AndroidLauncher.SampleClient
             };
             TextView txt = FindViewById<TextView>(Resource.Id.txtSignResult);
 
-            var pos = await _serviceConnection.GetPOSAsync();
-            var response = await pos.SignAsync(receiptRequest);
+            try
+            {
+                var pos = await _serviceConnection.GetPOSAsync();
+                var response = await pos.SignAsync(receiptRequest);
+                txt.Text = JsonConvert.SerializeObject(response, Formatting.Indented);
+            }
+            catch (System.Exception ex)
+            {
+                txt.Text = $"An exception was thrown: {ex}";
+            }
 
-            txt.Text = JsonConvert.SerializeObject(response, Formatting.Indented);
             SetButtonsEnabled(true);
         }
 
@@ -111,8 +124,7 @@ namespace fiskaltrust.AndroidLauncher.SampleClient
             SetButtonsEnabled(false);
             var receiptRequest = new ReceiptRequest
             {
-                ftCashBoxID = "82d3d0ed-ff0b-4aeb-9f1b-389f7d6b5b14",
-                ftQueueID = "b80af2a1-b7f8-4aa4-938f-9043b3a5ae40",
+                ftCashBoxID = CASHBOX_ID,
                 ftPosSystemId = "d4a62055-ca6c-4372-ae4d-f835a88e4a5d",
                 cbTerminalID = "T1",
                 cbReceiptReference = "2020020120152812",
@@ -127,10 +139,16 @@ namespace fiskaltrust.AndroidLauncher.SampleClient
             };
             TextView txt = FindViewById<TextView>(Resource.Id.txtSpecialReceiptResult);
 
-            var pos = await _serviceConnection.GetPOSAsync();
-            var response = await pos.SignAsync(receiptRequest);
-
-            txt.Text = JsonConvert.SerializeObject(response, Formatting.Indented);
+            try
+            {
+                var pos = await _serviceConnection.GetPOSAsync();
+                var response = await pos.SignAsync(receiptRequest);
+                txt.Text = JsonConvert.SerializeObject(response, Formatting.Indented);
+            }
+            catch (System.Exception ex)
+            {
+                txt.Text = $"An exception was thrown: {ex}";
+            }
             SetButtonsEnabled(true);
         }
 
@@ -139,8 +157,7 @@ namespace fiskaltrust.AndroidLauncher.SampleClient
             SetButtonsEnabled(false);
             var receiptRequest = new ReceiptRequest
             {
-                ftCashBoxID = "82d3d0ed-ff0b-4aeb-9f1b-389f7d6b5b14",
-                ftQueueID = "b80af2a1-b7f8-4aa4-938f-9043b3a5ae40",
+                ftCashBoxID = CASHBOX_ID,
                 ftPosSystemId = "d4a62055-ca6c-4372-ae4d-f835a88e4a5d",
                 cbTerminalID = "T1",
                 cbReceiptReference = "2020020120152812",
@@ -155,10 +172,17 @@ namespace fiskaltrust.AndroidLauncher.SampleClient
             };
             TextView txt = FindViewById<TextView>(Resource.Id.txtSpecialReceiptResult);
 
-            var pos = await _serviceConnection.GetPOSAsync();
-            var response = await pos.SignAsync(receiptRequest);
+            try
+            {
+                var pos = await _serviceConnection.GetPOSAsync();
+                var response = await pos.SignAsync(receiptRequest);
+                txt.Text = JsonConvert.SerializeObject(response, Formatting.Indented);
+            }
+            catch (System.Exception ex)
+            {
+                txt.Text = $"An exception was thrown: {ex}";
+            }
 
-            txt.Text = JsonConvert.SerializeObject(response, Formatting.Indented);
             SetButtonsEnabled(true);
         }
 
