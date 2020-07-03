@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using fiskaltrust.storage.serialization.V0;
+using System;
 using System.Threading.Tasks;
 
-namespace fiskaltrust.Launcher.Android
+namespace fiskaltrust.AndroidLauncher.Services.Configuration
 {
     internal interface IConfigurationProvider
     {
-        Task<Dictionary<string, object>> GetCashboxConfigurationAsync(Guid cashboxId);
+        Task<ftCashBoxConfiguration> GetCashboxConfigurationAsync(Guid cashboxId, string accessToken);
     }
 }

@@ -1,4 +1,4 @@
-﻿using fiskaltrust.ifPOS.v1.de;
+﻿using fiskaltrust.ifPOS.v1;
 using fiskaltrust.Middleware.Abstractions;
 using fiskaltrust.Middleware.Interface.Client;
 using fiskaltrust.Middleware.Interface.Client.Grpc;
@@ -6,11 +6,11 @@ using System;
 
 namespace fiskaltrust.AndroidLauncher.Services.Hosting
 {
-    internal class DESSCDClientFactory : IClientFactory<IDESSCD>
+    internal class POSClientFactory : IClientFactory<IPOS>
     {
         private const int DEFAULT_TIMEOUT_SEC = 70;
 
-        public IDESSCD CreateClient(ClientConfiguration configuration)
+        public IPOS CreateClient(ClientConfiguration configuration)
         {
             if (configuration == null)
             {
@@ -24,7 +24,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Hosting
                 Retries = 2
             };
 
-            return GrpcDESSCDFactory.CreateSSCDAsync(new GrpcClientOptions { Url = new Uri(configuration.Url), RetryPolicyOptions = retryPolicyoptions }).Result;
+            return GrpcPosFactory.CreatePosAsync(new GrpcClientOptions { Url = new Uri(configuration.Url), RetryPolicyOptions = retryPolicyoptions }).Result;
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace fiskaltrust.Launcher.Android.Exceptions
+namespace fiskaltrust.AndroidLauncher.Exceptions
 {
     [Serializable]
     public class RemountRequiredException : Exception

@@ -1,20 +1,17 @@
-﻿using System.Collections.Generic;
-using fiskaltrust.ifPOS.v1.de;
+﻿using fiskaltrust.ifPOS.v1.de;
 using fiskaltrust.Middleware.SCU.DE.Fiskaly;
+using fiskaltrust.storage.serialization.V0;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 
-namespace fiskaltrust.Launcher.Android.Services.SCU
+namespace fiskaltrust.AndroidLauncher.Services.SCU
 {
     class FiskalyScuProvider : IScuProvider
     {
-        public IDESSCD CreateSCU(Dictionary<string, object> scuConfiguration)
+        public IDESSCD CreateSCU(PackageConfiguration scuConfiguration)
         {
-            var scuConfig = JsonConvert.DeserializeObject<Dictionary<string, object>>(JsonConvert.SerializeObject(scuConfiguration["Configuration"]));
-
             var bootstrapper = new ScuBootstrapper
             {
-                Configuration = scuConfig,
+                Configuration = scuConfiguration.Configuration,
             };
 
             var serviceCollection = new ServiceCollection();

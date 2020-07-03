@@ -5,42 +5,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginHorizontal="10px"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_main"
     android:orientation="vertical">
 
-    <LinearLayout
-    android:layout_height="wrap_content" 
-    android:layout_width="match_parent" 
-    android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/btnInitLauncher"
-        android:layout_width="match_parent" 
-        android:layout_height="wrap_content" 
-        android:layout_weight="1" android:text="Init Swissbit"/>
+    
+    <TextView
+        android:layout_marginVertical="20px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="This is a sample application demonstrating the fiskaltrust.Middleware usage on Android.\nThe first operation will consume a bit more time, as the Middleware is initialized - subsequent calls will be fast and re-use the instance stored in the background service."
+        />
 
-        <Button
-            android:id="@+id/btnInitFiskalyLauncher"
-        android:layout_width="match_parent" 
-        android:layout_height="wrap_content" 
-        android:layout_weight="1" android:text="Init fiskaly (Demo)"/>
-    </LinearLayout>
-
-
+    <TextView
+        android:id="@+id/txtServiceStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text=""
+        />
 
     <Button
         android:id="@+id/btnSendEchoRequest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Send Echo Request"/>
+    
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="Echo Result: "
+        android:text="Echo result:"
+        android:textStyle="bold"
         />
+
     <TextView
         android:id="@+id/txtResult"
         android:layout_width="match_parent"
@@ -50,20 +51,35 @@
         />
 
 
-    <Button
-        android:id="@+id/btnSendStartReceipt"
-        android:layout_width="match_parent"
+    <LinearLayout
         android:layout_height="wrap_content"
-        android:text="Send start receipt"/>
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btnSendStartReceipt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Send start receipt"/>
+
+        <Button
+            android:id="@+id/btnSendZeroReceipt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Send zero receipt"/>
+    </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="Sign Result: "
+        android:text="Special receipt result: "
+        android:textStyle="bold"
         />
     <TextView
-        android:id="@+id/txtStartReceiptResult"
+        android:id="@+id/txtSpecialReceiptResult"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -80,7 +96,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="Sign Result: "
+        android:text="Sign result: "
+        android:textStyle="bold"
         />
     <TextView
         android:id="@+id/txtSignResult"
