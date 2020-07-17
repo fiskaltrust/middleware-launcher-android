@@ -47,6 +47,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\ContextExtensions.cs" />
+    <Compile Include="Extensions\ServiceCollectionExtensions.cs" />
     <Compile Include="Helpers\AndroidLogger.cs" />
     <Compile Include="Helpers\AndroidLoggerProvider.cs" />
     <Compile Include="MiddlewareLauncher.cs" />

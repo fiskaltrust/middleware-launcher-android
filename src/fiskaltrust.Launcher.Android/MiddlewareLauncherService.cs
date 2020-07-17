@@ -2,6 +2,7 @@
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
+using fiskaltrust.AndroidLauncher.Extensions;
 using fiskaltrust.AndroidLauncher.Services;
 using fiskaltrust.ifPOS.v1;
 using System;
@@ -68,5 +69,22 @@ namespace fiskaltrust.AndroidLauncher
         }
 
         public Task<IPOS> GetPOSAsync() => _posProvider.GetPOSAsync();
+
+        public static void Start(IServiceConnection serviceConnection, string cashboxId, string accessToken)
+        {
+            Intent intent = new Intent(Application.Context, typeof(MiddlewareLauncherService));
+            intent.PutExtra("cashboxid", cashboxId);
+            intent.PutExtra("accesstoken", accessToken);
+            Application.Context.BindService(intent, serviceConnection, Bind.AutoCreate);
+            Application.Context.StartForegroundServiceCompat<MiddlewareLauncherService>();
+        }
+
+        public static void Stop()
+        {
+            // TODO: helipad-upload
+
+            var intent = new Intent(Application.Context, typeof(MiddlewareLauncherService));
+            Application.Context.StopService(intent);
+        }
     }
 }

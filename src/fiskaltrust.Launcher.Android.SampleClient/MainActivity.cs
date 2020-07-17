@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Java.Lang;
 using fiskaltrust.AndroidLauncher.Exceptions;
 using Android.Content;
+using fiskaltrust.AndroidLauncher.Extensions;
 
 namespace fiskaltrust.AndroidLauncher.SampleClient
 {
@@ -32,18 +33,12 @@ namespace fiskaltrust.AndroidLauncher.SampleClient
             FindViewById<Button>(Resource.Id.btnSendStartReceipt).Click += new EventHandler(async (s, e) => await ButtonStartReceiptOnClickAsync());
             FindViewById<Button>(Resource.Id.btnSendZeroReceipt).Click += new EventHandler(async (s, e) => await ButtonZeroReceiptOnClickAsync());
 
-
             if (_serviceConnection == null)
             {
                 _serviceConnection = new MiddlewareServiceConnection(this);
             }
 
-            // Setup the Middleware background service
-            Intent intent = new Intent(this, typeof(MiddlewareLauncherService));
-            intent.PutExtra("cashboxid", CASHBOX_ID);
-            intent.PutExtra("accesstoken", ACCESS_TOKEN);
-            BindService(intent, _serviceConnection, Bind.AutoCreate);
-            this.StartForegroundServiceCompat<MiddlewareLauncherService>();
+            MiddlewareLauncherService.Start(_serviceConnection, CASHBOX_ID, ACCESS_TOKEN);
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)

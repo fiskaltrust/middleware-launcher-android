@@ -2,7 +2,7 @@
 using Android.Content;
 using Android.OS;
 
-namespace fiskaltrust.AndroidLauncher.SampleClient
+namespace fiskaltrust.AndroidLauncher.Extensions
 {
     public static class ContextExtensions
     {
