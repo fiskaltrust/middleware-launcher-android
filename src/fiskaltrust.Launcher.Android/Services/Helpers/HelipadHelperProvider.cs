@@ -30,12 +30,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Helpers
 
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddSingleton<IClientFactory<IPOS>, POSClientFactory>();
-            serviceCollection.AddLogging(builder =>
-            {
-                builder.Services.AddSingleton<ILoggerProvider, AndroidLoggerProvider>();
-                builder.AddConsole();
-                builder.SetMinimumLevel(LogLevel.Debug);
-            });
+            serviceCollection.AddLogCatLogging();
 
             bootstrapper.ConfigureServices(serviceCollection);
             return serviceCollection.BuildServiceProvider().GetRequiredService<IHelper>();
