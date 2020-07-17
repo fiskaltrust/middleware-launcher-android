@@ -10,7 +10,7 @@
     tools:showIn="@layout/activity_main"
     android:orientation="vertical">
 
-    
+
     <TextView
         android:layout_marginVertical="20px"
         android:layout_width="match_parent"
@@ -19,20 +19,48 @@
         android:text="This is a sample application demonstrating the fiskaltrust.Middleware usage on Android.\nThe first operation will consume a bit more time, as the Middleware is initialized - subsequent calls will be fast and re-use the instance stored in the background service."
         />
 
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btnStartService"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Start service"/>
+
+        <Button
+            android:id="@+id/btnStopService"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Stop service"/>
+    </LinearLayout>
+
     <TextView
         android:id="@+id/txtServiceStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text=""
+        android:gravity="center"        
         />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#D3D3D3"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="15dp"/>
 
     <Button
         android:id="@+id/btnSendEchoRequest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Send Echo Request"/>
-    
+
 
     <TextView
         android:layout_width="match_parent"

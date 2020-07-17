@@ -15,7 +15,7 @@ namespace fiskaltrust.AndroidLauncher.Services.SCU
             };
 
             var serviceCollection = new ServiceCollection();
-            serviceCollection.AddLogging();
+            serviceCollection.AddLogCatLogging();
             bootstrapper.ConfigureServices(serviceCollection);
             return serviceCollection.BuildServiceProvider().GetRequiredService<IDESSCD>();
         }

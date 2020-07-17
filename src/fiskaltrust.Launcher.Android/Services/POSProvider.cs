@@ -6,7 +6,7 @@ namespace fiskaltrust.AndroidLauncher.Services
 {
     class POSProvider : IPOSProvider
     {
-        private readonly MiddlewareLauncher _launcher;
+        private MiddlewareLauncher _launcher;
         private IPOS _pos;
 
         public POSProvider(Guid cashboxId, string accessToken)
@@ -24,5 +24,7 @@ namespace fiskaltrust.AndroidLauncher.Services
 
             return _pos;
         }
+
+        public async Task StopAsync() => await _launcher.StopAsync();
     }
 }

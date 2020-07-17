@@ -7,9 +7,6 @@ using System.Threading.Tasks;
 using fiskaltrust.ifPOS.v1;
 using Android.Widget;
 using Newtonsoft.Json;
-using Java.Lang;
-using fiskaltrust.AndroidLauncher.Exceptions;
-using Android.Content;
 
 namespace fiskaltrust.AndroidLauncher.SampleClient
 {
@@ -27,23 +24,19 @@ namespace fiskaltrust.AndroidLauncher.SampleClient
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
 
+            FindViewById<Button>(Resource.Id.btnStartService).Click += new EventHandler((s, e) => ButtonStartServiceOnClick());
+            FindViewById<Button>(Resource.Id.btnStopService).Click += new EventHandler((s, e) => ButtonStopServiceOnClick());
             FindViewById<Button>(Resource.Id.btnSendEchoRequest).Click += new EventHandler(async (s, e) => await ButtonEchoRequestOnClickAsync());
             FindViewById<Button>(Resource.Id.btnSendSignRequest).Click += new EventHandler(async (s, e) => await ButtonSignRequestOnClickAsync());
             FindViewById<Button>(Resource.Id.btnSendStartReceipt).Click += new EventHandler(async (s, e) => await ButtonStartReceiptOnClickAsync());
             FindViewById<Button>(Resource.Id.btnSendZeroReceipt).Click += new EventHandler(async (s, e) => await ButtonZeroReceiptOnClickAsync());
-
 
             if (_serviceConnection == null)
             {
                 _serviceConnection = new MiddlewareServiceConnection(this);
             }
 
-            // Setup the Middleware background service
-            Intent intent = new Intent(this, typeof(MiddlewareLauncherService));
-            intent.PutExtra("cashboxid", CASHBOX_ID);
-            intent.PutExtra("accesstoken", ACCESS_TOKEN);
-            BindService(intent, _serviceConnection, Bind.AutoCreate);
-            this.StartForegroundServiceCompat<MiddlewareLauncherService>();
+            MiddlewareLauncherService.Start(_serviceConnection, CASHBOX_ID, ACCESS_TOKEN);
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)
@@ -79,11 +72,22 @@ namespace fiskaltrust.AndroidLauncher.SampleClient
             SetButtonsEnabled(true);
         }
 
+        private void ButtonStartServiceOnClick()
+        {
+            MiddlewareLauncherService.Start(_serviceConnection, CASHBOX_ID, ACCESS_TOKEN);
+            SetButtonsEnabled(true);
+        }
+
+        private void ButtonStopServiceOnClick()
+        {
+            SetButtonsEnabled(false);
+            MiddlewareLauncherService.Stop(_serviceConnection);
+        }
+
         private async Task ButtonEchoRequestOnClickAsync()
         {
             SetButtonsEnabled(false);
             TextView txt = FindViewById<TextView>(Resource.Id.txtResult);
-
 
             var pos = await _serviceConnection.GetPOSAsync();
             var response = await pos.EchoAsync(new EchoRequest { Message = $"Hello World, it's {DateTime.Now}!" });

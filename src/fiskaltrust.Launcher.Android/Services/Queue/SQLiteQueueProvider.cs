@@ -18,7 +18,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Queue
         public IPOS CreatePOS(string workingDir, PackageConfiguration queueConfiguration)
         {
             CopyMigrationsToDataDir();
-
+            
             queueConfiguration.Configuration["servicefolder"] = workingDir;
 
             var bootstrapper = new PosBootstrapper
@@ -29,10 +29,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Queue
 
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddSingleton<IClientFactory<IDESSCD>, DESSCDClientFactory>();
-            serviceCollection.AddLogging(builder =>
-            {
-                builder.Services.AddSingleton<ILoggerProvider, AndroidLoggerProvider>();
-            });
+            serviceCollection.AddLogCatLogging();
 
             bootstrapper.ConfigureServices(serviceCollection);
             return serviceCollection.BuildServiceProvider().GetRequiredService<IPOS>();

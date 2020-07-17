@@ -61,7 +61,6 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="MiddlewareServiceConnection.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
