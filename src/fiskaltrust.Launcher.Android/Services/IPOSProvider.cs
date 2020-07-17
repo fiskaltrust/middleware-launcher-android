@@ -6,5 +6,6 @@ namespace fiskaltrust.AndroidLauncher.Services
     public interface IPOSProvider
     {
         Task<IPOS> GetPOSAsync();
+        Task StopAsync();
     }
 }

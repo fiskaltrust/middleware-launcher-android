@@ -21,11 +21,14 @@ namespace fiskaltrust.AndroidLauncher
 
         private readonly Guid _cashboxId;
         private readonly string _accessToken;
-        private IConfigurationProvider _configurationProvider;
-        private readonly GrpcHost _posHost;
-        private readonly GrpcHost _scuHost;
+        private readonly IConfigurationProvider _configurationProvider;
+
+        private GrpcHost _posHost;
+        private GrpcHost _scuHost;
 
         private string _defaultUrl = null;
+
+        public bool IsRunning { get; set; }
 
         public MiddlewareLauncher(Guid cashboxId, string accessToken)
         {
@@ -33,12 +36,13 @@ namespace fiskaltrust.AndroidLauncher
             _accessToken = accessToken;
 
             _configurationProvider = new HelipadConfigurationProvider();
-            _posHost = new GrpcHost();
-            _scuHost = new GrpcHost();
         }
 
         public async Task StartAsync()
         {
+            _posHost = new GrpcHost();
+            _scuHost = new GrpcHost();
+
             var configuration = await _configurationProvider.GetCashboxConfigurationAsync(_cashboxId, _accessToken);
 
             foreach (var scuConfig in configuration.ftSignaturCreationDevices)
@@ -64,6 +68,24 @@ namespace fiskaltrust.AndroidLauncher
             }
 
             await InitializeHelipadHelperAsync(configuration);
+
+            IsRunning = true;
+        }
+
+        public async Task StopAsync()
+        {
+            if (_posHost != null)
+            {
+                await _posHost.ShutdownAsync();
+                _posHost.Dispose();
+            }
+            if (_scuHost != null)
+            {
+                await _scuHost.ShutdownAsync();
+                _scuHost.Dispose();
+            }
+
+            IsRunning = false;
         }
 
         // If no URL is specified, the URL of the first queue is taken

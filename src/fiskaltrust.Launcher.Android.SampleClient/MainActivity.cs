@@ -7,10 +7,6 @@ using System.Threading.Tasks;
 using fiskaltrust.ifPOS.v1;
 using Android.Widget;
 using Newtonsoft.Json;
-using Java.Lang;
-using fiskaltrust.AndroidLauncher.Exceptions;
-using Android.Content;
-using fiskaltrust.AndroidLauncher.Extensions;
 
 namespace fiskaltrust.AndroidLauncher.SampleClient
 {
@@ -28,6 +24,8 @@ namespace fiskaltrust.AndroidLauncher.SampleClient
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
 
+            FindViewById<Button>(Resource.Id.btnStartService).Click += new EventHandler((s, e) => ButtonStartServiceOnClick());
+            FindViewById<Button>(Resource.Id.btnStopService).Click += new EventHandler((s, e) => ButtonStopServiceOnClick());
             FindViewById<Button>(Resource.Id.btnSendEchoRequest).Click += new EventHandler(async (s, e) => await ButtonEchoRequestOnClickAsync());
             FindViewById<Button>(Resource.Id.btnSendSignRequest).Click += new EventHandler(async (s, e) => await ButtonSignRequestOnClickAsync());
             FindViewById<Button>(Resource.Id.btnSendStartReceipt).Click += new EventHandler(async (s, e) => await ButtonStartReceiptOnClickAsync());
@@ -74,11 +72,22 @@ namespace fiskaltrust.AndroidLauncher.SampleClient
             SetButtonsEnabled(true);
         }
 
+        private void ButtonStartServiceOnClick()
+        {
+            MiddlewareLauncherService.Start(_serviceConnection, CASHBOX_ID, ACCESS_TOKEN);
+            SetButtonsEnabled(true);
+        }
+
+        private void ButtonStopServiceOnClick()
+        {
+            SetButtonsEnabled(false);
+            MiddlewareLauncherService.Stop(_serviceConnection);
+        }
+
         private async Task ButtonEchoRequestOnClickAsync()
         {
             SetButtonsEnabled(false);
             TextView txt = FindViewById<TextView>(Resource.Id.txtResult);
-
 
             var pos = await _serviceConnection.GetPOSAsync();
             var response = await pos.EchoAsync(new EchoRequest { Message = $"Hello World, it's {DateTime.Now}!" });

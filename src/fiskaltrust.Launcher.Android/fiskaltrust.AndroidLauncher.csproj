@@ -51,6 +51,7 @@
     <Compile Include="Extensions\ServiceCollectionExtensions.cs" />
     <Compile Include="Helpers\AndroidLogger.cs" />
     <Compile Include="Helpers\AndroidLoggerProvider.cs" />
+    <Compile Include="IMiddlewareServiceConnection.cs" />
     <Compile Include="MiddlewareLauncher.cs" />
     <Compile Include="Helpers\GrpcHelper.cs" />
     <Compile Include="Helpers\GrpcHost.cs" />

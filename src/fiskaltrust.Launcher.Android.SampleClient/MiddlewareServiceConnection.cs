@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace fiskaltrust.AndroidLauncher.SampleClient
 {
-    public class MiddlewareServiceConnection : Java.Lang.Object, IServiceConnection, IPOSProvider
+    public class MiddlewareServiceConnection : Java.Lang.Object, IMiddlewareServiceConnection, IPOSProvider
     {
         private static readonly string TAG = typeof(MiddlewareServiceConnection).FullName;
         private readonly MainActivity _mainActivity;
@@ -40,9 +40,7 @@ namespace fiskaltrust.AndroidLauncher.SampleClient
         public void OnServiceDisconnected(ComponentName name)
         {
             Log.Debug(TAG, $"OnServiceDisconnected {name.ClassName}");
-            IsConnected = false;
-            Binder = null;
-            _mainActivity.UpdateUiForUnboundService();
+            OnManualDisconnect();
         }
 
         public Task<IPOS> GetPOSAsync()
@@ -54,5 +52,14 @@ namespace fiskaltrust.AndroidLauncher.SampleClient
 
             return Binder?.Service.GetPOSAsync();
         }
+
+        public void OnManualDisconnect()
+        {
+            IsConnected = false;
+            Binder = null;
+            _mainActivity.UpdateUiForUnboundService();
+        }
+
+        public Task StopAsync() => Binder?.Service.StopAsync();
     }
 }
