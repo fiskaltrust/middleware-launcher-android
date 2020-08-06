@@ -23,7 +23,7 @@ steps:
     projectFile: '**/*droid*.csproj'
     outputDirectory: '$(outputDirectory)'
     configuration: '$(buildConfiguration)'
-    msbuildArguments: '-restore'
+    msbuildArguments: '-restore -verbosity=detailed'
     jdkOption: 'JDKVersion'
 
 - task: CopyFiles@2
