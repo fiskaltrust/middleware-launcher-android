@@ -25,7 +25,6 @@ steps:
     configuration: '$(buildConfiguration)'
     msbuildVersionOption: 'latest'
     jdkOption: 'JDKVersion'
-  continueOnError: true
 
 - task: CopyFiles@2
   inputs:
