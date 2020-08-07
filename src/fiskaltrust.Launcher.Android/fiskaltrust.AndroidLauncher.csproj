@@ -44,7 +44,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Private.ServiceModel">
-      <HintPath>$(NuGetPackageRoot)\system.private.servicemodel\4.5.3\runtimes\win\lib\netstandard2.0\System.Private.ServiceModel.dll</HintPath>
+      <HintPath>lib\System.Private.ServiceModel.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
@@ -139,9 +139,6 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console">
       <Version>3.1.4</Version>
     </PackageReference>
-    <PackageReference Include="System.Private.ServiceModel">
-      <Version>4.5.3</Version>
-    </PackageReference>
     <PackageReference Include="System.ServiceModel.Syndication">
       <Version>4.5.0</Version>
     </PackageReference>
@@ -152,6 +149,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\ft_notification.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="lib\System.Private.ServiceModel.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
