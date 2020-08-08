@@ -1,16 +1,18 @@
-﻿//using Android.App;
-//using Android.Content;
-//using fiskaltrust.AndroidLauncher.Common;
+﻿using Android.App;
+using Android.Content;
+using Android.Widget;
+using fiskaltrust.AndroidLauncher.Common;
 
-//namespace fiskaltrust.AndroidLauncher
-//{
-//    [BroadcastReceiver(Enabled = true, Name = "eu.fiskaltrust.AndroidLauncher.Stop")]
-//    [IntentFilter(new[] { "eu.fiskaltrust.AndroidLauncher.Stop" })]
-//    public class StopLauncherBroadcastReceiver : BroadcastReceiver
-//    {
-//        public override void OnReceive(Context context, Intent intent)
-//        {
-//            MiddlewareLauncherService.Stop(ServiceConnectionProvider.GetConnection());
-//        }
-//    }
-//}
+namespace fiskaltrust.AndroidLauncher
+{
+    [BroadcastReceiver(Enabled = true, Exported = true, Name = "eu.fiskaltrust.androidlauncher.Stop")]
+    [IntentFilter(new[] { Intent.ActionSend }, Categories = new[] { Intent.CategoryDefault })]
+    public class StopLauncherBroadcastReceiver : BroadcastReceiver
+    {
+        public override void OnReceive(Context context, Intent intent)
+        {
+            MiddlewareLauncherService.Stop(ServiceConnectionProvider.GetConnection());
+            Toast.MakeText(context, $"fiskaltrust Middleware stopped.", ToastLength.Long).Show();
+        }
+    }
+}
