@@ -4,11 +4,7 @@
     <TargetFramework>MonoAndroid90</TargetFramework>
     <AssemblyName>fiskaltrust.AndroidLauncher.Common</AssemblyName>
     <RootNamespace>fiskaltrust.AndroidLauncher.Common</RootNamespace>
-
-    <!--<EnableDefaultCompileItems>false</EnableDefaultCompileItems>-->
-
-    <DefineConstants>$(DefineConstants);</DefineConstants>
-
+    <AndroidUseManagedDesignTimeResourceGenerator>False</AndroidUseManagedDesignTimeResourceGenerator>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
@@ -23,7 +19,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
-  <ItemGroup>    
+  <ItemGroup>
     <AndroidResource Include="Resources\**\*.axml" />
     <AndroidResource Include="Resources\**\*.xml" />
     <AndroidResource Include="Resources\**\*.png" />

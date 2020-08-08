@@ -64,6 +64,6 @@ namespace fiskaltrust.AndroidLauncher.Common
             _onUnbound?.Invoke();
         }
 
-        public Task StopAsync() => Binder?.Service.StopAsync();
+        public async Task StopAsync() => await Binder?.Service.StopAsync();
     }
 }
