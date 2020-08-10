@@ -20,6 +20,7 @@ namespace fiskaltrust.AndroidLauncher.Common
         private readonly Guid _cashboxId;
         private readonly string _accessToken;
         private readonly IConfigurationProvider _configurationProvider;
+        private readonly ILocalConfigurationProvider _localConfigurationProvider;
 
         private GrpcHost _posHost;
         private GrpcHost _scuHost;
@@ -34,6 +35,7 @@ namespace fiskaltrust.AndroidLauncher.Common
             _accessToken = accessToken;
 
             _configurationProvider = new HelipadConfigurationProvider();
+            _localConfigurationProvider = new LocalConfigurationProvider();
         }
 
         public async Task StartAsync()
@@ -41,7 +43,16 @@ namespace fiskaltrust.AndroidLauncher.Common
             _posHost = new GrpcHost();
             _scuHost = new GrpcHost();
 
-            var configuration = await _configurationProvider.GetCashboxConfigurationAsync(_cashboxId, _accessToken);
+            ftCashBoxConfiguration configuration;
+            try
+            {
+                configuration = await _configurationProvider.GetCashboxConfigurationAsync(_cashboxId, _accessToken);
+                await _localConfigurationProvider.PersistAsync(_cashboxId, configuration);
+            }
+            catch (Exception)
+            {
+                configuration = await _localConfigurationProvider.GetCashboxConfigurationAsync(_cashboxId, _accessToken);
+            }            
 
             foreach (var scuConfig in configuration.ftSignaturCreationDevices)
             {

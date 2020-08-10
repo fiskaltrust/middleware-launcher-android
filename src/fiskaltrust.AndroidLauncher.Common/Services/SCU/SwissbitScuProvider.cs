@@ -47,7 +47,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
                 File.Create(triggerFile).Dispose();
             }
 
-            throw new RemountRequiredException("First call an uninitialized TSE; please either remount the SD card, or restart your device.");
+            throw new RemountRequiredException("First call to an uninitialized TSE; please either remount the SD card, or restart your device.");
         }
     }
 }

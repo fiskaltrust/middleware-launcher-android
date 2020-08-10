@@ -1,8 +1,10 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.OS;
+using Android.Util;
 using Android.Widget;
 using fiskaltrust.AndroidLauncher.Common;
+using fiskaltrust.AndroidLauncher.Common.Exceptions;
 using System.Threading.Tasks;
 
 namespace fiskaltrust.AndroidLauncher
@@ -13,20 +15,38 @@ namespace fiskaltrust.AndroidLauncher
     {
         public override void OnReceive(Context context, Intent intent)
         {
-            var cashboxId = intent.GetStringExtra("cashboxid");
-            var accessToken = intent.GetStringExtra("accesstoken");
+            //var cashboxId = intent.GetStringExtra("cashboxid");
+            //var accessToken = intent.GetStringExtra("accesstoken");
+
+            var cashboxId = "bbe826c1-f6d3-4cd9-9ac2-af9acfab300b";
+            var accessToken = "BNsgpihE1twvA13mC3i1/iUBprvCv2wJMDmMw0X653wO1AhN8BFtiNpLX5q490ArUBiIiV8JS9JOCu0S9cOIfAk=";
 
             Toast.MakeText(context, $"Starting fiskaltrust Middleware with cashbox '{cashboxId}'. Initializing might take up to 45 seconds, depending on the TSE.", ToastLength.Long).Show();
             MiddlewareLauncherService.Start(ServiceConnectionProvider.GetConnection(), cashboxId, accessToken);
 
             Task.Run(async () =>
             {
-                await Task.Delay(3000);
-                // Call once to initialize Middleware. Will be replaced with a cleaner approach soon.
-                await ServiceConnectionProvider.GetConnection().GetPOSAsync();
-                System.Console.WriteLine();
+                try
+                {
+                    await Task.Delay(1000);
 
-                new Handler(Looper.MainLooper).Post(() => Toast.MakeText(context, $"Successfully started the fiskaltrust Middleware.", ToastLength.Long).Show());
+                    // Call once to initialize Middleware. Will be replaced with a cleaner approach soon.
+                    await ServiceConnectionProvider.GetConnection().GetPOSAsync();
+
+                    new Handler(Looper.MainLooper).Post(() => Toast.MakeText(context, $"Successfully started the fiskaltrust Middleware.", ToastLength.Long).Show());
+                    MiddlewareLauncherService.SetState(LauncherState.Connected);
+                }
+                catch (System.Exception ex)
+                {
+                    Log.Error("fiskaltrust.AndroidLauncher", ex.ToString());
+
+                    if (ex is RemountRequiredException remountRequiredEx)
+                        MiddlewareLauncherService.SetState(LauncherState.Error, remountRequiredEx.Message);
+                    else if (ex is ConfigurationNotFoundException confNotFoundEx)
+                        MiddlewareLauncherService.SetState(LauncherState.Error, confNotFoundEx.Message);
+                    else
+                        MiddlewareLauncherService.SetState(LauncherState.Error);
+                }
             });
         }
     }

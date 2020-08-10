@@ -13,7 +13,7 @@ namespace fiskaltrust.AndroidLauncher.Common
     [Service(Name = "eu.fiskaltrust.MiddlewareLauncherService")]
     public class MiddlewareLauncherService : Service, IPOSProvider
     {
-        private const int SERVICE_RUNNING_NOTIFICATION_ID = 0x66746d77;
+        private const int NOTIFICATION_ID = 0x66746d77;
         private const string NOTIFICATION_CHANNEL_ID = "eu.fiskaltrust.launcher.android";
 
         private IPOSProvider _posProvider;
@@ -42,15 +42,10 @@ namespace fiskaltrust.AndroidLauncher.Common
         [return: GeneratedEnum]
         public override StartCommandResult OnStartCommand(Intent intent, [GeneratedEnum] StartCommandFlags flags, int startId)
         {
-            var channelId = CreateNotificationChannel();
-            var builder = new Notification.Builder(this, channelId)
-               .SetContentTitle(Resources.GetString(Resource.String.app_name))
-               .SetContentText("The fiskaltrust Middleware.Launcher is running.")
-               .SetCategory(Notification.CategoryService)
-               .SetSmallIcon(Resource.Drawable.ft_notification)
-               .SetOngoing(true);
+            CreateNotificationChannel();           
+            var notification = GetNotification(LauncherState.NotConnected);
 
-            StartForeground(SERVICE_RUNNING_NOTIFICATION_ID, builder.Build());
+            StartForeground(NOTIFICATION_ID, notification);
 
             return base.OnStartCommand(intent, flags, startId);
         }
@@ -71,21 +66,9 @@ namespace fiskaltrust.AndroidLauncher.Common
             base.OnDestroy();
         }
 
-        private string CreateNotificationChannel()
-        {
-            NotificationChannel chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "fiskaltrust Middleware", NotificationImportance.Default)
-            {
-                Description = "The fiskaltrust Middleware"
-            };
-            NotificationManager manager = (NotificationManager)this.GetSystemService(NotificationService);
-            manager.CreateNotificationChannel(chan);
-
-            return NOTIFICATION_CHANNEL_ID;
-        }
-
         public Task<IPOS> GetPOSAsync() => _posProvider.GetPOSAsync();
 
-        public Task StopPOSAsync() => _posProvider.StopAsync();
+        public Task StopAsync() => _posProvider.StopAsync();
 
         public static void Start(IMiddlewareServiceConnection serviceConnection, string cashboxId, string accessToken)
         {
@@ -112,7 +95,50 @@ namespace fiskaltrust.AndroidLauncher.Common
             }
         }
 
-        public Task StopAsync() => _posProvider.StopAsync();
+        public static void SetState(LauncherState state, string contentText = null)
+        {
+            var notification = GetNotification(state, contentText);
+            var manager = (NotificationManager)Application.Context.GetSystemService(NotificationService);
+            manager.Notify(NOTIFICATION_ID, notification);
+        }
+
+        private static Notification GetNotification(LauncherState state, string contentText = null)
+        {
+            var icon = state switch
+            {
+                LauncherState.NotConnected => Resource.Drawable.ft_notification_notconnected,
+                LauncherState.Connected => Resource.Drawable.ft_notification_connected,
+                LauncherState.Error => Resource.Drawable.ft_notification_error,
+                _ => throw new NotImplementedException(),
+            };
+            var text = state switch
+            {
+                LauncherState.NotConnected => "The fiskaltrust Middleware is on standby. Starting will take a few seconds, depending on the TSE.",
+                LauncherState.Connected => "The fiskaltrust Middleware is running.",
+                LauncherState.Error => "An error occured in the fiskaltrust Middleware. Please restart it.",
+                _ => throw new NotImplementedException(),
+            };
+            if (contentText != null)
+                text = contentText;
+
+            var builder = new Notification.Builder(Application.Context, NOTIFICATION_CHANNEL_ID)
+              .SetContentTitle(Application.Context.Resources.GetString(Resource.String.app_name))
+              .SetContentText(text)
+              .SetCategory(Notification.CategoryService)
+              .SetSmallIcon(icon)
+              .SetOngoing(true);
+            return builder.Build();
+        }
+
+        private static void CreateNotificationChannel()
+        {
+            var channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "fiskaltrust Middleware", NotificationImportance.Default)
+            {
+                Description = "The fiskaltrust Middleware"
+            };
+            var manager = (NotificationManager)Application.Context.GetSystemService(NotificationService);
+            manager.CreateNotificationChannel(channel);
+        }
 
         private static bool IsRunning(Type type)
         {
