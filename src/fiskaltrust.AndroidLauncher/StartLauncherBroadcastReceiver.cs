@@ -15,11 +15,8 @@ namespace fiskaltrust.AndroidLauncher
     {
         public override void OnReceive(Context context, Intent intent)
         {
-            //var cashboxId = intent.GetStringExtra("cashboxid");
-            //var accessToken = intent.GetStringExtra("accesstoken");
-
-            var cashboxId = "bbe826c1-f6d3-4cd9-9ac2-af9acfab300b";
-            var accessToken = "BNsgpihE1twvA13mC3i1/iUBprvCv2wJMDmMw0X653wO1AhN8BFtiNpLX5q490ArUBiIiV8JS9JOCu0S9cOIfAk=";
+            var cashboxId = intent.GetStringExtra("cashboxid");
+            var accessToken = intent.GetStringExtra("accesstoken");
 
             Toast.MakeText(context, $"Starting fiskaltrust Middleware with cashbox '{cashboxId}'. Initializing might take up to 45 seconds, depending on the TSE.", ToastLength.Long).Show();
             MiddlewareLauncherService.Start(ServiceConnectionProvider.GetConnection(), cashboxId, accessToken);
