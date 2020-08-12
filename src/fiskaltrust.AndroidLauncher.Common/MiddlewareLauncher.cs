@@ -19,6 +19,7 @@ namespace fiskaltrust.AndroidLauncher.Common
 
         private readonly Guid _cashboxId;
         private readonly string _accessToken;
+        private readonly bool _isSandbox;
         private readonly IConfigurationProvider _configurationProvider;
         private readonly ILocalConfigurationProvider _localConfigurationProvider;
 
@@ -29,10 +30,11 @@ namespace fiskaltrust.AndroidLauncher.Common
 
         public bool IsRunning { get; set; }
 
-        public MiddlewareLauncher(Guid cashboxId, string accessToken)
+        public MiddlewareLauncher(Guid cashboxId, string accessToken, bool isSandbox)
         {
             _cashboxId = cashboxId;
             _accessToken = accessToken;
+            _isSandbox = isSandbox;
 
             _configurationProvider = new HelipadConfigurationProvider();
             _localConfigurationProvider = new LocalConfigurationProvider();
@@ -56,6 +58,7 @@ namespace fiskaltrust.AndroidLauncher.Common
 
             foreach (var scuConfig in configuration.ftSignaturCreationDevices)
             {
+                scuConfig.Configuration["sandbox"] = _isSandbox;
                 switch (scuConfig.Package)
                 {
                     case PACKAGE_NAME_SWISSBIT:
@@ -71,6 +74,8 @@ namespace fiskaltrust.AndroidLauncher.Common
 
             foreach (var queueConfig in configuration.ftQueues)
             {
+                queueConfig.Configuration["sandbox"] = _isSandbox;
+
                 if (_defaultUrl == null)
                     _defaultUrl = GetGrpcUrl(queueConfig);
                 await InitializeQueueAsync(queueConfig);
@@ -146,7 +151,7 @@ namespace fiskaltrust.AndroidLauncher.Common
         private async Task InitializeHelipadHelperAsync(ftCashBoxConfiguration configuration)
         {
             var helipadHelperProvider = new HelipadHelperProvider();
-            var helper = await Task.Run(() => helipadHelperProvider.CreateHelper(configuration, _accessToken));
+            var helper = await Task.Run(() => helipadHelperProvider.CreateHelper(configuration, _accessToken, _isSandbox));
             helper.StartBegin();
             helper.StartEnd();
         }

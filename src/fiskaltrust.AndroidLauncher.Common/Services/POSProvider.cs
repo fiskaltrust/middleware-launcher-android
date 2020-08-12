@@ -9,9 +9,9 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
         private MiddlewareLauncher _launcher;
         private IPOS _pos;
 
-        public POSProvider(Guid cashboxId, string accessToken)
+        public POSProvider(Guid cashboxId, string accessToken, bool isSandbox)
         {
-            _launcher = new MiddlewareLauncher(cashboxId, accessToken);
+            _launcher = new MiddlewareLauncher(cashboxId, accessToken, isSandbox);
         }
 
         public async Task<IPOS> GetPOSAsync()

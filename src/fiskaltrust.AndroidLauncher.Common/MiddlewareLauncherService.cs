@@ -24,8 +24,9 @@ namespace fiskaltrust.AndroidLauncher.Common
         {
             var cashboxIdString = intent.GetStringExtra("cashboxid");
             var accesstoken = intent.GetStringExtra("accesstoken");
+            var isSandbox = bool.TryParse(intent.GetStringExtra("sandbox"), out var val) && val;
 
-            if(string.IsNullOrEmpty(cashboxIdString) || !Guid.TryParse(cashboxIdString, out var cashboxId))
+            if (string.IsNullOrEmpty(cashboxIdString) || !Guid.TryParse(cashboxIdString, out var cashboxId))
             {
                 throw new ArgumentException("The extra 'cashboxid' needs to be set in this intent.", "cashboxid");
             }
@@ -34,7 +35,7 @@ namespace fiskaltrust.AndroidLauncher.Common
                 throw new ArgumentException("The extra 'accesstoken' needs to be set in this intent.", "accesstoken");
             }
 
-            _posProvider = new POSProvider(cashboxId, accesstoken);
+            _posProvider = new POSProvider(cashboxId, accesstoken, isSandbox);
             Binder = new POSProviderBinder(this);
             return Binder;
         }
@@ -70,13 +71,14 @@ namespace fiskaltrust.AndroidLauncher.Common
 
         public Task StopAsync() => _posProvider.StopAsync();
 
-        public static void Start(IMiddlewareServiceConnection serviceConnection, string cashboxId, string accessToken)
+        public static void Start(IMiddlewareServiceConnection serviceConnection, string cashboxId, string accessToken, bool isSandbox)
         {
             if (!IsRunning(typeof(MiddlewareLauncherService)))
             {
                 var intent = new Intent(Application.Context, typeof(MiddlewareLauncherService));
                 intent.PutExtra("cashboxid", cashboxId);
                 intent.PutExtra("accesstoken", accessToken);
+                intent.PutExtra("sandbox", isSandbox);
                 Application.Context.BindService(intent, serviceConnection, Bind.AutoCreate);
                 Application.Context.StartForegroundServiceCompat<MiddlewareLauncherService>();
             }

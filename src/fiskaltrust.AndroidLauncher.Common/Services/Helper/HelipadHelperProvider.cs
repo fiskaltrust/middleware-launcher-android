@@ -12,15 +12,17 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.Helper
 {
     public class HelipadHelperProvider
     {
-        private const string HELIPAD_URL = "https://helipad-sandbox.fiskaltrust.cloud/";
+        private const string HELIPAD_URL = "https://helipad.fiskaltrust.cloud/";
+        private const string HELIPAD_URL_SANDBOX = "https://helipad-sandbox.fiskaltrust.cloud/";
 
-        public IHelper CreateHelper(ftCashBoxConfiguration cashBoxConfiguration, string accessToken)
+        public IHelper CreateHelper(ftCashBoxConfiguration cashBoxConfiguration, string accessToken, bool isSandbox)
         {
             var config = new Dictionary<string, object>();
             config["cashboxid"] = cashBoxConfiguration.ftCashBoxId;
             config["accesstoken"] = accessToken;
             config["configuration"] = JsonConvert.SerializeObject(cashBoxConfiguration);
-            config["server"] = HELIPAD_URL;
+            config["server"] = isSandbox ? HELIPAD_URL_SANDBOX : HELIPAD_URL;
+            config["sandbox"] = isSandbox;
 
             var bootstrapper = new HelperBootstrapper
             {
