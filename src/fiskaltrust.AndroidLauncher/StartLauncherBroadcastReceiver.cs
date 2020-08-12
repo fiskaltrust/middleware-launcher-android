@@ -20,7 +20,6 @@ namespace fiskaltrust.AndroidLauncher
 
             Toast.MakeText(context, $"Starting fiskaltrust Middleware with cashbox '{cashboxId}'. Initializing might take up to 45 seconds, depending on the TSE.", ToastLength.Long).Show();
             MiddlewareLauncherService.Start(ServiceConnectionProvider.GetConnection(), cashboxId, accessToken);
-
             Task.Run(async () =>
             {
                 try
