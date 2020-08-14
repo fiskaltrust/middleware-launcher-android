@@ -5,11 +5,16 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  buildConfiguration: 'Debug'
+  buildConfiguration: 'Release'
   outputDirectory: '$(build.binariesDirectory)/$(buildConfiguration)'
 
 steps:
 - task: NuGetToolInstaller@1
+
+- task: yavt@1
+  inputs:
+    pathToVersionJson: 'version.json'
+    semverVersion: 'v1'
 
 - task: NuGetCommand@2
   inputs:
@@ -32,4 +37,7 @@ steps:
     targetFolder: '$(build.artifactStagingDirectory)'
     flattenFolders: true
 
+- powershell: 
+    Rename-Item -Path "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.apk" -NewName "eu.fiskaltrust.androidlauncher.$(Build.BuildNumber).apk"
+    
 - task: PublishBuildArtifacts@1
