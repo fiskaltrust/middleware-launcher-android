@@ -37,4 +37,7 @@ steps:
     targetFolder: '$(build.artifactStagingDirectory)'
     flattenFolders: true
 
+- powershell: 
+    Rename-Item -Path "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.apk" -NewName "eu.fiskaltrust.androidlauncher.$(Build.BuildNumber).apk"
+    
 - task: PublishBuildArtifacts@1
