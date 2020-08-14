@@ -63,13 +63,13 @@ namespace fiskaltrust.AndroidLauncher.Common
             }
 
             StopSelf();
-            StopAsync().Wait();
+            Task.Run(() => StopAsync()).Wait();
             base.OnDestroy();
         }
 
-        public Task<IPOS> GetPOSAsync() => _posProvider.GetPOSAsync();
+        public async Task<IPOS> GetPOSAsync() => await _posProvider.GetPOSAsync();
 
-        public Task StopAsync() => _posProvider.StopAsync();
+        public async Task StopAsync() => await _posProvider.StopAsync();
 
         public static void Start(IMiddlewareServiceConnection serviceConnection, string cashboxId, string accessToken, bool isSandbox)
         {

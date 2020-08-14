@@ -91,12 +91,10 @@ namespace fiskaltrust.AndroidLauncher.Common
             if (_posHost != null)
             {
                 await _posHost.ShutdownAsync();
-                _posHost.Dispose();
             }
             if (_scuHost != null)
             {
                 await _scuHost.ShutdownAsync();
-                _scuHost.Dispose();
             }
 
             IsRunning = false;
