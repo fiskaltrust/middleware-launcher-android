@@ -7551,28 +7551,34 @@ namespace fiskaltrust.AndroidLauncher
 			public const int hide_bottom_view_on_scroll_behavior = 2131558448;
 			
 			// aapt resource value: 0x7F0D0031
-			public const int mtrl_chip_close_icon_content_description = 2131558449;
+			public const int main_content = 2131558449;
 			
 			// aapt resource value: 0x7F0D0032
-			public const int password_toggle_content_description = 2131558450;
+			public const int main_title = 2131558450;
 			
 			// aapt resource value: 0x7F0D0033
-			public const int path_password_eye = 2131558451;
+			public const int mtrl_chip_close_icon_content_description = 2131558451;
 			
 			// aapt resource value: 0x7F0D0034
-			public const int path_password_eye_mask_strike_through = 2131558452;
+			public const int password_toggle_content_description = 2131558452;
 			
 			// aapt resource value: 0x7F0D0035
-			public const int path_password_eye_mask_visible = 2131558453;
+			public const int path_password_eye = 2131558453;
 			
 			// aapt resource value: 0x7F0D0036
-			public const int path_password_strike_through = 2131558454;
+			public const int path_password_eye_mask_strike_through = 2131558454;
 			
 			// aapt resource value: 0x7F0D0037
-			public const int search_menu_title = 2131558455;
+			public const int path_password_eye_mask_visible = 2131558455;
 			
 			// aapt resource value: 0x7F0D0038
-			public const int status_bar_notification_info_overflow = 2131558456;
+			public const int path_password_strike_through = 2131558456;
+			
+			// aapt resource value: 0x7F0D0039
+			public const int search_menu_title = 2131558457;
+			
+			// aapt resource value: 0x7F0D003A
+			public const int status_bar_notification_info_overflow = 2131558458;
 			
 			static String()
 			{

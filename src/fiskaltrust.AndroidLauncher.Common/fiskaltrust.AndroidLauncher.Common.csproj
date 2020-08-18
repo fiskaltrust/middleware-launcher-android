@@ -54,7 +54,7 @@
     <PackageReference Include="fiskaltrust.Middleware.Abstractions" Version="1.3.3" />
     <PackageReference Include="fiskaltrust.Middleware.Helper.Helipad" Version="1.3.2" />
     <PackageReference Include="fiskaltrust.Middleware.Interface.Client.Grpc" Version="1.3.3" />
-    <PackageReference Include="fiskaltrust.Middleware.Queue.SQLite" Version="1.3.4" />
+    <PackageReference Include="fiskaltrust.Middleware.Queue.SQLite" Version="1.3.5-ci-20231-32887" />
     <PackageReference Include="fiskaltrust.Middleware.SCU.DE.Fiskaly" Version="1.3.3-rc2" />
     <PackageReference Include="fiskaltrust.Middleware.SCU.DE.Swissbit" Version="1.3.1" />
     <PackageReference Include="fiskaltrust.Middleware.SCU.DE.SwissbitAndroid" Version="1.3.4-rc1" />

@@ -17,9 +17,9 @@ namespace fiskaltrust.AndroidLauncher
         {
             var cashboxId = intent.GetStringExtra("cashboxid");
             var accessToken = intent.GetStringExtra("accesstoken");
-            var isSandbox = bool.TryParse(intent.GetStringExtra("sandbox"), out var val) && val;
+            var isSandbox = intent.GetBooleanExtra("sandbox", false);
 
-            Toast.MakeText(context, $"Starting fiskaltrust Middleware with cashbox '{cashboxId}'. Initializing might take up to 45 seconds, depending on the TSE.", ToastLength.Long).Show();
+            Toast.MakeText(context, $"Starting fiskaltrust Middleware with cashbox '{cashboxId}' (Sandbox: {isSandbox}). Initializing might take up to 45 seconds, depending on the TSE.", ToastLength.Long).Show();
             MiddlewareLauncherService.Start(ServiceConnectionProvider.GetConnection(), cashboxId, accessToken, isSandbox);
             Task.Run(async () =>
             {

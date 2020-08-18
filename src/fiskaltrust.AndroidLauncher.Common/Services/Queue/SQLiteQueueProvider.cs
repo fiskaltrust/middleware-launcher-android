@@ -16,9 +16,12 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.Queue
     {
         public IPOS CreatePOS(string workingDir, PackageConfiguration queueConfiguration)
         {
-            CopyMigrationsToDataDir();
+            var migrationsFolder = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "Migrations");
+
+            CopyMigrationsToDataDir(migrationsFolder);
             
             queueConfiguration.Configuration["servicefolder"] = workingDir;
+            queueConfiguration.Configuration["migrationDirectory"] = migrationsFolder;
 
             var bootstrapper = new PosBootstrapper
             {
@@ -34,12 +37,11 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.Queue
             return serviceCollection.BuildServiceProvider().GetRequiredService<IPOS>();
         }
 
-        public static void CopyMigrationsToDataDir()
+        public static void CopyMigrationsToDataDir(string targetDirectory)
         {
             const string migrationDir = "Migrations";
 
             var assets = Application.Context.Assets.List(migrationDir);
-            var targetDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), migrationDir);
             Directory.CreateDirectory(targetDirectory);
             foreach (var asset in assets)
             {

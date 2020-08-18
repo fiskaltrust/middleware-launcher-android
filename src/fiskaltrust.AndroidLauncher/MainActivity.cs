@@ -5,8 +5,6 @@ using Android.Runtime;
 
 namespace fiskaltrust.AndroidLauncher
 {
-    // Right now we keep this activity only for debug purposes. It will be deleted later (or replaced by an informational screen about the Launcher)
-
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
     public class MainActivity : AppCompatActivity
     {
@@ -14,7 +12,6 @@ namespace fiskaltrust.AndroidLauncher
         {
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
-            // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.activity_main);
         }
 
