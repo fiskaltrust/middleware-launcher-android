@@ -24,7 +24,7 @@ namespace fiskaltrust.AndroidLauncher.Common
         {
             var cashboxIdString = intent.GetStringExtra("cashboxid");
             var accesstoken = intent.GetStringExtra("accesstoken");
-            var isSandbox = bool.TryParse(intent.GetStringExtra("sandbox"), out var val) && val;
+            var isSandbox = intent.GetBooleanExtra("sandbox", false);
 
             if (string.IsNullOrEmpty(cashboxIdString) || !Guid.TryParse(cashboxIdString, out var cashboxId))
             {
