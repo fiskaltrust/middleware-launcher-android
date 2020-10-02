@@ -105,7 +105,6 @@
   <ItemGroup>
     <AndroidNativeLibrary Include="lib\arm64-v8a\libcom.fiskaly.client-v1.2.000.so" />
     <AndroidNativeLibrary Include="lib\armeabi-v7a\libcom.fiskaly.client-v1.2.000.so" />
-    <AndroidNativeLibrary Include="lib\x64\libcom.fiskaly.client-v1.2.000.so" />
     <AndroidNativeLibrary Include="lib\x86\libcom.fiskaly.client-v1.2.000.so" />
     <AndroidAsset Include="Migrations\000_ftSchema.sqlite3" />
     <AndroidAsset Include="Migrations\001_Init.sqlite3" />
