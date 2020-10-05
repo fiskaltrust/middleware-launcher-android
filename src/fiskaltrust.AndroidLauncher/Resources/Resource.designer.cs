@@ -25,1654 +25,6 @@ namespace fiskaltrust.AndroidLauncher
 		
 		public static void UpdateIdValues()
 		{
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Animation.abc_fade_in = global::fiskaltrust.AndroidLauncher.Resource.Animation.abc_fade_in;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Animation.abc_fade_out = global::fiskaltrust.AndroidLauncher.Resource.Animation.abc_fade_out;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Animation.abc_grow_fade_in_from_bottom = global::fiskaltrust.AndroidLauncher.Resource.Animation.abc_grow_fade_in_from_bottom;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Animation.abc_popup_enter = global::fiskaltrust.AndroidLauncher.Resource.Animation.abc_popup_enter;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Animation.abc_popup_exit = global::fiskaltrust.AndroidLauncher.Resource.Animation.abc_popup_exit;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Animation.abc_shrink_fade_out_from_bottom = global::fiskaltrust.AndroidLauncher.Resource.Animation.abc_shrink_fade_out_from_bottom;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Animation.abc_slide_in_bottom = global::fiskaltrust.AndroidLauncher.Resource.Animation.abc_slide_in_bottom;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Animation.abc_slide_in_top = global::fiskaltrust.AndroidLauncher.Resource.Animation.abc_slide_in_top;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Animation.abc_slide_out_bottom = global::fiskaltrust.AndroidLauncher.Resource.Animation.abc_slide_out_bottom;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Animation.abc_slide_out_top = global::fiskaltrust.AndroidLauncher.Resource.Animation.abc_slide_out_top;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Animation.abc_tooltip_enter = global::fiskaltrust.AndroidLauncher.Resource.Animation.abc_tooltip_enter;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Animation.abc_tooltip_exit = global::fiskaltrust.AndroidLauncher.Resource.Animation.abc_tooltip_exit;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionBarDivider = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionBarDivider;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionBarItemBackground = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionBarItemBackground;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionBarPopupTheme = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionBarPopupTheme;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionBarSize = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionBarSize;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionBarSplitStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionBarSplitStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionBarStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionBarStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionBarTabBarStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionBarTabBarStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionBarTabStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionBarTabStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionBarTabTextStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionBarTabTextStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionBarTheme = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionBarTheme;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionBarWidgetTheme = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionBarWidgetTheme;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionButtonStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionButtonStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionDropDownStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionDropDownStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionLayout = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionLayout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionMenuTextAppearance = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionMenuTextAppearance;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionMenuTextColor = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionMenuTextColor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionModeBackground = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionModeBackground;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionModeCloseButtonStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionModeCloseButtonStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionModeCloseDrawable = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionModeCloseDrawable;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionModeCopyDrawable = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionModeCopyDrawable;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionModeCutDrawable = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionModeCutDrawable;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionModeFindDrawable = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionModeFindDrawable;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionModePasteDrawable = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionModePasteDrawable;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionModePopupWindowStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionModePopupWindowStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionModeSelectAllDrawable = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionModeSelectAllDrawable;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionModeShareDrawable = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionModeShareDrawable;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionModeSplitBackground = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionModeSplitBackground;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionModeStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionModeStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionModeWebSearchDrawable = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionModeWebSearchDrawable;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionOverflowButtonStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionOverflowButtonStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionOverflowMenuStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionOverflowMenuStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionProviderClass = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionProviderClass;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.actionViewClass = global::fiskaltrust.AndroidLauncher.Resource.Attribute.actionViewClass;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.activityChooserViewStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.activityChooserViewStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.alertDialogButtonGroupStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.alertDialogButtonGroupStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.alertDialogCenterButtons = global::fiskaltrust.AndroidLauncher.Resource.Attribute.alertDialogCenterButtons;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.alertDialogStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.alertDialogStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.alertDialogTheme = global::fiskaltrust.AndroidLauncher.Resource.Attribute.alertDialogTheme;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.allowStacking = global::fiskaltrust.AndroidLauncher.Resource.Attribute.allowStacking;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.alpha = global::fiskaltrust.AndroidLauncher.Resource.Attribute.alpha;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.alphabeticModifiers = global::fiskaltrust.AndroidLauncher.Resource.Attribute.alphabeticModifiers;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.arrowHeadLength = global::fiskaltrust.AndroidLauncher.Resource.Attribute.arrowHeadLength;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.arrowShaftLength = global::fiskaltrust.AndroidLauncher.Resource.Attribute.arrowShaftLength;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.autoCompleteTextViewStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.autoCompleteTextViewStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.autoSizeMaxTextSize = global::fiskaltrust.AndroidLauncher.Resource.Attribute.autoSizeMaxTextSize;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.autoSizeMinTextSize = global::fiskaltrust.AndroidLauncher.Resource.Attribute.autoSizeMinTextSize;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.autoSizePresetSizes = global::fiskaltrust.AndroidLauncher.Resource.Attribute.autoSizePresetSizes;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.autoSizeStepGranularity = global::fiskaltrust.AndroidLauncher.Resource.Attribute.autoSizeStepGranularity;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.autoSizeTextType = global::fiskaltrust.AndroidLauncher.Resource.Attribute.autoSizeTextType;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.background = global::fiskaltrust.AndroidLauncher.Resource.Attribute.background;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.backgroundSplit = global::fiskaltrust.AndroidLauncher.Resource.Attribute.backgroundSplit;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.backgroundStacked = global::fiskaltrust.AndroidLauncher.Resource.Attribute.backgroundStacked;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.backgroundTint = global::fiskaltrust.AndroidLauncher.Resource.Attribute.backgroundTint;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.backgroundTintMode = global::fiskaltrust.AndroidLauncher.Resource.Attribute.backgroundTintMode;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.barLength = global::fiskaltrust.AndroidLauncher.Resource.Attribute.barLength;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.borderlessButtonStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.borderlessButtonStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.buttonBarButtonStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.buttonBarButtonStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.buttonBarNegativeButtonStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.buttonBarNegativeButtonStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.buttonBarNeutralButtonStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.buttonBarNeutralButtonStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.buttonBarPositiveButtonStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.buttonBarPositiveButtonStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.buttonBarStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.buttonBarStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.buttonGravity = global::fiskaltrust.AndroidLauncher.Resource.Attribute.buttonGravity;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.buttonIconDimen = global::fiskaltrust.AndroidLauncher.Resource.Attribute.buttonIconDimen;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.buttonPanelSideLayout = global::fiskaltrust.AndroidLauncher.Resource.Attribute.buttonPanelSideLayout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.buttonStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.buttonStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.buttonStyleSmall = global::fiskaltrust.AndroidLauncher.Resource.Attribute.buttonStyleSmall;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.buttonTint = global::fiskaltrust.AndroidLauncher.Resource.Attribute.buttonTint;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.buttonTintMode = global::fiskaltrust.AndroidLauncher.Resource.Attribute.buttonTintMode;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.checkboxStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.checkboxStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.checkedTextViewStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.checkedTextViewStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.closeIcon = global::fiskaltrust.AndroidLauncher.Resource.Attribute.closeIcon;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.closeItemLayout = global::fiskaltrust.AndroidLauncher.Resource.Attribute.closeItemLayout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.collapseContentDescription = global::fiskaltrust.AndroidLauncher.Resource.Attribute.collapseContentDescription;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.collapseIcon = global::fiskaltrust.AndroidLauncher.Resource.Attribute.collapseIcon;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.color = global::fiskaltrust.AndroidLauncher.Resource.Attribute.color;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.colorAccent = global::fiskaltrust.AndroidLauncher.Resource.Attribute.colorAccent;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.colorBackgroundFloating = global::fiskaltrust.AndroidLauncher.Resource.Attribute.colorBackgroundFloating;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.colorButtonNormal = global::fiskaltrust.AndroidLauncher.Resource.Attribute.colorButtonNormal;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.colorControlActivated = global::fiskaltrust.AndroidLauncher.Resource.Attribute.colorControlActivated;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.colorControlHighlight = global::fiskaltrust.AndroidLauncher.Resource.Attribute.colorControlHighlight;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.colorControlNormal = global::fiskaltrust.AndroidLauncher.Resource.Attribute.colorControlNormal;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.colorError = global::fiskaltrust.AndroidLauncher.Resource.Attribute.colorError;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.colorPrimary = global::fiskaltrust.AndroidLauncher.Resource.Attribute.colorPrimary;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.colorPrimaryDark = global::fiskaltrust.AndroidLauncher.Resource.Attribute.colorPrimaryDark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.colorSwitchThumbNormal = global::fiskaltrust.AndroidLauncher.Resource.Attribute.colorSwitchThumbNormal;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.commitIcon = global::fiskaltrust.AndroidLauncher.Resource.Attribute.commitIcon;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.contentDescription = global::fiskaltrust.AndroidLauncher.Resource.Attribute.contentDescription;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.contentInsetEnd = global::fiskaltrust.AndroidLauncher.Resource.Attribute.contentInsetEnd;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.contentInsetEndWithActions = global::fiskaltrust.AndroidLauncher.Resource.Attribute.contentInsetEndWithActions;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.contentInsetLeft = global::fiskaltrust.AndroidLauncher.Resource.Attribute.contentInsetLeft;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.contentInsetRight = global::fiskaltrust.AndroidLauncher.Resource.Attribute.contentInsetRight;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.contentInsetStart = global::fiskaltrust.AndroidLauncher.Resource.Attribute.contentInsetStart;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.contentInsetStartWithNavigation = global::fiskaltrust.AndroidLauncher.Resource.Attribute.contentInsetStartWithNavigation;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.controlBackground = global::fiskaltrust.AndroidLauncher.Resource.Attribute.controlBackground;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.coordinatorLayoutStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.coordinatorLayoutStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.customNavigationLayout = global::fiskaltrust.AndroidLauncher.Resource.Attribute.customNavigationLayout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.defaultQueryHint = global::fiskaltrust.AndroidLauncher.Resource.Attribute.defaultQueryHint;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.dialogCornerRadius = global::fiskaltrust.AndroidLauncher.Resource.Attribute.dialogCornerRadius;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.dialogPreferredPadding = global::fiskaltrust.AndroidLauncher.Resource.Attribute.dialogPreferredPadding;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.dialogTheme = global::fiskaltrust.AndroidLauncher.Resource.Attribute.dialogTheme;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.displayOptions = global::fiskaltrust.AndroidLauncher.Resource.Attribute.displayOptions;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.divider = global::fiskaltrust.AndroidLauncher.Resource.Attribute.divider;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.dividerHorizontal = global::fiskaltrust.AndroidLauncher.Resource.Attribute.dividerHorizontal;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.dividerPadding = global::fiskaltrust.AndroidLauncher.Resource.Attribute.dividerPadding;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.dividerVertical = global::fiskaltrust.AndroidLauncher.Resource.Attribute.dividerVertical;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.drawableSize = global::fiskaltrust.AndroidLauncher.Resource.Attribute.drawableSize;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.drawerArrowStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.drawerArrowStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.dropdownListPreferredItemHeight = global::fiskaltrust.AndroidLauncher.Resource.Attribute.dropdownListPreferredItemHeight;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.dropDownListViewStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.dropDownListViewStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.editTextBackground = global::fiskaltrust.AndroidLauncher.Resource.Attribute.editTextBackground;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.editTextColor = global::fiskaltrust.AndroidLauncher.Resource.Attribute.editTextColor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.editTextStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.editTextStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.elevation = global::fiskaltrust.AndroidLauncher.Resource.Attribute.elevation;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.expandActivityOverflowButtonDrawable = global::fiskaltrust.AndroidLauncher.Resource.Attribute.expandActivityOverflowButtonDrawable;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.firstBaselineToTopHeight = global::fiskaltrust.AndroidLauncher.Resource.Attribute.firstBaselineToTopHeight;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.font = global::fiskaltrust.AndroidLauncher.Resource.Attribute.font;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.fontFamily = global::fiskaltrust.AndroidLauncher.Resource.Attribute.fontFamily;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.fontProviderAuthority = global::fiskaltrust.AndroidLauncher.Resource.Attribute.fontProviderAuthority;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.fontProviderCerts = global::fiskaltrust.AndroidLauncher.Resource.Attribute.fontProviderCerts;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.fontProviderFetchStrategy = global::fiskaltrust.AndroidLauncher.Resource.Attribute.fontProviderFetchStrategy;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.fontProviderFetchTimeout = global::fiskaltrust.AndroidLauncher.Resource.Attribute.fontProviderFetchTimeout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.fontProviderPackage = global::fiskaltrust.AndroidLauncher.Resource.Attribute.fontProviderPackage;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.fontProviderQuery = global::fiskaltrust.AndroidLauncher.Resource.Attribute.fontProviderQuery;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.fontStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.fontStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.fontVariationSettings = global::fiskaltrust.AndroidLauncher.Resource.Attribute.fontVariationSettings;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.fontWeight = global::fiskaltrust.AndroidLauncher.Resource.Attribute.fontWeight;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.gapBetweenBars = global::fiskaltrust.AndroidLauncher.Resource.Attribute.gapBetweenBars;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.goIcon = global::fiskaltrust.AndroidLauncher.Resource.Attribute.goIcon;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.height = global::fiskaltrust.AndroidLauncher.Resource.Attribute.height;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.hideOnContentScroll = global::fiskaltrust.AndroidLauncher.Resource.Attribute.hideOnContentScroll;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.homeAsUpIndicator = global::fiskaltrust.AndroidLauncher.Resource.Attribute.homeAsUpIndicator;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.homeLayout = global::fiskaltrust.AndroidLauncher.Resource.Attribute.homeLayout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.icon = global::fiskaltrust.AndroidLauncher.Resource.Attribute.icon;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.iconifiedByDefault = global::fiskaltrust.AndroidLauncher.Resource.Attribute.iconifiedByDefault;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.iconTint = global::fiskaltrust.AndroidLauncher.Resource.Attribute.iconTint;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.iconTintMode = global::fiskaltrust.AndroidLauncher.Resource.Attribute.iconTintMode;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.imageButtonStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.imageButtonStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.indeterminateProgressStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.indeterminateProgressStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.initialActivityCount = global::fiskaltrust.AndroidLauncher.Resource.Attribute.initialActivityCount;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.isLightTheme = global::fiskaltrust.AndroidLauncher.Resource.Attribute.isLightTheme;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.itemPadding = global::fiskaltrust.AndroidLauncher.Resource.Attribute.itemPadding;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.keylines = global::fiskaltrust.AndroidLauncher.Resource.Attribute.keylines;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.lastBaselineToBottomHeight = global::fiskaltrust.AndroidLauncher.Resource.Attribute.lastBaselineToBottomHeight;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.layout = global::fiskaltrust.AndroidLauncher.Resource.Attribute.layout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.layout_anchor = global::fiskaltrust.AndroidLauncher.Resource.Attribute.layout_anchor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.layout_anchorGravity = global::fiskaltrust.AndroidLauncher.Resource.Attribute.layout_anchorGravity;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.layout_behavior = global::fiskaltrust.AndroidLauncher.Resource.Attribute.layout_behavior;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.layout_dodgeInsetEdges = global::fiskaltrust.AndroidLauncher.Resource.Attribute.layout_dodgeInsetEdges;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.layout_insetEdge = global::fiskaltrust.AndroidLauncher.Resource.Attribute.layout_insetEdge;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.layout_keyline = global::fiskaltrust.AndroidLauncher.Resource.Attribute.layout_keyline;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.lineHeight = global::fiskaltrust.AndroidLauncher.Resource.Attribute.lineHeight;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.listChoiceBackgroundIndicator = global::fiskaltrust.AndroidLauncher.Resource.Attribute.listChoiceBackgroundIndicator;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.listDividerAlertDialog = global::fiskaltrust.AndroidLauncher.Resource.Attribute.listDividerAlertDialog;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.listItemLayout = global::fiskaltrust.AndroidLauncher.Resource.Attribute.listItemLayout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.listLayout = global::fiskaltrust.AndroidLauncher.Resource.Attribute.listLayout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.listMenuViewStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.listMenuViewStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.listPopupWindowStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.listPopupWindowStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.listPreferredItemHeight = global::fiskaltrust.AndroidLauncher.Resource.Attribute.listPreferredItemHeight;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.listPreferredItemHeightLarge = global::fiskaltrust.AndroidLauncher.Resource.Attribute.listPreferredItemHeightLarge;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.listPreferredItemHeightSmall = global::fiskaltrust.AndroidLauncher.Resource.Attribute.listPreferredItemHeightSmall;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.listPreferredItemPaddingLeft = global::fiskaltrust.AndroidLauncher.Resource.Attribute.listPreferredItemPaddingLeft;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.listPreferredItemPaddingRight = global::fiskaltrust.AndroidLauncher.Resource.Attribute.listPreferredItemPaddingRight;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.logo = global::fiskaltrust.AndroidLauncher.Resource.Attribute.logo;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.logoDescription = global::fiskaltrust.AndroidLauncher.Resource.Attribute.logoDescription;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.maxButtonHeight = global::fiskaltrust.AndroidLauncher.Resource.Attribute.maxButtonHeight;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.measureWithLargestChild = global::fiskaltrust.AndroidLauncher.Resource.Attribute.measureWithLargestChild;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.multiChoiceItemLayout = global::fiskaltrust.AndroidLauncher.Resource.Attribute.multiChoiceItemLayout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.navigationContentDescription = global::fiskaltrust.AndroidLauncher.Resource.Attribute.navigationContentDescription;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.navigationIcon = global::fiskaltrust.AndroidLauncher.Resource.Attribute.navigationIcon;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.navigationMode = global::fiskaltrust.AndroidLauncher.Resource.Attribute.navigationMode;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.numericModifiers = global::fiskaltrust.AndroidLauncher.Resource.Attribute.numericModifiers;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.overlapAnchor = global::fiskaltrust.AndroidLauncher.Resource.Attribute.overlapAnchor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.paddingBottomNoButtons = global::fiskaltrust.AndroidLauncher.Resource.Attribute.paddingBottomNoButtons;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.paddingEnd = global::fiskaltrust.AndroidLauncher.Resource.Attribute.paddingEnd;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.paddingStart = global::fiskaltrust.AndroidLauncher.Resource.Attribute.paddingStart;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.paddingTopNoTitle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.paddingTopNoTitle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.panelBackground = global::fiskaltrust.AndroidLauncher.Resource.Attribute.panelBackground;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.panelMenuListTheme = global::fiskaltrust.AndroidLauncher.Resource.Attribute.panelMenuListTheme;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.panelMenuListWidth = global::fiskaltrust.AndroidLauncher.Resource.Attribute.panelMenuListWidth;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.popupMenuStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.popupMenuStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.popupTheme = global::fiskaltrust.AndroidLauncher.Resource.Attribute.popupTheme;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.popupWindowStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.popupWindowStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.preserveIconSpacing = global::fiskaltrust.AndroidLauncher.Resource.Attribute.preserveIconSpacing;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.progressBarPadding = global::fiskaltrust.AndroidLauncher.Resource.Attribute.progressBarPadding;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.progressBarStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.progressBarStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.queryBackground = global::fiskaltrust.AndroidLauncher.Resource.Attribute.queryBackground;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.queryHint = global::fiskaltrust.AndroidLauncher.Resource.Attribute.queryHint;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.radioButtonStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.radioButtonStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.ratingBarStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.ratingBarStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.ratingBarStyleIndicator = global::fiskaltrust.AndroidLauncher.Resource.Attribute.ratingBarStyleIndicator;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.ratingBarStyleSmall = global::fiskaltrust.AndroidLauncher.Resource.Attribute.ratingBarStyleSmall;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.searchHintIcon = global::fiskaltrust.AndroidLauncher.Resource.Attribute.searchHintIcon;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.searchIcon = global::fiskaltrust.AndroidLauncher.Resource.Attribute.searchIcon;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.searchViewStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.searchViewStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.seekBarStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.seekBarStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.selectableItemBackground = global::fiskaltrust.AndroidLauncher.Resource.Attribute.selectableItemBackground;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.selectableItemBackgroundBorderless = global::fiskaltrust.AndroidLauncher.Resource.Attribute.selectableItemBackgroundBorderless;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.showAsAction = global::fiskaltrust.AndroidLauncher.Resource.Attribute.showAsAction;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.showDividers = global::fiskaltrust.AndroidLauncher.Resource.Attribute.showDividers;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.showText = global::fiskaltrust.AndroidLauncher.Resource.Attribute.showText;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.showTitle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.showTitle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.singleChoiceItemLayout = global::fiskaltrust.AndroidLauncher.Resource.Attribute.singleChoiceItemLayout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.spinBars = global::fiskaltrust.AndroidLauncher.Resource.Attribute.spinBars;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.spinnerDropDownItemStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.spinnerDropDownItemStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.spinnerStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.spinnerStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.splitTrack = global::fiskaltrust.AndroidLauncher.Resource.Attribute.splitTrack;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.srcCompat = global::fiskaltrust.AndroidLauncher.Resource.Attribute.srcCompat;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.state_above_anchor = global::fiskaltrust.AndroidLauncher.Resource.Attribute.state_above_anchor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.statusBarBackground = global::fiskaltrust.AndroidLauncher.Resource.Attribute.statusBarBackground;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.subMenuArrow = global::fiskaltrust.AndroidLauncher.Resource.Attribute.subMenuArrow;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.submitBackground = global::fiskaltrust.AndroidLauncher.Resource.Attribute.submitBackground;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.subtitle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.subtitle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.subtitleTextAppearance = global::fiskaltrust.AndroidLauncher.Resource.Attribute.subtitleTextAppearance;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.subtitleTextColor = global::fiskaltrust.AndroidLauncher.Resource.Attribute.subtitleTextColor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.subtitleTextStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.subtitleTextStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.suggestionRowLayout = global::fiskaltrust.AndroidLauncher.Resource.Attribute.suggestionRowLayout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.switchMinWidth = global::fiskaltrust.AndroidLauncher.Resource.Attribute.switchMinWidth;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.switchPadding = global::fiskaltrust.AndroidLauncher.Resource.Attribute.switchPadding;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.switchStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.switchStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.switchTextAppearance = global::fiskaltrust.AndroidLauncher.Resource.Attribute.switchTextAppearance;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.textAllCaps = global::fiskaltrust.AndroidLauncher.Resource.Attribute.textAllCaps;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.textAppearanceLargePopupMenu = global::fiskaltrust.AndroidLauncher.Resource.Attribute.textAppearanceLargePopupMenu;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.textAppearanceListItem = global::fiskaltrust.AndroidLauncher.Resource.Attribute.textAppearanceListItem;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.textAppearanceListItemSecondary = global::fiskaltrust.AndroidLauncher.Resource.Attribute.textAppearanceListItemSecondary;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.textAppearanceListItemSmall = global::fiskaltrust.AndroidLauncher.Resource.Attribute.textAppearanceListItemSmall;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.textAppearancePopupMenuHeader = global::fiskaltrust.AndroidLauncher.Resource.Attribute.textAppearancePopupMenuHeader;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.textAppearanceSearchResultSubtitle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.textAppearanceSearchResultSubtitle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.textAppearanceSearchResultTitle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.textAppearanceSearchResultTitle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.textAppearanceSmallPopupMenu = global::fiskaltrust.AndroidLauncher.Resource.Attribute.textAppearanceSmallPopupMenu;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.textColorAlertDialogListItem = global::fiskaltrust.AndroidLauncher.Resource.Attribute.textColorAlertDialogListItem;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.textColorSearchUrl = global::fiskaltrust.AndroidLauncher.Resource.Attribute.textColorSearchUrl;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.theme = global::fiskaltrust.AndroidLauncher.Resource.Attribute.theme;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.thickness = global::fiskaltrust.AndroidLauncher.Resource.Attribute.thickness;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.thumbTextPadding = global::fiskaltrust.AndroidLauncher.Resource.Attribute.thumbTextPadding;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.thumbTint = global::fiskaltrust.AndroidLauncher.Resource.Attribute.thumbTint;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.thumbTintMode = global::fiskaltrust.AndroidLauncher.Resource.Attribute.thumbTintMode;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.tickMark = global::fiskaltrust.AndroidLauncher.Resource.Attribute.tickMark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.tickMarkTint = global::fiskaltrust.AndroidLauncher.Resource.Attribute.tickMarkTint;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.tickMarkTintMode = global::fiskaltrust.AndroidLauncher.Resource.Attribute.tickMarkTintMode;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.tint = global::fiskaltrust.AndroidLauncher.Resource.Attribute.tint;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.tintMode = global::fiskaltrust.AndroidLauncher.Resource.Attribute.tintMode;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.title = global::fiskaltrust.AndroidLauncher.Resource.Attribute.title;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.titleMargin = global::fiskaltrust.AndroidLauncher.Resource.Attribute.titleMargin;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.titleMarginBottom = global::fiskaltrust.AndroidLauncher.Resource.Attribute.titleMarginBottom;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.titleMarginEnd = global::fiskaltrust.AndroidLauncher.Resource.Attribute.titleMarginEnd;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.titleMargins = global::fiskaltrust.AndroidLauncher.Resource.Attribute.titleMargins;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.titleMarginStart = global::fiskaltrust.AndroidLauncher.Resource.Attribute.titleMarginStart;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.titleMarginTop = global::fiskaltrust.AndroidLauncher.Resource.Attribute.titleMarginTop;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.titleTextAppearance = global::fiskaltrust.AndroidLauncher.Resource.Attribute.titleTextAppearance;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.titleTextColor = global::fiskaltrust.AndroidLauncher.Resource.Attribute.titleTextColor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.titleTextStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.titleTextStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.toolbarNavigationButtonStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.toolbarNavigationButtonStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.toolbarStyle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.toolbarStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.tooltipForegroundColor = global::fiskaltrust.AndroidLauncher.Resource.Attribute.tooltipForegroundColor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.tooltipFrameBackground = global::fiskaltrust.AndroidLauncher.Resource.Attribute.tooltipFrameBackground;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.tooltipText = global::fiskaltrust.AndroidLauncher.Resource.Attribute.tooltipText;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.track = global::fiskaltrust.AndroidLauncher.Resource.Attribute.track;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.trackTint = global::fiskaltrust.AndroidLauncher.Resource.Attribute.trackTint;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.trackTintMode = global::fiskaltrust.AndroidLauncher.Resource.Attribute.trackTintMode;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.ttcIndex = global::fiskaltrust.AndroidLauncher.Resource.Attribute.ttcIndex;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.viewInflaterClass = global::fiskaltrust.AndroidLauncher.Resource.Attribute.viewInflaterClass;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.voiceIcon = global::fiskaltrust.AndroidLauncher.Resource.Attribute.voiceIcon;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.windowActionBar = global::fiskaltrust.AndroidLauncher.Resource.Attribute.windowActionBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.windowActionBarOverlay = global::fiskaltrust.AndroidLauncher.Resource.Attribute.windowActionBarOverlay;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.windowActionModeOverlay = global::fiskaltrust.AndroidLauncher.Resource.Attribute.windowActionModeOverlay;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.windowFixedHeightMajor = global::fiskaltrust.AndroidLauncher.Resource.Attribute.windowFixedHeightMajor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.windowFixedHeightMinor = global::fiskaltrust.AndroidLauncher.Resource.Attribute.windowFixedHeightMinor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.windowFixedWidthMajor = global::fiskaltrust.AndroidLauncher.Resource.Attribute.windowFixedWidthMajor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.windowFixedWidthMinor = global::fiskaltrust.AndroidLauncher.Resource.Attribute.windowFixedWidthMinor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.windowMinWidthMajor = global::fiskaltrust.AndroidLauncher.Resource.Attribute.windowMinWidthMajor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.windowMinWidthMinor = global::fiskaltrust.AndroidLauncher.Resource.Attribute.windowMinWidthMinor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Attribute.windowNoTitle = global::fiskaltrust.AndroidLauncher.Resource.Attribute.windowNoTitle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Boolean.abc_action_bar_embed_tabs = global::fiskaltrust.AndroidLauncher.Resource.Boolean.abc_action_bar_embed_tabs;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Boolean.abc_allow_stacked_button_bar = global::fiskaltrust.AndroidLauncher.Resource.Boolean.abc_allow_stacked_button_bar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Boolean.abc_config_actionMenuItemAllCaps = global::fiskaltrust.AndroidLauncher.Resource.Boolean.abc_config_actionMenuItemAllCaps;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.abc_background_cache_hint_selector_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Color.abc_background_cache_hint_selector_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.abc_background_cache_hint_selector_material_light = global::fiskaltrust.AndroidLauncher.Resource.Color.abc_background_cache_hint_selector_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.abc_btn_colored_borderless_text_material = global::fiskaltrust.AndroidLauncher.Resource.Color.abc_btn_colored_borderless_text_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.abc_btn_colored_text_material = global::fiskaltrust.AndroidLauncher.Resource.Color.abc_btn_colored_text_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.abc_color_highlight_material = global::fiskaltrust.AndroidLauncher.Resource.Color.abc_color_highlight_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.abc_hint_foreground_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Color.abc_hint_foreground_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.abc_hint_foreground_material_light = global::fiskaltrust.AndroidLauncher.Resource.Color.abc_hint_foreground_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.abc_input_method_navigation_guard = global::fiskaltrust.AndroidLauncher.Resource.Color.abc_input_method_navigation_guard;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.abc_primary_text_disable_only_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Color.abc_primary_text_disable_only_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.abc_primary_text_disable_only_material_light = global::fiskaltrust.AndroidLauncher.Resource.Color.abc_primary_text_disable_only_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.abc_primary_text_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Color.abc_primary_text_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.abc_primary_text_material_light = global::fiskaltrust.AndroidLauncher.Resource.Color.abc_primary_text_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.abc_search_url_text = global::fiskaltrust.AndroidLauncher.Resource.Color.abc_search_url_text;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.abc_search_url_text_normal = global::fiskaltrust.AndroidLauncher.Resource.Color.abc_search_url_text_normal;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.abc_search_url_text_pressed = global::fiskaltrust.AndroidLauncher.Resource.Color.abc_search_url_text_pressed;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.abc_search_url_text_selected = global::fiskaltrust.AndroidLauncher.Resource.Color.abc_search_url_text_selected;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.abc_secondary_text_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Color.abc_secondary_text_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.abc_secondary_text_material_light = global::fiskaltrust.AndroidLauncher.Resource.Color.abc_secondary_text_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.abc_tint_btn_checkable = global::fiskaltrust.AndroidLauncher.Resource.Color.abc_tint_btn_checkable;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.abc_tint_default = global::fiskaltrust.AndroidLauncher.Resource.Color.abc_tint_default;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.abc_tint_edittext = global::fiskaltrust.AndroidLauncher.Resource.Color.abc_tint_edittext;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.abc_tint_seek_thumb = global::fiskaltrust.AndroidLauncher.Resource.Color.abc_tint_seek_thumb;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.abc_tint_spinner = global::fiskaltrust.AndroidLauncher.Resource.Color.abc_tint_spinner;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.abc_tint_switch_track = global::fiskaltrust.AndroidLauncher.Resource.Color.abc_tint_switch_track;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.accent_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Color.accent_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.accent_material_light = global::fiskaltrust.AndroidLauncher.Resource.Color.accent_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.background_floating_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Color.background_floating_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.background_floating_material_light = global::fiskaltrust.AndroidLauncher.Resource.Color.background_floating_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.background_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Color.background_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.background_material_light = global::fiskaltrust.AndroidLauncher.Resource.Color.background_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.bright_foreground_disabled_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Color.bright_foreground_disabled_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.bright_foreground_disabled_material_light = global::fiskaltrust.AndroidLauncher.Resource.Color.bright_foreground_disabled_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.bright_foreground_inverse_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Color.bright_foreground_inverse_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.bright_foreground_inverse_material_light = global::fiskaltrust.AndroidLauncher.Resource.Color.bright_foreground_inverse_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.bright_foreground_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Color.bright_foreground_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.bright_foreground_material_light = global::fiskaltrust.AndroidLauncher.Resource.Color.bright_foreground_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.browser_actions_bg_grey = global::fiskaltrust.AndroidLauncher.Resource.Color.browser_actions_bg_grey;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.browser_actions_divider_color = global::fiskaltrust.AndroidLauncher.Resource.Color.browser_actions_divider_color;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.browser_actions_text_color = global::fiskaltrust.AndroidLauncher.Resource.Color.browser_actions_text_color;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.browser_actions_title_color = global::fiskaltrust.AndroidLauncher.Resource.Color.browser_actions_title_color;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.button_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Color.button_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.button_material_light = global::fiskaltrust.AndroidLauncher.Resource.Color.button_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.dim_foreground_disabled_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Color.dim_foreground_disabled_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.dim_foreground_disabled_material_light = global::fiskaltrust.AndroidLauncher.Resource.Color.dim_foreground_disabled_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.dim_foreground_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Color.dim_foreground_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.dim_foreground_material_light = global::fiskaltrust.AndroidLauncher.Resource.Color.dim_foreground_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.error_color_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Color.error_color_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.error_color_material_light = global::fiskaltrust.AndroidLauncher.Resource.Color.error_color_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.foreground_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Color.foreground_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.foreground_material_light = global::fiskaltrust.AndroidLauncher.Resource.Color.foreground_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.highlighted_text_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Color.highlighted_text_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.highlighted_text_material_light = global::fiskaltrust.AndroidLauncher.Resource.Color.highlighted_text_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.material_blue_grey_800 = global::fiskaltrust.AndroidLauncher.Resource.Color.material_blue_grey_800;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.material_blue_grey_900 = global::fiskaltrust.AndroidLauncher.Resource.Color.material_blue_grey_900;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.material_blue_grey_950 = global::fiskaltrust.AndroidLauncher.Resource.Color.material_blue_grey_950;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.material_deep_teal_200 = global::fiskaltrust.AndroidLauncher.Resource.Color.material_deep_teal_200;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.material_deep_teal_500 = global::fiskaltrust.AndroidLauncher.Resource.Color.material_deep_teal_500;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.material_grey_100 = global::fiskaltrust.AndroidLauncher.Resource.Color.material_grey_100;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.material_grey_300 = global::fiskaltrust.AndroidLauncher.Resource.Color.material_grey_300;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.material_grey_50 = global::fiskaltrust.AndroidLauncher.Resource.Color.material_grey_50;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.material_grey_600 = global::fiskaltrust.AndroidLauncher.Resource.Color.material_grey_600;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.material_grey_800 = global::fiskaltrust.AndroidLauncher.Resource.Color.material_grey_800;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.material_grey_850 = global::fiskaltrust.AndroidLauncher.Resource.Color.material_grey_850;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.material_grey_900 = global::fiskaltrust.AndroidLauncher.Resource.Color.material_grey_900;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.notification_action_color_filter = global::fiskaltrust.AndroidLauncher.Resource.Color.notification_action_color_filter;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.notification_icon_bg_color = global::fiskaltrust.AndroidLauncher.Resource.Color.notification_icon_bg_color;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.notification_material_background_media_default_color = global::fiskaltrust.AndroidLauncher.Resource.Color.notification_material_background_media_default_color;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.primary_dark_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Color.primary_dark_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.primary_dark_material_light = global::fiskaltrust.AndroidLauncher.Resource.Color.primary_dark_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.primary_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Color.primary_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.primary_material_light = global::fiskaltrust.AndroidLauncher.Resource.Color.primary_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.primary_text_default_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Color.primary_text_default_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.primary_text_default_material_light = global::fiskaltrust.AndroidLauncher.Resource.Color.primary_text_default_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.primary_text_disabled_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Color.primary_text_disabled_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.primary_text_disabled_material_light = global::fiskaltrust.AndroidLauncher.Resource.Color.primary_text_disabled_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.ripple_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Color.ripple_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.ripple_material_light = global::fiskaltrust.AndroidLauncher.Resource.Color.ripple_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.secondary_text_default_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Color.secondary_text_default_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.secondary_text_default_material_light = global::fiskaltrust.AndroidLauncher.Resource.Color.secondary_text_default_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.secondary_text_disabled_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Color.secondary_text_disabled_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.secondary_text_disabled_material_light = global::fiskaltrust.AndroidLauncher.Resource.Color.secondary_text_disabled_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.switch_thumb_disabled_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Color.switch_thumb_disabled_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.switch_thumb_disabled_material_light = global::fiskaltrust.AndroidLauncher.Resource.Color.switch_thumb_disabled_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.switch_thumb_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Color.switch_thumb_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.switch_thumb_material_light = global::fiskaltrust.AndroidLauncher.Resource.Color.switch_thumb_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.switch_thumb_normal_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Color.switch_thumb_normal_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.switch_thumb_normal_material_light = global::fiskaltrust.AndroidLauncher.Resource.Color.switch_thumb_normal_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.tooltip_background_dark = global::fiskaltrust.AndroidLauncher.Resource.Color.tooltip_background_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.tooltip_background_light = global::fiskaltrust.AndroidLauncher.Resource.Color.tooltip_background_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_action_bar_content_inset_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_action_bar_content_inset_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_action_bar_content_inset_with_nav = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_action_bar_content_inset_with_nav;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_action_bar_default_height_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_action_bar_default_height_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_action_bar_default_padding_end_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_action_bar_default_padding_end_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_action_bar_default_padding_start_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_action_bar_default_padding_start_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_action_bar_elevation_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_action_bar_elevation_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_action_bar_icon_vertical_padding_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_action_bar_icon_vertical_padding_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_action_bar_overflow_padding_end_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_action_bar_overflow_padding_end_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_action_bar_overflow_padding_start_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_action_bar_overflow_padding_start_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_action_bar_stacked_max_height = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_action_bar_stacked_max_height;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_action_bar_stacked_tab_max_width = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_action_bar_stacked_tab_max_width;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_action_bar_subtitle_bottom_margin_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_action_bar_subtitle_bottom_margin_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_action_bar_subtitle_top_margin_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_action_bar_subtitle_top_margin_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_action_button_min_height_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_action_button_min_height_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_action_button_min_width_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_action_button_min_width_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_action_button_min_width_overflow_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_action_button_min_width_overflow_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_alert_dialog_button_bar_height = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_alert_dialog_button_bar_height;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_alert_dialog_button_dimen = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_alert_dialog_button_dimen;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_button_inset_horizontal_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_button_inset_horizontal_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_button_inset_vertical_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_button_inset_vertical_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_button_padding_horizontal_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_button_padding_horizontal_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_button_padding_vertical_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_button_padding_vertical_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_cascading_menus_min_smallest_width = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_cascading_menus_min_smallest_width;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_config_prefDialogWidth = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_config_prefDialogWidth;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_control_corner_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_control_corner_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_control_inset_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_control_inset_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_control_padding_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_control_padding_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_dialog_corner_radius_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_dialog_corner_radius_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_dialog_fixed_height_major = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_dialog_fixed_height_major;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_dialog_fixed_height_minor = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_dialog_fixed_height_minor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_dialog_fixed_width_major = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_dialog_fixed_width_major;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_dialog_fixed_width_minor = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_dialog_fixed_width_minor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_dialog_list_padding_bottom_no_buttons = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_dialog_list_padding_bottom_no_buttons;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_dialog_list_padding_top_no_title = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_dialog_list_padding_top_no_title;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_dialog_min_width_major = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_dialog_min_width_major;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_dialog_min_width_minor = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_dialog_min_width_minor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_dialog_padding_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_dialog_padding_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_dialog_padding_top_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_dialog_padding_top_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_dialog_title_divider_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_dialog_title_divider_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_disabled_alpha_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_disabled_alpha_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_disabled_alpha_material_light = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_disabled_alpha_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_dropdownitem_icon_width = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_dropdownitem_icon_width;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_dropdownitem_text_padding_left = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_dropdownitem_text_padding_left;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_dropdownitem_text_padding_right = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_dropdownitem_text_padding_right;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_edit_text_inset_bottom_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_edit_text_inset_bottom_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_edit_text_inset_horizontal_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_edit_text_inset_horizontal_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_edit_text_inset_top_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_edit_text_inset_top_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_floating_window_z = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_floating_window_z;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_list_item_padding_horizontal_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_list_item_padding_horizontal_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_panel_menu_list_width = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_panel_menu_list_width;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_progress_bar_height_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_progress_bar_height_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_search_view_preferred_height = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_search_view_preferred_height;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_search_view_preferred_width = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_search_view_preferred_width;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_seekbar_track_background_height_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_seekbar_track_background_height_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_seekbar_track_progress_height_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_seekbar_track_progress_height_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_select_dialog_padding_start_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_select_dialog_padding_start_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_switch_padding = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_switch_padding;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_text_size_body_1_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_text_size_body_1_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_text_size_body_2_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_text_size_body_2_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_text_size_button_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_text_size_button_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_text_size_caption_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_text_size_caption_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_text_size_display_1_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_text_size_display_1_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_text_size_display_2_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_text_size_display_2_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_text_size_display_3_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_text_size_display_3_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_text_size_display_4_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_text_size_display_4_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_text_size_headline_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_text_size_headline_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_text_size_large_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_text_size_large_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_text_size_medium_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_text_size_medium_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_text_size_menu_header_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_text_size_menu_header_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_text_size_menu_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_text_size_menu_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_text_size_small_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_text_size_small_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_text_size_subhead_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_text_size_subhead_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_text_size_subtitle_material_toolbar = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_text_size_subtitle_material_toolbar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_text_size_title_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_text_size_title_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.abc_text_size_title_material_toolbar = global::fiskaltrust.AndroidLauncher.Resource.Dimension.abc_text_size_title_material_toolbar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.browser_actions_context_menu_max_width = global::fiskaltrust.AndroidLauncher.Resource.Dimension.browser_actions_context_menu_max_width;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.browser_actions_context_menu_min_padding = global::fiskaltrust.AndroidLauncher.Resource.Dimension.browser_actions_context_menu_min_padding;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.compat_button_inset_horizontal_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.compat_button_inset_horizontal_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.compat_button_inset_vertical_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.compat_button_inset_vertical_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.compat_button_padding_horizontal_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.compat_button_padding_horizontal_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.compat_button_padding_vertical_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.compat_button_padding_vertical_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.compat_control_corner_material = global::fiskaltrust.AndroidLauncher.Resource.Dimension.compat_control_corner_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.compat_notification_large_icon_max_height = global::fiskaltrust.AndroidLauncher.Resource.Dimension.compat_notification_large_icon_max_height;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.compat_notification_large_icon_max_width = global::fiskaltrust.AndroidLauncher.Resource.Dimension.compat_notification_large_icon_max_width;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.disabled_alpha_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Dimension.disabled_alpha_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.disabled_alpha_material_light = global::fiskaltrust.AndroidLauncher.Resource.Dimension.disabled_alpha_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.highlight_alpha_material_colored = global::fiskaltrust.AndroidLauncher.Resource.Dimension.highlight_alpha_material_colored;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.highlight_alpha_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Dimension.highlight_alpha_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.highlight_alpha_material_light = global::fiskaltrust.AndroidLauncher.Resource.Dimension.highlight_alpha_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.hint_alpha_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Dimension.hint_alpha_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.hint_alpha_material_light = global::fiskaltrust.AndroidLauncher.Resource.Dimension.hint_alpha_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.hint_pressed_alpha_material_dark = global::fiskaltrust.AndroidLauncher.Resource.Dimension.hint_pressed_alpha_material_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.hint_pressed_alpha_material_light = global::fiskaltrust.AndroidLauncher.Resource.Dimension.hint_pressed_alpha_material_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.notification_action_icon_size = global::fiskaltrust.AndroidLauncher.Resource.Dimension.notification_action_icon_size;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.notification_action_text_size = global::fiskaltrust.AndroidLauncher.Resource.Dimension.notification_action_text_size;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.notification_big_circle_margin = global::fiskaltrust.AndroidLauncher.Resource.Dimension.notification_big_circle_margin;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.notification_content_margin_start = global::fiskaltrust.AndroidLauncher.Resource.Dimension.notification_content_margin_start;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.notification_large_icon_height = global::fiskaltrust.AndroidLauncher.Resource.Dimension.notification_large_icon_height;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.notification_large_icon_width = global::fiskaltrust.AndroidLauncher.Resource.Dimension.notification_large_icon_width;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.notification_main_column_padding_top = global::fiskaltrust.AndroidLauncher.Resource.Dimension.notification_main_column_padding_top;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.notification_media_narrow_margin = global::fiskaltrust.AndroidLauncher.Resource.Dimension.notification_media_narrow_margin;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.notification_right_icon_size = global::fiskaltrust.AndroidLauncher.Resource.Dimension.notification_right_icon_size;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.notification_right_side_padding_top = global::fiskaltrust.AndroidLauncher.Resource.Dimension.notification_right_side_padding_top;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.notification_small_icon_background_padding = global::fiskaltrust.AndroidLauncher.Resource.Dimension.notification_small_icon_background_padding;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.notification_small_icon_size_as_large = global::fiskaltrust.AndroidLauncher.Resource.Dimension.notification_small_icon_size_as_large;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.notification_subtext_size = global::fiskaltrust.AndroidLauncher.Resource.Dimension.notification_subtext_size;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.notification_top_pad = global::fiskaltrust.AndroidLauncher.Resource.Dimension.notification_top_pad;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.notification_top_pad_large_text = global::fiskaltrust.AndroidLauncher.Resource.Dimension.notification_top_pad_large_text;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.subtitle_corner_radius = global::fiskaltrust.AndroidLauncher.Resource.Dimension.subtitle_corner_radius;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.subtitle_outline_width = global::fiskaltrust.AndroidLauncher.Resource.Dimension.subtitle_outline_width;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.subtitle_shadow_offset = global::fiskaltrust.AndroidLauncher.Resource.Dimension.subtitle_shadow_offset;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.subtitle_shadow_radius = global::fiskaltrust.AndroidLauncher.Resource.Dimension.subtitle_shadow_radius;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.tooltip_corner_radius = global::fiskaltrust.AndroidLauncher.Resource.Dimension.tooltip_corner_radius;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.tooltip_horizontal_padding = global::fiskaltrust.AndroidLauncher.Resource.Dimension.tooltip_horizontal_padding;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.tooltip_margin = global::fiskaltrust.AndroidLauncher.Resource.Dimension.tooltip_margin;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.tooltip_precise_anchor_extra_offset = global::fiskaltrust.AndroidLauncher.Resource.Dimension.tooltip_precise_anchor_extra_offset;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.tooltip_precise_anchor_threshold = global::fiskaltrust.AndroidLauncher.Resource.Dimension.tooltip_precise_anchor_threshold;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.tooltip_vertical_padding = global::fiskaltrust.AndroidLauncher.Resource.Dimension.tooltip_vertical_padding;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.tooltip_y_offset_non_touch = global::fiskaltrust.AndroidLauncher.Resource.Dimension.tooltip_y_offset_non_touch;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Dimension.tooltip_y_offset_touch = global::fiskaltrust.AndroidLauncher.Resource.Dimension.tooltip_y_offset_touch;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_ab_share_pack_mtrl_alpha = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_ab_share_pack_mtrl_alpha;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_action_bar_item_background_material = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_action_bar_item_background_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_btn_borderless_material = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_btn_borderless_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_btn_check_material = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_btn_check_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_btn_check_to_on_mtrl_000 = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_btn_check_to_on_mtrl_000;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_btn_check_to_on_mtrl_015 = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_btn_check_to_on_mtrl_015;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_btn_colored_material = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_btn_colored_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_btn_default_mtrl_shape = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_btn_default_mtrl_shape;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_btn_radio_material = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_btn_radio_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_btn_radio_to_on_mtrl_000 = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_btn_radio_to_on_mtrl_000;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_btn_radio_to_on_mtrl_015 = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_btn_radio_to_on_mtrl_015;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_btn_switch_to_on_mtrl_00001 = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_btn_switch_to_on_mtrl_00001;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_btn_switch_to_on_mtrl_00012 = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_btn_switch_to_on_mtrl_00012;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_cab_background_internal_bg = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_cab_background_internal_bg;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_cab_background_top_material = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_cab_background_top_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_cab_background_top_mtrl_alpha = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_cab_background_top_mtrl_alpha;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_control_background_material = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_control_background_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_dialog_material_background = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_dialog_material_background;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_edit_text_material = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_edit_text_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_ic_ab_back_material = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_ic_ab_back_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_ic_arrow_drop_right_black_24dp = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_ic_arrow_drop_right_black_24dp;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_ic_clear_material = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_ic_clear_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_ic_commit_search_api_mtrl_alpha = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_ic_commit_search_api_mtrl_alpha;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_ic_go_search_api_material = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_ic_go_search_api_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_ic_menu_copy_mtrl_am_alpha = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_ic_menu_copy_mtrl_am_alpha;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_ic_menu_cut_mtrl_alpha = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_ic_menu_cut_mtrl_alpha;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_ic_menu_overflow_material = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_ic_menu_overflow_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_ic_menu_paste_mtrl_am_alpha = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_ic_menu_paste_mtrl_am_alpha;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_ic_menu_selectall_mtrl_alpha = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_ic_menu_selectall_mtrl_alpha;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_ic_menu_share_mtrl_alpha = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_ic_menu_share_mtrl_alpha;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_ic_search_api_material = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_ic_search_api_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_ic_star_black_16dp = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_ic_star_black_16dp;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_ic_star_black_36dp = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_ic_star_black_36dp;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_ic_star_black_48dp = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_ic_star_black_48dp;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_ic_star_half_black_16dp = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_ic_star_half_black_16dp;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_ic_star_half_black_36dp = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_ic_star_half_black_36dp;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_ic_star_half_black_48dp = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_ic_star_half_black_48dp;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_ic_voice_search_api_material = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_ic_voice_search_api_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_item_background_holo_dark = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_item_background_holo_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_item_background_holo_light = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_item_background_holo_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_list_divider_material = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_list_divider_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_list_divider_mtrl_alpha = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_list_divider_mtrl_alpha;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_list_focused_holo = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_list_focused_holo;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_list_longpressed_holo = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_list_longpressed_holo;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_list_pressed_holo_dark = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_list_pressed_holo_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_list_pressed_holo_light = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_list_pressed_holo_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_list_selector_background_transition_holo_dark = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_list_selector_background_transition_holo_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_list_selector_background_transition_holo_light = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_list_selector_background_transition_holo_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_list_selector_disabled_holo_dark = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_list_selector_disabled_holo_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_list_selector_disabled_holo_light = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_list_selector_disabled_holo_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_list_selector_holo_dark = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_list_selector_holo_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_list_selector_holo_light = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_list_selector_holo_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_menu_hardkey_panel_mtrl_mult = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_menu_hardkey_panel_mtrl_mult;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_popup_background_mtrl_mult = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_popup_background_mtrl_mult;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_ratingbar_indicator_material = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_ratingbar_indicator_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_ratingbar_material = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_ratingbar_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_ratingbar_small_material = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_ratingbar_small_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_scrubber_control_off_mtrl_alpha = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_scrubber_control_off_mtrl_alpha;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_scrubber_control_to_pressed_mtrl_000 = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_scrubber_control_to_pressed_mtrl_000;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_scrubber_control_to_pressed_mtrl_005 = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_scrubber_control_to_pressed_mtrl_005;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_scrubber_primary_mtrl_alpha = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_scrubber_primary_mtrl_alpha;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_scrubber_track_mtrl_alpha = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_scrubber_track_mtrl_alpha;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_seekbar_thumb_material = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_seekbar_thumb_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_seekbar_tick_mark_material = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_seekbar_tick_mark_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_seekbar_track_material = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_seekbar_track_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_spinner_mtrl_am_alpha = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_spinner_mtrl_am_alpha;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_spinner_textfield_background_material = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_spinner_textfield_background_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_switch_thumb_material = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_switch_thumb_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_switch_track_mtrl_alpha = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_switch_track_mtrl_alpha;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_tab_indicator_material = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_tab_indicator_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_tab_indicator_mtrl_alpha = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_tab_indicator_mtrl_alpha;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_textfield_activated_mtrl_alpha = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_textfield_activated_mtrl_alpha;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_textfield_default_mtrl_alpha = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_textfield_default_mtrl_alpha;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_textfield_search_activated_mtrl_alpha = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_textfield_search_activated_mtrl_alpha;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_textfield_search_default_mtrl_alpha = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_textfield_search_default_mtrl_alpha;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_textfield_search_material = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_textfield_search_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_text_cursor_material = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_text_cursor_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_text_select_handle_left_mtrl_dark = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_text_select_handle_left_mtrl_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_text_select_handle_left_mtrl_light = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_text_select_handle_left_mtrl_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_text_select_handle_middle_mtrl_dark = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_text_select_handle_middle_mtrl_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_text_select_handle_middle_mtrl_light = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_text_select_handle_middle_mtrl_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_text_select_handle_right_mtrl_dark = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_text_select_handle_right_mtrl_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_text_select_handle_right_mtrl_light = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_text_select_handle_right_mtrl_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.abc_vector_test = global::fiskaltrust.AndroidLauncher.Resource.Drawable.abc_vector_test;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.ft_notification_connected = global::fiskaltrust.AndroidLauncher.Resource.Drawable.ft_notification_connected;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.ft_notification_error = global::fiskaltrust.AndroidLauncher.Resource.Drawable.ft_notification_error;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.ft_notification_notconnected = global::fiskaltrust.AndroidLauncher.Resource.Drawable.ft_notification_notconnected;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.notification_action_background = global::fiskaltrust.AndroidLauncher.Resource.Drawable.notification_action_background;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.notification_bg = global::fiskaltrust.AndroidLauncher.Resource.Drawable.notification_bg;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.notification_bg_low = global::fiskaltrust.AndroidLauncher.Resource.Drawable.notification_bg_low;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.notification_bg_low_normal = global::fiskaltrust.AndroidLauncher.Resource.Drawable.notification_bg_low_normal;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.notification_bg_low_pressed = global::fiskaltrust.AndroidLauncher.Resource.Drawable.notification_bg_low_pressed;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.notification_bg_normal = global::fiskaltrust.AndroidLauncher.Resource.Drawable.notification_bg_normal;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.notification_bg_normal_pressed = global::fiskaltrust.AndroidLauncher.Resource.Drawable.notification_bg_normal_pressed;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.notification_icon_background = global::fiskaltrust.AndroidLauncher.Resource.Drawable.notification_icon_background;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.notification_template_icon_bg = global::fiskaltrust.AndroidLauncher.Resource.Drawable.notification_template_icon_bg;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.notification_template_icon_low_bg = global::fiskaltrust.AndroidLauncher.Resource.Drawable.notification_template_icon_low_bg;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.notification_tile_bg = global::fiskaltrust.AndroidLauncher.Resource.Drawable.notification_tile_bg;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.notify_panel_notification_icon_bg = global::fiskaltrust.AndroidLauncher.Resource.Drawable.notify_panel_notification_icon_bg;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.tooltip_frame_dark = global::fiskaltrust.AndroidLauncher.Resource.Drawable.tooltip_frame_dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Drawable.tooltip_frame_light = global::fiskaltrust.AndroidLauncher.Resource.Drawable.tooltip_frame_light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.action0 = global::fiskaltrust.AndroidLauncher.Resource.Id.action0;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.actions = global::fiskaltrust.AndroidLauncher.Resource.Id.actions;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.action_bar = global::fiskaltrust.AndroidLauncher.Resource.Id.action_bar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.action_bar_activity_content = global::fiskaltrust.AndroidLauncher.Resource.Id.action_bar_activity_content;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.action_bar_container = global::fiskaltrust.AndroidLauncher.Resource.Id.action_bar_container;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.action_bar_root = global::fiskaltrust.AndroidLauncher.Resource.Id.action_bar_root;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.action_bar_spinner = global::fiskaltrust.AndroidLauncher.Resource.Id.action_bar_spinner;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.action_bar_subtitle = global::fiskaltrust.AndroidLauncher.Resource.Id.action_bar_subtitle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.action_bar_title = global::fiskaltrust.AndroidLauncher.Resource.Id.action_bar_title;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.action_container = global::fiskaltrust.AndroidLauncher.Resource.Id.action_container;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.action_context_bar = global::fiskaltrust.AndroidLauncher.Resource.Id.action_context_bar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.action_divider = global::fiskaltrust.AndroidLauncher.Resource.Id.action_divider;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.action_image = global::fiskaltrust.AndroidLauncher.Resource.Id.action_image;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.action_menu_divider = global::fiskaltrust.AndroidLauncher.Resource.Id.action_menu_divider;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.action_menu_presenter = global::fiskaltrust.AndroidLauncher.Resource.Id.action_menu_presenter;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.action_mode_bar = global::fiskaltrust.AndroidLauncher.Resource.Id.action_mode_bar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.action_mode_bar_stub = global::fiskaltrust.AndroidLauncher.Resource.Id.action_mode_bar_stub;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.action_mode_close_button = global::fiskaltrust.AndroidLauncher.Resource.Id.action_mode_close_button;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.action_text = global::fiskaltrust.AndroidLauncher.Resource.Id.action_text;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.activity_chooser_view_content = global::fiskaltrust.AndroidLauncher.Resource.Id.activity_chooser_view_content;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.add = global::fiskaltrust.AndroidLauncher.Resource.Id.add;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.alertTitle = global::fiskaltrust.AndroidLauncher.Resource.Id.alertTitle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.all = global::fiskaltrust.AndroidLauncher.Resource.Id.all;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.ALT = global::fiskaltrust.AndroidLauncher.Resource.Id.ALT;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.always = global::fiskaltrust.AndroidLauncher.Resource.Id.always;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.async = global::fiskaltrust.AndroidLauncher.Resource.Id.async;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.beginning = global::fiskaltrust.AndroidLauncher.Resource.Id.beginning;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.blocking = global::fiskaltrust.AndroidLauncher.Resource.Id.blocking;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.bottom = global::fiskaltrust.AndroidLauncher.Resource.Id.bottom;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.browser_actions_header_text = global::fiskaltrust.AndroidLauncher.Resource.Id.browser_actions_header_text;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.browser_actions_menu_items = global::fiskaltrust.AndroidLauncher.Resource.Id.browser_actions_menu_items;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.browser_actions_menu_item_icon = global::fiskaltrust.AndroidLauncher.Resource.Id.browser_actions_menu_item_icon;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.browser_actions_menu_item_text = global::fiskaltrust.AndroidLauncher.Resource.Id.browser_actions_menu_item_text;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.browser_actions_menu_view = global::fiskaltrust.AndroidLauncher.Resource.Id.browser_actions_menu_view;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.buttonPanel = global::fiskaltrust.AndroidLauncher.Resource.Id.buttonPanel;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.cancel_action = global::fiskaltrust.AndroidLauncher.Resource.Id.cancel_action;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.center = global::fiskaltrust.AndroidLauncher.Resource.Id.center;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.center_horizontal = global::fiskaltrust.AndroidLauncher.Resource.Id.center_horizontal;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.center_vertical = global::fiskaltrust.AndroidLauncher.Resource.Id.center_vertical;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.checkbox = global::fiskaltrust.AndroidLauncher.Resource.Id.checkbox;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.chronometer = global::fiskaltrust.AndroidLauncher.Resource.Id.chronometer;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.clip_horizontal = global::fiskaltrust.AndroidLauncher.Resource.Id.clip_horizontal;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.clip_vertical = global::fiskaltrust.AndroidLauncher.Resource.Id.clip_vertical;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.collapseActionView = global::fiskaltrust.AndroidLauncher.Resource.Id.collapseActionView;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.content = global::fiskaltrust.AndroidLauncher.Resource.Id.content;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.contentPanel = global::fiskaltrust.AndroidLauncher.Resource.Id.contentPanel;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.CTRL = global::fiskaltrust.AndroidLauncher.Resource.Id.CTRL;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.custom = global::fiskaltrust.AndroidLauncher.Resource.Id.custom;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.customPanel = global::fiskaltrust.AndroidLauncher.Resource.Id.customPanel;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.decor_content_parent = global::fiskaltrust.AndroidLauncher.Resource.Id.decor_content_parent;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.default_activity_button = global::fiskaltrust.AndroidLauncher.Resource.Id.default_activity_button;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.disableHome = global::fiskaltrust.AndroidLauncher.Resource.Id.disableHome;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.edit_query = global::fiskaltrust.AndroidLauncher.Resource.Id.edit_query;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.end = global::fiskaltrust.AndroidLauncher.Resource.Id.end;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.end_padder = global::fiskaltrust.AndroidLauncher.Resource.Id.end_padder;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.expanded_menu = global::fiskaltrust.AndroidLauncher.Resource.Id.expanded_menu;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.expand_activities_button = global::fiskaltrust.AndroidLauncher.Resource.Id.expand_activities_button;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.fill = global::fiskaltrust.AndroidLauncher.Resource.Id.fill;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.fill_horizontal = global::fiskaltrust.AndroidLauncher.Resource.Id.fill_horizontal;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.fill_vertical = global::fiskaltrust.AndroidLauncher.Resource.Id.fill_vertical;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.forever = global::fiskaltrust.AndroidLauncher.Resource.Id.forever;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.FUNCTION = global::fiskaltrust.AndroidLauncher.Resource.Id.FUNCTION;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.group_divider = global::fiskaltrust.AndroidLauncher.Resource.Id.group_divider;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.home = global::fiskaltrust.AndroidLauncher.Resource.Id.home;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.homeAsUp = global::fiskaltrust.AndroidLauncher.Resource.Id.homeAsUp;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.icon = global::fiskaltrust.AndroidLauncher.Resource.Id.icon;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.icon_group = global::fiskaltrust.AndroidLauncher.Resource.Id.icon_group;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.ifRoom = global::fiskaltrust.AndroidLauncher.Resource.Id.ifRoom;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.image = global::fiskaltrust.AndroidLauncher.Resource.Id.image;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.info = global::fiskaltrust.AndroidLauncher.Resource.Id.info;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.italic = global::fiskaltrust.AndroidLauncher.Resource.Id.italic;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.left = global::fiskaltrust.AndroidLauncher.Resource.Id.left;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.line1 = global::fiskaltrust.AndroidLauncher.Resource.Id.line1;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.line3 = global::fiskaltrust.AndroidLauncher.Resource.Id.line3;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.listMode = global::fiskaltrust.AndroidLauncher.Resource.Id.listMode;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.list_item = global::fiskaltrust.AndroidLauncher.Resource.Id.list_item;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.media_actions = global::fiskaltrust.AndroidLauncher.Resource.Id.media_actions;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.message = global::fiskaltrust.AndroidLauncher.Resource.Id.message;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.META = global::fiskaltrust.AndroidLauncher.Resource.Id.META;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.middle = global::fiskaltrust.AndroidLauncher.Resource.Id.middle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.multiply = global::fiskaltrust.AndroidLauncher.Resource.Id.multiply;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.never = global::fiskaltrust.AndroidLauncher.Resource.Id.never;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.none = global::fiskaltrust.AndroidLauncher.Resource.Id.none;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.normal = global::fiskaltrust.AndroidLauncher.Resource.Id.normal;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.notification_background = global::fiskaltrust.AndroidLauncher.Resource.Id.notification_background;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.notification_main_column = global::fiskaltrust.AndroidLauncher.Resource.Id.notification_main_column;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.notification_main_column_container = global::fiskaltrust.AndroidLauncher.Resource.Id.notification_main_column_container;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.parentPanel = global::fiskaltrust.AndroidLauncher.Resource.Id.parentPanel;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.progress_circular = global::fiskaltrust.AndroidLauncher.Resource.Id.progress_circular;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.progress_horizontal = global::fiskaltrust.AndroidLauncher.Resource.Id.progress_horizontal;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.radio = global::fiskaltrust.AndroidLauncher.Resource.Id.radio;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.right = global::fiskaltrust.AndroidLauncher.Resource.Id.right;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.right_icon = global::fiskaltrust.AndroidLauncher.Resource.Id.right_icon;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.right_side = global::fiskaltrust.AndroidLauncher.Resource.Id.right_side;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.screen = global::fiskaltrust.AndroidLauncher.Resource.Id.screen;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.scrollIndicatorDown = global::fiskaltrust.AndroidLauncher.Resource.Id.scrollIndicatorDown;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.scrollIndicatorUp = global::fiskaltrust.AndroidLauncher.Resource.Id.scrollIndicatorUp;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.scrollView = global::fiskaltrust.AndroidLauncher.Resource.Id.scrollView;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.search_badge = global::fiskaltrust.AndroidLauncher.Resource.Id.search_badge;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.search_bar = global::fiskaltrust.AndroidLauncher.Resource.Id.search_bar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.search_button = global::fiskaltrust.AndroidLauncher.Resource.Id.search_button;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.search_close_btn = global::fiskaltrust.AndroidLauncher.Resource.Id.search_close_btn;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.search_edit_frame = global::fiskaltrust.AndroidLauncher.Resource.Id.search_edit_frame;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.search_go_btn = global::fiskaltrust.AndroidLauncher.Resource.Id.search_go_btn;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.search_mag_icon = global::fiskaltrust.AndroidLauncher.Resource.Id.search_mag_icon;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.search_plate = global::fiskaltrust.AndroidLauncher.Resource.Id.search_plate;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.search_src_text = global::fiskaltrust.AndroidLauncher.Resource.Id.search_src_text;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.search_voice_btn = global::fiskaltrust.AndroidLauncher.Resource.Id.search_voice_btn;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.select_dialog_listview = global::fiskaltrust.AndroidLauncher.Resource.Id.select_dialog_listview;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.SHIFT = global::fiskaltrust.AndroidLauncher.Resource.Id.SHIFT;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.shortcut = global::fiskaltrust.AndroidLauncher.Resource.Id.shortcut;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.showCustom = global::fiskaltrust.AndroidLauncher.Resource.Id.showCustom;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.showHome = global::fiskaltrust.AndroidLauncher.Resource.Id.showHome;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.showTitle = global::fiskaltrust.AndroidLauncher.Resource.Id.showTitle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.spacer = global::fiskaltrust.AndroidLauncher.Resource.Id.spacer;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.split_action_bar = global::fiskaltrust.AndroidLauncher.Resource.Id.split_action_bar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.src_atop = global::fiskaltrust.AndroidLauncher.Resource.Id.src_atop;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.src_in = global::fiskaltrust.AndroidLauncher.Resource.Id.src_in;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.src_over = global::fiskaltrust.AndroidLauncher.Resource.Id.src_over;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.start = global::fiskaltrust.AndroidLauncher.Resource.Id.start;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.status_bar_latest_event_content = global::fiskaltrust.AndroidLauncher.Resource.Id.status_bar_latest_event_content;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.submenuarrow = global::fiskaltrust.AndroidLauncher.Resource.Id.submenuarrow;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.submit_area = global::fiskaltrust.AndroidLauncher.Resource.Id.submit_area;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.SYM = global::fiskaltrust.AndroidLauncher.Resource.Id.SYM;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.tabMode = global::fiskaltrust.AndroidLauncher.Resource.Id.tabMode;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.tag_transition_group = global::fiskaltrust.AndroidLauncher.Resource.Id.tag_transition_group;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.tag_unhandled_key_event_manager = global::fiskaltrust.AndroidLauncher.Resource.Id.tag_unhandled_key_event_manager;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.tag_unhandled_key_listeners = global::fiskaltrust.AndroidLauncher.Resource.Id.tag_unhandled_key_listeners;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.text = global::fiskaltrust.AndroidLauncher.Resource.Id.text;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.text2 = global::fiskaltrust.AndroidLauncher.Resource.Id.text2;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.textSpacerNoButtons = global::fiskaltrust.AndroidLauncher.Resource.Id.textSpacerNoButtons;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.textSpacerNoTitle = global::fiskaltrust.AndroidLauncher.Resource.Id.textSpacerNoTitle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.time = global::fiskaltrust.AndroidLauncher.Resource.Id.time;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.title = global::fiskaltrust.AndroidLauncher.Resource.Id.title;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.titleDividerNoCustom = global::fiskaltrust.AndroidLauncher.Resource.Id.titleDividerNoCustom;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.title_template = global::fiskaltrust.AndroidLauncher.Resource.Id.title_template;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.top = global::fiskaltrust.AndroidLauncher.Resource.Id.top;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.topPanel = global::fiskaltrust.AndroidLauncher.Resource.Id.topPanel;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.uniform = global::fiskaltrust.AndroidLauncher.Resource.Id.uniform;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.up = global::fiskaltrust.AndroidLauncher.Resource.Id.up;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.useLogo = global::fiskaltrust.AndroidLauncher.Resource.Id.useLogo;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.withText = global::fiskaltrust.AndroidLauncher.Resource.Id.withText;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.wrap_content = global::fiskaltrust.AndroidLauncher.Resource.Id.wrap_content;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Integer.abc_config_activityDefaultDur = global::fiskaltrust.AndroidLauncher.Resource.Integer.abc_config_activityDefaultDur;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Integer.abc_config_activityShortDur = global::fiskaltrust.AndroidLauncher.Resource.Integer.abc_config_activityShortDur;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Integer.cancel_button_image_alpha = global::fiskaltrust.AndroidLauncher.Resource.Integer.cancel_button_image_alpha;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Integer.config_tooltipAnimTime = global::fiskaltrust.AndroidLauncher.Resource.Integer.config_tooltipAnimTime;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Integer.status_bar_notification_info_maxnum = global::fiskaltrust.AndroidLauncher.Resource.Integer.status_bar_notification_info_maxnum;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_action_bar_title_item = global::fiskaltrust.AndroidLauncher.Resource.Layout.abc_action_bar_title_item;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_action_bar_up_container = global::fiskaltrust.AndroidLauncher.Resource.Layout.abc_action_bar_up_container;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_action_menu_item_layout = global::fiskaltrust.AndroidLauncher.Resource.Layout.abc_action_menu_item_layout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_action_menu_layout = global::fiskaltrust.AndroidLauncher.Resource.Layout.abc_action_menu_layout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_action_mode_bar = global::fiskaltrust.AndroidLauncher.Resource.Layout.abc_action_mode_bar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_action_mode_close_item_material = global::fiskaltrust.AndroidLauncher.Resource.Layout.abc_action_mode_close_item_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_activity_chooser_view = global::fiskaltrust.AndroidLauncher.Resource.Layout.abc_activity_chooser_view;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_activity_chooser_view_list_item = global::fiskaltrust.AndroidLauncher.Resource.Layout.abc_activity_chooser_view_list_item;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_alert_dialog_button_bar_material = global::fiskaltrust.AndroidLauncher.Resource.Layout.abc_alert_dialog_button_bar_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_alert_dialog_material = global::fiskaltrust.AndroidLauncher.Resource.Layout.abc_alert_dialog_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_alert_dialog_title_material = global::fiskaltrust.AndroidLauncher.Resource.Layout.abc_alert_dialog_title_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_cascading_menu_item_layout = global::fiskaltrust.AndroidLauncher.Resource.Layout.abc_cascading_menu_item_layout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_dialog_title_material = global::fiskaltrust.AndroidLauncher.Resource.Layout.abc_dialog_title_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_expanded_menu_layout = global::fiskaltrust.AndroidLauncher.Resource.Layout.abc_expanded_menu_layout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_list_menu_item_checkbox = global::fiskaltrust.AndroidLauncher.Resource.Layout.abc_list_menu_item_checkbox;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_list_menu_item_icon = global::fiskaltrust.AndroidLauncher.Resource.Layout.abc_list_menu_item_icon;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_list_menu_item_layout = global::fiskaltrust.AndroidLauncher.Resource.Layout.abc_list_menu_item_layout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_list_menu_item_radio = global::fiskaltrust.AndroidLauncher.Resource.Layout.abc_list_menu_item_radio;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_popup_menu_header_item_layout = global::fiskaltrust.AndroidLauncher.Resource.Layout.abc_popup_menu_header_item_layout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_popup_menu_item_layout = global::fiskaltrust.AndroidLauncher.Resource.Layout.abc_popup_menu_item_layout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_screen_content_include = global::fiskaltrust.AndroidLauncher.Resource.Layout.abc_screen_content_include;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_screen_simple = global::fiskaltrust.AndroidLauncher.Resource.Layout.abc_screen_simple;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_screen_simple_overlay_action_mode = global::fiskaltrust.AndroidLauncher.Resource.Layout.abc_screen_simple_overlay_action_mode;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_screen_toolbar = global::fiskaltrust.AndroidLauncher.Resource.Layout.abc_screen_toolbar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_search_dropdown_item_icons_2line = global::fiskaltrust.AndroidLauncher.Resource.Layout.abc_search_dropdown_item_icons_2line;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_search_view = global::fiskaltrust.AndroidLauncher.Resource.Layout.abc_search_view;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_select_dialog_material = global::fiskaltrust.AndroidLauncher.Resource.Layout.abc_select_dialog_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_tooltip = global::fiskaltrust.AndroidLauncher.Resource.Layout.abc_tooltip;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.browser_actions_context_menu_page = global::fiskaltrust.AndroidLauncher.Resource.Layout.browser_actions_context_menu_page;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.browser_actions_context_menu_row = global::fiskaltrust.AndroidLauncher.Resource.Layout.browser_actions_context_menu_row;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.notification_action = global::fiskaltrust.AndroidLauncher.Resource.Layout.notification_action;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.notification_action_tombstone = global::fiskaltrust.AndroidLauncher.Resource.Layout.notification_action_tombstone;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.notification_media_action = global::fiskaltrust.AndroidLauncher.Resource.Layout.notification_media_action;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.notification_media_cancel_action = global::fiskaltrust.AndroidLauncher.Resource.Layout.notification_media_cancel_action;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.notification_template_big_media = global::fiskaltrust.AndroidLauncher.Resource.Layout.notification_template_big_media;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.notification_template_big_media_custom = global::fiskaltrust.AndroidLauncher.Resource.Layout.notification_template_big_media_custom;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.notification_template_big_media_narrow = global::fiskaltrust.AndroidLauncher.Resource.Layout.notification_template_big_media_narrow;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.notification_template_big_media_narrow_custom = global::fiskaltrust.AndroidLauncher.Resource.Layout.notification_template_big_media_narrow_custom;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.notification_template_custom_big = global::fiskaltrust.AndroidLauncher.Resource.Layout.notification_template_custom_big;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.notification_template_icon_group = global::fiskaltrust.AndroidLauncher.Resource.Layout.notification_template_icon_group;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.notification_template_lines_media = global::fiskaltrust.AndroidLauncher.Resource.Layout.notification_template_lines_media;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.notification_template_media = global::fiskaltrust.AndroidLauncher.Resource.Layout.notification_template_media;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.notification_template_media_custom = global::fiskaltrust.AndroidLauncher.Resource.Layout.notification_template_media_custom;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.notification_template_part_chronometer = global::fiskaltrust.AndroidLauncher.Resource.Layout.notification_template_part_chronometer;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.notification_template_part_time = global::fiskaltrust.AndroidLauncher.Resource.Layout.notification_template_part_time;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.select_dialog_item_material = global::fiskaltrust.AndroidLauncher.Resource.Layout.select_dialog_item_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.select_dialog_multichoice_material = global::fiskaltrust.AndroidLauncher.Resource.Layout.select_dialog_multichoice_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.select_dialog_singlechoice_material = global::fiskaltrust.AndroidLauncher.Resource.Layout.select_dialog_singlechoice_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.support_simple_spinner_dropdown_item = global::fiskaltrust.AndroidLauncher.Resource.Layout.support_simple_spinner_dropdown_item;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_action_bar_home_description = global::fiskaltrust.AndroidLauncher.Resource.String.abc_action_bar_home_description;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_action_bar_up_description = global::fiskaltrust.AndroidLauncher.Resource.String.abc_action_bar_up_description;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_action_menu_overflow_description = global::fiskaltrust.AndroidLauncher.Resource.String.abc_action_menu_overflow_description;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_action_mode_done = global::fiskaltrust.AndroidLauncher.Resource.String.abc_action_mode_done;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_activitychooserview_choose_application = global::fiskaltrust.AndroidLauncher.Resource.String.abc_activitychooserview_choose_application;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_activity_chooser_view_see_all = global::fiskaltrust.AndroidLauncher.Resource.String.abc_activity_chooser_view_see_all;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_capital_off = global::fiskaltrust.AndroidLauncher.Resource.String.abc_capital_off;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_capital_on = global::fiskaltrust.AndroidLauncher.Resource.String.abc_capital_on;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_font_family_body_1_material = global::fiskaltrust.AndroidLauncher.Resource.String.abc_font_family_body_1_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_font_family_body_2_material = global::fiskaltrust.AndroidLauncher.Resource.String.abc_font_family_body_2_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_font_family_button_material = global::fiskaltrust.AndroidLauncher.Resource.String.abc_font_family_button_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_font_family_caption_material = global::fiskaltrust.AndroidLauncher.Resource.String.abc_font_family_caption_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_font_family_display_1_material = global::fiskaltrust.AndroidLauncher.Resource.String.abc_font_family_display_1_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_font_family_display_2_material = global::fiskaltrust.AndroidLauncher.Resource.String.abc_font_family_display_2_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_font_family_display_3_material = global::fiskaltrust.AndroidLauncher.Resource.String.abc_font_family_display_3_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_font_family_display_4_material = global::fiskaltrust.AndroidLauncher.Resource.String.abc_font_family_display_4_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_font_family_headline_material = global::fiskaltrust.AndroidLauncher.Resource.String.abc_font_family_headline_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_font_family_menu_material = global::fiskaltrust.AndroidLauncher.Resource.String.abc_font_family_menu_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_font_family_subhead_material = global::fiskaltrust.AndroidLauncher.Resource.String.abc_font_family_subhead_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_font_family_title_material = global::fiskaltrust.AndroidLauncher.Resource.String.abc_font_family_title_material;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_menu_alt_shortcut_label = global::fiskaltrust.AndroidLauncher.Resource.String.abc_menu_alt_shortcut_label;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_menu_ctrl_shortcut_label = global::fiskaltrust.AndroidLauncher.Resource.String.abc_menu_ctrl_shortcut_label;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_menu_delete_shortcut_label = global::fiskaltrust.AndroidLauncher.Resource.String.abc_menu_delete_shortcut_label;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_menu_enter_shortcut_label = global::fiskaltrust.AndroidLauncher.Resource.String.abc_menu_enter_shortcut_label;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_menu_function_shortcut_label = global::fiskaltrust.AndroidLauncher.Resource.String.abc_menu_function_shortcut_label;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_menu_meta_shortcut_label = global::fiskaltrust.AndroidLauncher.Resource.String.abc_menu_meta_shortcut_label;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_menu_shift_shortcut_label = global::fiskaltrust.AndroidLauncher.Resource.String.abc_menu_shift_shortcut_label;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_menu_space_shortcut_label = global::fiskaltrust.AndroidLauncher.Resource.String.abc_menu_space_shortcut_label;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_menu_sym_shortcut_label = global::fiskaltrust.AndroidLauncher.Resource.String.abc_menu_sym_shortcut_label;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_prepend_shortcut_label = global::fiskaltrust.AndroidLauncher.Resource.String.abc_prepend_shortcut_label;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_searchview_description_clear = global::fiskaltrust.AndroidLauncher.Resource.String.abc_searchview_description_clear;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_searchview_description_query = global::fiskaltrust.AndroidLauncher.Resource.String.abc_searchview_description_query;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_searchview_description_search = global::fiskaltrust.AndroidLauncher.Resource.String.abc_searchview_description_search;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_searchview_description_submit = global::fiskaltrust.AndroidLauncher.Resource.String.abc_searchview_description_submit;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_searchview_description_voice = global::fiskaltrust.AndroidLauncher.Resource.String.abc_searchview_description_voice;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_search_hint = global::fiskaltrust.AndroidLauncher.Resource.String.abc_search_hint;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_shareactionprovider_share_with = global::fiskaltrust.AndroidLauncher.Resource.String.abc_shareactionprovider_share_with;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_shareactionprovider_share_with_application = global::fiskaltrust.AndroidLauncher.Resource.String.abc_shareactionprovider_share_with_application;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_toolbar_collapse_description = global::fiskaltrust.AndroidLauncher.Resource.String.abc_toolbar_collapse_description;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.app_name = global::fiskaltrust.AndroidLauncher.Resource.String.app_name;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.hello = global::fiskaltrust.AndroidLauncher.Resource.String.hello;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.search_menu_title = global::fiskaltrust.AndroidLauncher.Resource.String.search_menu_title;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.status_bar_notification_info_overflow = global::fiskaltrust.AndroidLauncher.Resource.String.status_bar_notification_info_overflow;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.AlertDialog_AppCompat = global::fiskaltrust.AndroidLauncher.Resource.Style.AlertDialog_AppCompat;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.AlertDialog_AppCompat_Light = global::fiskaltrust.AndroidLauncher.Resource.Style.AlertDialog_AppCompat_Light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Animation_AppCompat_Dialog = global::fiskaltrust.AndroidLauncher.Resource.Style.Animation_AppCompat_Dialog;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Animation_AppCompat_DropDownUp = global::fiskaltrust.AndroidLauncher.Resource.Style.Animation_AppCompat_DropDownUp;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Animation_AppCompat_Tooltip = global::fiskaltrust.AndroidLauncher.Resource.Style.Animation_AppCompat_Tooltip;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_AlertDialog_AppCompat = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_AlertDialog_AppCompat;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_AlertDialog_AppCompat_Light = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_AlertDialog_AppCompat_Light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Animation_AppCompat_Dialog = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Animation_AppCompat_Dialog;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Animation_AppCompat_DropDownUp = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Animation_AppCompat_DropDownUp;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Animation_AppCompat_Tooltip = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Animation_AppCompat_Tooltip;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_DialogWindowTitleBackground_AppCompat = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_DialogWindowTitleBackground_AppCompat;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_DialogWindowTitle_AppCompat = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_DialogWindowTitle_AppCompat;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Body1 = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Body1;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Body2 = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Body2;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Button = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Button;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Caption = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Caption;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Display1 = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Display1;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Display2 = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Display2;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Display3 = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Display3;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Display4 = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Display4;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Headline = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Headline;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Inverse = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Inverse;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Large = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Large;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Large_Inverse = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Large_Inverse;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Light_Widget_PopupMenu_Large = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Light_Widget_PopupMenu_Large;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Light_Widget_PopupMenu_Small = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Light_Widget_PopupMenu_Small;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Medium = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Medium;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Medium_Inverse = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Medium_Inverse;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Menu = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Menu;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_SearchResult = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_SearchResult;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_SearchResult_Subtitle = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_SearchResult_Subtitle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_SearchResult_Title = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_SearchResult_Title;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Small = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Small;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Small_Inverse = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Small_Inverse;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Subhead = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Subhead;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Subhead_Inverse = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Subhead_Inverse;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Title = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Title;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Title_Inverse = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Title_Inverse;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Tooltip = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Tooltip;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Widget_ActionBar_Menu = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Widget_ActionBar_Menu;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Widget_ActionBar_Subtitle = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Widget_ActionBar_Subtitle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Widget_ActionBar_Subtitle_Inverse = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Widget_ActionBar_Subtitle_Inverse;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Widget_ActionBar_Title = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Widget_ActionBar_Title;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Widget_ActionBar_Title_Inverse = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Widget_ActionBar_Title_Inverse;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Widget_ActionMode_Subtitle = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Widget_ActionMode_Subtitle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Widget_ActionMode_Title = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Widget_ActionMode_Title;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Widget_Button = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Widget_Button;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Widget_Button_Borderless_Colored = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Widget_Button_Borderless_Colored;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Widget_Button_Colored = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Widget_Button_Colored;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Widget_Button_Inverse = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Widget_Button_Inverse;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Widget_DropDownItem = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Widget_DropDownItem;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Widget_PopupMenu_Header = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Widget_PopupMenu_Header;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Widget_PopupMenu_Large = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Widget_PopupMenu_Large;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Widget_PopupMenu_Small = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Widget_PopupMenu_Small;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Widget_Switch = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Widget_Switch;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_AppCompat_Widget_TextView_SpinnerItem = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_AppCompat_Widget_TextView_SpinnerItem;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_Widget_AppCompat_ExpandedMenu_Item = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_Widget_AppCompat_ExpandedMenu_Item;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_Widget_AppCompat_Toolbar_Subtitle = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_Widget_AppCompat_Toolbar_Subtitle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_TextAppearance_Widget_AppCompat_Toolbar_Title = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_TextAppearance_Widget_AppCompat_Toolbar_Title;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_ThemeOverlay_AppCompat = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_ThemeOverlay_AppCompat;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_ThemeOverlay_AppCompat_ActionBar = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_ThemeOverlay_AppCompat_ActionBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_ThemeOverlay_AppCompat_Dark = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_ThemeOverlay_AppCompat_Dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_ThemeOverlay_AppCompat_Dark_ActionBar = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_ThemeOverlay_AppCompat_Dark_ActionBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_ThemeOverlay_AppCompat_Dialog = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_ThemeOverlay_AppCompat_Dialog;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_ThemeOverlay_AppCompat_Dialog_Alert = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_ThemeOverlay_AppCompat_Dialog_Alert;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_ThemeOverlay_AppCompat_Light = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_ThemeOverlay_AppCompat_Light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Theme_AppCompat = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Theme_AppCompat;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Theme_AppCompat_CompactMenu = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Theme_AppCompat_CompactMenu;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Theme_AppCompat_Dialog = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Theme_AppCompat_Dialog;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Theme_AppCompat_DialogWhenLarge = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Theme_AppCompat_DialogWhenLarge;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Theme_AppCompat_Dialog_Alert = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Theme_AppCompat_Dialog_Alert;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Theme_AppCompat_Dialog_FixedSize = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Theme_AppCompat_Dialog_FixedSize;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Theme_AppCompat_Dialog_MinWidth = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Theme_AppCompat_Dialog_MinWidth;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Theme_AppCompat_Light = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Theme_AppCompat_Light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Theme_AppCompat_Light_DarkActionBar = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Theme_AppCompat_Light_DarkActionBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Theme_AppCompat_Light_Dialog = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Theme_AppCompat_Light_Dialog;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Theme_AppCompat_Light_DialogWhenLarge = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Theme_AppCompat_Light_DialogWhenLarge;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Theme_AppCompat_Light_Dialog_Alert = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Theme_AppCompat_Light_Dialog_Alert;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Theme_AppCompat_Light_Dialog_FixedSize = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Theme_AppCompat_Light_Dialog_FixedSize;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Theme_AppCompat_Light_Dialog_MinWidth = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Theme_AppCompat_Light_Dialog_MinWidth;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_V21_ThemeOverlay_AppCompat_Dialog = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_V21_ThemeOverlay_AppCompat_Dialog;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_V21_Theme_AppCompat = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_V21_Theme_AppCompat;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_V21_Theme_AppCompat_Dialog = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_V21_Theme_AppCompat_Dialog;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_V21_Theme_AppCompat_Light = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_V21_Theme_AppCompat_Light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_V21_Theme_AppCompat_Light_Dialog = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_V21_Theme_AppCompat_Light_Dialog;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_V22_Theme_AppCompat = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_V22_Theme_AppCompat;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_V22_Theme_AppCompat_Light = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_V22_Theme_AppCompat_Light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_V23_Theme_AppCompat = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_V23_Theme_AppCompat;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_V23_Theme_AppCompat_Light = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_V23_Theme_AppCompat_Light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_V26_Theme_AppCompat = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_V26_Theme_AppCompat;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_V26_Theme_AppCompat_Light = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_V26_Theme_AppCompat_Light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_V26_Widget_AppCompat_Toolbar = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_V26_Widget_AppCompat_Toolbar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_V28_Theme_AppCompat = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_V28_Theme_AppCompat;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_V28_Theme_AppCompat_Light = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_V28_Theme_AppCompat_Light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_V7_ThemeOverlay_AppCompat_Dialog = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_V7_ThemeOverlay_AppCompat_Dialog;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_V7_Theme_AppCompat = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_V7_Theme_AppCompat;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_V7_Theme_AppCompat_Dialog = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_V7_Theme_AppCompat_Dialog;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_V7_Theme_AppCompat_Light = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_V7_Theme_AppCompat_Light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_V7_Theme_AppCompat_Light_Dialog = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_V7_Theme_AppCompat_Light_Dialog;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_V7_Widget_AppCompat_AutoCompleteTextView = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_V7_Widget_AppCompat_AutoCompleteTextView;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_V7_Widget_AppCompat_EditText = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_V7_Widget_AppCompat_EditText;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_V7_Widget_AppCompat_Toolbar = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_V7_Widget_AppCompat_Toolbar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_ActionBar = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_ActionBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_ActionBar_Solid = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_ActionBar_Solid;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_ActionBar_TabBar = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_ActionBar_TabBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_ActionBar_TabText = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_ActionBar_TabText;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_ActionBar_TabView = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_ActionBar_TabView;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_ActionButton = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_ActionButton;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_ActionButton_CloseMode = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_ActionButton_CloseMode;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_ActionButton_Overflow = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_ActionButton_Overflow;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_ActionMode = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_ActionMode;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_ActivityChooserView = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_ActivityChooserView;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_AutoCompleteTextView = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_AutoCompleteTextView;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_Button = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_Button;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_ButtonBar = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_ButtonBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_ButtonBar_AlertDialog = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_ButtonBar_AlertDialog;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_Button_Borderless = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_Button_Borderless;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_Button_Borderless_Colored = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_Button_Borderless_Colored;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_Button_ButtonBar_AlertDialog = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_Button_ButtonBar_AlertDialog;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_Button_Colored = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_Button_Colored;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_Button_Small = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_Button_Small;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_CompoundButton_CheckBox = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_CompoundButton_CheckBox;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_CompoundButton_RadioButton = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_CompoundButton_RadioButton;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_CompoundButton_Switch = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_CompoundButton_Switch;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_DrawerArrowToggle = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_DrawerArrowToggle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_DrawerArrowToggle_Common = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_DrawerArrowToggle_Common;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_DropDownItem_Spinner = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_DropDownItem_Spinner;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_EditText = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_EditText;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_ImageButton = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_ImageButton;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_Light_ActionBar = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_Light_ActionBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_Light_ActionBar_Solid = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_Light_ActionBar_Solid;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_Light_ActionBar_TabBar = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_Light_ActionBar_TabBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_Light_ActionBar_TabText = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_Light_ActionBar_TabText;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_Light_ActionBar_TabText_Inverse = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_Light_ActionBar_TabText_Inverse;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_Light_ActionBar_TabView = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_Light_ActionBar_TabView;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_Light_PopupMenu = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_Light_PopupMenu;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_Light_PopupMenu_Overflow = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_Light_PopupMenu_Overflow;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_ListMenuView = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_ListMenuView;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_ListPopupWindow = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_ListPopupWindow;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_ListView = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_ListView;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_ListView_DropDown = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_ListView_DropDown;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_ListView_Menu = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_ListView_Menu;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_PopupMenu = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_PopupMenu;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_PopupMenu_Overflow = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_PopupMenu_Overflow;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_PopupWindow = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_PopupWindow;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_ProgressBar = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_ProgressBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_ProgressBar_Horizontal = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_ProgressBar_Horizontal;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_RatingBar = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_RatingBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_RatingBar_Indicator = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_RatingBar_Indicator;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_RatingBar_Small = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_RatingBar_Small;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_SearchView = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_SearchView;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_SearchView_ActionBar = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_SearchView_ActionBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_SeekBar = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_SeekBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_SeekBar_Discrete = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_SeekBar_Discrete;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_Spinner = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_Spinner;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_Spinner_Underlined = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_Spinner_Underlined;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_TextView_SpinnerItem = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_TextView_SpinnerItem;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_Toolbar = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_Toolbar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Widget_AppCompat_Toolbar_Button_Navigation = global::fiskaltrust.AndroidLauncher.Resource.Style.Base_Widget_AppCompat_Toolbar_Button_Navigation;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Platform_AppCompat = global::fiskaltrust.AndroidLauncher.Resource.Style.Platform_AppCompat;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Platform_AppCompat_Light = global::fiskaltrust.AndroidLauncher.Resource.Style.Platform_AppCompat_Light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Platform_ThemeOverlay_AppCompat = global::fiskaltrust.AndroidLauncher.Resource.Style.Platform_ThemeOverlay_AppCompat;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Platform_ThemeOverlay_AppCompat_Dark = global::fiskaltrust.AndroidLauncher.Resource.Style.Platform_ThemeOverlay_AppCompat_Dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Platform_ThemeOverlay_AppCompat_Light = global::fiskaltrust.AndroidLauncher.Resource.Style.Platform_ThemeOverlay_AppCompat_Light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Platform_V21_AppCompat = global::fiskaltrust.AndroidLauncher.Resource.Style.Platform_V21_AppCompat;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Platform_V21_AppCompat_Light = global::fiskaltrust.AndroidLauncher.Resource.Style.Platform_V21_AppCompat_Light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Platform_V25_AppCompat = global::fiskaltrust.AndroidLauncher.Resource.Style.Platform_V25_AppCompat;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Platform_V25_AppCompat_Light = global::fiskaltrust.AndroidLauncher.Resource.Style.Platform_V25_AppCompat_Light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Platform_Widget_AppCompat_Spinner = global::fiskaltrust.AndroidLauncher.Resource.Style.Platform_Widget_AppCompat_Spinner;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.RtlOverlay_DialogWindowTitle_AppCompat = global::fiskaltrust.AndroidLauncher.Resource.Style.RtlOverlay_DialogWindowTitle_AppCompat;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.RtlOverlay_Widget_AppCompat_ActionBar_TitleItem = global::fiskaltrust.AndroidLauncher.Resource.Style.RtlOverlay_Widget_AppCompat_ActionBar_TitleItem;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.RtlOverlay_Widget_AppCompat_DialogTitle_Icon = global::fiskaltrust.AndroidLauncher.Resource.Style.RtlOverlay_Widget_AppCompat_DialogTitle_Icon;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.RtlOverlay_Widget_AppCompat_PopupMenuItem = global::fiskaltrust.AndroidLauncher.Resource.Style.RtlOverlay_Widget_AppCompat_PopupMenuItem;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.RtlOverlay_Widget_AppCompat_PopupMenuItem_InternalGroup = global::fiskaltrust.AndroidLauncher.Resource.Style.RtlOverlay_Widget_AppCompat_PopupMenuItem_InternalGroup;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.RtlOverlay_Widget_AppCompat_PopupMenuItem_Shortcut = global::fiskaltrust.AndroidLauncher.Resource.Style.RtlOverlay_Widget_AppCompat_PopupMenuItem_Shortcut;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.RtlOverlay_Widget_AppCompat_PopupMenuItem_SubmenuArrow = global::fiskaltrust.AndroidLauncher.Resource.Style.RtlOverlay_Widget_AppCompat_PopupMenuItem_SubmenuArrow;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.RtlOverlay_Widget_AppCompat_PopupMenuItem_Text = global::fiskaltrust.AndroidLauncher.Resource.Style.RtlOverlay_Widget_AppCompat_PopupMenuItem_Text;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.RtlOverlay_Widget_AppCompat_PopupMenuItem_Title = global::fiskaltrust.AndroidLauncher.Resource.Style.RtlOverlay_Widget_AppCompat_PopupMenuItem_Title;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.RtlOverlay_Widget_AppCompat_SearchView_MagIcon = global::fiskaltrust.AndroidLauncher.Resource.Style.RtlOverlay_Widget_AppCompat_SearchView_MagIcon;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.RtlOverlay_Widget_AppCompat_Search_DropDown = global::fiskaltrust.AndroidLauncher.Resource.Style.RtlOverlay_Widget_AppCompat_Search_DropDown;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.RtlOverlay_Widget_AppCompat_Search_DropDown_Icon1 = global::fiskaltrust.AndroidLauncher.Resource.Style.RtlOverlay_Widget_AppCompat_Search_DropDown_Icon1;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.RtlOverlay_Widget_AppCompat_Search_DropDown_Icon2 = global::fiskaltrust.AndroidLauncher.Resource.Style.RtlOverlay_Widget_AppCompat_Search_DropDown_Icon2;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.RtlOverlay_Widget_AppCompat_Search_DropDown_Query = global::fiskaltrust.AndroidLauncher.Resource.Style.RtlOverlay_Widget_AppCompat_Search_DropDown_Query;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.RtlOverlay_Widget_AppCompat_Search_DropDown_Text = global::fiskaltrust.AndroidLauncher.Resource.Style.RtlOverlay_Widget_AppCompat_Search_DropDown_Text;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.RtlUnderlay_Widget_AppCompat_ActionButton = global::fiskaltrust.AndroidLauncher.Resource.Style.RtlUnderlay_Widget_AppCompat_ActionButton;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.RtlUnderlay_Widget_AppCompat_ActionButton_Overflow = global::fiskaltrust.AndroidLauncher.Resource.Style.RtlUnderlay_Widget_AppCompat_ActionButton_Overflow;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Body1 = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Body1;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Body2 = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Body2;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Button = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Button;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Caption = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Caption;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Display1 = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Display1;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Display2 = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Display2;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Display3 = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Display3;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Display4 = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Display4;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Headline = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Headline;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Inverse = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Inverse;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Large = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Large;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Large_Inverse = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Large_Inverse;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Light_SearchResult_Subtitle = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Light_SearchResult_Subtitle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Light_SearchResult_Title = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Light_SearchResult_Title;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Light_Widget_PopupMenu_Large = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Light_Widget_PopupMenu_Large;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Light_Widget_PopupMenu_Small = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Light_Widget_PopupMenu_Small;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Medium = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Medium;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Medium_Inverse = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Medium_Inverse;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Menu = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Menu;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_SearchResult_Subtitle = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_SearchResult_Subtitle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_SearchResult_Title = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_SearchResult_Title;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Small = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Small;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Small_Inverse = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Small_Inverse;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Subhead = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Subhead;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Subhead_Inverse = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Subhead_Inverse;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Title = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Title;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Title_Inverse = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Title_Inverse;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Tooltip = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Tooltip;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Widget_ActionBar_Menu = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Widget_ActionBar_Menu;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Widget_ActionBar_Subtitle = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Widget_ActionBar_Subtitle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Widget_ActionBar_Subtitle_Inverse = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Widget_ActionBar_Subtitle_Inverse;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Widget_ActionBar_Title = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Widget_ActionBar_Title;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Widget_ActionBar_Title_Inverse = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Widget_ActionBar_Title_Inverse;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Widget_ActionMode_Subtitle = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Widget_ActionMode_Subtitle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Widget_ActionMode_Subtitle_Inverse = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Widget_ActionMode_Subtitle_Inverse;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Widget_ActionMode_Title = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Widget_ActionMode_Title;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Widget_ActionMode_Title_Inverse = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Widget_ActionMode_Title_Inverse;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Widget_Button = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Widget_Button;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Widget_Button_Borderless_Colored = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Widget_Button_Borderless_Colored;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Widget_Button_Colored = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Widget_Button_Colored;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Widget_Button_Inverse = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Widget_Button_Inverse;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Widget_DropDownItem = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Widget_DropDownItem;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Widget_PopupMenu_Header = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Widget_PopupMenu_Header;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Widget_PopupMenu_Large = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Widget_PopupMenu_Large;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Widget_PopupMenu_Small = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Widget_PopupMenu_Small;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Widget_Switch = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Widget_Switch;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_AppCompat_Widget_TextView_SpinnerItem = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_AppCompat_Widget_TextView_SpinnerItem;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_Compat_Notification = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_Compat_Notification;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_Compat_Notification_Info = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_Compat_Notification_Info;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_Compat_Notification_Info_Media = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_Compat_Notification_Info_Media;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_Compat_Notification_Line2 = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_Compat_Notification_Line2;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_Compat_Notification_Line2_Media = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_Compat_Notification_Line2_Media;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_Compat_Notification_Media = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_Compat_Notification_Media;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_Compat_Notification_Time = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_Compat_Notification_Time;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_Compat_Notification_Time_Media = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_Compat_Notification_Time_Media;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_Compat_Notification_Title = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_Compat_Notification_Title;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_Compat_Notification_Title_Media = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_Compat_Notification_Title_Media;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_Widget_AppCompat_ExpandedMenu_Item = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_Widget_AppCompat_ExpandedMenu_Item;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_Widget_AppCompat_Toolbar_Subtitle = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_Widget_AppCompat_Toolbar_Subtitle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.TextAppearance_Widget_AppCompat_Toolbar_Title = global::fiskaltrust.AndroidLauncher.Resource.Style.TextAppearance_Widget_AppCompat_Toolbar_Title;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.ThemeOverlay_AppCompat = global::fiskaltrust.AndroidLauncher.Resource.Style.ThemeOverlay_AppCompat;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.ThemeOverlay_AppCompat_ActionBar = global::fiskaltrust.AndroidLauncher.Resource.Style.ThemeOverlay_AppCompat_ActionBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.ThemeOverlay_AppCompat_Dark = global::fiskaltrust.AndroidLauncher.Resource.Style.ThemeOverlay_AppCompat_Dark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.ThemeOverlay_AppCompat_Dark_ActionBar = global::fiskaltrust.AndroidLauncher.Resource.Style.ThemeOverlay_AppCompat_Dark_ActionBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.ThemeOverlay_AppCompat_Dialog = global::fiskaltrust.AndroidLauncher.Resource.Style.ThemeOverlay_AppCompat_Dialog;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.ThemeOverlay_AppCompat_Dialog_Alert = global::fiskaltrust.AndroidLauncher.Resource.Style.ThemeOverlay_AppCompat_Dialog_Alert;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.ThemeOverlay_AppCompat_Light = global::fiskaltrust.AndroidLauncher.Resource.Style.ThemeOverlay_AppCompat_Light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Theme_AppCompat = global::fiskaltrust.AndroidLauncher.Resource.Style.Theme_AppCompat;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Theme_AppCompat_CompactMenu = global::fiskaltrust.AndroidLauncher.Resource.Style.Theme_AppCompat_CompactMenu;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Theme_AppCompat_DayNight = global::fiskaltrust.AndroidLauncher.Resource.Style.Theme_AppCompat_DayNight;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Theme_AppCompat_DayNight_DarkActionBar = global::fiskaltrust.AndroidLauncher.Resource.Style.Theme_AppCompat_DayNight_DarkActionBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Theme_AppCompat_DayNight_Dialog = global::fiskaltrust.AndroidLauncher.Resource.Style.Theme_AppCompat_DayNight_Dialog;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Theme_AppCompat_DayNight_DialogWhenLarge = global::fiskaltrust.AndroidLauncher.Resource.Style.Theme_AppCompat_DayNight_DialogWhenLarge;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Theme_AppCompat_DayNight_Dialog_Alert = global::fiskaltrust.AndroidLauncher.Resource.Style.Theme_AppCompat_DayNight_Dialog_Alert;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Theme_AppCompat_DayNight_Dialog_MinWidth = global::fiskaltrust.AndroidLauncher.Resource.Style.Theme_AppCompat_DayNight_Dialog_MinWidth;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Theme_AppCompat_DayNight_NoActionBar = global::fiskaltrust.AndroidLauncher.Resource.Style.Theme_AppCompat_DayNight_NoActionBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Theme_AppCompat_Dialog = global::fiskaltrust.AndroidLauncher.Resource.Style.Theme_AppCompat_Dialog;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Theme_AppCompat_DialogWhenLarge = global::fiskaltrust.AndroidLauncher.Resource.Style.Theme_AppCompat_DialogWhenLarge;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Theme_AppCompat_Dialog_Alert = global::fiskaltrust.AndroidLauncher.Resource.Style.Theme_AppCompat_Dialog_Alert;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Theme_AppCompat_Dialog_MinWidth = global::fiskaltrust.AndroidLauncher.Resource.Style.Theme_AppCompat_Dialog_MinWidth;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Theme_AppCompat_Light = global::fiskaltrust.AndroidLauncher.Resource.Style.Theme_AppCompat_Light;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Theme_AppCompat_Light_DarkActionBar = global::fiskaltrust.AndroidLauncher.Resource.Style.Theme_AppCompat_Light_DarkActionBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Theme_AppCompat_Light_Dialog = global::fiskaltrust.AndroidLauncher.Resource.Style.Theme_AppCompat_Light_Dialog;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Theme_AppCompat_Light_DialogWhenLarge = global::fiskaltrust.AndroidLauncher.Resource.Style.Theme_AppCompat_Light_DialogWhenLarge;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Theme_AppCompat_Light_Dialog_Alert = global::fiskaltrust.AndroidLauncher.Resource.Style.Theme_AppCompat_Light_Dialog_Alert;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Theme_AppCompat_Light_Dialog_MinWidth = global::fiskaltrust.AndroidLauncher.Resource.Style.Theme_AppCompat_Light_Dialog_MinWidth;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Theme_AppCompat_Light_NoActionBar = global::fiskaltrust.AndroidLauncher.Resource.Style.Theme_AppCompat_Light_NoActionBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Theme_AppCompat_NoActionBar = global::fiskaltrust.AndroidLauncher.Resource.Style.Theme_AppCompat_NoActionBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_ActionBar = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_ActionBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_ActionBar_Solid = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_ActionBar_Solid;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_ActionBar_TabBar = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_ActionBar_TabBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_ActionBar_TabText = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_ActionBar_TabText;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_ActionBar_TabView = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_ActionBar_TabView;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_ActionButton = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_ActionButton;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_ActionButton_CloseMode = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_ActionButton_CloseMode;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_ActionButton_Overflow = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_ActionButton_Overflow;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_ActionMode = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_ActionMode;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_ActivityChooserView = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_ActivityChooserView;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_AutoCompleteTextView = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_AutoCompleteTextView;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Button = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Button;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_ButtonBar = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_ButtonBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_ButtonBar_AlertDialog = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_ButtonBar_AlertDialog;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Button_Borderless = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Button_Borderless;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Button_Borderless_Colored = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Button_Borderless_Colored;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Button_ButtonBar_AlertDialog = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Button_ButtonBar_AlertDialog;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Button_Colored = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Button_Colored;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Button_Small = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Button_Small;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_CompoundButton_CheckBox = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_CompoundButton_CheckBox;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_CompoundButton_RadioButton = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_CompoundButton_RadioButton;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_CompoundButton_Switch = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_CompoundButton_Switch;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_DrawerArrowToggle = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_DrawerArrowToggle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_DropDownItem_Spinner = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_DropDownItem_Spinner;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_EditText = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_EditText;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_ImageButton = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_ImageButton;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Light_ActionBar = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Light_ActionBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Light_ActionBar_Solid = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Light_ActionBar_Solid;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Light_ActionBar_Solid_Inverse = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Light_ActionBar_Solid_Inverse;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Light_ActionBar_TabBar = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Light_ActionBar_TabBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Light_ActionBar_TabBar_Inverse = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Light_ActionBar_TabBar_Inverse;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Light_ActionBar_TabText = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Light_ActionBar_TabText;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Light_ActionBar_TabText_Inverse = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Light_ActionBar_TabText_Inverse;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Light_ActionBar_TabView = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Light_ActionBar_TabView;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Light_ActionBar_TabView_Inverse = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Light_ActionBar_TabView_Inverse;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Light_ActionButton = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Light_ActionButton;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Light_ActionButton_CloseMode = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Light_ActionButton_CloseMode;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Light_ActionButton_Overflow = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Light_ActionButton_Overflow;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Light_ActionMode_Inverse = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Light_ActionMode_Inverse;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Light_ActivityChooserView = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Light_ActivityChooserView;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Light_AutoCompleteTextView = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Light_AutoCompleteTextView;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Light_DropDownItem_Spinner = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Light_DropDownItem_Spinner;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Light_ListPopupWindow = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Light_ListPopupWindow;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Light_ListView_DropDown = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Light_ListView_DropDown;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Light_PopupMenu = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Light_PopupMenu;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Light_PopupMenu_Overflow = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Light_PopupMenu_Overflow;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Light_SearchView = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Light_SearchView;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Light_Spinner_DropDown_ActionBar = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Light_Spinner_DropDown_ActionBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_ListMenuView = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_ListMenuView;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_ListPopupWindow = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_ListPopupWindow;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_ListView = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_ListView;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_ListView_DropDown = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_ListView_DropDown;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_ListView_Menu = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_ListView_Menu;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_PopupMenu = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_PopupMenu;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_PopupMenu_Overflow = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_PopupMenu_Overflow;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_PopupWindow = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_PopupWindow;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_ProgressBar = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_ProgressBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_ProgressBar_Horizontal = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_ProgressBar_Horizontal;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_RatingBar = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_RatingBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_RatingBar_Indicator = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_RatingBar_Indicator;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_RatingBar_Small = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_RatingBar_Small;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_SearchView = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_SearchView;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_SearchView_ActionBar = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_SearchView_ActionBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_SeekBar = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_SeekBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_SeekBar_Discrete = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_SeekBar_Discrete;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Spinner = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Spinner;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Spinner_DropDown = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Spinner_DropDown;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Spinner_DropDown_ActionBar = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Spinner_DropDown_ActionBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Spinner_Underlined = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Spinner_Underlined;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_TextView_SpinnerItem = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_TextView_SpinnerItem;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Toolbar = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Toolbar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_AppCompat_Toolbar_Button_Navigation = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_AppCompat_Toolbar_Button_Navigation;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_Compat_NotificationActionContainer = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_Compat_NotificationActionContainer;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_Compat_NotificationActionText = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_Compat_NotificationActionText;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Widget_Support_CoordinatorLayout = global::fiskaltrust.AndroidLauncher.Resource.Style.Widget_Support_CoordinatorLayout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBarLayout = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBarLayout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBarLayout_android_layout_gravity = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBarLayout_android_layout_gravity;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_background = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_background;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_backgroundSplit = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_backgroundSplit;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_backgroundStacked = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_backgroundStacked;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_contentInsetEnd = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_contentInsetEnd;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_contentInsetEndWithActions = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_contentInsetEndWithActions;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_contentInsetLeft = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_contentInsetLeft;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_contentInsetRight = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_contentInsetRight;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_contentInsetStart = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_contentInsetStart;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_contentInsetStartWithNavigation = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_contentInsetStartWithNavigation;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_customNavigationLayout = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_customNavigationLayout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_displayOptions = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_displayOptions;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_divider = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_divider;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_elevation = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_elevation;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_height = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_height;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_hideOnContentScroll = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_hideOnContentScroll;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_homeAsUpIndicator = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_homeAsUpIndicator;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_homeLayout = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_homeLayout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_icon = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_icon;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_indeterminateProgressStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_indeterminateProgressStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_itemPadding = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_itemPadding;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_logo = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_logo;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_navigationMode = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_navigationMode;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_popupTheme = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_popupTheme;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_progressBarPadding = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_progressBarPadding;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_progressBarStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_progressBarStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_subtitle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_subtitle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_subtitleTextStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_subtitleTextStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_title = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_title;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionBar_titleTextStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionBar_titleTextStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionMenuItemView = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionMenuItemView;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionMenuItemView_android_minWidth = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionMenuItemView_android_minWidth;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionMenuView = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionMenuView;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionMode = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionMode;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionMode_background = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionMode_background;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionMode_backgroundSplit = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionMode_backgroundSplit;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionMode_closeItemLayout = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionMode_closeItemLayout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionMode_height = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionMode_height;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionMode_subtitleTextStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionMode_subtitleTextStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActionMode_titleTextStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActionMode_titleTextStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActivityChooserView = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActivityChooserView;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActivityChooserView_expandActivityOverflowButtonDrawable = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActivityChooserView_expandActivityOverflowButtonDrawable;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ActivityChooserView_initialActivityCount = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ActivityChooserView_initialActivityCount;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AlertDialog = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AlertDialog;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AlertDialog_android_layout = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AlertDialog_android_layout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AlertDialog_buttonIconDimen = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AlertDialog_buttonIconDimen;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AlertDialog_buttonPanelSideLayout = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AlertDialog_buttonPanelSideLayout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AlertDialog_listItemLayout = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AlertDialog_listItemLayout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AlertDialog_listLayout = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AlertDialog_listLayout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AlertDialog_multiChoiceItemLayout = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AlertDialog_multiChoiceItemLayout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AlertDialog_showTitle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AlertDialog_showTitle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AlertDialog_singleChoiceItemLayout = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AlertDialog_singleChoiceItemLayout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AnimatedStateListDrawableCompat = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AnimatedStateListDrawableCompat;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AnimatedStateListDrawableCompat_android_constantSize = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AnimatedStateListDrawableCompat_android_constantSize;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AnimatedStateListDrawableCompat_android_dither = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AnimatedStateListDrawableCompat_android_dither;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AnimatedStateListDrawableCompat_android_enterFadeDuration = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AnimatedStateListDrawableCompat_android_enterFadeDuration;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AnimatedStateListDrawableCompat_android_exitFadeDuration = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AnimatedStateListDrawableCompat_android_exitFadeDuration;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AnimatedStateListDrawableCompat_android_variablePadding = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AnimatedStateListDrawableCompat_android_variablePadding;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AnimatedStateListDrawableCompat_android_visible = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AnimatedStateListDrawableCompat_android_visible;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AnimatedStateListDrawableItem = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AnimatedStateListDrawableItem;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AnimatedStateListDrawableItem_android_drawable = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AnimatedStateListDrawableItem_android_drawable;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AnimatedStateListDrawableItem_android_id = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AnimatedStateListDrawableItem_android_id;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AnimatedStateListDrawableTransition = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AnimatedStateListDrawableTransition;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AnimatedStateListDrawableTransition_android_drawable = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AnimatedStateListDrawableTransition_android_drawable;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AnimatedStateListDrawableTransition_android_fromId = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AnimatedStateListDrawableTransition_android_fromId;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AnimatedStateListDrawableTransition_android_reversible = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AnimatedStateListDrawableTransition_android_reversible;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AnimatedStateListDrawableTransition_android_toId = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AnimatedStateListDrawableTransition_android_toId;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatImageView = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatImageView;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatImageView_android_src = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatImageView_android_src;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatImageView_srcCompat = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatImageView_srcCompat;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatImageView_tint = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatImageView_tint;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatImageView_tintMode = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatImageView_tintMode;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatSeekBar = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatSeekBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatSeekBar_android_thumb = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatSeekBar_android_thumb;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatSeekBar_tickMark = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatSeekBar_tickMark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatSeekBar_tickMarkTint = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatSeekBar_tickMarkTint;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatSeekBar_tickMarkTintMode = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatSeekBar_tickMarkTintMode;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTextHelper = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTextHelper;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTextHelper_android_drawableBottom = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTextHelper_android_drawableBottom;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTextHelper_android_drawableEnd = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTextHelper_android_drawableEnd;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTextHelper_android_drawableLeft = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTextHelper_android_drawableLeft;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTextHelper_android_drawableRight = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTextHelper_android_drawableRight;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTextHelper_android_drawableStart = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTextHelper_android_drawableStart;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTextHelper_android_drawableTop = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTextHelper_android_drawableTop;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTextHelper_android_textAppearance = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTextHelper_android_textAppearance;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTextView = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTextView;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTextView_android_textAppearance = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTextView_android_textAppearance;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTextView_autoSizeMaxTextSize = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTextView_autoSizeMaxTextSize;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTextView_autoSizeMinTextSize = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTextView_autoSizeMinTextSize;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTextView_autoSizePresetSizes = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTextView_autoSizePresetSizes;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTextView_autoSizeStepGranularity = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTextView_autoSizeStepGranularity;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTextView_autoSizeTextType = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTextView_autoSizeTextType;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTextView_firstBaselineToTopHeight = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTextView_firstBaselineToTopHeight;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTextView_fontFamily = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTextView_fontFamily;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTextView_lastBaselineToBottomHeight = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTextView_lastBaselineToBottomHeight;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTextView_lineHeight = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTextView_lineHeight;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTextView_textAllCaps = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTextView_textAllCaps;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionBarDivider = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionBarDivider;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionBarItemBackground = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionBarItemBackground;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionBarPopupTheme = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionBarPopupTheme;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionBarSize = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionBarSize;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionBarSplitStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionBarSplitStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionBarStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionBarStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionBarTabBarStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionBarTabBarStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionBarTabStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionBarTabStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionBarTabTextStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionBarTabTextStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionBarTheme = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionBarTheme;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionBarWidgetTheme = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionBarWidgetTheme;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionButtonStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionButtonStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionDropDownStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionDropDownStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionMenuTextAppearance = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionMenuTextAppearance;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionMenuTextColor = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionMenuTextColor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionModeBackground = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionModeBackground;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionModeCloseButtonStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionModeCloseButtonStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionModeCloseDrawable = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionModeCloseDrawable;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionModeCopyDrawable = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionModeCopyDrawable;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionModeCutDrawable = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionModeCutDrawable;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionModeFindDrawable = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionModeFindDrawable;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionModePasteDrawable = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionModePasteDrawable;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionModePopupWindowStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionModePopupWindowStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionModeSelectAllDrawable = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionModeSelectAllDrawable;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionModeShareDrawable = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionModeShareDrawable;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionModeSplitBackground = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionModeSplitBackground;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionModeStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionModeStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionModeWebSearchDrawable = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionModeWebSearchDrawable;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionOverflowButtonStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionOverflowButtonStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_actionOverflowMenuStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_actionOverflowMenuStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_activityChooserViewStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_activityChooserViewStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_alertDialogButtonGroupStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_alertDialogButtonGroupStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_alertDialogCenterButtons = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_alertDialogCenterButtons;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_alertDialogStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_alertDialogStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_alertDialogTheme = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_alertDialogTheme;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_android_windowAnimationStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_android_windowAnimationStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_android_windowIsFloating = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_android_windowIsFloating;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_autoCompleteTextViewStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_autoCompleteTextViewStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_borderlessButtonStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_borderlessButtonStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_buttonBarButtonStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_buttonBarButtonStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_buttonBarNegativeButtonStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_buttonBarNegativeButtonStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_buttonBarNeutralButtonStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_buttonBarNeutralButtonStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_buttonBarPositiveButtonStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_buttonBarPositiveButtonStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_buttonBarStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_buttonBarStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_buttonStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_buttonStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_buttonStyleSmall = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_buttonStyleSmall;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_checkboxStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_checkboxStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_checkedTextViewStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_checkedTextViewStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_colorAccent = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_colorAccent;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_colorBackgroundFloating = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_colorBackgroundFloating;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_colorButtonNormal = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_colorButtonNormal;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_colorControlActivated = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_colorControlActivated;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_colorControlHighlight = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_colorControlHighlight;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_colorControlNormal = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_colorControlNormal;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_colorError = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_colorError;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_colorPrimary = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_colorPrimary;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_colorPrimaryDark = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_colorPrimaryDark;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_colorSwitchThumbNormal = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_colorSwitchThumbNormal;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_controlBackground = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_controlBackground;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_dialogCornerRadius = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_dialogCornerRadius;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_dialogPreferredPadding = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_dialogPreferredPadding;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_dialogTheme = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_dialogTheme;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_dividerHorizontal = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_dividerHorizontal;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_dividerVertical = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_dividerVertical;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_dropdownListPreferredItemHeight = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_dropdownListPreferredItemHeight;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_dropDownListViewStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_dropDownListViewStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_editTextBackground = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_editTextBackground;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_editTextColor = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_editTextColor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_editTextStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_editTextStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_homeAsUpIndicator = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_homeAsUpIndicator;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_imageButtonStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_imageButtonStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_listChoiceBackgroundIndicator = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_listChoiceBackgroundIndicator;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_listDividerAlertDialog = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_listDividerAlertDialog;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_listMenuViewStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_listMenuViewStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_listPopupWindowStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_listPopupWindowStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_listPreferredItemHeight = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_listPreferredItemHeight;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_listPreferredItemHeightLarge = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_listPreferredItemHeightLarge;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_listPreferredItemHeightSmall = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_listPreferredItemHeightSmall;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_listPreferredItemPaddingLeft = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_listPreferredItemPaddingLeft;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_listPreferredItemPaddingRight = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_listPreferredItemPaddingRight;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_panelBackground = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_panelBackground;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_panelMenuListTheme = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_panelMenuListTheme;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_panelMenuListWidth = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_panelMenuListWidth;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_popupMenuStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_popupMenuStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_popupWindowStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_popupWindowStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_radioButtonStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_radioButtonStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_ratingBarStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_ratingBarStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_ratingBarStyleIndicator = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_ratingBarStyleIndicator;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_ratingBarStyleSmall = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_ratingBarStyleSmall;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_searchViewStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_searchViewStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_seekBarStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_seekBarStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_selectableItemBackground = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_selectableItemBackground;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_selectableItemBackgroundBorderless = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_selectableItemBackgroundBorderless;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_spinnerDropDownItemStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_spinnerDropDownItemStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_spinnerStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_spinnerStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_switchStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_switchStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_textAppearanceLargePopupMenu = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_textAppearanceLargePopupMenu;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_textAppearanceListItem = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_textAppearanceListItem;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_textAppearanceListItemSecondary = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_textAppearanceListItemSecondary;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_textAppearanceListItemSmall = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_textAppearanceListItemSmall;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_textAppearancePopupMenuHeader = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_textAppearancePopupMenuHeader;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_textAppearanceSearchResultSubtitle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_textAppearanceSearchResultSubtitle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_textAppearanceSearchResultTitle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_textAppearanceSearchResultTitle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_textAppearanceSmallPopupMenu = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_textAppearanceSmallPopupMenu;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_textColorAlertDialogListItem = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_textColorAlertDialogListItem;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_textColorSearchUrl = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_textColorSearchUrl;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_toolbarNavigationButtonStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_toolbarNavigationButtonStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_toolbarStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_toolbarStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_tooltipForegroundColor = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_tooltipForegroundColor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_tooltipFrameBackground = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_tooltipFrameBackground;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_viewInflaterClass = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_viewInflaterClass;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_windowActionBar = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_windowActionBar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_windowActionBarOverlay = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_windowActionBarOverlay;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_windowActionModeOverlay = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_windowActionModeOverlay;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_windowFixedHeightMajor = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_windowFixedHeightMajor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_windowFixedHeightMinor = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_windowFixedHeightMinor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_windowFixedWidthMajor = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_windowFixedWidthMajor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_windowFixedWidthMinor = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_windowFixedWidthMinor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_windowMinWidthMajor = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_windowMinWidthMajor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_windowMinWidthMinor = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_windowMinWidthMinor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.AppCompatTheme_windowNoTitle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.AppCompatTheme_windowNoTitle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ButtonBarLayout = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ButtonBarLayout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ButtonBarLayout_allowStacking = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ButtonBarLayout_allowStacking;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ColorStateListItem = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ColorStateListItem;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ColorStateListItem_alpha = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ColorStateListItem_alpha;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ColorStateListItem_android_alpha = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ColorStateListItem_android_alpha;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ColorStateListItem_android_color = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ColorStateListItem_android_color;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.CompoundButton = global::fiskaltrust.AndroidLauncher.Resource.Styleable.CompoundButton;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.CompoundButton_android_button = global::fiskaltrust.AndroidLauncher.Resource.Styleable.CompoundButton_android_button;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.CompoundButton_buttonTint = global::fiskaltrust.AndroidLauncher.Resource.Styleable.CompoundButton_buttonTint;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.CompoundButton_buttonTintMode = global::fiskaltrust.AndroidLauncher.Resource.Styleable.CompoundButton_buttonTintMode;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.CoordinatorLayout = global::fiskaltrust.AndroidLauncher.Resource.Styleable.CoordinatorLayout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.CoordinatorLayout_keylines = global::fiskaltrust.AndroidLauncher.Resource.Styleable.CoordinatorLayout_keylines;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.CoordinatorLayout_Layout = global::fiskaltrust.AndroidLauncher.Resource.Styleable.CoordinatorLayout_Layout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.CoordinatorLayout_Layout_android_layout_gravity = global::fiskaltrust.AndroidLauncher.Resource.Styleable.CoordinatorLayout_Layout_android_layout_gravity;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.CoordinatorLayout_Layout_layout_anchor = global::fiskaltrust.AndroidLauncher.Resource.Styleable.CoordinatorLayout_Layout_layout_anchor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.CoordinatorLayout_Layout_layout_anchorGravity = global::fiskaltrust.AndroidLauncher.Resource.Styleable.CoordinatorLayout_Layout_layout_anchorGravity;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.CoordinatorLayout_Layout_layout_behavior = global::fiskaltrust.AndroidLauncher.Resource.Styleable.CoordinatorLayout_Layout_layout_behavior;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.CoordinatorLayout_Layout_layout_dodgeInsetEdges = global::fiskaltrust.AndroidLauncher.Resource.Styleable.CoordinatorLayout_Layout_layout_dodgeInsetEdges;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.CoordinatorLayout_Layout_layout_insetEdge = global::fiskaltrust.AndroidLauncher.Resource.Styleable.CoordinatorLayout_Layout_layout_insetEdge;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.CoordinatorLayout_Layout_layout_keyline = global::fiskaltrust.AndroidLauncher.Resource.Styleable.CoordinatorLayout_Layout_layout_keyline;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.CoordinatorLayout_statusBarBackground = global::fiskaltrust.AndroidLauncher.Resource.Styleable.CoordinatorLayout_statusBarBackground;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.DrawerArrowToggle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.DrawerArrowToggle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.DrawerArrowToggle_arrowHeadLength = global::fiskaltrust.AndroidLauncher.Resource.Styleable.DrawerArrowToggle_arrowHeadLength;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.DrawerArrowToggle_arrowShaftLength = global::fiskaltrust.AndroidLauncher.Resource.Styleable.DrawerArrowToggle_arrowShaftLength;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.DrawerArrowToggle_barLength = global::fiskaltrust.AndroidLauncher.Resource.Styleable.DrawerArrowToggle_barLength;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.DrawerArrowToggle_color = global::fiskaltrust.AndroidLauncher.Resource.Styleable.DrawerArrowToggle_color;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.DrawerArrowToggle_drawableSize = global::fiskaltrust.AndroidLauncher.Resource.Styleable.DrawerArrowToggle_drawableSize;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.DrawerArrowToggle_gapBetweenBars = global::fiskaltrust.AndroidLauncher.Resource.Styleable.DrawerArrowToggle_gapBetweenBars;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.DrawerArrowToggle_spinBars = global::fiskaltrust.AndroidLauncher.Resource.Styleable.DrawerArrowToggle_spinBars;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.DrawerArrowToggle_thickness = global::fiskaltrust.AndroidLauncher.Resource.Styleable.DrawerArrowToggle_thickness;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.FontFamily = global::fiskaltrust.AndroidLauncher.Resource.Styleable.FontFamily;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.FontFamilyFont = global::fiskaltrust.AndroidLauncher.Resource.Styleable.FontFamilyFont;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.FontFamilyFont_android_font = global::fiskaltrust.AndroidLauncher.Resource.Styleable.FontFamilyFont_android_font;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.FontFamilyFont_android_fontStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.FontFamilyFont_android_fontStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.FontFamilyFont_android_fontVariationSettings = global::fiskaltrust.AndroidLauncher.Resource.Styleable.FontFamilyFont_android_fontVariationSettings;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.FontFamilyFont_android_fontWeight = global::fiskaltrust.AndroidLauncher.Resource.Styleable.FontFamilyFont_android_fontWeight;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.FontFamilyFont_android_ttcIndex = global::fiskaltrust.AndroidLauncher.Resource.Styleable.FontFamilyFont_android_ttcIndex;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.FontFamilyFont_font = global::fiskaltrust.AndroidLauncher.Resource.Styleable.FontFamilyFont_font;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.FontFamilyFont_fontStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.FontFamilyFont_fontStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.FontFamilyFont_fontVariationSettings = global::fiskaltrust.AndroidLauncher.Resource.Styleable.FontFamilyFont_fontVariationSettings;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.FontFamilyFont_fontWeight = global::fiskaltrust.AndroidLauncher.Resource.Styleable.FontFamilyFont_fontWeight;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.FontFamilyFont_ttcIndex = global::fiskaltrust.AndroidLauncher.Resource.Styleable.FontFamilyFont_ttcIndex;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.FontFamily_fontProviderAuthority = global::fiskaltrust.AndroidLauncher.Resource.Styleable.FontFamily_fontProviderAuthority;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.FontFamily_fontProviderCerts = global::fiskaltrust.AndroidLauncher.Resource.Styleable.FontFamily_fontProviderCerts;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.FontFamily_fontProviderFetchStrategy = global::fiskaltrust.AndroidLauncher.Resource.Styleable.FontFamily_fontProviderFetchStrategy;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.FontFamily_fontProviderFetchTimeout = global::fiskaltrust.AndroidLauncher.Resource.Styleable.FontFamily_fontProviderFetchTimeout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.FontFamily_fontProviderPackage = global::fiskaltrust.AndroidLauncher.Resource.Styleable.FontFamily_fontProviderPackage;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.FontFamily_fontProviderQuery = global::fiskaltrust.AndroidLauncher.Resource.Styleable.FontFamily_fontProviderQuery;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.GradientColor = global::fiskaltrust.AndroidLauncher.Resource.Styleable.GradientColor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.GradientColorItem = global::fiskaltrust.AndroidLauncher.Resource.Styleable.GradientColorItem;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.GradientColorItem_android_color = global::fiskaltrust.AndroidLauncher.Resource.Styleable.GradientColorItem_android_color;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.GradientColorItem_android_offset = global::fiskaltrust.AndroidLauncher.Resource.Styleable.GradientColorItem_android_offset;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.GradientColor_android_centerColor = global::fiskaltrust.AndroidLauncher.Resource.Styleable.GradientColor_android_centerColor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.GradientColor_android_centerX = global::fiskaltrust.AndroidLauncher.Resource.Styleable.GradientColor_android_centerX;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.GradientColor_android_centerY = global::fiskaltrust.AndroidLauncher.Resource.Styleable.GradientColor_android_centerY;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.GradientColor_android_endColor = global::fiskaltrust.AndroidLauncher.Resource.Styleable.GradientColor_android_endColor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.GradientColor_android_endX = global::fiskaltrust.AndroidLauncher.Resource.Styleable.GradientColor_android_endX;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.GradientColor_android_endY = global::fiskaltrust.AndroidLauncher.Resource.Styleable.GradientColor_android_endY;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.GradientColor_android_gradientRadius = global::fiskaltrust.AndroidLauncher.Resource.Styleable.GradientColor_android_gradientRadius;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.GradientColor_android_startColor = global::fiskaltrust.AndroidLauncher.Resource.Styleable.GradientColor_android_startColor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.GradientColor_android_startX = global::fiskaltrust.AndroidLauncher.Resource.Styleable.GradientColor_android_startX;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.GradientColor_android_startY = global::fiskaltrust.AndroidLauncher.Resource.Styleable.GradientColor_android_startY;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.GradientColor_android_tileMode = global::fiskaltrust.AndroidLauncher.Resource.Styleable.GradientColor_android_tileMode;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.GradientColor_android_type = global::fiskaltrust.AndroidLauncher.Resource.Styleable.GradientColor_android_type;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.LinearLayoutCompat = global::fiskaltrust.AndroidLauncher.Resource.Styleable.LinearLayoutCompat;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.LinearLayoutCompat_android_baselineAligned = global::fiskaltrust.AndroidLauncher.Resource.Styleable.LinearLayoutCompat_android_baselineAligned;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.LinearLayoutCompat_android_baselineAlignedChildIndex = global::fiskaltrust.AndroidLauncher.Resource.Styleable.LinearLayoutCompat_android_baselineAlignedChildIndex;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.LinearLayoutCompat_android_gravity = global::fiskaltrust.AndroidLauncher.Resource.Styleable.LinearLayoutCompat_android_gravity;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.LinearLayoutCompat_android_orientation = global::fiskaltrust.AndroidLauncher.Resource.Styleable.LinearLayoutCompat_android_orientation;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.LinearLayoutCompat_android_weightSum = global::fiskaltrust.AndroidLauncher.Resource.Styleable.LinearLayoutCompat_android_weightSum;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.LinearLayoutCompat_divider = global::fiskaltrust.AndroidLauncher.Resource.Styleable.LinearLayoutCompat_divider;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.LinearLayoutCompat_dividerPadding = global::fiskaltrust.AndroidLauncher.Resource.Styleable.LinearLayoutCompat_dividerPadding;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.LinearLayoutCompat_Layout = global::fiskaltrust.AndroidLauncher.Resource.Styleable.LinearLayoutCompat_Layout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.LinearLayoutCompat_Layout_android_layout_gravity = global::fiskaltrust.AndroidLauncher.Resource.Styleable.LinearLayoutCompat_Layout_android_layout_gravity;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.LinearLayoutCompat_Layout_android_layout_height = global::fiskaltrust.AndroidLauncher.Resource.Styleable.LinearLayoutCompat_Layout_android_layout_height;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.LinearLayoutCompat_Layout_android_layout_weight = global::fiskaltrust.AndroidLauncher.Resource.Styleable.LinearLayoutCompat_Layout_android_layout_weight;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.LinearLayoutCompat_Layout_android_layout_width = global::fiskaltrust.AndroidLauncher.Resource.Styleable.LinearLayoutCompat_Layout_android_layout_width;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.LinearLayoutCompat_measureWithLargestChild = global::fiskaltrust.AndroidLauncher.Resource.Styleable.LinearLayoutCompat_measureWithLargestChild;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.LinearLayoutCompat_showDividers = global::fiskaltrust.AndroidLauncher.Resource.Styleable.LinearLayoutCompat_showDividers;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ListPopupWindow = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ListPopupWindow;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ListPopupWindow_android_dropDownHorizontalOffset = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ListPopupWindow_android_dropDownHorizontalOffset;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ListPopupWindow_android_dropDownVerticalOffset = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ListPopupWindow_android_dropDownVerticalOffset;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuGroup = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuGroup;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuGroup_android_checkableBehavior = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuGroup_android_checkableBehavior;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuGroup_android_enabled = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuGroup_android_enabled;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuGroup_android_id = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuGroup_android_id;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuGroup_android_menuCategory = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuGroup_android_menuCategory;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuGroup_android_orderInCategory = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuGroup_android_orderInCategory;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuGroup_android_visible = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuGroup_android_visible;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuItem = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuItem;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuItem_actionLayout = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuItem_actionLayout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuItem_actionProviderClass = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuItem_actionProviderClass;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuItem_actionViewClass = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuItem_actionViewClass;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuItem_alphabeticModifiers = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuItem_alphabeticModifiers;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuItem_android_alphabeticShortcut = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuItem_android_alphabeticShortcut;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuItem_android_checkable = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuItem_android_checkable;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuItem_android_checked = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuItem_android_checked;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuItem_android_enabled = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuItem_android_enabled;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuItem_android_icon = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuItem_android_icon;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuItem_android_id = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuItem_android_id;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuItem_android_menuCategory = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuItem_android_menuCategory;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuItem_android_numericShortcut = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuItem_android_numericShortcut;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuItem_android_onClick = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuItem_android_onClick;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuItem_android_orderInCategory = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuItem_android_orderInCategory;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuItem_android_title = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuItem_android_title;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuItem_android_titleCondensed = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuItem_android_titleCondensed;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuItem_android_visible = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuItem_android_visible;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuItem_contentDescription = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuItem_contentDescription;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuItem_iconTint = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuItem_iconTint;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuItem_iconTintMode = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuItem_iconTintMode;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuItem_numericModifiers = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuItem_numericModifiers;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuItem_showAsAction = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuItem_showAsAction;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuItem_tooltipText = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuItem_tooltipText;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuView = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuView;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuView_android_headerBackground = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuView_android_headerBackground;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuView_android_horizontalDivider = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuView_android_horizontalDivider;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuView_android_itemBackground = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuView_android_itemBackground;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuView_android_itemIconDisabledAlpha = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuView_android_itemIconDisabledAlpha;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuView_android_itemTextAppearance = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuView_android_itemTextAppearance;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuView_android_verticalDivider = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuView_android_verticalDivider;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuView_android_windowAnimationStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuView_android_windowAnimationStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuView_preserveIconSpacing = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuView_preserveIconSpacing;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.MenuView_subMenuArrow = global::fiskaltrust.AndroidLauncher.Resource.Styleable.MenuView_subMenuArrow;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.PopupWindow = global::fiskaltrust.AndroidLauncher.Resource.Styleable.PopupWindow;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.PopupWindowBackgroundState = global::fiskaltrust.AndroidLauncher.Resource.Styleable.PopupWindowBackgroundState;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.PopupWindowBackgroundState_state_above_anchor = global::fiskaltrust.AndroidLauncher.Resource.Styleable.PopupWindowBackgroundState_state_above_anchor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.PopupWindow_android_popupAnimationStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.PopupWindow_android_popupAnimationStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.PopupWindow_android_popupBackground = global::fiskaltrust.AndroidLauncher.Resource.Styleable.PopupWindow_android_popupBackground;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.PopupWindow_overlapAnchor = global::fiskaltrust.AndroidLauncher.Resource.Styleable.PopupWindow_overlapAnchor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.RecycleListView = global::fiskaltrust.AndroidLauncher.Resource.Styleable.RecycleListView;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.RecycleListView_paddingBottomNoButtons = global::fiskaltrust.AndroidLauncher.Resource.Styleable.RecycleListView_paddingBottomNoButtons;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.RecycleListView_paddingTopNoTitle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.RecycleListView_paddingTopNoTitle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SearchView = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SearchView;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SearchView_android_focusable = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SearchView_android_focusable;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SearchView_android_imeOptions = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SearchView_android_imeOptions;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SearchView_android_inputType = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SearchView_android_inputType;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SearchView_android_maxWidth = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SearchView_android_maxWidth;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SearchView_closeIcon = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SearchView_closeIcon;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SearchView_commitIcon = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SearchView_commitIcon;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SearchView_defaultQueryHint = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SearchView_defaultQueryHint;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SearchView_goIcon = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SearchView_goIcon;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SearchView_iconifiedByDefault = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SearchView_iconifiedByDefault;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SearchView_layout = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SearchView_layout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SearchView_queryBackground = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SearchView_queryBackground;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SearchView_queryHint = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SearchView_queryHint;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SearchView_searchHintIcon = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SearchView_searchHintIcon;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SearchView_searchIcon = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SearchView_searchIcon;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SearchView_submitBackground = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SearchView_submitBackground;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SearchView_suggestionRowLayout = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SearchView_suggestionRowLayout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SearchView_voiceIcon = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SearchView_voiceIcon;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Spinner = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Spinner;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Spinner_android_dropDownWidth = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Spinner_android_dropDownWidth;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Spinner_android_entries = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Spinner_android_entries;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Spinner_android_popupBackground = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Spinner_android_popupBackground;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Spinner_android_prompt = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Spinner_android_prompt;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Spinner_popupTheme = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Spinner_popupTheme;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.StateListDrawable = global::fiskaltrust.AndroidLauncher.Resource.Styleable.StateListDrawable;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.StateListDrawableItem = global::fiskaltrust.AndroidLauncher.Resource.Styleable.StateListDrawableItem;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.StateListDrawableItem_android_drawable = global::fiskaltrust.AndroidLauncher.Resource.Styleable.StateListDrawableItem_android_drawable;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.StateListDrawable_android_constantSize = global::fiskaltrust.AndroidLauncher.Resource.Styleable.StateListDrawable_android_constantSize;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.StateListDrawable_android_dither = global::fiskaltrust.AndroidLauncher.Resource.Styleable.StateListDrawable_android_dither;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.StateListDrawable_android_enterFadeDuration = global::fiskaltrust.AndroidLauncher.Resource.Styleable.StateListDrawable_android_enterFadeDuration;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.StateListDrawable_android_exitFadeDuration = global::fiskaltrust.AndroidLauncher.Resource.Styleable.StateListDrawable_android_exitFadeDuration;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.StateListDrawable_android_variablePadding = global::fiskaltrust.AndroidLauncher.Resource.Styleable.StateListDrawable_android_variablePadding;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.StateListDrawable_android_visible = global::fiskaltrust.AndroidLauncher.Resource.Styleable.StateListDrawable_android_visible;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SwitchCompat = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SwitchCompat;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SwitchCompat_android_textOff = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SwitchCompat_android_textOff;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SwitchCompat_android_textOn = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SwitchCompat_android_textOn;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SwitchCompat_android_thumb = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SwitchCompat_android_thumb;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SwitchCompat_showText = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SwitchCompat_showText;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SwitchCompat_splitTrack = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SwitchCompat_splitTrack;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SwitchCompat_switchMinWidth = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SwitchCompat_switchMinWidth;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SwitchCompat_switchPadding = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SwitchCompat_switchPadding;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SwitchCompat_switchTextAppearance = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SwitchCompat_switchTextAppearance;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SwitchCompat_thumbTextPadding = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SwitchCompat_thumbTextPadding;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SwitchCompat_thumbTint = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SwitchCompat_thumbTint;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SwitchCompat_thumbTintMode = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SwitchCompat_thumbTintMode;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SwitchCompat_track = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SwitchCompat_track;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SwitchCompat_trackTint = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SwitchCompat_trackTint;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.SwitchCompat_trackTintMode = global::fiskaltrust.AndroidLauncher.Resource.Styleable.SwitchCompat_trackTintMode;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.TextAppearance = global::fiskaltrust.AndroidLauncher.Resource.Styleable.TextAppearance;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.TextAppearance_android_fontFamily = global::fiskaltrust.AndroidLauncher.Resource.Styleable.TextAppearance_android_fontFamily;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.TextAppearance_android_shadowColor = global::fiskaltrust.AndroidLauncher.Resource.Styleable.TextAppearance_android_shadowColor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.TextAppearance_android_shadowDx = global::fiskaltrust.AndroidLauncher.Resource.Styleable.TextAppearance_android_shadowDx;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.TextAppearance_android_shadowDy = global::fiskaltrust.AndroidLauncher.Resource.Styleable.TextAppearance_android_shadowDy;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.TextAppearance_android_shadowRadius = global::fiskaltrust.AndroidLauncher.Resource.Styleable.TextAppearance_android_shadowRadius;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.TextAppearance_android_textColor = global::fiskaltrust.AndroidLauncher.Resource.Styleable.TextAppearance_android_textColor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.TextAppearance_android_textColorHint = global::fiskaltrust.AndroidLauncher.Resource.Styleable.TextAppearance_android_textColorHint;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.TextAppearance_android_textColorLink = global::fiskaltrust.AndroidLauncher.Resource.Styleable.TextAppearance_android_textColorLink;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.TextAppearance_android_textSize = global::fiskaltrust.AndroidLauncher.Resource.Styleable.TextAppearance_android_textSize;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.TextAppearance_android_textStyle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.TextAppearance_android_textStyle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.TextAppearance_android_typeface = global::fiskaltrust.AndroidLauncher.Resource.Styleable.TextAppearance_android_typeface;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.TextAppearance_fontFamily = global::fiskaltrust.AndroidLauncher.Resource.Styleable.TextAppearance_fontFamily;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.TextAppearance_textAllCaps = global::fiskaltrust.AndroidLauncher.Resource.Styleable.TextAppearance_textAllCaps;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_android_gravity = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_android_gravity;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_android_minHeight = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_android_minHeight;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_buttonGravity = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_buttonGravity;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_collapseContentDescription = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_collapseContentDescription;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_collapseIcon = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_collapseIcon;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_contentInsetEnd = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_contentInsetEnd;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_contentInsetEndWithActions = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_contentInsetEndWithActions;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_contentInsetLeft = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_contentInsetLeft;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_contentInsetRight = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_contentInsetRight;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_contentInsetStart = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_contentInsetStart;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_contentInsetStartWithNavigation = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_contentInsetStartWithNavigation;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_logo = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_logo;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_logoDescription = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_logoDescription;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_maxButtonHeight = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_maxButtonHeight;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_navigationContentDescription = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_navigationContentDescription;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_navigationIcon = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_navigationIcon;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_popupTheme = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_popupTheme;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_subtitle = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_subtitle;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_subtitleTextAppearance = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_subtitleTextAppearance;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_subtitleTextColor = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_subtitleTextColor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_title = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_title;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_titleMargin = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_titleMargin;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_titleMarginBottom = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_titleMarginBottom;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_titleMarginEnd = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_titleMarginEnd;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_titleMargins = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_titleMargins;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_titleMarginStart = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_titleMarginStart;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_titleMarginTop = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_titleMarginTop;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_titleTextAppearance = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_titleTextAppearance;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.Toolbar_titleTextColor = global::fiskaltrust.AndroidLauncher.Resource.Styleable.Toolbar_titleTextColor;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.View = global::fiskaltrust.AndroidLauncher.Resource.Styleable.View;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ViewBackgroundHelper = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ViewBackgroundHelper;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ViewBackgroundHelper_android_background = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ViewBackgroundHelper_android_background;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ViewBackgroundHelper_backgroundTint = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ViewBackgroundHelper_backgroundTint;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ViewBackgroundHelper_backgroundTintMode = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ViewBackgroundHelper_backgroundTintMode;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ViewStubCompat = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ViewStubCompat;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ViewStubCompat_android_id = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ViewStubCompat_android_id;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ViewStubCompat_android_inflatedId = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ViewStubCompat_android_inflatedId;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.ViewStubCompat_android_layout = global::fiskaltrust.AndroidLauncher.Resource.Styleable.ViewStubCompat_android_layout;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.View_android_focusable = global::fiskaltrust.AndroidLauncher.Resource.Styleable.View_android_focusable;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.View_android_theme = global::fiskaltrust.AndroidLauncher.Resource.Styleable.View_android_theme;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.View_paddingEnd = global::fiskaltrust.AndroidLauncher.Resource.Styleable.View_paddingEnd;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.View_paddingStart = global::fiskaltrust.AndroidLauncher.Resource.Styleable.View_paddingStart;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Styleable.View_theme = global::fiskaltrust.AndroidLauncher.Resource.Styleable.View_theme;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.Xml.xamarin_essentials_fileprovider_file_paths = global::fiskaltrust.AndroidLauncher.Resource.Xml.xamarin_essentials_fileprovider_file_paths;
 			global::fiskaltrust.Middleware.SCU.DE.SwissbitAndroid.Resource.Animation.abc_fade_in = global::fiskaltrust.AndroidLauncher.Resource.Animation.abc_fade_in;
 			global::fiskaltrust.Middleware.SCU.DE.SwissbitAndroid.Resource.Animation.abc_fade_out = global::fiskaltrust.AndroidLauncher.Resource.Animation.abc_fade_out;
 			global::fiskaltrust.Middleware.SCU.DE.SwissbitAndroid.Resource.Animation.abc_grow_fade_in_from_bottom = global::fiskaltrust.AndroidLauncher.Resource.Animation.abc_grow_fade_in_from_bottom;
@@ -5377,73 +3729,70 @@ namespace fiskaltrust.AndroidLauncher
 			public const int notification_icon_bg_color = 2131034223;
 			
 			// aapt resource value: 0x7F050070
-			public const int notification_material_background_media_default_color = 2131034224;
+			public const int primary_dark_material_dark = 2131034224;
 			
 			// aapt resource value: 0x7F050071
-			public const int primary_dark_material_dark = 2131034225;
+			public const int primary_dark_material_light = 2131034225;
 			
 			// aapt resource value: 0x7F050072
-			public const int primary_dark_material_light = 2131034226;
+			public const int primary_material_dark = 2131034226;
 			
 			// aapt resource value: 0x7F050073
-			public const int primary_material_dark = 2131034227;
+			public const int primary_material_light = 2131034227;
 			
 			// aapt resource value: 0x7F050074
-			public const int primary_material_light = 2131034228;
+			public const int primary_text_default_material_dark = 2131034228;
 			
 			// aapt resource value: 0x7F050075
-			public const int primary_text_default_material_dark = 2131034229;
+			public const int primary_text_default_material_light = 2131034229;
 			
 			// aapt resource value: 0x7F050076
-			public const int primary_text_default_material_light = 2131034230;
+			public const int primary_text_disabled_material_dark = 2131034230;
 			
 			// aapt resource value: 0x7F050077
-			public const int primary_text_disabled_material_dark = 2131034231;
+			public const int primary_text_disabled_material_light = 2131034231;
 			
 			// aapt resource value: 0x7F050078
-			public const int primary_text_disabled_material_light = 2131034232;
+			public const int ripple_material_dark = 2131034232;
 			
 			// aapt resource value: 0x7F050079
-			public const int ripple_material_dark = 2131034233;
+			public const int ripple_material_light = 2131034233;
 			
 			// aapt resource value: 0x7F05007A
-			public const int ripple_material_light = 2131034234;
+			public const int secondary_text_default_material_dark = 2131034234;
 			
 			// aapt resource value: 0x7F05007B
-			public const int secondary_text_default_material_dark = 2131034235;
+			public const int secondary_text_default_material_light = 2131034235;
 			
 			// aapt resource value: 0x7F05007C
-			public const int secondary_text_default_material_light = 2131034236;
+			public const int secondary_text_disabled_material_dark = 2131034236;
 			
 			// aapt resource value: 0x7F05007D
-			public const int secondary_text_disabled_material_dark = 2131034237;
+			public const int secondary_text_disabled_material_light = 2131034237;
 			
 			// aapt resource value: 0x7F05007E
-			public const int secondary_text_disabled_material_light = 2131034238;
+			public const int switch_thumb_disabled_material_dark = 2131034238;
 			
 			// aapt resource value: 0x7F05007F
-			public const int switch_thumb_disabled_material_dark = 2131034239;
+			public const int switch_thumb_disabled_material_light = 2131034239;
 			
 			// aapt resource value: 0x7F050080
-			public const int switch_thumb_disabled_material_light = 2131034240;
+			public const int switch_thumb_material_dark = 2131034240;
 			
 			// aapt resource value: 0x7F050081
-			public const int switch_thumb_material_dark = 2131034241;
+			public const int switch_thumb_material_light = 2131034241;
 			
 			// aapt resource value: 0x7F050082
-			public const int switch_thumb_material_light = 2131034242;
+			public const int switch_thumb_normal_material_dark = 2131034242;
 			
 			// aapt resource value: 0x7F050083
-			public const int switch_thumb_normal_material_dark = 2131034243;
+			public const int switch_thumb_normal_material_light = 2131034243;
 			
 			// aapt resource value: 0x7F050084
-			public const int switch_thumb_normal_material_light = 2131034244;
+			public const int tooltip_background_dark = 2131034244;
 			
 			// aapt resource value: 0x7F050085
-			public const int tooltip_background_dark = 2131034245;
-			
-			// aapt resource value: 0x7F050086
-			public const int tooltip_background_light = 2131034246;
+			public const int tooltip_background_light = 2131034245;
 			
 			static Color()
 			{
@@ -6086,40 +4435,28 @@ namespace fiskaltrust.AndroidLauncher
 			public const int notification_top_pad_large_text = 2131099856;
 			
 			// aapt resource value: 0x7F0600D1
-			public const int subtitle_corner_radius = 2131099857;
+			public const int tooltip_corner_radius = 2131099857;
 			
 			// aapt resource value: 0x7F0600D2
-			public const int subtitle_outline_width = 2131099858;
+			public const int tooltip_horizontal_padding = 2131099858;
 			
 			// aapt resource value: 0x7F0600D3
-			public const int subtitle_shadow_offset = 2131099859;
+			public const int tooltip_margin = 2131099859;
 			
 			// aapt resource value: 0x7F0600D4
-			public const int subtitle_shadow_radius = 2131099860;
+			public const int tooltip_precise_anchor_extra_offset = 2131099860;
 			
 			// aapt resource value: 0x7F0600D5
-			public const int tooltip_corner_radius = 2131099861;
+			public const int tooltip_precise_anchor_threshold = 2131099861;
 			
 			// aapt resource value: 0x7F0600D6
-			public const int tooltip_horizontal_padding = 2131099862;
+			public const int tooltip_vertical_padding = 2131099862;
 			
 			// aapt resource value: 0x7F0600D7
-			public const int tooltip_margin = 2131099863;
+			public const int tooltip_y_offset_non_touch = 2131099863;
 			
 			// aapt resource value: 0x7F0600D8
-			public const int tooltip_precise_anchor_extra_offset = 2131099864;
-			
-			// aapt resource value: 0x7F0600D9
-			public const int tooltip_precise_anchor_threshold = 2131099865;
-			
-			// aapt resource value: 0x7F0600DA
-			public const int tooltip_vertical_padding = 2131099866;
-			
-			// aapt resource value: 0x7F0600DB
-			public const int tooltip_y_offset_non_touch = 2131099867;
-			
-			// aapt resource value: 0x7F0600DC
-			public const int tooltip_y_offset_touch = 2131099868;
+			public const int tooltip_y_offset_touch = 2131099864;
 			
 			static Dimension()
 			{
@@ -6495,590 +4832,575 @@ namespace fiskaltrust.AndroidLauncher
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7F080006
-			public const int action0 = 2131230726;
+			// aapt resource value: 0x7F080017
+			public const int actions = 2131230743;
 			
-			// aapt resource value: 0x7F080018
-			public const int actions = 2131230744;
+			// aapt resource value: 0x7F080006
+			public const int action_bar = 2131230726;
 			
 			// aapt resource value: 0x7F080007
-			public const int action_bar = 2131230727;
+			public const int action_bar_activity_content = 2131230727;
 			
 			// aapt resource value: 0x7F080008
-			public const int action_bar_activity_content = 2131230728;
+			public const int action_bar_container = 2131230728;
 			
 			// aapt resource value: 0x7F080009
-			public const int action_bar_container = 2131230729;
+			public const int action_bar_root = 2131230729;
 			
 			// aapt resource value: 0x7F08000A
-			public const int action_bar_root = 2131230730;
+			public const int action_bar_spinner = 2131230730;
 			
 			// aapt resource value: 0x7F08000B
-			public const int action_bar_spinner = 2131230731;
+			public const int action_bar_subtitle = 2131230731;
 			
 			// aapt resource value: 0x7F08000C
-			public const int action_bar_subtitle = 2131230732;
+			public const int action_bar_title = 2131230732;
 			
 			// aapt resource value: 0x7F08000D
-			public const int action_bar_title = 2131230733;
+			public const int action_container = 2131230733;
 			
 			// aapt resource value: 0x7F08000E
-			public const int action_container = 2131230734;
+			public const int action_context_bar = 2131230734;
 			
 			// aapt resource value: 0x7F08000F
-			public const int action_context_bar = 2131230735;
+			public const int action_divider = 2131230735;
 			
 			// aapt resource value: 0x7F080010
-			public const int action_divider = 2131230736;
+			public const int action_image = 2131230736;
 			
 			// aapt resource value: 0x7F080011
-			public const int action_image = 2131230737;
+			public const int action_menu_divider = 2131230737;
 			
 			// aapt resource value: 0x7F080012
-			public const int action_menu_divider = 2131230738;
+			public const int action_menu_presenter = 2131230738;
 			
 			// aapt resource value: 0x7F080013
-			public const int action_menu_presenter = 2131230739;
+			public const int action_mode_bar = 2131230739;
 			
 			// aapt resource value: 0x7F080014
-			public const int action_mode_bar = 2131230740;
+			public const int action_mode_bar_stub = 2131230740;
 			
 			// aapt resource value: 0x7F080015
-			public const int action_mode_bar_stub = 2131230741;
+			public const int action_mode_close_button = 2131230741;
 			
 			// aapt resource value: 0x7F080016
-			public const int action_mode_close_button = 2131230742;
+			public const int action_text = 2131230742;
 			
-			// aapt resource value: 0x7F080017
-			public const int action_text = 2131230743;
+			// aapt resource value: 0x7F080018
+			public const int activity_chooser_view_content = 2131230744;
 			
 			// aapt resource value: 0x7F080019
-			public const int activity_chooser_view_content = 2131230745;
+			public const int add = 2131230745;
 			
 			// aapt resource value: 0x7F08001A
-			public const int add = 2131230746;
+			public const int alertTitle = 2131230746;
 			
 			// aapt resource value: 0x7F08001B
-			public const int alertTitle = 2131230747;
-			
-			// aapt resource value: 0x7F08001C
-			public const int all = 2131230748;
+			public const int all = 2131230747;
 			
 			// aapt resource value: 0x7F080000
 			public const int ALT = 2131230720;
 			
+			// aapt resource value: 0x7F08001C
+			public const int always = 2131230748;
+			
 			// aapt resource value: 0x7F08001D
-			public const int always = 2131230749;
+			public const int async = 2131230749;
 			
 			// aapt resource value: 0x7F08001E
-			public const int async = 2131230750;
+			public const int auto = 2131230750;
 			
 			// aapt resource value: 0x7F08001F
-			public const int auto = 2131230751;
+			public const int beginning = 2131230751;
 			
 			// aapt resource value: 0x7F080020
-			public const int beginning = 2131230752;
+			public const int blocking = 2131230752;
 			
 			// aapt resource value: 0x7F080021
-			public const int blocking = 2131230753;
+			public const int bottom = 2131230753;
 			
 			// aapt resource value: 0x7F080022
-			public const int bottom = 2131230754;
-			
-			// aapt resource value: 0x7F080023
-			public const int browser_actions_header_text = 2131230755;
-			
-			// aapt resource value: 0x7F080026
-			public const int browser_actions_menu_items = 2131230758;
-			
-			// aapt resource value: 0x7F080024
-			public const int browser_actions_menu_item_icon = 2131230756;
+			public const int browser_actions_header_text = 2131230754;
 			
 			// aapt resource value: 0x7F080025
-			public const int browser_actions_menu_item_text = 2131230757;
+			public const int browser_actions_menu_items = 2131230757;
+			
+			// aapt resource value: 0x7F080023
+			public const int browser_actions_menu_item_icon = 2131230755;
+			
+			// aapt resource value: 0x7F080024
+			public const int browser_actions_menu_item_text = 2131230756;
+			
+			// aapt resource value: 0x7F080026
+			public const int browser_actions_menu_view = 2131230758;
 			
 			// aapt resource value: 0x7F080027
-			public const int browser_actions_menu_view = 2131230759;
+			public const int buttonPanel = 2131230759;
 			
 			// aapt resource value: 0x7F080028
-			public const int buttonPanel = 2131230760;
+			public const int center = 2131230760;
 			
 			// aapt resource value: 0x7F080029
-			public const int cancel_action = 2131230761;
+			public const int center_horizontal = 2131230761;
 			
 			// aapt resource value: 0x7F08002A
-			public const int center = 2131230762;
+			public const int center_vertical = 2131230762;
 			
 			// aapt resource value: 0x7F08002B
-			public const int center_horizontal = 2131230763;
+			public const int checkbox = 2131230763;
 			
 			// aapt resource value: 0x7F08002C
-			public const int center_vertical = 2131230764;
+			public const int chronometer = 2131230764;
 			
 			// aapt resource value: 0x7F08002D
-			public const int checkbox = 2131230765;
+			public const int clip_horizontal = 2131230765;
 			
 			// aapt resource value: 0x7F08002E
-			public const int chronometer = 2131230766;
+			public const int clip_vertical = 2131230766;
 			
 			// aapt resource value: 0x7F08002F
-			public const int clip_horizontal = 2131230767;
+			public const int collapseActionView = 2131230767;
 			
 			// aapt resource value: 0x7F080030
-			public const int clip_vertical = 2131230768;
+			public const int container = 2131230768;
 			
 			// aapt resource value: 0x7F080031
-			public const int collapseActionView = 2131230769;
+			public const int content = 2131230769;
 			
 			// aapt resource value: 0x7F080032
-			public const int container = 2131230770;
+			public const int contentPanel = 2131230770;
 			
 			// aapt resource value: 0x7F080033
-			public const int content = 2131230771;
-			
-			// aapt resource value: 0x7F080034
-			public const int contentPanel = 2131230772;
-			
-			// aapt resource value: 0x7F080035
-			public const int coordinator = 2131230773;
+			public const int coordinator = 2131230771;
 			
 			// aapt resource value: 0x7F080001
 			public const int CTRL = 2131230721;
 			
+			// aapt resource value: 0x7F080034
+			public const int custom = 2131230772;
+			
+			// aapt resource value: 0x7F080035
+			public const int customPanel = 2131230773;
+			
 			// aapt resource value: 0x7F080036
-			public const int custom = 2131230774;
+			public const int decor_content_parent = 2131230774;
 			
 			// aapt resource value: 0x7F080037
-			public const int customPanel = 2131230775;
+			public const int default_activity_button = 2131230775;
 			
 			// aapt resource value: 0x7F080038
-			public const int decor_content_parent = 2131230776;
+			public const int design_bottom_sheet = 2131230776;
 			
 			// aapt resource value: 0x7F080039
-			public const int default_activity_button = 2131230777;
+			public const int design_menu_item_action_area = 2131230777;
 			
 			// aapt resource value: 0x7F08003A
-			public const int design_bottom_sheet = 2131230778;
+			public const int design_menu_item_action_area_stub = 2131230778;
 			
 			// aapt resource value: 0x7F08003B
-			public const int design_menu_item_action_area = 2131230779;
+			public const int design_menu_item_text = 2131230779;
 			
 			// aapt resource value: 0x7F08003C
-			public const int design_menu_item_action_area_stub = 2131230780;
+			public const int design_navigation_view = 2131230780;
 			
 			// aapt resource value: 0x7F08003D
-			public const int design_menu_item_text = 2131230781;
+			public const int disableHome = 2131230781;
 			
 			// aapt resource value: 0x7F08003E
-			public const int design_navigation_view = 2131230782;
+			public const int edit_query = 2131230782;
 			
 			// aapt resource value: 0x7F08003F
-			public const int disableHome = 2131230783;
+			public const int end = 2131230783;
 			
 			// aapt resource value: 0x7F080040
-			public const int edit_query = 2131230784;
+			public const int enterAlways = 2131230784;
 			
 			// aapt resource value: 0x7F080041
-			public const int end = 2131230785;
+			public const int enterAlwaysCollapsed = 2131230785;
 			
 			// aapt resource value: 0x7F080042
-			public const int end_padder = 2131230786;
-			
-			// aapt resource value: 0x7F080043
-			public const int enterAlways = 2131230787;
+			public const int exitUntilCollapsed = 2131230786;
 			
 			// aapt resource value: 0x7F080044
-			public const int enterAlwaysCollapsed = 2131230788;
+			public const int expanded_menu = 2131230788;
+			
+			// aapt resource value: 0x7F080043
+			public const int expand_activities_button = 2131230787;
 			
 			// aapt resource value: 0x7F080045
-			public const int exitUntilCollapsed = 2131230789;
-			
-			// aapt resource value: 0x7F080047
-			public const int expanded_menu = 2131230791;
-			
-			// aapt resource value: 0x7F080046
-			public const int expand_activities_button = 2131230790;
+			public const int fill = 2131230789;
 			
 			// aapt resource value: 0x7F080048
-			public const int fill = 2131230792;
+			public const int filled = 2131230792;
 			
-			// aapt resource value: 0x7F08004B
-			public const int filled = 2131230795;
+			// aapt resource value: 0x7F080046
+			public const int fill_horizontal = 2131230790;
+			
+			// aapt resource value: 0x7F080047
+			public const int fill_vertical = 2131230791;
 			
 			// aapt resource value: 0x7F080049
-			public const int fill_horizontal = 2131230793;
+			public const int @fixed = 2131230793;
 			
 			// aapt resource value: 0x7F08004A
-			public const int fill_vertical = 2131230794;
-			
-			// aapt resource value: 0x7F08004C
-			public const int @fixed = 2131230796;
-			
-			// aapt resource value: 0x7F08004D
-			public const int forever = 2131230797;
+			public const int forever = 2131230794;
 			
 			// aapt resource value: 0x7F080002
 			public const int FUNCTION = 2131230722;
 			
+			// aapt resource value: 0x7F08004B
+			public const int ghost_view = 2131230795;
+			
+			// aapt resource value: 0x7F08004C
+			public const int group_divider = 2131230796;
+			
+			// aapt resource value: 0x7F08004D
+			public const int home = 2131230797;
+			
 			// aapt resource value: 0x7F08004E
-			public const int ghost_view = 2131230798;
+			public const int homeAsUp = 2131230798;
 			
 			// aapt resource value: 0x7F08004F
-			public const int group_divider = 2131230799;
+			public const int icon = 2131230799;
 			
 			// aapt resource value: 0x7F080050
-			public const int home = 2131230800;
+			public const int icon_group = 2131230800;
 			
 			// aapt resource value: 0x7F080051
-			public const int homeAsUp = 2131230801;
+			public const int ifRoom = 2131230801;
 			
 			// aapt resource value: 0x7F080052
-			public const int icon = 2131230802;
+			public const int image = 2131230802;
 			
 			// aapt resource value: 0x7F080053
-			public const int icon_group = 2131230803;
+			public const int info = 2131230803;
 			
 			// aapt resource value: 0x7F080054
-			public const int ifRoom = 2131230804;
+			public const int italic = 2131230804;
 			
 			// aapt resource value: 0x7F080055
-			public const int image = 2131230805;
+			public const int item_touch_helper_previous_elevation = 2131230805;
 			
 			// aapt resource value: 0x7F080056
-			public const int info = 2131230806;
+			public const int labeled = 2131230806;
 			
 			// aapt resource value: 0x7F080057
-			public const int italic = 2131230807;
+			public const int largeLabel = 2131230807;
 			
 			// aapt resource value: 0x7F080058
-			public const int item_touch_helper_previous_elevation = 2131230808;
+			public const int left = 2131230808;
 			
 			// aapt resource value: 0x7F080059
-			public const int labeled = 2131230809;
+			public const int line1 = 2131230809;
 			
 			// aapt resource value: 0x7F08005A
-			public const int largeLabel = 2131230810;
+			public const int line3 = 2131230810;
 			
 			// aapt resource value: 0x7F08005B
-			public const int left = 2131230811;
+			public const int listMode = 2131230811;
 			
 			// aapt resource value: 0x7F08005C
-			public const int line1 = 2131230812;
+			public const int list_item = 2131230812;
 			
 			// aapt resource value: 0x7F08005D
-			public const int line3 = 2131230813;
+			public const int masked = 2131230813;
 			
 			// aapt resource value: 0x7F08005E
-			public const int listMode = 2131230814;
-			
-			// aapt resource value: 0x7F08005F
-			public const int list_item = 2131230815;
-			
-			// aapt resource value: 0x7F080060
-			public const int masked = 2131230816;
-			
-			// aapt resource value: 0x7F080061
-			public const int media_actions = 2131230817;
-			
-			// aapt resource value: 0x7F080062
-			public const int message = 2131230818;
+			public const int message = 2131230814;
 			
 			// aapt resource value: 0x7F080003
 			public const int META = 2131230723;
 			
+			// aapt resource value: 0x7F08005F
+			public const int middle = 2131230815;
+			
+			// aapt resource value: 0x7F080060
+			public const int mini = 2131230816;
+			
+			// aapt resource value: 0x7F080061
+			public const int mtrl_child_content_container = 2131230817;
+			
+			// aapt resource value: 0x7F080062
+			public const int mtrl_internal_children_alpha_tag = 2131230818;
+			
 			// aapt resource value: 0x7F080063
-			public const int middle = 2131230819;
+			public const int multiply = 2131230819;
 			
 			// aapt resource value: 0x7F080064
-			public const int mini = 2131230820;
+			public const int navigation_header_container = 2131230820;
 			
 			// aapt resource value: 0x7F080065
-			public const int mtrl_child_content_container = 2131230821;
+			public const int never = 2131230821;
 			
 			// aapt resource value: 0x7F080066
-			public const int mtrl_internal_children_alpha_tag = 2131230822;
+			public const int none = 2131230822;
 			
 			// aapt resource value: 0x7F080067
-			public const int multiply = 2131230823;
+			public const int normal = 2131230823;
 			
 			// aapt resource value: 0x7F080068
-			public const int navigation_header_container = 2131230824;
+			public const int notification_background = 2131230824;
 			
 			// aapt resource value: 0x7F080069
-			public const int never = 2131230825;
+			public const int notification_main_column = 2131230825;
 			
 			// aapt resource value: 0x7F08006A
-			public const int none = 2131230826;
+			public const int notification_main_column_container = 2131230826;
 			
 			// aapt resource value: 0x7F08006B
-			public const int normal = 2131230827;
+			public const int outline = 2131230827;
 			
 			// aapt resource value: 0x7F08006C
-			public const int notification_background = 2131230828;
+			public const int parallax = 2131230828;
 			
 			// aapt resource value: 0x7F08006D
-			public const int notification_main_column = 2131230829;
+			public const int parentPanel = 2131230829;
 			
 			// aapt resource value: 0x7F08006E
-			public const int notification_main_column_container = 2131230830;
+			public const int parent_matrix = 2131230830;
 			
 			// aapt resource value: 0x7F08006F
-			public const int outline = 2131230831;
+			public const int pin = 2131230831;
 			
 			// aapt resource value: 0x7F080070
-			public const int parallax = 2131230832;
+			public const int progress_circular = 2131230832;
 			
 			// aapt resource value: 0x7F080071
-			public const int parentPanel = 2131230833;
+			public const int progress_horizontal = 2131230833;
 			
 			// aapt resource value: 0x7F080072
-			public const int parent_matrix = 2131230834;
+			public const int radio = 2131230834;
 			
 			// aapt resource value: 0x7F080073
-			public const int pin = 2131230835;
+			public const int right = 2131230835;
 			
 			// aapt resource value: 0x7F080074
-			public const int progress_circular = 2131230836;
+			public const int right_icon = 2131230836;
 			
 			// aapt resource value: 0x7F080075
-			public const int progress_horizontal = 2131230837;
+			public const int right_side = 2131230837;
 			
 			// aapt resource value: 0x7F080076
-			public const int radio = 2131230838;
+			public const int save_image_matrix = 2131230838;
 			
 			// aapt resource value: 0x7F080077
-			public const int right = 2131230839;
+			public const int save_non_transition_alpha = 2131230839;
 			
 			// aapt resource value: 0x7F080078
-			public const int right_icon = 2131230840;
+			public const int save_scale_type = 2131230840;
 			
 			// aapt resource value: 0x7F080079
-			public const int right_side = 2131230841;
+			public const int screen = 2131230841;
 			
 			// aapt resource value: 0x7F08007A
-			public const int save_image_matrix = 2131230842;
-			
-			// aapt resource value: 0x7F08007B
-			public const int save_non_transition_alpha = 2131230843;
-			
-			// aapt resource value: 0x7F08007C
-			public const int save_scale_type = 2131230844;
-			
-			// aapt resource value: 0x7F08007D
-			public const int screen = 2131230845;
+			public const int scroll = 2131230842;
 			
 			// aapt resource value: 0x7F08007E
-			public const int scroll = 2131230846;
+			public const int scrollable = 2131230846;
 			
-			// aapt resource value: 0x7F080082
-			public const int scrollable = 2131230850;
+			// aapt resource value: 0x7F08007B
+			public const int scrollIndicatorDown = 2131230843;
+			
+			// aapt resource value: 0x7F08007C
+			public const int scrollIndicatorUp = 2131230844;
+			
+			// aapt resource value: 0x7F08007D
+			public const int scrollView = 2131230845;
 			
 			// aapt resource value: 0x7F08007F
-			public const int scrollIndicatorDown = 2131230847;
+			public const int search_badge = 2131230847;
 			
 			// aapt resource value: 0x7F080080
-			public const int scrollIndicatorUp = 2131230848;
+			public const int search_bar = 2131230848;
 			
 			// aapt resource value: 0x7F080081
-			public const int scrollView = 2131230849;
+			public const int search_button = 2131230849;
+			
+			// aapt resource value: 0x7F080082
+			public const int search_close_btn = 2131230850;
 			
 			// aapt resource value: 0x7F080083
-			public const int search_badge = 2131230851;
+			public const int search_edit_frame = 2131230851;
 			
 			// aapt resource value: 0x7F080084
-			public const int search_bar = 2131230852;
+			public const int search_go_btn = 2131230852;
 			
 			// aapt resource value: 0x7F080085
-			public const int search_button = 2131230853;
+			public const int search_mag_icon = 2131230853;
 			
 			// aapt resource value: 0x7F080086
-			public const int search_close_btn = 2131230854;
+			public const int search_plate = 2131230854;
 			
 			// aapt resource value: 0x7F080087
-			public const int search_edit_frame = 2131230855;
+			public const int search_src_text = 2131230855;
 			
 			// aapt resource value: 0x7F080088
-			public const int search_go_btn = 2131230856;
-			
-			// aapt resource value: 0x7F080089
-			public const int search_mag_icon = 2131230857;
+			public const int search_voice_btn = 2131230856;
 			
 			// aapt resource value: 0x7F08008A
-			public const int search_plate = 2131230858;
+			public const int selected = 2131230858;
 			
-			// aapt resource value: 0x7F08008B
-			public const int search_src_text = 2131230859;
-			
-			// aapt resource value: 0x7F08008C
-			public const int search_voice_btn = 2131230860;
-			
-			// aapt resource value: 0x7F08008E
-			public const int selected = 2131230862;
-			
-			// aapt resource value: 0x7F08008D
-			public const int select_dialog_listview = 2131230861;
+			// aapt resource value: 0x7F080089
+			public const int select_dialog_listview = 2131230857;
 			
 			// aapt resource value: 0x7F080004
 			public const int SHIFT = 2131230724;
 			
+			// aapt resource value: 0x7F08008B
+			public const int shortcut = 2131230859;
+			
+			// aapt resource value: 0x7F08008C
+			public const int showCustom = 2131230860;
+			
+			// aapt resource value: 0x7F08008D
+			public const int showHome = 2131230861;
+			
+			// aapt resource value: 0x7F08008E
+			public const int showTitle = 2131230862;
+			
 			// aapt resource value: 0x7F08008F
-			public const int shortcut = 2131230863;
+			public const int smallLabel = 2131230863;
 			
 			// aapt resource value: 0x7F080090
-			public const int showCustom = 2131230864;
+			public const int snackbar_action = 2131230864;
 			
 			// aapt resource value: 0x7F080091
-			public const int showHome = 2131230865;
+			public const int snackbar_text = 2131230865;
 			
 			// aapt resource value: 0x7F080092
-			public const int showTitle = 2131230866;
+			public const int snap = 2131230866;
 			
 			// aapt resource value: 0x7F080093
-			public const int smallLabel = 2131230867;
+			public const int snapMargins = 2131230867;
 			
 			// aapt resource value: 0x7F080094
-			public const int snackbar_action = 2131230868;
+			public const int spacer = 2131230868;
 			
 			// aapt resource value: 0x7F080095
-			public const int snackbar_text = 2131230869;
+			public const int split_action_bar = 2131230869;
 			
 			// aapt resource value: 0x7F080096
-			public const int snap = 2131230870;
+			public const int src_atop = 2131230870;
 			
 			// aapt resource value: 0x7F080097
-			public const int snapMargins = 2131230871;
+			public const int src_in = 2131230871;
 			
 			// aapt resource value: 0x7F080098
-			public const int spacer = 2131230872;
+			public const int src_over = 2131230872;
 			
 			// aapt resource value: 0x7F080099
-			public const int split_action_bar = 2131230873;
+			public const int start = 2131230873;
 			
 			// aapt resource value: 0x7F08009A
-			public const int src_atop = 2131230874;
+			public const int stretch = 2131230874;
 			
 			// aapt resource value: 0x7F08009B
-			public const int src_in = 2131230875;
+			public const int submenuarrow = 2131230875;
 			
 			// aapt resource value: 0x7F08009C
-			public const int src_over = 2131230876;
-			
-			// aapt resource value: 0x7F08009D
-			public const int start = 2131230877;
-			
-			// aapt resource value: 0x7F08009E
-			public const int status_bar_latest_event_content = 2131230878;
-			
-			// aapt resource value: 0x7F08009F
-			public const int stretch = 2131230879;
-			
-			// aapt resource value: 0x7F0800A0
-			public const int submenuarrow = 2131230880;
-			
-			// aapt resource value: 0x7F0800A1
-			public const int submit_area = 2131230881;
+			public const int submit_area = 2131230876;
 			
 			// aapt resource value: 0x7F080005
 			public const int SYM = 2131230725;
 			
+			// aapt resource value: 0x7F08009D
+			public const int tabMode = 2131230877;
+			
+			// aapt resource value: 0x7F08009E
+			public const int tag_transition_group = 2131230878;
+			
+			// aapt resource value: 0x7F08009F
+			public const int tag_unhandled_key_event_manager = 2131230879;
+			
+			// aapt resource value: 0x7F0800A0
+			public const int tag_unhandled_key_listeners = 2131230880;
+			
+			// aapt resource value: 0x7F0800A1
+			public const int text = 2131230881;
+			
 			// aapt resource value: 0x7F0800A2
-			public const int tabMode = 2131230882;
-			
-			// aapt resource value: 0x7F0800A3
-			public const int tag_transition_group = 2131230883;
-			
-			// aapt resource value: 0x7F0800A4
-			public const int tag_unhandled_key_event_manager = 2131230884;
-			
-			// aapt resource value: 0x7F0800A5
-			public const int tag_unhandled_key_listeners = 2131230885;
-			
-			// aapt resource value: 0x7F0800A6
-			public const int text = 2131230886;
+			public const int text2 = 2131230882;
 			
 			// aapt resource value: 0x7F0800A7
-			public const int text2 = 2131230887;
-			
-			// aapt resource value: 0x7F0800AC
-			public const int textinput_counter = 2131230892;
-			
-			// aapt resource value: 0x7F0800AD
-			public const int textinput_error = 2131230893;
-			
-			// aapt resource value: 0x7F0800AE
-			public const int textinput_helper_text = 2131230894;
+			public const int textinput_counter = 2131230887;
 			
 			// aapt resource value: 0x7F0800A8
-			public const int textSpacerNoButtons = 2131230888;
+			public const int textinput_error = 2131230888;
 			
 			// aapt resource value: 0x7F0800A9
-			public const int textSpacerNoTitle = 2131230889;
+			public const int textinput_helper_text = 2131230889;
+			
+			// aapt resource value: 0x7F0800A3
+			public const int textSpacerNoButtons = 2131230883;
+			
+			// aapt resource value: 0x7F0800A4
+			public const int textSpacerNoTitle = 2131230884;
+			
+			// aapt resource value: 0x7F0800A5
+			public const int textStart = 2131230885;
+			
+			// aapt resource value: 0x7F0800A6
+			public const int text_input_password_toggle = 2131230886;
 			
 			// aapt resource value: 0x7F0800AA
-			public const int textStart = 2131230890;
+			public const int time = 2131230890;
 			
 			// aapt resource value: 0x7F0800AB
-			public const int text_input_password_toggle = 2131230891;
+			public const int title = 2131230891;
+			
+			// aapt resource value: 0x7F0800AC
+			public const int titleDividerNoCustom = 2131230892;
+			
+			// aapt resource value: 0x7F0800AD
+			public const int title_template = 2131230893;
+			
+			// aapt resource value: 0x7F0800AE
+			public const int top = 2131230894;
 			
 			// aapt resource value: 0x7F0800AF
-			public const int time = 2131230895;
+			public const int topPanel = 2131230895;
 			
 			// aapt resource value: 0x7F0800B0
-			public const int title = 2131230896;
+			public const int touch_outside = 2131230896;
 			
 			// aapt resource value: 0x7F0800B1
-			public const int titleDividerNoCustom = 2131230897;
+			public const int transition_current_scene = 2131230897;
 			
 			// aapt resource value: 0x7F0800B2
-			public const int title_template = 2131230898;
+			public const int transition_layout_save = 2131230898;
 			
 			// aapt resource value: 0x7F0800B3
-			public const int top = 2131230899;
+			public const int transition_position = 2131230899;
 			
 			// aapt resource value: 0x7F0800B4
-			public const int topPanel = 2131230900;
+			public const int transition_scene_layoutid_cache = 2131230900;
 			
 			// aapt resource value: 0x7F0800B5
-			public const int touch_outside = 2131230901;
+			public const int transition_transform = 2131230901;
 			
 			// aapt resource value: 0x7F0800B6
-			public const int transition_current_scene = 2131230902;
+			public const int uniform = 2131230902;
 			
 			// aapt resource value: 0x7F0800B7
-			public const int transition_layout_save = 2131230903;
+			public const int unlabeled = 2131230903;
 			
 			// aapt resource value: 0x7F0800B8
-			public const int transition_position = 2131230904;
+			public const int up = 2131230904;
 			
 			// aapt resource value: 0x7F0800B9
-			public const int transition_scene_layoutid_cache = 2131230905;
+			public const int useLogo = 2131230905;
 			
 			// aapt resource value: 0x7F0800BA
-			public const int transition_transform = 2131230906;
+			public const int view_offset_helper = 2131230906;
 			
 			// aapt resource value: 0x7F0800BB
-			public const int uniform = 2131230907;
+			public const int visible = 2131230907;
 			
 			// aapt resource value: 0x7F0800BC
-			public const int unlabeled = 2131230908;
+			public const int withText = 2131230908;
 			
 			// aapt resource value: 0x7F0800BD
-			public const int up = 2131230909;
-			
-			// aapt resource value: 0x7F0800BE
-			public const int useLogo = 2131230910;
-			
-			// aapt resource value: 0x7F0800BF
-			public const int view_offset_helper = 2131230911;
-			
-			// aapt resource value: 0x7F0800C0
-			public const int visible = 2131230912;
-			
-			// aapt resource value: 0x7F0800C1
-			public const int withText = 2131230913;
-			
-			// aapt resource value: 0x7F0800C2
-			public const int wrap_content = 2131230914;
+			public const int wrap_content = 2131230909;
 			
 			static Id()
 			{
@@ -7324,55 +5646,28 @@ namespace fiskaltrust.AndroidLauncher
 			public const int notification_action_tombstone = 2131427376;
 			
 			// aapt resource value: 0x7F0B0031
-			public const int notification_media_action = 2131427377;
+			public const int notification_template_custom_big = 2131427377;
 			
 			// aapt resource value: 0x7F0B0032
-			public const int notification_media_cancel_action = 2131427378;
+			public const int notification_template_icon_group = 2131427378;
 			
 			// aapt resource value: 0x7F0B0033
-			public const int notification_template_big_media = 2131427379;
+			public const int notification_template_part_chronometer = 2131427379;
 			
 			// aapt resource value: 0x7F0B0034
-			public const int notification_template_big_media_custom = 2131427380;
+			public const int notification_template_part_time = 2131427380;
 			
 			// aapt resource value: 0x7F0B0035
-			public const int notification_template_big_media_narrow = 2131427381;
+			public const int select_dialog_item_material = 2131427381;
 			
 			// aapt resource value: 0x7F0B0036
-			public const int notification_template_big_media_narrow_custom = 2131427382;
+			public const int select_dialog_multichoice_material = 2131427382;
 			
 			// aapt resource value: 0x7F0B0037
-			public const int notification_template_custom_big = 2131427383;
+			public const int select_dialog_singlechoice_material = 2131427383;
 			
 			// aapt resource value: 0x7F0B0038
-			public const int notification_template_icon_group = 2131427384;
-			
-			// aapt resource value: 0x7F0B0039
-			public const int notification_template_lines_media = 2131427385;
-			
-			// aapt resource value: 0x7F0B003A
-			public const int notification_template_media = 2131427386;
-			
-			// aapt resource value: 0x7F0B003B
-			public const int notification_template_media_custom = 2131427387;
-			
-			// aapt resource value: 0x7F0B003C
-			public const int notification_template_part_chronometer = 2131427388;
-			
-			// aapt resource value: 0x7F0B003D
-			public const int notification_template_part_time = 2131427389;
-			
-			// aapt resource value: 0x7F0B003E
-			public const int select_dialog_item_material = 2131427390;
-			
-			// aapt resource value: 0x7F0B003F
-			public const int select_dialog_multichoice_material = 2131427391;
-			
-			// aapt resource value: 0x7F0B0040
-			public const int select_dialog_singlechoice_material = 2131427392;
-			
-			// aapt resource value: 0x7F0B0041
-			public const int support_simple_spinner_dropdown_item = 2131427393;
+			public const int support_simple_spinner_dropdown_item = 2131427384;
 			
 			static Layout()
 			{
@@ -8431,670 +6726,655 @@ namespace fiskaltrust.AndroidLauncher
 			public const int TextAppearance_Compat_Notification_Info = 2131624214;
 			
 			// aapt resource value: 0x7F0E0117
-			public const int TextAppearance_Compat_Notification_Info_Media = 2131624215;
+			public const int TextAppearance_Compat_Notification_Line2 = 2131624215;
 			
 			// aapt resource value: 0x7F0E0118
-			public const int TextAppearance_Compat_Notification_Line2 = 2131624216;
+			public const int TextAppearance_Compat_Notification_Time = 2131624216;
 			
 			// aapt resource value: 0x7F0E0119
-			public const int TextAppearance_Compat_Notification_Line2_Media = 2131624217;
+			public const int TextAppearance_Compat_Notification_Title = 2131624217;
 			
 			// aapt resource value: 0x7F0E011A
-			public const int TextAppearance_Compat_Notification_Media = 2131624218;
+			public const int TextAppearance_Design_CollapsingToolbar_Expanded = 2131624218;
 			
 			// aapt resource value: 0x7F0E011B
-			public const int TextAppearance_Compat_Notification_Time = 2131624219;
+			public const int TextAppearance_Design_Counter = 2131624219;
 			
 			// aapt resource value: 0x7F0E011C
-			public const int TextAppearance_Compat_Notification_Time_Media = 2131624220;
+			public const int TextAppearance_Design_Counter_Overflow = 2131624220;
 			
 			// aapt resource value: 0x7F0E011D
-			public const int TextAppearance_Compat_Notification_Title = 2131624221;
+			public const int TextAppearance_Design_Error = 2131624221;
 			
 			// aapt resource value: 0x7F0E011E
-			public const int TextAppearance_Compat_Notification_Title_Media = 2131624222;
+			public const int TextAppearance_Design_HelperText = 2131624222;
 			
 			// aapt resource value: 0x7F0E011F
-			public const int TextAppearance_Design_CollapsingToolbar_Expanded = 2131624223;
+			public const int TextAppearance_Design_Hint = 2131624223;
 			
 			// aapt resource value: 0x7F0E0120
-			public const int TextAppearance_Design_Counter = 2131624224;
+			public const int TextAppearance_Design_Snackbar_Message = 2131624224;
 			
 			// aapt resource value: 0x7F0E0121
-			public const int TextAppearance_Design_Counter_Overflow = 2131624225;
+			public const int TextAppearance_Design_Tab = 2131624225;
 			
 			// aapt resource value: 0x7F0E0122
-			public const int TextAppearance_Design_Error = 2131624226;
+			public const int TextAppearance_MaterialComponents_Body1 = 2131624226;
 			
 			// aapt resource value: 0x7F0E0123
-			public const int TextAppearance_Design_HelperText = 2131624227;
+			public const int TextAppearance_MaterialComponents_Body2 = 2131624227;
 			
 			// aapt resource value: 0x7F0E0124
-			public const int TextAppearance_Design_Hint = 2131624228;
+			public const int TextAppearance_MaterialComponents_Button = 2131624228;
 			
 			// aapt resource value: 0x7F0E0125
-			public const int TextAppearance_Design_Snackbar_Message = 2131624229;
+			public const int TextAppearance_MaterialComponents_Caption = 2131624229;
 			
 			// aapt resource value: 0x7F0E0126
-			public const int TextAppearance_Design_Tab = 2131624230;
+			public const int TextAppearance_MaterialComponents_Chip = 2131624230;
 			
 			// aapt resource value: 0x7F0E0127
-			public const int TextAppearance_MaterialComponents_Body1 = 2131624231;
+			public const int TextAppearance_MaterialComponents_Headline1 = 2131624231;
 			
 			// aapt resource value: 0x7F0E0128
-			public const int TextAppearance_MaterialComponents_Body2 = 2131624232;
+			public const int TextAppearance_MaterialComponents_Headline2 = 2131624232;
 			
 			// aapt resource value: 0x7F0E0129
-			public const int TextAppearance_MaterialComponents_Button = 2131624233;
+			public const int TextAppearance_MaterialComponents_Headline3 = 2131624233;
 			
 			// aapt resource value: 0x7F0E012A
-			public const int TextAppearance_MaterialComponents_Caption = 2131624234;
+			public const int TextAppearance_MaterialComponents_Headline4 = 2131624234;
 			
 			// aapt resource value: 0x7F0E012B
-			public const int TextAppearance_MaterialComponents_Chip = 2131624235;
+			public const int TextAppearance_MaterialComponents_Headline5 = 2131624235;
 			
 			// aapt resource value: 0x7F0E012C
-			public const int TextAppearance_MaterialComponents_Headline1 = 2131624236;
+			public const int TextAppearance_MaterialComponents_Headline6 = 2131624236;
 			
 			// aapt resource value: 0x7F0E012D
-			public const int TextAppearance_MaterialComponents_Headline2 = 2131624237;
+			public const int TextAppearance_MaterialComponents_Overline = 2131624237;
 			
 			// aapt resource value: 0x7F0E012E
-			public const int TextAppearance_MaterialComponents_Headline3 = 2131624238;
+			public const int TextAppearance_MaterialComponents_Subtitle1 = 2131624238;
 			
 			// aapt resource value: 0x7F0E012F
-			public const int TextAppearance_MaterialComponents_Headline4 = 2131624239;
+			public const int TextAppearance_MaterialComponents_Subtitle2 = 2131624239;
 			
 			// aapt resource value: 0x7F0E0130
-			public const int TextAppearance_MaterialComponents_Headline5 = 2131624240;
+			public const int TextAppearance_MaterialComponents_Tab = 2131624240;
 			
 			// aapt resource value: 0x7F0E0131
-			public const int TextAppearance_MaterialComponents_Headline6 = 2131624241;
+			public const int TextAppearance_Widget_AppCompat_ExpandedMenu_Item = 2131624241;
 			
 			// aapt resource value: 0x7F0E0132
-			public const int TextAppearance_MaterialComponents_Overline = 2131624242;
+			public const int TextAppearance_Widget_AppCompat_Toolbar_Subtitle = 2131624242;
 			
 			// aapt resource value: 0x7F0E0133
-			public const int TextAppearance_MaterialComponents_Subtitle1 = 2131624243;
-			
-			// aapt resource value: 0x7F0E0134
-			public const int TextAppearance_MaterialComponents_Subtitle2 = 2131624244;
-			
-			// aapt resource value: 0x7F0E0135
-			public const int TextAppearance_MaterialComponents_Tab = 2131624245;
-			
-			// aapt resource value: 0x7F0E0136
-			public const int TextAppearance_Widget_AppCompat_ExpandedMenu_Item = 2131624246;
-			
-			// aapt resource value: 0x7F0E0137
-			public const int TextAppearance_Widget_AppCompat_Toolbar_Subtitle = 2131624247;
-			
-			// aapt resource value: 0x7F0E0138
-			public const int TextAppearance_Widget_AppCompat_Toolbar_Title = 2131624248;
-			
-			// aapt resource value: 0x7F0E0169
-			public const int ThemeOverlay_AppCompat = 2131624297;
-			
-			// aapt resource value: 0x7F0E016A
-			public const int ThemeOverlay_AppCompat_ActionBar = 2131624298;
-			
-			// aapt resource value: 0x7F0E016B
-			public const int ThemeOverlay_AppCompat_Dark = 2131624299;
-			
-			// aapt resource value: 0x7F0E016C
-			public const int ThemeOverlay_AppCompat_Dark_ActionBar = 2131624300;
-			
-			// aapt resource value: 0x7F0E016D
-			public const int ThemeOverlay_AppCompat_Dialog = 2131624301;
-			
-			// aapt resource value: 0x7F0E016E
-			public const int ThemeOverlay_AppCompat_Dialog_Alert = 2131624302;
-			
-			// aapt resource value: 0x7F0E016F
-			public const int ThemeOverlay_AppCompat_Light = 2131624303;
-			
-			// aapt resource value: 0x7F0E0170
-			public const int ThemeOverlay_MaterialComponents = 2131624304;
-			
-			// aapt resource value: 0x7F0E0171
-			public const int ThemeOverlay_MaterialComponents_ActionBar = 2131624305;
-			
-			// aapt resource value: 0x7F0E0172
-			public const int ThemeOverlay_MaterialComponents_Dark = 2131624306;
-			
-			// aapt resource value: 0x7F0E0173
-			public const int ThemeOverlay_MaterialComponents_Dark_ActionBar = 2131624307;
-			
-			// aapt resource value: 0x7F0E0174
-			public const int ThemeOverlay_MaterialComponents_Dialog = 2131624308;
-			
-			// aapt resource value: 0x7F0E0175
-			public const int ThemeOverlay_MaterialComponents_Dialog_Alert = 2131624309;
-			
-			// aapt resource value: 0x7F0E0176
-			public const int ThemeOverlay_MaterialComponents_Light = 2131624310;
-			
-			// aapt resource value: 0x7F0E0177
-			public const int ThemeOverlay_MaterialComponents_TextInputEditText = 2131624311;
-			
-			// aapt resource value: 0x7F0E0178
-			public const int ThemeOverlay_MaterialComponents_TextInputEditText_FilledBox = 2131624312;
-			
-			// aapt resource value: 0x7F0E0179
-			public const int ThemeOverlay_MaterialComponents_TextInputEditText_FilledBox_Dense = 2131624313;
-			
-			// aapt resource value: 0x7F0E017A
-			public const int ThemeOverlay_MaterialComponents_TextInputEditText_OutlinedBox = 2131624314;
-			
-			// aapt resource value: 0x7F0E017B
-			public const int ThemeOverlay_MaterialComponents_TextInputEditText_OutlinedBox_Dense = 2131624315;
-			
-			// aapt resource value: 0x7F0E0139
-			public const int Theme_AppCompat = 2131624249;
-			
-			// aapt resource value: 0x7F0E013A
-			public const int Theme_AppCompat_CompactMenu = 2131624250;
-			
-			// aapt resource value: 0x7F0E013B
-			public const int Theme_AppCompat_DayNight = 2131624251;
-			
-			// aapt resource value: 0x7F0E013C
-			public const int Theme_AppCompat_DayNight_DarkActionBar = 2131624252;
-			
-			// aapt resource value: 0x7F0E013D
-			public const int Theme_AppCompat_DayNight_Dialog = 2131624253;
-			
-			// aapt resource value: 0x7F0E0140
-			public const int Theme_AppCompat_DayNight_DialogWhenLarge = 2131624256;
-			
-			// aapt resource value: 0x7F0E013E
-			public const int Theme_AppCompat_DayNight_Dialog_Alert = 2131624254;
-			
-			// aapt resource value: 0x7F0E013F
-			public const int Theme_AppCompat_DayNight_Dialog_MinWidth = 2131624255;
-			
-			// aapt resource value: 0x7F0E0141
-			public const int Theme_AppCompat_DayNight_NoActionBar = 2131624257;
-			
-			// aapt resource value: 0x7F0E0142
-			public const int Theme_AppCompat_Dialog = 2131624258;
-			
-			// aapt resource value: 0x7F0E0145
-			public const int Theme_AppCompat_DialogWhenLarge = 2131624261;
-			
-			// aapt resource value: 0x7F0E0143
-			public const int Theme_AppCompat_Dialog_Alert = 2131624259;
-			
-			// aapt resource value: 0x7F0E0144
-			public const int Theme_AppCompat_Dialog_MinWidth = 2131624260;
-			
-			// aapt resource value: 0x7F0E0146
-			public const int Theme_AppCompat_Light = 2131624262;
-			
-			// aapt resource value: 0x7F0E0147
-			public const int Theme_AppCompat_Light_DarkActionBar = 2131624263;
-			
-			// aapt resource value: 0x7F0E0148
-			public const int Theme_AppCompat_Light_Dialog = 2131624264;
-			
-			// aapt resource value: 0x7F0E014B
-			public const int Theme_AppCompat_Light_DialogWhenLarge = 2131624267;
-			
-			// aapt resource value: 0x7F0E0149
-			public const int Theme_AppCompat_Light_Dialog_Alert = 2131624265;
-			
-			// aapt resource value: 0x7F0E014A
-			public const int Theme_AppCompat_Light_Dialog_MinWidth = 2131624266;
-			
-			// aapt resource value: 0x7F0E014C
-			public const int Theme_AppCompat_Light_NoActionBar = 2131624268;
-			
-			// aapt resource value: 0x7F0E014D
-			public const int Theme_AppCompat_NoActionBar = 2131624269;
-			
-			// aapt resource value: 0x7F0E014E
-			public const int Theme_Design = 2131624270;
-			
-			// aapt resource value: 0x7F0E014F
-			public const int Theme_Design_BottomSheetDialog = 2131624271;
-			
-			// aapt resource value: 0x7F0E0150
-			public const int Theme_Design_Light = 2131624272;
-			
-			// aapt resource value: 0x7F0E0151
-			public const int Theme_Design_Light_BottomSheetDialog = 2131624273;
-			
-			// aapt resource value: 0x7F0E0152
-			public const int Theme_Design_Light_NoActionBar = 2131624274;
-			
-			// aapt resource value: 0x7F0E0153
-			public const int Theme_Design_NoActionBar = 2131624275;
-			
-			// aapt resource value: 0x7F0E0154
-			public const int Theme_MaterialComponents = 2131624276;
-			
-			// aapt resource value: 0x7F0E0155
-			public const int Theme_MaterialComponents_BottomSheetDialog = 2131624277;
-			
-			// aapt resource value: 0x7F0E0156
-			public const int Theme_MaterialComponents_Bridge = 2131624278;
-			
-			// aapt resource value: 0x7F0E0157
-			public const int Theme_MaterialComponents_CompactMenu = 2131624279;
-			
-			// aapt resource value: 0x7F0E0158
-			public const int Theme_MaterialComponents_Dialog = 2131624280;
-			
-			// aapt resource value: 0x7F0E015B
-			public const int Theme_MaterialComponents_DialogWhenLarge = 2131624283;
-			
-			// aapt resource value: 0x7F0E0159
-			public const int Theme_MaterialComponents_Dialog_Alert = 2131624281;
-			
-			// aapt resource value: 0x7F0E015A
-			public const int Theme_MaterialComponents_Dialog_MinWidth = 2131624282;
-			
-			// aapt resource value: 0x7F0E015C
-			public const int Theme_MaterialComponents_Light = 2131624284;
-			
-			// aapt resource value: 0x7F0E015D
-			public const int Theme_MaterialComponents_Light_BottomSheetDialog = 2131624285;
-			
-			// aapt resource value: 0x7F0E015E
-			public const int Theme_MaterialComponents_Light_Bridge = 2131624286;
-			
-			// aapt resource value: 0x7F0E015F
-			public const int Theme_MaterialComponents_Light_DarkActionBar = 2131624287;
-			
-			// aapt resource value: 0x7F0E0160
-			public const int Theme_MaterialComponents_Light_DarkActionBar_Bridge = 2131624288;
-			
-			// aapt resource value: 0x7F0E0161
-			public const int Theme_MaterialComponents_Light_Dialog = 2131624289;
+			public const int TextAppearance_Widget_AppCompat_Toolbar_Title = 2131624243;
 			
 			// aapt resource value: 0x7F0E0164
-			public const int Theme_MaterialComponents_Light_DialogWhenLarge = 2131624292;
-			
-			// aapt resource value: 0x7F0E0162
-			public const int Theme_MaterialComponents_Light_Dialog_Alert = 2131624290;
-			
-			// aapt resource value: 0x7F0E0163
-			public const int Theme_MaterialComponents_Light_Dialog_MinWidth = 2131624291;
+			public const int ThemeOverlay_AppCompat = 2131624292;
 			
 			// aapt resource value: 0x7F0E0165
-			public const int Theme_MaterialComponents_Light_NoActionBar = 2131624293;
+			public const int ThemeOverlay_AppCompat_ActionBar = 2131624293;
 			
 			// aapt resource value: 0x7F0E0166
-			public const int Theme_MaterialComponents_Light_NoActionBar_Bridge = 2131624294;
+			public const int ThemeOverlay_AppCompat_Dark = 2131624294;
 			
 			// aapt resource value: 0x7F0E0167
-			public const int Theme_MaterialComponents_NoActionBar = 2131624295;
+			public const int ThemeOverlay_AppCompat_Dark_ActionBar = 2131624295;
 			
 			// aapt resource value: 0x7F0E0168
-			public const int Theme_MaterialComponents_NoActionBar_Bridge = 2131624296;
+			public const int ThemeOverlay_AppCompat_Dialog = 2131624296;
+			
+			// aapt resource value: 0x7F0E0169
+			public const int ThemeOverlay_AppCompat_Dialog_Alert = 2131624297;
+			
+			// aapt resource value: 0x7F0E016A
+			public const int ThemeOverlay_AppCompat_Light = 2131624298;
+			
+			// aapt resource value: 0x7F0E016B
+			public const int ThemeOverlay_MaterialComponents = 2131624299;
+			
+			// aapt resource value: 0x7F0E016C
+			public const int ThemeOverlay_MaterialComponents_ActionBar = 2131624300;
+			
+			// aapt resource value: 0x7F0E016D
+			public const int ThemeOverlay_MaterialComponents_Dark = 2131624301;
+			
+			// aapt resource value: 0x7F0E016E
+			public const int ThemeOverlay_MaterialComponents_Dark_ActionBar = 2131624302;
+			
+			// aapt resource value: 0x7F0E016F
+			public const int ThemeOverlay_MaterialComponents_Dialog = 2131624303;
+			
+			// aapt resource value: 0x7F0E0170
+			public const int ThemeOverlay_MaterialComponents_Dialog_Alert = 2131624304;
+			
+			// aapt resource value: 0x7F0E0171
+			public const int ThemeOverlay_MaterialComponents_Light = 2131624305;
+			
+			// aapt resource value: 0x7F0E0172
+			public const int ThemeOverlay_MaterialComponents_TextInputEditText = 2131624306;
+			
+			// aapt resource value: 0x7F0E0173
+			public const int ThemeOverlay_MaterialComponents_TextInputEditText_FilledBox = 2131624307;
+			
+			// aapt resource value: 0x7F0E0174
+			public const int ThemeOverlay_MaterialComponents_TextInputEditText_FilledBox_Dense = 2131624308;
+			
+			// aapt resource value: 0x7F0E0175
+			public const int ThemeOverlay_MaterialComponents_TextInputEditText_OutlinedBox = 2131624309;
+			
+			// aapt resource value: 0x7F0E0176
+			public const int ThemeOverlay_MaterialComponents_TextInputEditText_OutlinedBox_Dense = 2131624310;
+			
+			// aapt resource value: 0x7F0E0134
+			public const int Theme_AppCompat = 2131624244;
+			
+			// aapt resource value: 0x7F0E0135
+			public const int Theme_AppCompat_CompactMenu = 2131624245;
+			
+			// aapt resource value: 0x7F0E0136
+			public const int Theme_AppCompat_DayNight = 2131624246;
+			
+			// aapt resource value: 0x7F0E0137
+			public const int Theme_AppCompat_DayNight_DarkActionBar = 2131624247;
+			
+			// aapt resource value: 0x7F0E0138
+			public const int Theme_AppCompat_DayNight_Dialog = 2131624248;
+			
+			// aapt resource value: 0x7F0E013B
+			public const int Theme_AppCompat_DayNight_DialogWhenLarge = 2131624251;
+			
+			// aapt resource value: 0x7F0E0139
+			public const int Theme_AppCompat_DayNight_Dialog_Alert = 2131624249;
+			
+			// aapt resource value: 0x7F0E013A
+			public const int Theme_AppCompat_DayNight_Dialog_MinWidth = 2131624250;
+			
+			// aapt resource value: 0x7F0E013C
+			public const int Theme_AppCompat_DayNight_NoActionBar = 2131624252;
+			
+			// aapt resource value: 0x7F0E013D
+			public const int Theme_AppCompat_Dialog = 2131624253;
+			
+			// aapt resource value: 0x7F0E0140
+			public const int Theme_AppCompat_DialogWhenLarge = 2131624256;
+			
+			// aapt resource value: 0x7F0E013E
+			public const int Theme_AppCompat_Dialog_Alert = 2131624254;
+			
+			// aapt resource value: 0x7F0E013F
+			public const int Theme_AppCompat_Dialog_MinWidth = 2131624255;
+			
+			// aapt resource value: 0x7F0E0141
+			public const int Theme_AppCompat_Light = 2131624257;
+			
+			// aapt resource value: 0x7F0E0142
+			public const int Theme_AppCompat_Light_DarkActionBar = 2131624258;
+			
+			// aapt resource value: 0x7F0E0143
+			public const int Theme_AppCompat_Light_Dialog = 2131624259;
+			
+			// aapt resource value: 0x7F0E0146
+			public const int Theme_AppCompat_Light_DialogWhenLarge = 2131624262;
+			
+			// aapt resource value: 0x7F0E0144
+			public const int Theme_AppCompat_Light_Dialog_Alert = 2131624260;
+			
+			// aapt resource value: 0x7F0E0145
+			public const int Theme_AppCompat_Light_Dialog_MinWidth = 2131624261;
+			
+			// aapt resource value: 0x7F0E0147
+			public const int Theme_AppCompat_Light_NoActionBar = 2131624263;
+			
+			// aapt resource value: 0x7F0E0148
+			public const int Theme_AppCompat_NoActionBar = 2131624264;
+			
+			// aapt resource value: 0x7F0E0149
+			public const int Theme_Design = 2131624265;
+			
+			// aapt resource value: 0x7F0E014A
+			public const int Theme_Design_BottomSheetDialog = 2131624266;
+			
+			// aapt resource value: 0x7F0E014B
+			public const int Theme_Design_Light = 2131624267;
+			
+			// aapt resource value: 0x7F0E014C
+			public const int Theme_Design_Light_BottomSheetDialog = 2131624268;
+			
+			// aapt resource value: 0x7F0E014D
+			public const int Theme_Design_Light_NoActionBar = 2131624269;
+			
+			// aapt resource value: 0x7F0E014E
+			public const int Theme_Design_NoActionBar = 2131624270;
+			
+			// aapt resource value: 0x7F0E014F
+			public const int Theme_MaterialComponents = 2131624271;
+			
+			// aapt resource value: 0x7F0E0150
+			public const int Theme_MaterialComponents_BottomSheetDialog = 2131624272;
+			
+			// aapt resource value: 0x7F0E0151
+			public const int Theme_MaterialComponents_Bridge = 2131624273;
+			
+			// aapt resource value: 0x7F0E0152
+			public const int Theme_MaterialComponents_CompactMenu = 2131624274;
+			
+			// aapt resource value: 0x7F0E0153
+			public const int Theme_MaterialComponents_Dialog = 2131624275;
+			
+			// aapt resource value: 0x7F0E0156
+			public const int Theme_MaterialComponents_DialogWhenLarge = 2131624278;
+			
+			// aapt resource value: 0x7F0E0154
+			public const int Theme_MaterialComponents_Dialog_Alert = 2131624276;
+			
+			// aapt resource value: 0x7F0E0155
+			public const int Theme_MaterialComponents_Dialog_MinWidth = 2131624277;
+			
+			// aapt resource value: 0x7F0E0157
+			public const int Theme_MaterialComponents_Light = 2131624279;
+			
+			// aapt resource value: 0x7F0E0158
+			public const int Theme_MaterialComponents_Light_BottomSheetDialog = 2131624280;
+			
+			// aapt resource value: 0x7F0E0159
+			public const int Theme_MaterialComponents_Light_Bridge = 2131624281;
+			
+			// aapt resource value: 0x7F0E015A
+			public const int Theme_MaterialComponents_Light_DarkActionBar = 2131624282;
+			
+			// aapt resource value: 0x7F0E015B
+			public const int Theme_MaterialComponents_Light_DarkActionBar_Bridge = 2131624283;
+			
+			// aapt resource value: 0x7F0E015C
+			public const int Theme_MaterialComponents_Light_Dialog = 2131624284;
+			
+			// aapt resource value: 0x7F0E015F
+			public const int Theme_MaterialComponents_Light_DialogWhenLarge = 2131624287;
+			
+			// aapt resource value: 0x7F0E015D
+			public const int Theme_MaterialComponents_Light_Dialog_Alert = 2131624285;
+			
+			// aapt resource value: 0x7F0E015E
+			public const int Theme_MaterialComponents_Light_Dialog_MinWidth = 2131624286;
+			
+			// aapt resource value: 0x7F0E0160
+			public const int Theme_MaterialComponents_Light_NoActionBar = 2131624288;
+			
+			// aapt resource value: 0x7F0E0161
+			public const int Theme_MaterialComponents_Light_NoActionBar_Bridge = 2131624289;
+			
+			// aapt resource value: 0x7F0E0162
+			public const int Theme_MaterialComponents_NoActionBar = 2131624290;
+			
+			// aapt resource value: 0x7F0E0163
+			public const int Theme_MaterialComponents_NoActionBar_Bridge = 2131624291;
+			
+			// aapt resource value: 0x7F0E0177
+			public const int Widget_AppCompat_ActionBar = 2131624311;
+			
+			// aapt resource value: 0x7F0E0178
+			public const int Widget_AppCompat_ActionBar_Solid = 2131624312;
+			
+			// aapt resource value: 0x7F0E0179
+			public const int Widget_AppCompat_ActionBar_TabBar = 2131624313;
+			
+			// aapt resource value: 0x7F0E017A
+			public const int Widget_AppCompat_ActionBar_TabText = 2131624314;
+			
+			// aapt resource value: 0x7F0E017B
+			public const int Widget_AppCompat_ActionBar_TabView = 2131624315;
 			
 			// aapt resource value: 0x7F0E017C
-			public const int Widget_AppCompat_ActionBar = 2131624316;
+			public const int Widget_AppCompat_ActionButton = 2131624316;
 			
 			// aapt resource value: 0x7F0E017D
-			public const int Widget_AppCompat_ActionBar_Solid = 2131624317;
+			public const int Widget_AppCompat_ActionButton_CloseMode = 2131624317;
 			
 			// aapt resource value: 0x7F0E017E
-			public const int Widget_AppCompat_ActionBar_TabBar = 2131624318;
+			public const int Widget_AppCompat_ActionButton_Overflow = 2131624318;
 			
 			// aapt resource value: 0x7F0E017F
-			public const int Widget_AppCompat_ActionBar_TabText = 2131624319;
+			public const int Widget_AppCompat_ActionMode = 2131624319;
 			
 			// aapt resource value: 0x7F0E0180
-			public const int Widget_AppCompat_ActionBar_TabView = 2131624320;
+			public const int Widget_AppCompat_ActivityChooserView = 2131624320;
 			
 			// aapt resource value: 0x7F0E0181
-			public const int Widget_AppCompat_ActionButton = 2131624321;
+			public const int Widget_AppCompat_AutoCompleteTextView = 2131624321;
 			
 			// aapt resource value: 0x7F0E0182
-			public const int Widget_AppCompat_ActionButton_CloseMode = 2131624322;
-			
-			// aapt resource value: 0x7F0E0183
-			public const int Widget_AppCompat_ActionButton_Overflow = 2131624323;
-			
-			// aapt resource value: 0x7F0E0184
-			public const int Widget_AppCompat_ActionMode = 2131624324;
-			
-			// aapt resource value: 0x7F0E0185
-			public const int Widget_AppCompat_ActivityChooserView = 2131624325;
-			
-			// aapt resource value: 0x7F0E0186
-			public const int Widget_AppCompat_AutoCompleteTextView = 2131624326;
-			
-			// aapt resource value: 0x7F0E0187
-			public const int Widget_AppCompat_Button = 2131624327;
-			
-			// aapt resource value: 0x7F0E018D
-			public const int Widget_AppCompat_ButtonBar = 2131624333;
-			
-			// aapt resource value: 0x7F0E018E
-			public const int Widget_AppCompat_ButtonBar_AlertDialog = 2131624334;
+			public const int Widget_AppCompat_Button = 2131624322;
 			
 			// aapt resource value: 0x7F0E0188
-			public const int Widget_AppCompat_Button_Borderless = 2131624328;
+			public const int Widget_AppCompat_ButtonBar = 2131624328;
 			
 			// aapt resource value: 0x7F0E0189
-			public const int Widget_AppCompat_Button_Borderless_Colored = 2131624329;
+			public const int Widget_AppCompat_ButtonBar_AlertDialog = 2131624329;
+			
+			// aapt resource value: 0x7F0E0183
+			public const int Widget_AppCompat_Button_Borderless = 2131624323;
+			
+			// aapt resource value: 0x7F0E0184
+			public const int Widget_AppCompat_Button_Borderless_Colored = 2131624324;
+			
+			// aapt resource value: 0x7F0E0185
+			public const int Widget_AppCompat_Button_ButtonBar_AlertDialog = 2131624325;
+			
+			// aapt resource value: 0x7F0E0186
+			public const int Widget_AppCompat_Button_Colored = 2131624326;
+			
+			// aapt resource value: 0x7F0E0187
+			public const int Widget_AppCompat_Button_Small = 2131624327;
 			
 			// aapt resource value: 0x7F0E018A
-			public const int Widget_AppCompat_Button_ButtonBar_AlertDialog = 2131624330;
+			public const int Widget_AppCompat_CompoundButton_CheckBox = 2131624330;
 			
 			// aapt resource value: 0x7F0E018B
-			public const int Widget_AppCompat_Button_Colored = 2131624331;
+			public const int Widget_AppCompat_CompoundButton_RadioButton = 2131624331;
 			
 			// aapt resource value: 0x7F0E018C
-			public const int Widget_AppCompat_Button_Small = 2131624332;
+			public const int Widget_AppCompat_CompoundButton_Switch = 2131624332;
+			
+			// aapt resource value: 0x7F0E018D
+			public const int Widget_AppCompat_DrawerArrowToggle = 2131624333;
+			
+			// aapt resource value: 0x7F0E018E
+			public const int Widget_AppCompat_DropDownItem_Spinner = 2131624334;
 			
 			// aapt resource value: 0x7F0E018F
-			public const int Widget_AppCompat_CompoundButton_CheckBox = 2131624335;
+			public const int Widget_AppCompat_EditText = 2131624335;
 			
 			// aapt resource value: 0x7F0E0190
-			public const int Widget_AppCompat_CompoundButton_RadioButton = 2131624336;
+			public const int Widget_AppCompat_ImageButton = 2131624336;
 			
 			// aapt resource value: 0x7F0E0191
-			public const int Widget_AppCompat_CompoundButton_Switch = 2131624337;
+			public const int Widget_AppCompat_Light_ActionBar = 2131624337;
 			
 			// aapt resource value: 0x7F0E0192
-			public const int Widget_AppCompat_DrawerArrowToggle = 2131624338;
+			public const int Widget_AppCompat_Light_ActionBar_Solid = 2131624338;
 			
 			// aapt resource value: 0x7F0E0193
-			public const int Widget_AppCompat_DropDownItem_Spinner = 2131624339;
+			public const int Widget_AppCompat_Light_ActionBar_Solid_Inverse = 2131624339;
 			
 			// aapt resource value: 0x7F0E0194
-			public const int Widget_AppCompat_EditText = 2131624340;
+			public const int Widget_AppCompat_Light_ActionBar_TabBar = 2131624340;
 			
 			// aapt resource value: 0x7F0E0195
-			public const int Widget_AppCompat_ImageButton = 2131624341;
+			public const int Widget_AppCompat_Light_ActionBar_TabBar_Inverse = 2131624341;
 			
 			// aapt resource value: 0x7F0E0196
-			public const int Widget_AppCompat_Light_ActionBar = 2131624342;
+			public const int Widget_AppCompat_Light_ActionBar_TabText = 2131624342;
 			
 			// aapt resource value: 0x7F0E0197
-			public const int Widget_AppCompat_Light_ActionBar_Solid = 2131624343;
+			public const int Widget_AppCompat_Light_ActionBar_TabText_Inverse = 2131624343;
 			
 			// aapt resource value: 0x7F0E0198
-			public const int Widget_AppCompat_Light_ActionBar_Solid_Inverse = 2131624344;
+			public const int Widget_AppCompat_Light_ActionBar_TabView = 2131624344;
 			
 			// aapt resource value: 0x7F0E0199
-			public const int Widget_AppCompat_Light_ActionBar_TabBar = 2131624345;
+			public const int Widget_AppCompat_Light_ActionBar_TabView_Inverse = 2131624345;
 			
 			// aapt resource value: 0x7F0E019A
-			public const int Widget_AppCompat_Light_ActionBar_TabBar_Inverse = 2131624346;
+			public const int Widget_AppCompat_Light_ActionButton = 2131624346;
 			
 			// aapt resource value: 0x7F0E019B
-			public const int Widget_AppCompat_Light_ActionBar_TabText = 2131624347;
+			public const int Widget_AppCompat_Light_ActionButton_CloseMode = 2131624347;
 			
 			// aapt resource value: 0x7F0E019C
-			public const int Widget_AppCompat_Light_ActionBar_TabText_Inverse = 2131624348;
+			public const int Widget_AppCompat_Light_ActionButton_Overflow = 2131624348;
 			
 			// aapt resource value: 0x7F0E019D
-			public const int Widget_AppCompat_Light_ActionBar_TabView = 2131624349;
+			public const int Widget_AppCompat_Light_ActionMode_Inverse = 2131624349;
 			
 			// aapt resource value: 0x7F0E019E
-			public const int Widget_AppCompat_Light_ActionBar_TabView_Inverse = 2131624350;
+			public const int Widget_AppCompat_Light_ActivityChooserView = 2131624350;
 			
 			// aapt resource value: 0x7F0E019F
-			public const int Widget_AppCompat_Light_ActionButton = 2131624351;
+			public const int Widget_AppCompat_Light_AutoCompleteTextView = 2131624351;
 			
 			// aapt resource value: 0x7F0E01A0
-			public const int Widget_AppCompat_Light_ActionButton_CloseMode = 2131624352;
+			public const int Widget_AppCompat_Light_DropDownItem_Spinner = 2131624352;
 			
 			// aapt resource value: 0x7F0E01A1
-			public const int Widget_AppCompat_Light_ActionButton_Overflow = 2131624353;
+			public const int Widget_AppCompat_Light_ListPopupWindow = 2131624353;
 			
 			// aapt resource value: 0x7F0E01A2
-			public const int Widget_AppCompat_Light_ActionMode_Inverse = 2131624354;
+			public const int Widget_AppCompat_Light_ListView_DropDown = 2131624354;
 			
 			// aapt resource value: 0x7F0E01A3
-			public const int Widget_AppCompat_Light_ActivityChooserView = 2131624355;
+			public const int Widget_AppCompat_Light_PopupMenu = 2131624355;
 			
 			// aapt resource value: 0x7F0E01A4
-			public const int Widget_AppCompat_Light_AutoCompleteTextView = 2131624356;
+			public const int Widget_AppCompat_Light_PopupMenu_Overflow = 2131624356;
 			
 			// aapt resource value: 0x7F0E01A5
-			public const int Widget_AppCompat_Light_DropDownItem_Spinner = 2131624357;
+			public const int Widget_AppCompat_Light_SearchView = 2131624357;
 			
 			// aapt resource value: 0x7F0E01A6
-			public const int Widget_AppCompat_Light_ListPopupWindow = 2131624358;
+			public const int Widget_AppCompat_Light_Spinner_DropDown_ActionBar = 2131624358;
 			
 			// aapt resource value: 0x7F0E01A7
-			public const int Widget_AppCompat_Light_ListView_DropDown = 2131624359;
+			public const int Widget_AppCompat_ListMenuView = 2131624359;
 			
 			// aapt resource value: 0x7F0E01A8
-			public const int Widget_AppCompat_Light_PopupMenu = 2131624360;
+			public const int Widget_AppCompat_ListPopupWindow = 2131624360;
 			
 			// aapt resource value: 0x7F0E01A9
-			public const int Widget_AppCompat_Light_PopupMenu_Overflow = 2131624361;
+			public const int Widget_AppCompat_ListView = 2131624361;
 			
 			// aapt resource value: 0x7F0E01AA
-			public const int Widget_AppCompat_Light_SearchView = 2131624362;
+			public const int Widget_AppCompat_ListView_DropDown = 2131624362;
 			
 			// aapt resource value: 0x7F0E01AB
-			public const int Widget_AppCompat_Light_Spinner_DropDown_ActionBar = 2131624363;
+			public const int Widget_AppCompat_ListView_Menu = 2131624363;
 			
 			// aapt resource value: 0x7F0E01AC
-			public const int Widget_AppCompat_ListMenuView = 2131624364;
+			public const int Widget_AppCompat_PopupMenu = 2131624364;
 			
 			// aapt resource value: 0x7F0E01AD
-			public const int Widget_AppCompat_ListPopupWindow = 2131624365;
+			public const int Widget_AppCompat_PopupMenu_Overflow = 2131624365;
 			
 			// aapt resource value: 0x7F0E01AE
-			public const int Widget_AppCompat_ListView = 2131624366;
+			public const int Widget_AppCompat_PopupWindow = 2131624366;
 			
 			// aapt resource value: 0x7F0E01AF
-			public const int Widget_AppCompat_ListView_DropDown = 2131624367;
+			public const int Widget_AppCompat_ProgressBar = 2131624367;
 			
 			// aapt resource value: 0x7F0E01B0
-			public const int Widget_AppCompat_ListView_Menu = 2131624368;
+			public const int Widget_AppCompat_ProgressBar_Horizontal = 2131624368;
 			
 			// aapt resource value: 0x7F0E01B1
-			public const int Widget_AppCompat_PopupMenu = 2131624369;
+			public const int Widget_AppCompat_RatingBar = 2131624369;
 			
 			// aapt resource value: 0x7F0E01B2
-			public const int Widget_AppCompat_PopupMenu_Overflow = 2131624370;
+			public const int Widget_AppCompat_RatingBar_Indicator = 2131624370;
 			
 			// aapt resource value: 0x7F0E01B3
-			public const int Widget_AppCompat_PopupWindow = 2131624371;
+			public const int Widget_AppCompat_RatingBar_Small = 2131624371;
 			
 			// aapt resource value: 0x7F0E01B4
-			public const int Widget_AppCompat_ProgressBar = 2131624372;
+			public const int Widget_AppCompat_SearchView = 2131624372;
 			
 			// aapt resource value: 0x7F0E01B5
-			public const int Widget_AppCompat_ProgressBar_Horizontal = 2131624373;
+			public const int Widget_AppCompat_SearchView_ActionBar = 2131624373;
 			
 			// aapt resource value: 0x7F0E01B6
-			public const int Widget_AppCompat_RatingBar = 2131624374;
+			public const int Widget_AppCompat_SeekBar = 2131624374;
 			
 			// aapt resource value: 0x7F0E01B7
-			public const int Widget_AppCompat_RatingBar_Indicator = 2131624375;
+			public const int Widget_AppCompat_SeekBar_Discrete = 2131624375;
 			
 			// aapt resource value: 0x7F0E01B8
-			public const int Widget_AppCompat_RatingBar_Small = 2131624376;
+			public const int Widget_AppCompat_Spinner = 2131624376;
 			
 			// aapt resource value: 0x7F0E01B9
-			public const int Widget_AppCompat_SearchView = 2131624377;
+			public const int Widget_AppCompat_Spinner_DropDown = 2131624377;
 			
 			// aapt resource value: 0x7F0E01BA
-			public const int Widget_AppCompat_SearchView_ActionBar = 2131624378;
+			public const int Widget_AppCompat_Spinner_DropDown_ActionBar = 2131624378;
 			
 			// aapt resource value: 0x7F0E01BB
-			public const int Widget_AppCompat_SeekBar = 2131624379;
+			public const int Widget_AppCompat_Spinner_Underlined = 2131624379;
 			
 			// aapt resource value: 0x7F0E01BC
-			public const int Widget_AppCompat_SeekBar_Discrete = 2131624380;
+			public const int Widget_AppCompat_TextView_SpinnerItem = 2131624380;
 			
 			// aapt resource value: 0x7F0E01BD
-			public const int Widget_AppCompat_Spinner = 2131624381;
+			public const int Widget_AppCompat_Toolbar = 2131624381;
 			
 			// aapt resource value: 0x7F0E01BE
-			public const int Widget_AppCompat_Spinner_DropDown = 2131624382;
+			public const int Widget_AppCompat_Toolbar_Button_Navigation = 2131624382;
 			
 			// aapt resource value: 0x7F0E01BF
-			public const int Widget_AppCompat_Spinner_DropDown_ActionBar = 2131624383;
+			public const int Widget_Compat_NotificationActionContainer = 2131624383;
 			
 			// aapt resource value: 0x7F0E01C0
-			public const int Widget_AppCompat_Spinner_Underlined = 2131624384;
+			public const int Widget_Compat_NotificationActionText = 2131624384;
 			
 			// aapt resource value: 0x7F0E01C1
-			public const int Widget_AppCompat_TextView_SpinnerItem = 2131624385;
+			public const int Widget_Design_AppBarLayout = 2131624385;
 			
 			// aapt resource value: 0x7F0E01C2
-			public const int Widget_AppCompat_Toolbar = 2131624386;
+			public const int Widget_Design_BottomNavigationView = 2131624386;
 			
 			// aapt resource value: 0x7F0E01C3
-			public const int Widget_AppCompat_Toolbar_Button_Navigation = 2131624387;
+			public const int Widget_Design_BottomSheet_Modal = 2131624387;
 			
 			// aapt resource value: 0x7F0E01C4
-			public const int Widget_Compat_NotificationActionContainer = 2131624388;
+			public const int Widget_Design_CollapsingToolbar = 2131624388;
 			
 			// aapt resource value: 0x7F0E01C5
-			public const int Widget_Compat_NotificationActionText = 2131624389;
+			public const int Widget_Design_FloatingActionButton = 2131624389;
 			
 			// aapt resource value: 0x7F0E01C6
-			public const int Widget_Design_AppBarLayout = 2131624390;
+			public const int Widget_Design_NavigationView = 2131624390;
 			
 			// aapt resource value: 0x7F0E01C7
-			public const int Widget_Design_BottomNavigationView = 2131624391;
+			public const int Widget_Design_ScrimInsetsFrameLayout = 2131624391;
 			
 			// aapt resource value: 0x7F0E01C8
-			public const int Widget_Design_BottomSheet_Modal = 2131624392;
+			public const int Widget_Design_Snackbar = 2131624392;
 			
 			// aapt resource value: 0x7F0E01C9
-			public const int Widget_Design_CollapsingToolbar = 2131624393;
+			public const int Widget_Design_TabLayout = 2131624393;
 			
 			// aapt resource value: 0x7F0E01CA
-			public const int Widget_Design_FloatingActionButton = 2131624394;
+			public const int Widget_Design_TextInputLayout = 2131624394;
 			
 			// aapt resource value: 0x7F0E01CB
-			public const int Widget_Design_NavigationView = 2131624395;
+			public const int Widget_MaterialComponents_BottomAppBar = 2131624395;
 			
 			// aapt resource value: 0x7F0E01CC
-			public const int Widget_Design_ScrimInsetsFrameLayout = 2131624396;
+			public const int Widget_MaterialComponents_BottomAppBar_Colored = 2131624396;
 			
 			// aapt resource value: 0x7F0E01CD
-			public const int Widget_Design_Snackbar = 2131624397;
+			public const int Widget_MaterialComponents_BottomNavigationView = 2131624397;
 			
 			// aapt resource value: 0x7F0E01CE
-			public const int Widget_Design_TabLayout = 2131624398;
+			public const int Widget_MaterialComponents_BottomNavigationView_Colored = 2131624398;
 			
 			// aapt resource value: 0x7F0E01CF
-			public const int Widget_Design_TextInputLayout = 2131624399;
+			public const int Widget_MaterialComponents_BottomSheet_Modal = 2131624399;
 			
 			// aapt resource value: 0x7F0E01D0
-			public const int Widget_MaterialComponents_BottomAppBar = 2131624400;
+			public const int Widget_MaterialComponents_Button = 2131624400;
 			
 			// aapt resource value: 0x7F0E01D1
-			public const int Widget_MaterialComponents_BottomAppBar_Colored = 2131624401;
+			public const int Widget_MaterialComponents_Button_Icon = 2131624401;
 			
 			// aapt resource value: 0x7F0E01D2
-			public const int Widget_MaterialComponents_BottomNavigationView = 2131624402;
+			public const int Widget_MaterialComponents_Button_OutlinedButton = 2131624402;
 			
 			// aapt resource value: 0x7F0E01D3
-			public const int Widget_MaterialComponents_BottomNavigationView_Colored = 2131624403;
+			public const int Widget_MaterialComponents_Button_OutlinedButton_Icon = 2131624403;
 			
 			// aapt resource value: 0x7F0E01D4
-			public const int Widget_MaterialComponents_BottomSheet_Modal = 2131624404;
+			public const int Widget_MaterialComponents_Button_TextButton = 2131624404;
 			
 			// aapt resource value: 0x7F0E01D5
-			public const int Widget_MaterialComponents_Button = 2131624405;
+			public const int Widget_MaterialComponents_Button_TextButton_Dialog = 2131624405;
 			
 			// aapt resource value: 0x7F0E01D6
-			public const int Widget_MaterialComponents_Button_Icon = 2131624406;
+			public const int Widget_MaterialComponents_Button_TextButton_Dialog_Icon = 2131624406;
 			
 			// aapt resource value: 0x7F0E01D7
-			public const int Widget_MaterialComponents_Button_OutlinedButton = 2131624407;
+			public const int Widget_MaterialComponents_Button_TextButton_Icon = 2131624407;
 			
 			// aapt resource value: 0x7F0E01D8
-			public const int Widget_MaterialComponents_Button_OutlinedButton_Icon = 2131624408;
+			public const int Widget_MaterialComponents_Button_UnelevatedButton = 2131624408;
 			
 			// aapt resource value: 0x7F0E01D9
-			public const int Widget_MaterialComponents_Button_TextButton = 2131624409;
+			public const int Widget_MaterialComponents_Button_UnelevatedButton_Icon = 2131624409;
 			
 			// aapt resource value: 0x7F0E01DA
-			public const int Widget_MaterialComponents_Button_TextButton_Dialog = 2131624410;
-			
-			// aapt resource value: 0x7F0E01DB
-			public const int Widget_MaterialComponents_Button_TextButton_Dialog_Icon = 2131624411;
-			
-			// aapt resource value: 0x7F0E01DC
-			public const int Widget_MaterialComponents_Button_TextButton_Icon = 2131624412;
-			
-			// aapt resource value: 0x7F0E01DD
-			public const int Widget_MaterialComponents_Button_UnelevatedButton = 2131624413;
-			
-			// aapt resource value: 0x7F0E01DE
-			public const int Widget_MaterialComponents_Button_UnelevatedButton_Icon = 2131624414;
+			public const int Widget_MaterialComponents_CardView = 2131624410;
 			
 			// aapt resource value: 0x7F0E01DF
-			public const int Widget_MaterialComponents_CardView = 2131624415;
+			public const int Widget_MaterialComponents_ChipGroup = 2131624415;
 			
-			// aapt resource value: 0x7F0E01E4
-			public const int Widget_MaterialComponents_ChipGroup = 2131624420;
+			// aapt resource value: 0x7F0E01DB
+			public const int Widget_MaterialComponents_Chip_Action = 2131624411;
+			
+			// aapt resource value: 0x7F0E01DC
+			public const int Widget_MaterialComponents_Chip_Choice = 2131624412;
+			
+			// aapt resource value: 0x7F0E01DD
+			public const int Widget_MaterialComponents_Chip_Entry = 2131624413;
+			
+			// aapt resource value: 0x7F0E01DE
+			public const int Widget_MaterialComponents_Chip_Filter = 2131624414;
 			
 			// aapt resource value: 0x7F0E01E0
-			public const int Widget_MaterialComponents_Chip_Action = 2131624416;
+			public const int Widget_MaterialComponents_FloatingActionButton = 2131624416;
 			
 			// aapt resource value: 0x7F0E01E1
-			public const int Widget_MaterialComponents_Chip_Choice = 2131624417;
+			public const int Widget_MaterialComponents_NavigationView = 2131624417;
 			
 			// aapt resource value: 0x7F0E01E2
-			public const int Widget_MaterialComponents_Chip_Entry = 2131624418;
+			public const int Widget_MaterialComponents_Snackbar = 2131624418;
 			
 			// aapt resource value: 0x7F0E01E3
-			public const int Widget_MaterialComponents_Chip_Filter = 2131624419;
+			public const int Widget_MaterialComponents_Snackbar_FullWidth = 2131624419;
+			
+			// aapt resource value: 0x7F0E01E4
+			public const int Widget_MaterialComponents_TabLayout = 2131624420;
 			
 			// aapt resource value: 0x7F0E01E5
-			public const int Widget_MaterialComponents_FloatingActionButton = 2131624421;
+			public const int Widget_MaterialComponents_TabLayout_Colored = 2131624421;
 			
 			// aapt resource value: 0x7F0E01E6
-			public const int Widget_MaterialComponents_NavigationView = 2131624422;
+			public const int Widget_MaterialComponents_TextInputEditText_FilledBox = 2131624422;
 			
 			// aapt resource value: 0x7F0E01E7
-			public const int Widget_MaterialComponents_Snackbar = 2131624423;
+			public const int Widget_MaterialComponents_TextInputEditText_FilledBox_Dense = 2131624423;
 			
 			// aapt resource value: 0x7F0E01E8
-			public const int Widget_MaterialComponents_Snackbar_FullWidth = 2131624424;
+			public const int Widget_MaterialComponents_TextInputEditText_OutlinedBox = 2131624424;
 			
 			// aapt resource value: 0x7F0E01E9
-			public const int Widget_MaterialComponents_TabLayout = 2131624425;
+			public const int Widget_MaterialComponents_TextInputEditText_OutlinedBox_Dense = 2131624425;
 			
 			// aapt resource value: 0x7F0E01EA
-			public const int Widget_MaterialComponents_TabLayout_Colored = 2131624426;
+			public const int Widget_MaterialComponents_TextInputLayout_FilledBox = 2131624426;
 			
 			// aapt resource value: 0x7F0E01EB
-			public const int Widget_MaterialComponents_TextInputEditText_FilledBox = 2131624427;
+			public const int Widget_MaterialComponents_TextInputLayout_FilledBox_Dense = 2131624427;
 			
 			// aapt resource value: 0x7F0E01EC
-			public const int Widget_MaterialComponents_TextInputEditText_FilledBox_Dense = 2131624428;
+			public const int Widget_MaterialComponents_TextInputLayout_OutlinedBox = 2131624428;
 			
 			// aapt resource value: 0x7F0E01ED
-			public const int Widget_MaterialComponents_TextInputEditText_OutlinedBox = 2131624429;
+			public const int Widget_MaterialComponents_TextInputLayout_OutlinedBox_Dense = 2131624429;
 			
 			// aapt resource value: 0x7F0E01EE
-			public const int Widget_MaterialComponents_TextInputEditText_OutlinedBox_Dense = 2131624430;
+			public const int Widget_MaterialComponents_Toolbar = 2131624430;
 			
 			// aapt resource value: 0x7F0E01EF
-			public const int Widget_MaterialComponents_TextInputLayout_FilledBox = 2131624431;
-			
-			// aapt resource value: 0x7F0E01F0
-			public const int Widget_MaterialComponents_TextInputLayout_FilledBox_Dense = 2131624432;
-			
-			// aapt resource value: 0x7F0E01F1
-			public const int Widget_MaterialComponents_TextInputLayout_OutlinedBox = 2131624433;
-			
-			// aapt resource value: 0x7F0E01F2
-			public const int Widget_MaterialComponents_TextInputLayout_OutlinedBox_Dense = 2131624434;
-			
-			// aapt resource value: 0x7F0E01F3
-			public const int Widget_MaterialComponents_Toolbar = 2131624435;
-			
-			// aapt resource value: 0x7F0E01F4
-			public const int Widget_Support_CoordinatorLayout = 2131624436;
+			public const int Widget_Support_CoordinatorLayout = 2131624431;
 			
 			static Style()
 			{

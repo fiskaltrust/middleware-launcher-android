@@ -7,6 +7,7 @@ pool:
 variables:
   buildConfiguration: 'Release'
   outputDirectory: '$(build.binariesDirectory)/$(buildConfiguration)'
+  projectFile: fiskaltrust.AndroidLauncher.csproj
 
 steps:
 - task: NuGetToolInstaller@1
@@ -25,7 +26,7 @@ steps:
 
 - task: XamarinAndroid@1
   inputs:
-    projectFile: '**/*droid*.csproj'
+    projectFile: '**/$(projectFile)'
     outputDirectory: '$(outputDirectory)'
     configuration: '$(buildConfiguration)'
     msbuildVersionOption: 'latest'
