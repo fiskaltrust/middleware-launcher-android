@@ -148,16 +148,16 @@
       <Version>1.3.3</Version>
     </PackageReference>
     <PackageReference Include="fiskaltrust.Middleware.Queue.SQLite">
-      <Version>1.3.8-rc1</Version>
+      <Version>1.3.9</Version>
     </PackageReference>
     <PackageReference Include="fiskaltrust.Middleware.SCU.DE.Fiskaly">
       <Version>1.3.6-rc1</Version>
     </PackageReference>
     <PackageReference Include="fiskaltrust.Middleware.SCU.DE.Swissbit">
-      <Version>1.3.1</Version>
+      <Version>1.3.9</Version>
     </PackageReference>
     <PackageReference Include="fiskaltrust.Middleware.SCU.DE.SwissbitAndroid">
-      <Version>1.3.4-rc1</Version>
+      <Version>1.3.9-rc1</Version>
     </PackageReference>
     <PackageReference Include="Grpc.Core">
       <Version>2.31.0</Version>
