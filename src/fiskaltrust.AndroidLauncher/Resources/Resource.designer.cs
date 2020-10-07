@@ -5683,7 +5683,7 @@ namespace fiskaltrust.AndroidLauncher
 		{
 			
 			// aapt resource value: 0x7F0C0000
-			public const int icon = 2131492864;
+			public const int ic_launcher = 2131492864;
 			
 			static Mipmap()
 			{
