@@ -18,6 +18,14 @@ steps:
     pathToVersionJson: 'version.json'
     semverVersion: 'v1'
 
+- task: android-manifest-version@1
+  inputs:
+    sourcePath: 'src/fiskaltrust.AndroidLauncher/Properties/AndroidManifest.xml'
+    versionCodeOption: 'buildid'
+    versionCode: '$(Build.BuildId)'
+    versionName: '$(Build.BuildNumber)'
+    printFile: true
+
 - task: NuGetCommand@2
   inputs:
     command: 'restore'
