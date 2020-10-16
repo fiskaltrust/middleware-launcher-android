@@ -5,8 +5,10 @@ using fiskaltrust.AndroidLauncher.Services.Queue;
 using fiskaltrust.AndroidLauncher.Services.SCU;
 using fiskaltrust.ifPOS.v1;
 using fiskaltrust.Middleware.Interface.Client.Grpc;
+using fiskaltrust.Middleware.SCU.DE.Fiskaly;
 using fiskaltrust.storage.serialization.V0;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,6 +22,7 @@ namespace fiskaltrust.AndroidLauncher.Services
         private readonly Guid _cashboxId;
         private readonly string _accessToken;
         private readonly bool _isSandbox;
+        private readonly Dictionary<string, object> _scuParams;
         private readonly IConfigurationProvider _configurationProvider;
         private readonly ILocalConfigurationProvider _localConfigurationProvider;
 
@@ -30,11 +33,12 @@ namespace fiskaltrust.AndroidLauncher.Services
 
         public bool IsRunning { get; set; }
 
-        public MiddlewareLauncher(Guid cashboxId, string accessToken, bool isSandbox)
+        public MiddlewareLauncher(Guid cashboxId, string accessToken, bool isSandbox, Dictionary<string, object> scuParams)
         {
             _cashboxId = cashboxId;
             _accessToken = accessToken;
             _isSandbox = isSandbox;
+            _scuParams = scuParams;
 
             _configurationProvider = new HelipadConfigurationProvider();
             _localConfigurationProvider = new LocalConfigurationProvider();
@@ -59,12 +63,16 @@ namespace fiskaltrust.AndroidLauncher.Services
             foreach (var scuConfig in configuration.ftSignaturCreationDevices)
             {
                 scuConfig.Configuration["sandbox"] = _isSandbox;
+                
                 switch (scuConfig.Package)
                 {
                     case PACKAGE_NAME_SWISSBIT:
                         await InitializeSwissbitScuAsync(scuConfig);
                         break;
                     case PACKAGE_NAME_FISKALY:
+                        if (_scuParams.TryGetValue(nameof(FiskalySCUConfiguration.FislayClientTimeout), out var clientTimeout)) scuConfig.Configuration[nameof(FiskalySCUConfiguration.FislayClientTimeout)] = clientTimeout;
+                        if (_scuParams.TryGetValue(nameof(FiskalySCUConfiguration.FislayClientSmaersTimeout), out var smaersTimeout)) scuConfig.Configuration[nameof(FiskalySCUConfiguration.FislayClientSmaersTimeout)] = smaersTimeout;
+
                         await InitializeFiskalyScuAsync(scuConfig);
                         break;
                     default:

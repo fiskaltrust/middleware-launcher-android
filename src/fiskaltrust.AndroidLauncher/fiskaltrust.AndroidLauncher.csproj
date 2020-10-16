@@ -53,7 +53,7 @@
     <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
     <AndroidLinkMode>None</AndroidLinkMode>
     <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>8.0</LangVersion>    
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -71,6 +71,7 @@
     <Compile Include="Exceptions\ConfigurationNotFoundException.cs" />
     <Compile Include="Exceptions\RemountRequiredException.cs" />
     <Compile Include="Extensions\ContextExtensions.cs" />
+    <Compile Include="Extensions\IntentExtensions.cs" />
     <Compile Include="Extensions\ServiceCollectionExtensions.cs" />
     <Compile Include="Helpers\Hosting\DESSCDClientFactory.cs" />
     <Compile Include="Helpers\Hosting\GrpcHelper.cs" />

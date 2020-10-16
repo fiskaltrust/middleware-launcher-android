@@ -5,6 +5,7 @@ using Android.Util;
 using Android.Widget;
 using fiskaltrust.AndroidLauncher.Enums;
 using fiskaltrust.AndroidLauncher.Exceptions;
+using fiskaltrust.AndroidLauncher.Extensions;
 using System.Threading.Tasks;
 
 namespace fiskaltrust.AndroidLauncher.AndroidService.Broadcasting
@@ -18,9 +19,10 @@ namespace fiskaltrust.AndroidLauncher.AndroidService.Broadcasting
             var cashboxId = intent.GetStringExtra("cashboxid");
             var accessToken = intent.GetStringExtra("accesstoken");
             var isSandbox = intent.GetBooleanExtra("sandbox", false);
+            var scuParams = intent.GetScuConfigParameters();
 
             Toast.MakeText(context, $"Starting fiskaltrust Middleware with cashbox '{cashboxId}' (Sandbox: {isSandbox}). Initializing might take up to 45 seconds, depending on the TSE.", ToastLength.Long).Show();
-            MiddlewareLauncherService.Start(ServiceConnectionProvider.GetConnection(), cashboxId, accessToken, isSandbox);
+            MiddlewareLauncherService.Start(ServiceConnectionProvider.GetConnection(), cashboxId, accessToken, isSandbox, scuParams);
             Task.Run(async () =>
             {
                 try

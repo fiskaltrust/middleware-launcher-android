@@ -4,9 +4,12 @@ using Android.OS;
 using Android.Runtime;
 using fiskaltrust.AndroidLauncher.Enums;
 using fiskaltrust.AndroidLauncher.Extensions;
+using fiskaltrust.AndroidLauncher.Helpers.Hosting;
 using fiskaltrust.AndroidLauncher.Services;
 using fiskaltrust.ifPOS.v1;
+using Java.Util;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace fiskaltrust.AndroidLauncher.AndroidService
@@ -26,6 +29,7 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
             var cashboxIdString = intent.GetStringExtra("cashboxid");
             var accesstoken = intent.GetStringExtra("accesstoken");
             var isSandbox = intent.GetBooleanExtra("sandbox", false);
+            var scuParams = intent.GetScuConfigParameters(removePrefix: true);            
 
             if (string.IsNullOrEmpty(cashboxIdString) || !Guid.TryParse(cashboxIdString, out var cashboxId))
             {
@@ -36,7 +40,7 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                 throw new ArgumentException("The extra 'accesstoken' needs to be set in this intent.", "accesstoken");
             }
 
-            _posProvider = new POSProvider(cashboxId, accesstoken, isSandbox);
+            _posProvider = new POSProvider(cashboxId, accesstoken, isSandbox, scuParams);
             Binder = new POSProviderBinder(this);
             return Binder;
         }
@@ -72,7 +76,7 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
 
         public async Task StopAsync() => await _posProvider.StopAsync();
 
-        public static void Start(IMiddlewareServiceConnection serviceConnection, string cashboxId, string accessToken, bool isSandbox)
+        public static void Start(IMiddlewareServiceConnection serviceConnection, string cashboxId, string accessToken, bool isSandbox, Dictionary<string, object> additionalScuParams)
         {
             if (!IsRunning(typeof(MiddlewareLauncherService)))
             {
@@ -80,6 +84,8 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                 intent.PutExtra("cashboxid", cashboxId);
                 intent.PutExtra("accesstoken", accessToken);
                 intent.PutExtra("sandbox", isSandbox);
+                intent.PutExtras(additionalScuParams);
+
                 Application.Context.BindService(intent, serviceConnection, Bind.AutoCreate);
                 Application.Context.StartForegroundServiceCompat<MiddlewareLauncherService>();
             }
