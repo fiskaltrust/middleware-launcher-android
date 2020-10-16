@@ -5,6 +5,7 @@ using fiskaltrust.AndroidLauncher.Services.Queue;
 using fiskaltrust.AndroidLauncher.Services.SCU;
 using fiskaltrust.ifPOS.v1;
 using fiskaltrust.Middleware.Interface.Client.Grpc;
+using fiskaltrust.Middleware.SCU.DE.Fiskaly;
 using fiskaltrust.storage.serialization.V0;
 using System;
 using System.Collections.Generic;
@@ -62,14 +63,13 @@ namespace fiskaltrust.AndroidLauncher.Services
             foreach (var scuConfig in configuration.ftSignaturCreationDevices)
             {
                 scuConfig.Configuration["sandbox"] = _isSandbox;
-                foreach (var kvp in _scuParams)
-                {
-                    scuConfig.Configuration[kvp.Key] = kvp.Value;
-                }
-
+                
                 switch (scuConfig.Package)
                 {
                     case PACKAGE_NAME_SWISSBIT:
+                        if (_scuParams.TryGetValue(nameof(FiskalySCUConfiguration.FislayClientTimeout), out var clientTimeout)) scuConfig.Configuration[nameof(FiskalySCUConfiguration.FislayClientTimeout)] = clientTimeout;
+                        if (_scuParams.TryGetValue(nameof(FiskalySCUConfiguration.FislayClientSmaersTimeout), out var smaersTimeout)) scuConfig.Configuration[nameof(FiskalySCUConfiguration.FislayClientSmaersTimeout)] = smaersTimeout;
+
                         await InitializeSwissbitScuAsync(scuConfig);
                         break;
                     case PACKAGE_NAME_FISKALY:
