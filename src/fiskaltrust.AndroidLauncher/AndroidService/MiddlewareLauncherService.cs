@@ -141,12 +141,15 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
 
         private static void CreateNotificationChannel()
         {
-            var channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "fiskaltrust Middleware", NotificationImportance.Default)
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
             {
-                Description = "The fiskaltrust Middleware"
-            };
-            var manager = (NotificationManager)Application.Context.GetSystemService(NotificationService);
-            manager.CreateNotificationChannel(channel);
+                var channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "fiskaltrust Middleware", NotificationImportance.Default)
+                {
+                    Description = "The fiskaltrust Middleware"
+                };
+                var manager = (NotificationManager)Application.Context.GetSystemService(NotificationService);
+                manager.CreateNotificationChannel(channel);
+            }
         }
 
         private static bool IsRunning(Type type)
