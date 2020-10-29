@@ -20,8 +20,11 @@ namespace fiskaltrust.AndroidLauncher.Helpers.Hosting
 
         public async Task ShutdownAsync()
         {
-            await _host?.ShutdownAsync();
-            _host = null;
+            if (_host != null)
+            {
+                await _host.ShutdownAsync();
+                _host = null;
+            }
         }
 
         public void Dispose()

@@ -40,6 +40,7 @@
     <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
     <LangVersion>8.0</LangVersion>
     <MandroidI18n />
+    <AndroidSupportedAbis>armeabi-v7a;x86;arm64-v8a</AndroidSupportedAbis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -54,6 +55,8 @@
     <AndroidLinkMode>None</AndroidLinkMode>
     <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
     <LangVersion>8.0</LangVersion>
+    <MandroidI18n />
+    <AndroidSupportedAbis>armeabi-v7a;x86;arm64-v8a</AndroidSupportedAbis>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -104,9 +107,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidNativeLibrary Include="lib\arm64-v8a\libcom.fiskaly.client-v1.2.000.so" />
-    <AndroidNativeLibrary Include="lib\armeabi-v7a\libcom.fiskaly.client-v1.2.000.so" />
-    <AndroidNativeLibrary Include="lib\x86\libcom.fiskaly.client-v1.2.000.so" />
     <AndroidAsset Include="Migrations\000_ftSchema.sqlite3" />
     <AndroidAsset Include="Migrations\001_Init.sqlite3" />
     <AndroidAsset Include="Migrations\002_TransactionPersistence.sqlite3" />
@@ -114,6 +114,18 @@
     <AndroidAsset Include="Migrations\004_FailedFinishTransactionRequest.sqlite3" />
     <AndroidAsset Include="Migrations\005_MasterData.sqlite3" />
     <AndroidAsset Include="Migrations\006_DailyClosingNumber.sqlite3" />
+    <AndroidNativeLibrary Include="lib\arm64-v8a\libcom.fiskaly.client-linux-x64-v1.2.100.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidNativeLibrary>
+    <AndroidNativeLibrary Include="lib\armeabi-v7a\libcom.fiskaly.client-linux-386-v1.2.100.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidNativeLibrary>
+    <AndroidNativeLibrary Include="lib\x86\libcom.fiskaly.client-linux-386-v1.2.100.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidNativeLibrary>
+    <AndroidNativeLibrary Include="lib\x86_64\libcom.fiskaly.client-linux-x64-v1.2.100.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AndroidNativeLibrary>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Properties\AndroidManifest.xml" />
     <None Include="Assets\AboutAssets.txt" />
@@ -140,16 +152,16 @@
       <Version>1.3.3</Version>
     </PackageReference>
     <PackageReference Include="fiskaltrust.Middleware.Helper.Helipad">
-      <Version>1.3.8</Version>
+      <Version>1.3.10</Version>
     </PackageReference>
     <PackageReference Include="fiskaltrust.Middleware.Interface.Client.Grpc">
       <Version>1.3.3</Version>
     </PackageReference>
     <PackageReference Include="fiskaltrust.Middleware.Queue.SQLite">
-      <Version>1.3.9</Version>
+      <Version>1.3.10</Version>
     </PackageReference>
     <PackageReference Include="fiskaltrust.Middleware.SCU.DE.Fiskaly">
-      <Version>1.3.6-rc1</Version>
+      <Version>1.3.10-rc2-20303-35602</Version>
     </PackageReference>
     <PackageReference Include="fiskaltrust.Middleware.SCU.DE.Swissbit">
       <Version>1.3.10</Version>
@@ -205,7 +217,6 @@
     <AndroidResource Include="Resources\mipmap-xxhdpi\ic_launcher.png" />
     <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher.png" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
     Other similar extension points exist, see Microsoft.Common.targets.

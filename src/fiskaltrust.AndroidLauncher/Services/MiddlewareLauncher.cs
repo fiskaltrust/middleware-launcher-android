@@ -126,8 +126,6 @@ namespace fiskaltrust.AndroidLauncher.Services
         {
             string url = GetGrpcUrl(packageConfig);
 
-            // Async initialization of the SCU is not possible, because JavaSystem.LoadLibrary("WormAPI") fails when not running on the UI thread..
-            // TODO: E.g. move this call out of the Swissbit package and instead call it from here
             var scuProvider = new SwissbitScuProvider();
             var scu = scuProvider.CreateSCU(packageConfig);
             _scuHost.StartService(url, scu);
@@ -135,13 +133,15 @@ namespace fiskaltrust.AndroidLauncher.Services
             return Task.CompletedTask;
         }
 
-        private async Task InitializeFiskalyScuAsync(PackageConfiguration packageConfig)
+        private Task InitializeFiskalyScuAsync(PackageConfiguration packageConfig)
         {
             string url = GetGrpcUrl(packageConfig);
 
             var scuProvider = new FiskalyScuProvider();
-            var scu = await Task.Run(() => scuProvider.CreateSCU(packageConfig));
+            var scu = scuProvider.CreateSCU(packageConfig);
             _scuHost.StartService(url, scu);
+
+            return Task.CompletedTask;
         }
 
         private async Task InitializeQueueAsync(PackageConfiguration packageConfig)

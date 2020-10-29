@@ -2,6 +2,7 @@
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
+using AndroidX.Core.App;
 using fiskaltrust.AndroidLauncher.Enums;
 using fiskaltrust.AndroidLauncher.Extensions;
 using fiskaltrust.AndroidLauncher.Helpers.Hosting;
@@ -29,13 +30,13 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
             var cashboxIdString = intent.GetStringExtra("cashboxid");
             var accesstoken = intent.GetStringExtra("accesstoken");
             var isSandbox = intent.GetBooleanExtra("sandbox", false);
-            var scuParams = intent.GetScuConfigParameters(removePrefix: true);            
+            var scuParams = intent.GetScuConfigParameters(removePrefix: true);
 
             if (string.IsNullOrEmpty(cashboxIdString) || !Guid.TryParse(cashboxIdString, out var cashboxId))
             {
                 throw new ArgumentException("The extra 'cashboxid' needs to be set in this intent.", "cashboxid");
             }
-            if(string.IsNullOrEmpty(accesstoken))
+            if (string.IsNullOrEmpty(accesstoken))
             {
                 throw new ArgumentException("The extra 'accesstoken' needs to be set in this intent.", "accesstoken");
             }
@@ -48,7 +49,7 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
         [return: GeneratedEnum]
         public override StartCommandResult OnStartCommand(Intent intent, [GeneratedEnum] StartCommandFlags flags, int startId)
         {
-            CreateNotificationChannel();           
+            CreateNotificationChannel();
             var notification = GetNotification(LauncherState.NotConnected);
 
             StartForeground(NOTIFICATION_ID, notification);
@@ -130,12 +131,12 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
             if (contentText != null)
                 text = contentText;
 
-            var builder = new Notification.Builder(Application.Context, NOTIFICATION_CHANNEL_ID)
-              .SetContentTitle(Application.Context.Resources.GetString(Resource.String.app_name))
-              .SetContentText(text)
-              .SetCategory(Notification.CategoryService)
-              .SetSmallIcon(icon)
-              .SetOngoing(true);
+            var builder = new NotificationCompat.Builder(Application.Context, NOTIFICATION_CHANNEL_ID)
+                .SetContentTitle(Application.Context.Resources.GetString(Resource.String.app_name))
+                .SetContentText(text)
+                .SetCategory(Notification.CategoryService)
+                .SetSmallIcon(icon)
+                .SetOngoing(true);
             return builder.Build();
         }
 
