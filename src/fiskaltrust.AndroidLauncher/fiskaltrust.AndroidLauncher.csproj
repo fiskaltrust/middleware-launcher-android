@@ -114,7 +114,7 @@
     <AndroidAsset Include="Migrations\004_FailedFinishTransactionRequest.sqlite3" />
     <AndroidAsset Include="Migrations\005_MasterData.sqlite3" />
     <AndroidAsset Include="Migrations\006_DailyClosingNumber.sqlite3" />
-    <AndroidNativeLibrary Include="lib\arm64-v8a\libcom.fiskaly.client-linux-x64-v1.2.100.so">
+    <AndroidNativeLibrary Include="lib\arm64-v8a\libcom.fiskaly.client-linux-amd64-v1.2.100.so">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </AndroidNativeLibrary>
     <AndroidNativeLibrary Include="lib\armeabi-v7a\libcom.fiskaly.client-linux-386-v1.2.100.so">
@@ -123,7 +123,7 @@
     <AndroidNativeLibrary Include="lib\x86\libcom.fiskaly.client-linux-386-v1.2.100.so">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </AndroidNativeLibrary>
-    <AndroidNativeLibrary Include="lib\x86_64\libcom.fiskaly.client-linux-x64-v1.2.100.so">
+    <AndroidNativeLibrary Include="lib\x86_64\libcom.fiskaly.client-linux-amd64-v1.2.100.so">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </AndroidNativeLibrary>
     <None Include="Resources\AboutResources.txt" />
