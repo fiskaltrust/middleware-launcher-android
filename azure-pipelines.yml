@@ -8,7 +8,6 @@ pool:
 variables:
   buildConfiguration: 'Release'
   outputDirectory: '$(build.binariesDirectory)/$(buildConfiguration)'
-  projectFile: fiskaltrust.AndroidLauncher.csproj
 
 steps:
 - task: NuGetToolInstaller@1
@@ -20,11 +19,21 @@ steps:
 
 - task: android-manifest-version@1
   inputs:
-    sourcePath: 'src/fiskaltrust.AndroidLauncher/Properties/AndroidManifest.xml'
+    sourcePath: 'src/fiskaltrust.AndroidLauncher.Http/Properties/AndroidManifest.xml'
     versionCodeOption: 'buildid'
     versionCode: '$(Build.BuildId)'
     versionName: '$(Build.BuildNumber)'
     printFile: true
+  displayName: Version HTTP Launcher
+
+- task: android-manifest-version@1
+  inputs:
+    sourcePath: 'src/fiskaltrust.AndroidLauncher.Grpc/Properties/AndroidManifest.xml'
+    versionCodeOption: 'buildid'
+    versionCode: '$(Build.BuildId)'
+    versionName: '$(Build.BuildNumber)'
+    printFile: true
+  displayName: Version gRPC Launcher
 
 - task: NuGetCommand@2
   inputs:
@@ -35,7 +44,9 @@ steps:
 
 - task: XamarinAndroid@1
   inputs:
-    projectFile: '**/$(projectFile)'
+    projectFile: |
+      **/fiskaltrust.AndroidLauncher.*.csproj
+      !**/fiskaltrust.AndroidLauncher.Common.csproj
     outputDirectory: '$(outputDirectory)'
     configuration: '$(buildConfiguration)'
     msbuildVersionOption: 'latest'
