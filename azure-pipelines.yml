@@ -41,6 +41,7 @@ steps:
     restoreSolution: '**/*.sln'
     feedsToUse: 'config'
     nugetConfigPath: 'NuGet.config'
+  displayName: Restore NuGet packages
 
 - task: XamarinAndroid@1
   inputs:
@@ -67,14 +68,18 @@ steps:
     apksignerKeystorePassword: '$(KeystorePassword)'
     apksignerKeystoreAlias: 'fiskaltrust-build'
     apksignerKeyPassword: '$(KeyPassword)'
+  displayName: Sign APKs
 
 - task: CopyFiles@2
   inputs:
     contents: '**/*.apk'
     targetFolder: '$(build.artifactStagingDirectory)'
     flattenFolders: true
+  displayName: Copy APKs to staging directory
 
 - powershell: 
-    Rename-Item -Path "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.apk" -NewName "eu.fiskaltrust.androidlauncher.$(Build.BuildNumber).apk"
+    Rename-Item -Path "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.apk" -NewName "eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk"
+    Rename-Item -Path "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.apk" -NewName "eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk"
+  displayName: Rename APK files
     
 - task: PublishBuildArtifacts@1
