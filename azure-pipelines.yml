@@ -78,8 +78,8 @@ steps:
   displayName: Copy APKs to staging directory
 
 - powershell: 
-    Rename-Item -Path "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.apk" -NewName "eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk"
-    Rename-Item -Path "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.apk" -NewName "eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk"
+    Rename-Item -Path "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.apk" -NewName "eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk";
+    Rename-Item -Path "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.apk" -NewName "eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk";
   displayName: Rename APK files
     
 - task: PublishBuildArtifacts@1
