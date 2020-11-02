@@ -44,13 +44,21 @@ steps:
 
 - task: XamarinAndroid@1
   inputs:
-    projectFile: |
-      **/fiskaltrust.AndroidLauncher.*.csproj
-      !**/fiskaltrust.AndroidLauncher.Common.csproj
+    projectFile: '**/fiskaltrust.AndroidLauncher.Http.csproj'
     outputDirectory: '$(outputDirectory)'
     configuration: '$(buildConfiguration)'
     msbuildVersionOption: 'latest'
     jdkOption: 'JDKVersion'
+  displayName: Build HTTP Launcher
+  
+- task: XamarinAndroid@1
+  inputs:
+    projectFile: '**/fiskaltrust.AndroidLauncher.Grpc.csproj'
+    outputDirectory: '$(outputDirectory)'
+    configuration: '$(buildConfiguration)'
+    msbuildVersionOption: 'latest'
+    jdkOption: 'JDKVersion'
+  displayName: Build gRPC Launcher
 
 - task: AndroidSigning@3
   inputs:
