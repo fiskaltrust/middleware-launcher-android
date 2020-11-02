@@ -8,7 +8,7 @@ namespace fiskaltrust.AndroidLauncher.Http.Hosting
     {
         public void Apply(ApplicationModel application)
         {
-            var includedController = application.Controllers.FirstOrDefault((model) => !model.ControllerType.IsEquivalentTo(typeof(T)));
+            var includedController = application.Controllers.FirstOrDefault((model) => model.ControllerType.IsEquivalentTo(typeof(T)));
 
             if(includedController != null)
             {                

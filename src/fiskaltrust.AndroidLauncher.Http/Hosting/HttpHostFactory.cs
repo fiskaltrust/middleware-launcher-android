@@ -9,6 +9,7 @@ using fiskaltrust.Middleware.Interface.Client.Http;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
@@ -59,9 +60,9 @@ namespace fiskaltrust.AndroidLauncher.Http.Hosting
                 })
                 .Configure(app =>
                 {
-                    app.UseMvc();
                     if (uri.Segments.Length > 1)
-                        app.UsePathBase(uri.AbsolutePath);
+                        app.UsePathBase(new PathString(uri.AbsolutePath));
+                    app.UseMvc();
                 })
                 .UseUrls(uri.GetLeftPart(UriPartial.Authority))
                 .Build();
@@ -121,9 +122,9 @@ namespace fiskaltrust.AndroidLauncher.Http.Hosting
                 })
                 .Configure(app =>
                 {
-                    app.UseMvc();
                     if (uri.Segments.Length > 1)
-                        app.UsePathBase(uri.AbsolutePath);
+                        app.UsePathBase(new PathString(uri.AbsolutePath));
+                    app.UseMvc();
                 })
                 .UseUrls(uri.GetLeftPart(UriPartial.Authority))
                 .Build();
