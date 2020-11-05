@@ -89,6 +89,11 @@ steps:
   inputs:
     version: '10.15.1'
 
+- task: NuGetCommand@2
+  inputs:
+    command: 'custom'
+    arguments: 'install xamarin.uitest -Version 3.0.5 -OutputDirectory "test-tools/"'
+
 - task: VSBuild@1
   inputs:
     solution: '**\fiskaltrust.AndroidLauncher.SmokeTests.csproj'
@@ -106,4 +111,5 @@ steps:
     appSlug: 'fiskaltrust.Launcher'
     devices: '5449d34b'
     localeOption: 'en_US'
+    uiTestToolsDirectory: 'test-tools/Xamarin.UITest.3.0.5/tools'
   displayName: Smoke tests (HTTP)
