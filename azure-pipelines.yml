@@ -112,7 +112,7 @@ steps:
     appSlug: 'fiskaltrust/fiskaltrust.Launcher'
     devices: 'fdd661d1'
     localeOption: 'en_US'
-    runOptions: '--include-category http'
+    prepareOptions: '--include-category http'
   displayName: Smoke tests (HTTP)
 
 - task: AppCenterTest@1
@@ -127,5 +127,5 @@ steps:
     appSlug: 'fiskaltrust/fiskaltrust.Launcher'
     devices: 'fdd661d1'
     localeOption: 'en_US'
-    runOptions: '--include-category grpc'
+    prepareOptions: '--include-category grpc'
   displayName: Smoke tests (gRPC)
