@@ -9,6 +9,7 @@ using Xamarin.UITest;
 namespace fiskaltrust.AndroidLauncher.SmokeTests
 {
     [TestFixture(Platform.Android)]
+    [Category("http")]
     public class HttpSmokeTests : AndroidLauncherSmokeTests
     {
         protected override string AppProtocol => "http";
