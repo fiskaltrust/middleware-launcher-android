@@ -39,12 +39,17 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
                     var result = App.Invoke("SendEchoTestBackdoor", new object[] { url, message }) as string;
                     if (result == message)
                         return;
+                    TestContext.Out.WriteLine("Echo result: " + result);
                 }
-                catch { }
+                catch(Exception ex) 
+                {
+                    TestContext.Error.WriteLine(ex);
+                }
 
                 await Task.Delay(3000);
             }
 
+            App.Screenshot("Timeout");
             throw new TimeoutException($"REST endpoint at {TestConstants.Http.Url} was not reachable after {timeSpan}.");
         }
     }
