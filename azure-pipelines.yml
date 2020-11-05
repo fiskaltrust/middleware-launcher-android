@@ -8,6 +8,7 @@ pool:
 variables:
   buildConfiguration: 'Release'
   outputDirectory: '$(build.binariesDirectory)/$(buildConfiguration)'
+  testOutputDirectory: '$(build.binariesDirectory)/test/$(buildConfiguration)'
 
 steps:
 - task: NuGetToolInstaller@1
@@ -83,3 +84,22 @@ steps:
   displayName: Rename APK files
     
 - task: PublishBuildArtifacts@1
+
+- task: VSBuild@1
+  inputs:
+    solution: '**\fiskaltrust.AndroidLauncher.SmokeTests.csproj'
+    msbuildArgs: '/p:OutputPath=$(testOutputDirectory)'
+    configuration: '$(buildConfiguration)'
+
+- task: AppCenterTest@1
+  inputs:
+    appFile: '$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk'
+    artifactsDirectory: '$(Build.ArtifactStagingDirectory)/AppCenterTest'
+    frameworkOption: 'uitest'
+    uiTestBuildDirectory: '$(testOutputDirectory)'
+    credentialsOption: 'serviceEndpoint'
+    serverEndpoint: 'VS App Center'
+    appSlug: 'fiskaltrust.Launcher'
+    devices: '5449d34b'
+    localeOption: 'en_US'
+  displayName: Smoke tests (HTTP)
