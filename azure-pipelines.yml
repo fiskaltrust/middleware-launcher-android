@@ -106,10 +106,26 @@ steps:
     artifactsDirectory: '$(Build.ArtifactStagingDirectory)/AppCenterTest'
     frameworkOption: 'uitest'
     uiTestBuildDirectory: '$(testOutputDirectory)'
+    uiTestToolsDirectory: 'test-tools/Xamarin.UITest.3.0.5/tools'
     credentialsOption: 'serviceEndpoint'
     serverEndpoint: 'VS App Center'
-    appSlug: 'fiskaltrust.Launcher'
-    devices: '5449d34b'
+    appSlug: 'fiskaltrust/fiskaltrust.Launcher'
+    devices: 'fdd661d1'
     localeOption: 'en_US'
-    uiTestToolsDirectory: 'test-tools/Xamarin.UITest.3.0.5/tools'
+    runOptions: '--include-category http'
   displayName: Smoke tests (HTTP)
+
+- task: AppCenterTest@1
+  inputs:
+    appFile: '$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk'
+    artifactsDirectory: '$(Build.ArtifactStagingDirectory)/AppCenterTest'
+    frameworkOption: 'uitest'
+    uiTestBuildDirectory: '$(testOutputDirectory)'
+    uiTestToolsDirectory: 'test-tools/Xamarin.UITest.3.0.5/tools'
+    credentialsOption: 'serviceEndpoint'
+    serverEndpoint: 'VS App Center'
+    appSlug: 'fiskaltrust/fiskaltrust.Launcher'
+    devices: 'fdd661d1'
+    localeOption: 'en_US'
+    runOptions: '--include-category grpc'
+  displayName: Smoke tests (gRPC)
