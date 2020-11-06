@@ -29,6 +29,7 @@ namespace fiskaltrust.AndroidLauncher.Http.Controllers
         public async Task<ActionResult<ReceiptResponse>> SignAsync([FromBody] ReceiptRequest request) => await _pos.SignAsync(request);
 
         [HttpPost("v0/journal")]
+        [HttpPost("journal")]
         public ActionResult<Stream> Journal([FromQuery] long type, [FromQuery] long from, [FromQuery] long to) => _pos.Journal(type, from, to);
     }
 }
