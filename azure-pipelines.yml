@@ -8,54 +8,130 @@ pool:
 variables:
   buildConfiguration: 'Release'
   outputDirectory: '$(build.binariesDirectory)/$(buildConfiguration)'
-  projectFile: fiskaltrust.AndroidLauncher.csproj
+  testOutputDirectory: '$(build.binariesDirectory)/test/$(buildConfiguration)'
 
-steps:
-- task: NuGetToolInstaller@1
+jobs:
+- job: Build
+  steps:
+  - task: NuGetToolInstaller@1
 
-- task: yavt@1
-  inputs:
-    pathToVersionJson: 'version.json'
-    semverVersion: 'v1'
+  - task: yavt@1
+    inputs:
+      pathToVersionJson: 'version.json'
+      semverVersion: 'v1'
 
-- task: android-manifest-version@1
-  inputs:
-    sourcePath: 'src/fiskaltrust.AndroidLauncher/Properties/AndroidManifest.xml'
-    versionCodeOption: 'buildid'
-    versionCode: '$(Build.BuildId)'
-    versionName: '$(Build.BuildNumber)'
-    printFile: true
+  - task: android-manifest-version@1
+    inputs:
+      sourcePath: 'src/fiskaltrust.AndroidLauncher.Http/Properties/AndroidManifest.xml'
+      versionCodeOption: 'buildid'
+      versionCode: '$(Build.BuildId)'
+      versionName: '$(Build.BuildNumber)'
+      printFile: true
+    displayName: Version HTTP Launcher
 
-- task: NuGetCommand@2
-  inputs:
-    command: 'restore'
-    restoreSolution: '**/*.sln'
-    feedsToUse: 'config'
-    nugetConfigPath: 'NuGet.config'
+  - task: android-manifest-version@1
+    inputs:
+      sourcePath: 'src/fiskaltrust.AndroidLauncher.Grpc/Properties/AndroidManifest.xml'
+      versionCodeOption: 'buildid'
+      versionCode: '$(Build.BuildId)'
+      versionName: '$(Build.BuildNumber)'
+      printFile: true
+    displayName: Version gRPC Launcher
 
-- task: XamarinAndroid@1
-  inputs:
-    projectFile: '**/$(projectFile)'
-    outputDirectory: '$(outputDirectory)'
-    configuration: '$(buildConfiguration)'
-    msbuildVersionOption: 'latest'
-    jdkOption: 'JDKVersion'
+  - task: NuGetCommand@2
+    inputs:
+      command: 'restore'
+      restoreSolution: '**/*.sln'
+      feedsToUse: 'config'
+      nugetConfigPath: 'NuGet.config'
+    displayName: Restore NuGet packages
 
-- task: AndroidSigning@3
-  inputs:
-    apkFiles: '**/*.apk'
-    apksignerKeystoreFile: 'fiskaltrust_android.keystore'
-    apksignerKeystorePassword: '$(KeystorePassword)'
-    apksignerKeystoreAlias: 'fiskaltrust-build'
-    apksignerKeyPassword: '$(KeyPassword)'
-
-- task: CopyFiles@2
-  inputs:
-    contents: '**/*.apk'
-    targetFolder: '$(build.artifactStagingDirectory)'
-    flattenFolders: true
-
-- powershell: 
-    Rename-Item -Path "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.apk" -NewName "eu.fiskaltrust.androidlauncher.$(Build.BuildNumber).apk"
+  - task: XamarinAndroid@1
+    inputs:
+      projectFile: '**/fiskaltrust.AndroidLauncher.Http.csproj'
+      outputDirectory: '$(outputDirectory)'
+      configuration: '$(buildConfiguration)'
+      msbuildVersionOption: 'latest'
+      jdkOption: 'JDKVersion'
+    displayName: Build HTTP Launcher
     
-- task: PublishBuildArtifacts@1
+  - task: XamarinAndroid@1
+    inputs:
+      projectFile: '**/fiskaltrust.AndroidLauncher.Grpc.csproj'
+      outputDirectory: '$(outputDirectory)'
+      configuration: '$(buildConfiguration)'
+      msbuildVersionOption: 'latest'
+      jdkOption: 'JDKVersion'
+    displayName: Build gRPC Launcher
+
+  - task: AndroidSigning@3
+    inputs:
+      apkFiles: '**/*.apk'
+      apksignerKeystoreFile: 'fiskaltrust_android.keystore'
+      apksignerKeystorePassword: '$(KeystorePassword)'
+      apksignerKeystoreAlias: 'fiskaltrust-build'
+      apksignerKeyPassword: '$(KeyPassword)'
+    displayName: Sign APKs
+
+  - task: CopyFiles@2
+    inputs:
+      contents: '**/*.apk'
+      targetFolder: '$(build.artifactStagingDirectory)'
+      flattenFolders: true
+    displayName: Copy APKs to staging directory
+
+  - powershell: 
+      Rename-Item -Path "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.apk" -NewName "eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk";
+      Rename-Item -Path "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.apk" -NewName "eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk";
+    displayName: Rename APK files
+      
+  - task: PublishBuildArtifacts@1
+
+- job: SmokeTest
+  dependsOn: Build
+  condition: and(succeeded(), or(eq(variables['build.sourceBranch'], 'refs/heads/master'), startsWith(variables['build.sourceBranch'], 'refs/tags')))
+  steps:
+  - task: UseNode@1
+    inputs:
+      version: '10.15.1'
+
+  - task: NuGetCommand@2
+    inputs:
+      command: 'custom'
+      arguments: 'install xamarin.uitest -Version 3.0.5 -OutputDirectory "test-tools/"'
+
+  - task: VSBuild@1
+    inputs:
+      solution: '**\fiskaltrust.AndroidLauncher.SmokeTests.csproj'
+      msbuildArgs: '/p:OutputPath=$(testOutputDirectory)'
+      configuration: '$(buildConfiguration)'
+
+  - task: AppCenterTest@1
+    inputs:
+      appFile: '$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk'
+      artifactsDirectory: '$(Build.ArtifactStagingDirectory)/AppCenterTest'
+      frameworkOption: 'uitest'
+      uiTestBuildDirectory: '$(testOutputDirectory)'
+      uiTestToolsDirectory: 'test-tools/Xamarin.UITest.3.0.5/tools'
+      credentialsOption: 'serviceEndpoint'
+      serverEndpoint: 'VS App Center'
+      appSlug: 'fiskaltrust/fiskaltrust.Launcher'
+      devices: 'fdd661d1'
+      localeOption: 'en_US'
+      prepareOptions: '--include-category http'
+    displayName: Smoke tests (HTTP)
+
+  - task: AppCenterTest@1
+    inputs:
+      appFile: '$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk'
+      artifactsDirectory: '$(Build.ArtifactStagingDirectory)/AppCenterTest'
+      frameworkOption: 'uitest'
+      uiTestBuildDirectory: '$(testOutputDirectory)'
+      uiTestToolsDirectory: 'test-tools/Xamarin.UITest.3.0.5/tools'
+      credentialsOption: 'serviceEndpoint'
+      serverEndpoint: 'VS App Center'
+      appSlug: 'fiskaltrust/fiskaltrust.Launcher'
+      devices: 'fdd661d1'
+      localeOption: 'en_US'
+      prepareOptions: '--include-category grpc'
+    displayName: Smoke tests (gRPC)

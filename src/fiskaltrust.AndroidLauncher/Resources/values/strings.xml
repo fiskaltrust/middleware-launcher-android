@@ -1,6 +1,0 @@
-<resources>
-  <string name="app_name">fiskaltrust.Launcher</string>
-  <string name="action_settings">Settings</string>
-  <string name="main_title">You\'re all set!</string>
-  <string name="main_content">The Launcher for the fiskaltrust.Middleware is installed on this device and will listen for incoming start requests.</string>
-</resources>

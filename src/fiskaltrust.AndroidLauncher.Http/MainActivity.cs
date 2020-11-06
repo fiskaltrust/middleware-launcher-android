@@ -1,0 +1,78 @@
+﻿using Android.App;
+using Android.OS;
+using Android.Support.V7.App;
+using Android.Runtime;
+using Java.Interop;
+using Android.Content;
+using Android.Widget;
+using fiskaltrust.Middleware.Interface.Client.Http;
+using System;
+using fiskaltrust.Middleware.Interface.Client;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using fiskaltrust.ifPOS.v1;
+
+namespace fiskaltrust.AndroidLauncher.Http
+{
+    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
+    public class MainActivity : AppCompatActivity
+    {
+        protected override void OnCreate(Bundle savedInstanceState)
+        {
+            base.OnCreate(savedInstanceState);
+            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
+            SetContentView(Resource.Layout.activity_main);
+        }
+
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
+        {
+            Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+
+            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+        [Export("SendStartIntentTestBackdoor")]
+        public void SendStartIntentTestBackdoor(string cashboxid, string accesstoken)
+        {
+            var componentName = new ComponentName("eu.fiskaltrust.androidlauncher.http", "eu.fiskaltrust.androidlauncher.http.Start");
+
+            var intent = new Intent(Intent.ActionSend);
+            intent.SetComponent(componentName);
+            intent.PutExtra("cashboxid", cashboxid);
+            intent.PutExtra("accesstoken", accesstoken);
+            intent.PutExtra("sandbox", true);
+
+            SendBroadcast(intent);
+        }
+
+        [Export("SendEchoTestBackdoor")]
+        public string SendEchoTestBackdoor(string url, string message)
+        {
+            try
+            {
+                var pos = Task.Run(() => HttpPosFactory.CreatePosAsync(new HttpPosClientOptions { Url = new Uri(url), RetryPolicyOptions = null })).Result;
+                return Task.Run(() => pos.EchoAsync(new ifPOS.v1.EchoRequest { Message = message })).Result.Message;
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
+
+        [Export("SendSignTestBackdoor")]
+        public string SendSignTestBackdoor(string url, string signRequest)
+        {
+            try
+            {
+                var pos = Task.Run(() => HttpPosFactory.CreatePosAsync(new HttpPosClientOptions { Url = new Uri(url), RetryPolicyOptions = null })).Result;
+                var response = Task.Run(() => pos.SignAsync(JsonConvert.DeserializeObject<ReceiptRequest>(signRequest))).Result;
+
+                return JsonConvert.SerializeObject(response);
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
+    }
+}
