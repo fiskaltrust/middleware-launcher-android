@@ -78,6 +78,9 @@
     <Compile Include="Controllers\POSController.cs" />
     <Compile Include="Helpers\RestUrlResolver.cs" />
     <Compile Include="Hosting\DESSCDClientFactory.cs" />
+    <Compile Include="Hosting\Hosts\HttpDeSscdHost.cs" />
+    <Compile Include="Hosting\Hosts\HttpHost.cs" />
+    <Compile Include="Hosting\Hosts\HttpPosHost.cs" />
     <Compile Include="Hosting\IncludeControllerConvention.cs" />
     <Compile Include="Hosting\HttpHostFactory.cs" />
     <Compile Include="Hosting\POSClientFactory.cs" />
