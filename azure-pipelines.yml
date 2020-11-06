@@ -85,12 +85,21 @@ jobs:
       Rename-Item -Path "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.apk" -NewName "eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk";
     displayName: Rename APK files
       
-  - task: PublishBuildArtifacts@1
+  - task: PublishPipelineArtifact@0
+    inputs:
+      artifactName: 'drop'
+      targetPath: '$(Build.ArtifactStagingDirectory)'
 
 - job: SmokeTest
   dependsOn: Build
   condition: and(succeeded(), or(eq(variables['build.sourceBranch'], 'refs/heads/master'), startsWith(variables['build.sourceBranch'], 'refs/tags')))
   steps:
+  - task: DownloadPipelineArtifact@2
+    inputs:
+      buildType: 'current'
+      artifactName: 'drop'
+      targetPath: '$(Build.ArtifactStagingDirectory)'
+
   - task: NuGetToolInstaller@1
 
   - task: UseNode@1
