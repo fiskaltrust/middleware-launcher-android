@@ -5,7 +5,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Helpers.Logging
 {
     public class AndroidLogger : ILogger
     {
-        private const string TAG = "fiskaltrust.AndroidLauncher";
+        public const string TAG = "fiskaltrust.AndroidLauncher";
 
         public IDisposable BeginScope<TState>(TState state) => new NoopDisposable();
 
