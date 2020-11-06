@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace fiskaltrust.AndroidLauncher.Grpc.Controllers
+namespace fiskaltrust.AndroidLauncher.Http.Controllers
 {
     public class DESSCDController : Controller
     {

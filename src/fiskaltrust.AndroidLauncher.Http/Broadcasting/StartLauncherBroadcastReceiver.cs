@@ -5,17 +5,18 @@ using Android.Util;
 using Android.Widget;
 using fiskaltrust.AndroidLauncher.Common;
 using fiskaltrust.AndroidLauncher.Common.AndroidService;
+using fiskaltrust.AndroidLauncher.Common.Constants;
 using fiskaltrust.AndroidLauncher.Common.Enums;
 using fiskaltrust.AndroidLauncher.Common.Exceptions;
 using fiskaltrust.AndroidLauncher.Common.Extensions;
 using fiskaltrust.AndroidLauncher.Common.Helpers;
-using fiskaltrust.AndroidLauncher.Helpers;
+using fiskaltrust.AndroidLauncher.Http.Helpers;
 using fiskaltrust.AndroidLauncher.Http.Hosting;
 using System.Threading.Tasks;
 
 namespace fiskaltrust.AndroidLauncher.Http.Broadcasting
 {
-    [BroadcastReceiver(Enabled = true, Exported = true, Name = "eu.fiskaltrust.androidlauncher.http.Start")]
+    [BroadcastReceiver(Enabled = true, Exported = true, Name = BroadcastConstants.HttpStartBroadcastName)]
     [IntentFilter(new[] { Intent.ActionSend }, Categories = new[] { Intent.CategoryDefault })]
     public class StartLauncherBroadcastReceiver : BroadcastReceiver
     {

@@ -1,6 +1,6 @@
 ﻿using fiskaltrust.AndroidLauncher.Common;
 using fiskaltrust.AndroidLauncher.Common.Hosting;
-using fiskaltrust.AndroidLauncher.Grpc.Controllers;
+using fiskaltrust.AndroidLauncher.Http.Controllers;
 using fiskaltrust.ifPOS.v1;
 using fiskaltrust.ifPOS.v1.de;
 using fiskaltrust.Middleware.Abstractions;

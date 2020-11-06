@@ -5,6 +5,7 @@ using Android.Util;
 using Android.Widget;
 using fiskaltrust.AndroidLauncher.Common;
 using fiskaltrust.AndroidLauncher.Common.AndroidService;
+using fiskaltrust.AndroidLauncher.Common.Constants;
 using fiskaltrust.AndroidLauncher.Common.Enums;
 using fiskaltrust.AndroidLauncher.Common.Exceptions;
 using fiskaltrust.AndroidLauncher.Common.Extensions;
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace fiskaltrust.AndroidLauncher.Grpc.Broadcasting
 {
-    [BroadcastReceiver(Enabled = true, Exported = true, Name = "eu.fiskaltrust.androidlauncher.grpc.Start")]
+    [BroadcastReceiver(Enabled = true, Exported = true, Name = BroadcastConstants.GrpcStartBroadcastName)]
     [IntentFilter(new[] { Intent.ActionSend }, Categories = new[] { Intent.CategoryDefault })]
     public class StartLauncherBroadcastReceiver : BroadcastReceiver
     {

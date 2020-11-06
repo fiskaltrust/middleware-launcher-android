@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace fiskaltrust.AndroidLauncher.Grpc.Controllers
+namespace fiskaltrust.AndroidLauncher.Http.Controllers
 {
     public class POSController : Controller
     {

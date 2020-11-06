@@ -52,6 +52,7 @@
     <Compile Include="AndroidService\MiddlewareLauncherService.cs" />
     <Compile Include="AndroidService\MiddlewareServiceConnection.cs" />
     <Compile Include="AndroidService\ServiceConnectionProvider.cs" />
+    <Compile Include="Constants\BroadcastConstants.cs" />
     <Compile Include="Enums\LauncherState.cs" />
     <Compile Include="Exceptions\ConfigurationNotFoundException.cs" />
     <Compile Include="Exceptions\RemountRequiredException.cs" />

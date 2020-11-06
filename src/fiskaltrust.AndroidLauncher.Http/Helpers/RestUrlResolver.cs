@@ -3,7 +3,7 @@ using fiskaltrust.storage.serialization.V0;
 using System;
 using System.Linq;
 
-namespace fiskaltrust.AndroidLauncher.Helpers
+namespace fiskaltrust.AndroidLauncher.Http.Helpers
 {
     public class RestUrlResolver : IUrlResolver
     {

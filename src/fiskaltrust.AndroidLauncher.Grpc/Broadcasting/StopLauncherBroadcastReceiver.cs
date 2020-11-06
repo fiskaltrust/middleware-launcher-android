@@ -2,10 +2,11 @@
 using Android.Content;
 using Android.Widget;
 using fiskaltrust.AndroidLauncher.Common.AndroidService;
+using fiskaltrust.AndroidLauncher.Common.Constants;
 
 namespace fiskaltrust.AndroidLauncher.Grpc.Broadcasting
 {
-    [BroadcastReceiver(Enabled = true, Exported = true, Name = "eu.fiskaltrust.androidlauncher.grpc.Stop")]
+    [BroadcastReceiver(Enabled = true, Exported = true, Name = BroadcastConstants.GrpcStopBroadcastName)]
     [IntentFilter(new[] { Intent.ActionSend }, Categories = new[] { Intent.CategoryDefault })]
     public class StopLauncherBroadcastReceiver : BroadcastReceiver
     {
