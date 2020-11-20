@@ -7,6 +7,7 @@ using fiskaltrust.AndroidLauncher.Common.Exceptions;
 using fiskaltrust.AndroidLauncher.Common.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 
 namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
@@ -18,11 +19,12 @@ namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
             var cashboxId = startIntent.GetStringExtra("cashboxid");
             var accessToken = startIntent.GetStringExtra("accesstoken");
             var isSandbox = startIntent.GetBooleanExtra("sandbox", false);
+            var logLevel = Enum.TryParse(startIntent.GetStringExtra("loglevel"), out LogLevel level) ? level : LogLevel.Information;
             var scuParams = startIntent.GetScuConfigParameters();
 
             Toast.MakeText(context, $"Starting fiskaltrust Middleware with cashbox '{cashboxId}' (Sandbox: {isSandbox}). Initializing might take up to 45 seconds, depending on the TSE.", ToastLength.Long).Show();
 
-            MiddlewareLauncherService.Start(ServiceConnectionProvider.GetConnection(), cashboxId, accessToken, isSandbox, scuParams);
+            MiddlewareLauncherService.Start(ServiceConnectionProvider.GetConnection(), cashboxId, accessToken, isSandbox, logLevel, scuParams);
             Task.Run(async () =>
             {
                 try
@@ -37,7 +39,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
                 }
                 catch (System.Exception ex)
                 {
-                    using (var services = new ServiceCollection().AddLogProviders().BuildServiceProvider())
+                    using (var services = new ServiceCollection().AddLogProviders(logLevel).BuildServiceProvider())
                     {
                         var logger = services.GetRequiredService<ILogger<MiddlewareLauncherService>>();
                         logger.LogCritical(ex, "An error occured while trying to start the fiskaltrust Android Launcher.");

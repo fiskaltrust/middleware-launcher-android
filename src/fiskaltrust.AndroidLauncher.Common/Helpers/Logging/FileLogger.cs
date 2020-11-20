@@ -14,7 +14,6 @@ namespace fiskaltrust.AndroidLauncher.Common.Helpers.Logging
         private readonly BlockingCollection<string> _logQueue;
         private readonly string _logDirectory;
         
-
         public static FileLogger Instance => lazyInstance.Value;
 
         private FileLogger() 

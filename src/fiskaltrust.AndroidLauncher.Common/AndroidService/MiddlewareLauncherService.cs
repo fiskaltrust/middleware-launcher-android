@@ -8,6 +8,7 @@ using fiskaltrust.AndroidLauncher.Common.Extensions;
 using fiskaltrust.AndroidLauncher.Common.Services;
 using fiskaltrust.ifPOS.v1;
 using Java.Util;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -29,6 +30,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
             var cashboxIdString = intent.GetStringExtra("cashboxid");
             var accesstoken = intent.GetStringExtra("accesstoken");
             var isSandbox = intent.GetBooleanExtra("sandbox", false);
+            var logLevel = Enum.TryParse(intent.GetStringExtra("loglevel"), out LogLevel level) ? level : LogLevel.Information;
             var scuParams = intent.GetScuConfigParameters(removePrefix: true);
 
             if (string.IsNullOrEmpty(cashboxIdString) || !Guid.TryParse(cashboxIdString, out var cashboxId))
@@ -40,7 +42,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
                 throw new ArgumentException("The extra 'accesstoken' needs to be set in this intent.", "accesstoken");
             }
 
-            _posProvider = new POSProvider(cashboxId, accesstoken, isSandbox, scuParams);
+            _posProvider = new POSProvider(cashboxId, accesstoken, isSandbox, logLevel, scuParams);
             Binder = new POSProviderBinder(this);
             return Binder;
         }
@@ -76,7 +78,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
 
         public async Task StopAsync() => await _posProvider.StopAsync();
 
-        public static void Start(IMiddlewareServiceConnection serviceConnection, string cashboxId, string accessToken, bool isSandbox, Dictionary<string, object> additionalScuParams)
+        public static void Start(IMiddlewareServiceConnection serviceConnection, string cashboxId, string accessToken, bool isSandbox, LogLevel logLevel, Dictionary<string, object> additionalScuParams)
         {
             if (!IsRunning(typeof(MiddlewareLauncherService)))
             {
@@ -84,6 +86,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
                 intent.PutExtra("cashboxid", cashboxId);
                 intent.PutExtra("accesstoken", accessToken);
                 intent.PutExtra("sandbox", isSandbox);
+                intent.PutExtra("loglevel", logLevel.ToString());
                 intent.PutExtras(additionalScuParams);
 
                 Application.Context.BindService(intent, serviceConnection, Bind.AutoCreate);

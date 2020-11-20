@@ -8,6 +8,7 @@ using fiskaltrust.ifPOS.v1;
 using fiskaltrust.ifPOS.v1.de;
 using fiskaltrust.Middleware.SCU.DE.Fiskaly;
 using fiskaltrust.storage.serialization.V0;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
         private readonly string _accessToken;
         private readonly bool _isSandbox;
         private readonly Dictionary<string, object> _scuParams;
+        private readonly LogLevel _logLevel;
         private readonly IConfigurationProvider _configurationProvider;
         private readonly ILocalConfigurationProvider _localConfigurationProvider;
 
@@ -34,12 +36,13 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
 
         public bool IsRunning { get; set; }
 
-        public MiddlewareLauncher(Guid cashboxId, string accessToken, bool isSandbox, Dictionary<string, object> scuParams)
+        public MiddlewareLauncher(Guid cashboxId, string accessToken, bool isSandbox, LogLevel logLevel, Dictionary<string, object> scuParams)
         {
             _cashboxId = cashboxId;
             _accessToken = accessToken;
             _isSandbox = isSandbox;
             _scuParams = scuParams;
+            _logLevel = logLevel;
 
             _configurationProvider = new HelipadConfigurationProvider();
             _localConfigurationProvider = new LocalConfigurationProvider();
@@ -121,7 +124,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             string url = ServiceLocator.Resolve<IUrlResolver>().GetProtocolSpecificUrl(packageConfig);
 
             var scuProvider = new SwissbitScuProvider();
-            var scu = scuProvider.CreateSCU(packageConfig);
+            var scu = scuProvider.CreateSCU(packageConfig, _logLevel);
             await _scuHost.StartAsync(url, scu);
         }
 
@@ -130,7 +133,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             string url = ServiceLocator.Resolve<IUrlResolver>().GetProtocolSpecificUrl(packageConfig);
 
             var scuProvider = new FiskalyScuProvider();
-            var scu = scuProvider.CreateSCU(packageConfig);
+            var scu = scuProvider.CreateSCU(packageConfig, _logLevel);
             await _scuHost.StartAsync(url, scu);
         }
 
@@ -139,7 +142,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             string url = ServiceLocator.Resolve<IUrlResolver>().GetProtocolSpecificUrl(packageConfig);
 
             var queueProvider = new SQLiteQueueProvider();
-            var pos = await Task.Run(() => queueProvider.CreatePOS(Environment.GetFolderPath(Environment.SpecialFolder.Personal), packageConfig, _scuHost));
+            var pos = await Task.Run(() => queueProvider.CreatePOS(Environment.GetFolderPath(Environment.SpecialFolder.Personal), packageConfig, _logLevel, _scuHost));
 
             await _posHost.StartAsync(url, pos);
         }
@@ -147,7 +150,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
         private async Task InitializeHelipadHelperAsync(ftCashBoxConfiguration configuration)
         {
             var helipadHelperProvider = new HelipadHelperProvider();
-            var helper = await Task.Run(() => helipadHelperProvider.CreateHelper(configuration, _accessToken, _isSandbox, _posHost));
+            var helper = await Task.Run(() => helipadHelperProvider.CreateHelper(configuration, _accessToken, _isSandbox, _logLevel, _posHost));
             helper.StartBegin();
             helper.StartEnd();
         }

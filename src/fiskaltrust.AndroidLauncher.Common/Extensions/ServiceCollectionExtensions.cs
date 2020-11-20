@@ -9,13 +9,13 @@ namespace fiskaltrust.AndroidLauncher.Common.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddLogProviders(this IServiceCollection serviceCollection)
+        public static IServiceCollection AddLogProviders(this IServiceCollection serviceCollection, LogLevel logLevel)
         {
             return serviceCollection.AddLogging(builder =>
             {
                 builder.Services.AddSingleton<ILoggerProvider, AndroidLoggerProvider>();
                 builder.Services.AddSingleton<ILoggerProvider, FileLoggerProvider>();
-                builder.SetMinimumLevel(LogLevel.Debug);
+                builder.SetMinimumLevel(logLevel);
             });
         }
     }

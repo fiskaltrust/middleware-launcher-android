@@ -8,12 +8,13 @@ using fiskaltrust.ifPOS.v1.de;
 using fiskaltrust.Middleware.SCU.DE.SwissbitAndroid;
 using fiskaltrust.storage.serialization.V0;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
 {
     class SwissbitScuProvider : IScuProvider
     {
-        public IDESSCD CreateSCU(PackageConfiguration scuConfiguration)
+        public IDESSCD CreateSCU(PackageConfiguration scuConfiguration, LogLevel logLevel)
         {
             var dir = InitializeTseAsync();
             scuConfiguration.Configuration["devicePath"] = dir;
@@ -24,7 +25,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
             };
 
             var serviceCollection = new ServiceCollection();
-            serviceCollection.AddLogProviders();
+            serviceCollection.AddLogProviders(logLevel);
             bootstrapper.ConfigureServices(serviceCollection);
             return serviceCollection.BuildServiceProvider().GetRequiredService<IDESSCD>();
         }
