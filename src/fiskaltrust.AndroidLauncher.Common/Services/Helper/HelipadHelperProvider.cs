@@ -31,7 +31,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.Helper
 
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddSingleton<IClientFactory<IPOS>>(posHost.GetClientFactory());
-            serviceCollection.AddLogCatLogging();
+            serviceCollection.AddLogProviders();
 
             bootstrapper.ConfigureServices(serviceCollection);
             return serviceCollection.BuildServiceProvider().GetRequiredService<IHelper>();

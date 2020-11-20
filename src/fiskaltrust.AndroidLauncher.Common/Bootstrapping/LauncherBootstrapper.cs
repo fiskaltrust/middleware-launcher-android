@@ -1,12 +1,12 @@
 ﻿using Android.Content;
 using Android.OS;
-using Android.Util;
 using Android.Widget;
 using fiskaltrust.AndroidLauncher.Common.AndroidService;
 using fiskaltrust.AndroidLauncher.Common.Enums;
 using fiskaltrust.AndroidLauncher.Common.Exceptions;
 using fiskaltrust.AndroidLauncher.Common.Extensions;
-using fiskaltrust.AndroidLauncher.Common.Helpers.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
 namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
@@ -37,7 +37,11 @@ namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
                 }
                 catch (System.Exception ex)
                 {
-                    Log.Error(AndroidLogger.TAG, ex.ToString());
+                    using (var services = new ServiceCollection().AddLogProviders().BuildServiceProvider())
+                    {
+                        var logger = services.GetRequiredService<ILogger<MiddlewareLauncherService>>();
+                        logger.LogCritical(ex, "An error occured while trying to start the fiskaltrust Android Launcher.");
+                    }
 
                     if (ex is RemountRequiredException remountRequiredEx)
                         MiddlewareLauncherService.SetState(LauncherState.Error, remountRequiredEx.Message);

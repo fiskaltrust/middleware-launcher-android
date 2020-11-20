@@ -30,7 +30,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.Queue
 
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddSingleton<IClientFactory<IDESSCD>>(scuHost.GetClientFactory());
-            serviceCollection.AddLogCatLogging();
+            serviceCollection.AddLogProviders();
 
             bootstrapper.ConfigureServices(serviceCollection);
             return serviceCollection.BuildServiceProvider().GetRequiredService<IPOS>();

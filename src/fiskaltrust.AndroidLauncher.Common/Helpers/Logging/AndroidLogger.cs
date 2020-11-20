@@ -32,10 +32,5 @@ namespace fiskaltrust.AndroidLauncher.Common.Helpers.Logging
                     break;
             }
         }
-
-        private class NoopDisposable : IDisposable
-        {
-            public void Dispose() { }
-        }
     }
 }
