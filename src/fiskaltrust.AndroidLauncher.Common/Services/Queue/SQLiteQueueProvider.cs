@@ -7,13 +7,14 @@ using fiskaltrust.Middleware.Abstractions;
 using fiskaltrust.Middleware.Queue.SQLite;
 using fiskaltrust.storage.serialization.V0;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.IO;
 
 namespace fiskaltrust.AndroidLauncher.Common.Services.Queue
 {
     public class SQLiteQueueProvider
     {
-        public IPOS CreatePOS(string workingDir, PackageConfiguration queueConfiguration, IHost<IDESSCD> scuHost)
+        public IPOS CreatePOS(string workingDir, PackageConfiguration queueConfiguration, LogLevel logLevel, IHost<IDESSCD> scuHost)
         {
             var migrationsFolder = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "Migrations");
 
@@ -30,7 +31,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.Queue
 
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddSingleton<IClientFactory<IDESSCD>>(scuHost.GetClientFactory());
-            serviceCollection.AddLogCatLogging();
+            serviceCollection.AddLogProviders(logLevel);
 
             bootstrapper.ConfigureServices(serviceCollection);
             return serviceCollection.BuildServiceProvider().GetRequiredService<IPOS>();

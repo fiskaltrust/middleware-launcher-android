@@ -3,12 +3,13 @@ using fiskaltrust.ifPOS.v1.de;
 using fiskaltrust.Middleware.SCU.DE.Fiskaly;
 using fiskaltrust.storage.serialization.V0;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
 {
     class FiskalyScuProvider : IScuProvider
     {
-        public IDESSCD CreateSCU(PackageConfiguration scuConfiguration)
+        public IDESSCD CreateSCU(PackageConfiguration scuConfiguration, LogLevel logLevel)
         {
             var bootstrapper = new ScuBootstrapper
             {
@@ -16,7 +17,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
             };
 
             var serviceCollection = new ServiceCollection();
-            serviceCollection.AddLogCatLogging();
+            serviceCollection.AddLogProviders(logLevel);
             bootstrapper.ConfigureServices(serviceCollection);
             return serviceCollection.BuildServiceProvider().GetRequiredService<IDESSCD>();
         }
