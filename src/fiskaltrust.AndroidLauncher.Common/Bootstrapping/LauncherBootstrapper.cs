@@ -2,9 +2,12 @@
 using Android.OS;
 using Android.Widget;
 using fiskaltrust.AndroidLauncher.Common.AndroidService;
+using fiskaltrust.AndroidLauncher.Common.Constants;
 using fiskaltrust.AndroidLauncher.Common.Enums;
 using fiskaltrust.AndroidLauncher.Common.Exceptions;
 using fiskaltrust.AndroidLauncher.Common.Extensions;
+using fiskaltrust.AndroidLauncher.Common.Hosting;
+using fiskaltrust.AndroidLauncher.Common.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -24,7 +27,9 @@ namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
 
             Toast.MakeText(context, $"Starting fiskaltrust Middleware with cashbox '{cashboxId}' (Sandbox: {isSandbox}). Initializing might take up to 45 seconds, depending on the TSE.", ToastLength.Long).Show();
 
+            Task.Run(async () => await AdminEndpointService.Instance.StartAsync()).Wait();
             MiddlewareLauncherService.Start(ServiceConnectionProvider.GetConnection(), cashboxId, accessToken, isSandbox, logLevel, scuParams);
+
             Task.Run(async () =>
             {
                 try
@@ -36,6 +41,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
 
                     new Handler(Looper.MainLooper).Post(() => Toast.MakeText(context, $"Successfully started the fiskaltrust Middleware.", ToastLength.Long).Show());
                     MiddlewareLauncherService.SetState(LauncherState.Connected);
+                    StateProvider.Instance.SetState(State.Running);
                 }
                 catch (System.Exception ex)
                 {
@@ -46,11 +52,19 @@ namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
                     }
 
                     if (ex is RemountRequiredException remountRequiredEx)
+                    {
+                        StateProvider.Instance.SetState(State.Error, StateReasons.RemountRequired);
                         MiddlewareLauncherService.SetState(LauncherState.Error, remountRequiredEx.Message);
+                    }
                     else if (ex is ConfigurationNotFoundException confNotFoundEx)
+                    {
+                        StateProvider.Instance.SetState(State.Error, StateReasons.ConfigurationNotFound);
                         MiddlewareLauncherService.SetState(LauncherState.Error, confNotFoundEx.Message);
+                    }
                     else
+                    {
                         MiddlewareLauncherService.SetState(LauncherState.Error);
+                    }
                 }
             });
         }
@@ -58,6 +72,9 @@ namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
         public static void Teardown(Context context)
         {
             MiddlewareLauncherService.Stop(ServiceConnectionProvider.GetConnection());
+            Task.Run(async () => await AdminEndpointService.Instance.StopAsync()).Wait();
+            StateProvider.Instance.SetState(State.Uninitialized);
+            
             Toast.MakeText(context, $"fiskaltrust Middleware stopped.", ToastLength.Long).Show();
         }
     }

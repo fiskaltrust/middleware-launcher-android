@@ -6,6 +6,7 @@ using fiskaltrust.AndroidLauncher.Common.Services.Queue;
 using fiskaltrust.AndroidLauncher.Common.Services.SCU;
 using fiskaltrust.ifPOS.v1;
 using fiskaltrust.ifPOS.v1.de;
+using fiskaltrust.Middleware.Abstractions;
 using fiskaltrust.Middleware.SCU.DE.Fiskaly;
 using fiskaltrust.storage.serialization.V0;
 using Microsoft.Extensions.Logging;
@@ -28,6 +29,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
         private readonly LogLevel _logLevel;
         private readonly IConfigurationProvider _configurationProvider;
         private readonly ILocalConfigurationProvider _localConfigurationProvider;
+        private List<IHelper> _helpers;
 
         private IHost<IPOS> _posHost;
         private IHost<IDESSCD> _scuHost;
@@ -46,6 +48,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
 
             _configurationProvider = new HelipadConfigurationProvider();
             _localConfigurationProvider = new LocalConfigurationProvider();
+            _helpers = new List<IHelper>();
         }
 
         public async Task StartAsync()
@@ -111,6 +114,12 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
                 await _scuHost.StopAsync();
             }
 
+            foreach (var helper in _helpers)
+            {
+                helper.StopBegin();
+                helper.StopEnd();
+            }
+
             IsRunning = false;
         }
 
@@ -153,6 +162,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             var helper = await Task.Run(() => helipadHelperProvider.CreateHelper(configuration, _accessToken, _isSandbox, _logLevel, _posHost));
             helper.StartBegin();
             helper.StartEnd();
+
+            _helpers.Add(helper);
         }
     }
 }
