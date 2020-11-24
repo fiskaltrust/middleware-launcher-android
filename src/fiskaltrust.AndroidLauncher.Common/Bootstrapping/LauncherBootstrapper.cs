@@ -63,6 +63,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
                     }
                     else
                     {
+                        StateProvider.Instance.SetState(State.Error, ex.Message);
                         MiddlewareLauncherService.SetState(LauncherState.Error);
                     }
                 }
