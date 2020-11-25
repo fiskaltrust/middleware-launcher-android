@@ -1,4 +1,6 @@
-﻿using fiskaltrust.AndroidLauncher.Common.Services;
+﻿using fiskaltrust.AndroidLauncher.Common.Helpers.Logging;
+using fiskaltrust.AndroidLauncher.Common.Services;
+using fiskaltrust.AndroidLauncher.Common.Services.Configuration;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,6 +9,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace fiskaltrust.AndroidLauncher.Common.Hosting
@@ -22,6 +25,11 @@ namespace fiskaltrust.AndroidLauncher.Common.Hosting
 
         public async Task StartAsync()
         {
+            if(_host != null)
+            {
+                await StopAsync();
+            }
+
             var uri = new Uri("http://localhost:4654");
             _host = WebHost
                 .CreateDefaultBuilder()
@@ -40,7 +48,29 @@ namespace fiskaltrust.AndroidLauncher.Common.Hosting
                         });
                         router.MapGet("fiskaltrust/logs", async (request, response, routerData) =>
                         {
-                            //TODO check cashboxid & accesstoken headers and return logs
+                            if (!request.Headers.ContainsKey("cashboxid") || !request.Headers.ContainsKey("accesstoken"))
+                            {
+                                response.StatusCode = StatusCodes.Status400BadRequest;
+                                await response.WriteAsync("The headers 'cashboxid' and 'accesstoken' are required to access this endpoint.");
+                                return;
+                            }
+
+                            if(!await AuthenticateAsync(request.Headers["cashboxid"], request.Headers["accesstoken"]))
+                            {
+                                response.StatusCode = StatusCodes.Status403Forbidden;
+                                return;
+                            }
+
+                            var logFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), FileLogger.LogDirectory, FileLogger.LogFilename);
+
+                            if (File.Exists(logFile))
+                            {
+                                await response.WriteAsync(File.ReadAllText(logFile));
+                            }
+                            else
+                            {
+                                response.StatusCode = StatusCodes.Status204NoContent;
+                            }
                         });
                     });
                 })
@@ -48,6 +78,15 @@ namespace fiskaltrust.AndroidLauncher.Common.Hosting
                 .Build();
 
             await _host.StartAsync();
+        }
+
+        private async Task<bool> AuthenticateAsync(string cashboxid, string accesstoken)
+        {
+            var configProvider = new LocalConfigurationProvider();
+            if (!Guid.TryParse(cashboxid, out var id))
+                return false;
+
+            return await configProvider.ConfigurationExistsAsync(id, accesstoken);
         }
 
         public async Task StopAsync() => await (_host?.StopAsync() ?? Task.CompletedTask);

@@ -62,7 +62,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             try
             {
                 configuration = await _configurationProvider.GetCashboxConfigurationAsync(_cashboxId, _accessToken);
-                await _localConfigurationProvider.PersistAsync(_cashboxId, configuration);
+                await _localConfigurationProvider.PersistAsync(_cashboxId, _accessToken, configuration);
             }
             catch (Exception)
             {

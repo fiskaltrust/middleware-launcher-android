@@ -8,7 +8,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Helpers.Logging
 {
     internal sealed class FileLogger : ILogger
     {
-        private const string LOG_FILENAME = "fiskaltrust.log";
+        public const string LogFilename = "fiskaltrust.log";
+        public const string LogDirectory = "logs";
 
         private static readonly Lazy<FileLogger> lazyInstance = new Lazy<FileLogger>(() => new FileLogger());
         private readonly BlockingCollection<string> _logQueue;
@@ -19,7 +20,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Helpers.Logging
         private FileLogger() 
         {
             _logQueue = new BlockingCollection<string>();
-            _logDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "log");
+            _logDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), LogDirectory);
             Directory.CreateDirectory(_logDirectory);
             
             Task.Run(() => ProcessQueue());
@@ -30,7 +31,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Helpers.Logging
             while (!_logQueue.IsCompleted)
             {
                 var line = _logQueue.Take();
-                File.AppendAllLines(Path.Combine(_logDirectory, LOG_FILENAME), new[] { line });
+                File.AppendAllLines(Path.Combine(_logDirectory, LogFilename), new[] { line });
             }
         }
 
