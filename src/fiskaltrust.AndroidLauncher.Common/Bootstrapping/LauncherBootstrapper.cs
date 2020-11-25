@@ -30,26 +30,29 @@ namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
             Task.Run(async () => await AdminEndpointService.Instance.StartAsync()).Wait();
             MiddlewareLauncherService.Start(ServiceConnectionProvider.GetConnection(), cashboxId, accessToken, isSandbox, logLevel, scuParams);
 
+            using var services = new ServiceCollection().AddLogProviders(logLevel).BuildServiceProvider();
+            var logger = services.GetRequiredService<ILogger<MiddlewareLauncherService>>();
+
             Task.Run(async () =>
             {
                 try
                 {
-                    await Task.Delay(1000);
+                    await Task.Delay(2000);
 
                     // Call once to initialize Middleware. Will be replaced with a cleaner approach soon.
-                    await ServiceConnectionProvider.GetConnection().GetPOSAsync();
+                    var pos = await ServiceConnectionProvider.GetConnection().GetPOSAsync();
+                    if (pos == null)
+                    {
+                        logger.LogError("GetPOSAsync returned null while starting the Launcher.");
+                    }
 
                     new Handler(Looper.MainLooper).Post(() => Toast.MakeText(context, $"Successfully started the fiskaltrust Middleware.", ToastLength.Long).Show());
                     MiddlewareLauncherService.SetState(LauncherState.Connected);
                     StateProvider.Instance.SetState(State.Running);
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
-                    using (var services = new ServiceCollection().AddLogProviders(logLevel).BuildServiceProvider())
-                    {
-                        var logger = services.GetRequiredService<ILogger<MiddlewareLauncherService>>();
-                        logger.LogCritical(ex, "An error occured while trying to start the fiskaltrust Android Launcher.");
-                    }
+                    logger.LogCritical(ex, "An error occured while trying to start the fiskaltrust Android Launcher.");
 
                     if (ex is RemountRequiredException remountRequiredEx)
                     {
@@ -75,7 +78,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
             MiddlewareLauncherService.Stop(ServiceConnectionProvider.GetConnection());
             Task.Run(async () => await AdminEndpointService.Instance.StopAsync()).Wait();
             StateProvider.Instance.SetState(State.Uninitialized);
-            
+
             Toast.MakeText(context, $"fiskaltrust Middleware stopped.", ToastLength.Long).Show();
         }
     }
