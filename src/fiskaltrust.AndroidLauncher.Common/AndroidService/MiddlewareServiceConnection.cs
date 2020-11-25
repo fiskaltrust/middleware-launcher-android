@@ -47,14 +47,14 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
             OnManualDisconnect();
         }
 
-        public Task<IPOS> GetPOSAsync()
+        public async Task<IPOS> GetPOSAsync()
         {
             if (!IsConnected)
             {
                 return null;
             }
 
-            return Binder?.Service.GetPOSAsync();
+            return await ((Binder?.Service.GetPOSAsync()) ?? Task.FromResult<IPOS>(null));
         }
 
         public void OnManualDisconnect()

@@ -34,7 +34,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
             {
                 try
                 {
-                    await Task.Delay(1000);
+                    await Task.Delay(2000);
 
                     // Call once to initialize Middleware. Will be replaced with a cleaner approach soon.
                     await ServiceConnectionProvider.GetConnection().GetPOSAsync();
