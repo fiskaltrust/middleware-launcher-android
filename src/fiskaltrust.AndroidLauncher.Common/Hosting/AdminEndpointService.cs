@@ -50,7 +50,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Hosting
                         {
                             if (!request.Headers.ContainsKey("cashboxid") || !request.Headers.ContainsKey("accesstoken"))
                             {
-                                response.StatusCode = StatusCodes.Status400BadRequest;
+                                response.StatusCode = StatusCodes.Status401Unauthorized;
                                 await response.WriteAsync("The headers 'cashboxid' and 'accesstoken' are required to access this endpoint.");
                                 return;
                             }
