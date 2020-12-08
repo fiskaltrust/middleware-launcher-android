@@ -1,4 +1,5 @@
-﻿using fiskaltrust.ifPOS.v1;
+﻿using fiskaltrust.AndroidLauncher.Common.Hosting;
+using fiskaltrust.ifPOS.v1;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,12 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
         {
             if (_pos == null)
             {
+                try
+                {
+                    await AdminEndpointService.Instance.StartAsync();
+                }
+                catch (Exception) { }
+
                 await _launcher.StartAsync();
                 _pos = await _launcher.GetPOS();
             }
@@ -27,6 +34,10 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             return _pos;
         }
 
-        public async Task StopAsync() => await _launcher.StopAsync();
+        public async Task StopAsync()
+        {
+            await AdminEndpointService.Instance.StopAsync();
+            await _launcher.StopAsync();
+        }
     }
 }

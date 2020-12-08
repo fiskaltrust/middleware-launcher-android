@@ -6,7 +6,6 @@ using fiskaltrust.AndroidLauncher.Common.Constants;
 using fiskaltrust.AndroidLauncher.Common.Enums;
 using fiskaltrust.AndroidLauncher.Common.Exceptions;
 using fiskaltrust.AndroidLauncher.Common.Extensions;
-using fiskaltrust.AndroidLauncher.Common.Hosting;
 using fiskaltrust.AndroidLauncher.Common.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -27,7 +26,6 @@ namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
 
             Toast.MakeText(context, $"Starting fiskaltrust Middleware with cashbox '{cashboxId}' (Sandbox: {isSandbox}). Initializing might take up to 45 seconds, depending on the TSE.", ToastLength.Long).Show();
 
-            Task.Run(async () => await AdminEndpointService.Instance.StartAsync()).Wait();
             MiddlewareLauncherService.Start(ServiceConnectionProvider.GetConnection(), cashboxId, accessToken, isSandbox, logLevel, scuParams);
 
             using var services = new ServiceCollection().AddLogProviders(logLevel).BuildServiceProvider();
@@ -76,7 +74,6 @@ namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
         public static void Teardown(Context context)
         {
             MiddlewareLauncherService.Stop(ServiceConnectionProvider.GetConnection());
-            Task.Run(async () => await AdminEndpointService.Instance.StopAsync()).Wait();
             StateProvider.Instance.SetState(State.Uninitialized);
 
             Toast.MakeText(context, $"fiskaltrust Middleware stopped.", ToastLength.Long).Show();
