@@ -1,6 +1,4 @@
 ﻿using Android.Content;
-using Android.OS;
-using Android.Widget;
 using fiskaltrust.AndroidLauncher.Common.AndroidService;
 using fiskaltrust.AndroidLauncher.Common.Constants;
 using fiskaltrust.AndroidLauncher.Common.Enums;
@@ -24,8 +22,6 @@ namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
             var logLevel = Enum.TryParse(startIntent.GetStringExtra("loglevel"), out LogLevel level) ? level : LogLevel.Information;
             var scuParams = startIntent.GetScuConfigParameters();
 
-            Toast.MakeText(context, $"Starting fiskaltrust Middleware with cashbox '{cashboxId}' (Sandbox: {isSandbox}). Initializing might take up to 45 seconds, depending on the TSE.", ToastLength.Long).Show();
-
             MiddlewareLauncherService.Start(ServiceConnectionProvider.GetConnection(), cashboxId, accessToken, isSandbox, logLevel, scuParams);
 
             using var services = new ServiceCollection().AddLogProviders(logLevel).BuildServiceProvider();
@@ -41,10 +37,9 @@ namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
                     var pos = await ServiceConnectionProvider.GetConnection().GetPOSAsync();
                     if (pos == null)
                     {
-                        logger.LogError("GetPOSAsync returned null while starting the Launcher.");
+                        logger.LogWarning("GetPOSAsync returned null while starting the Launcher.");
                     }
 
-                    new Handler(Looper.MainLooper).Post(() => Toast.MakeText(context, $"Successfully started the fiskaltrust Middleware.", ToastLength.Long).Show());
                     MiddlewareLauncherService.SetState(LauncherState.Connected);
                     StateProvider.Instance.SetState(State.Running);
                 }
@@ -75,8 +70,6 @@ namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
         {
             MiddlewareLauncherService.Stop(ServiceConnectionProvider.GetConnection());
             StateProvider.Instance.SetState(State.Uninitialized);
-
-            Toast.MakeText(context, $"fiskaltrust Middleware stopped.", ToastLength.Long).Show();
         }
     }
 }

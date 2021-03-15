@@ -33,7 +33,6 @@ namespace fiskaltrust.AndroidLauncher.Grpc
         [Export("SendStartIntentTestBackdoor")]
         public void SendStartIntentTestBackdoor(string cashboxid, string accesstoken)
         {
-            Toast.MakeText(this, "Starting...", ToastLength.Long).Show();
             var componentName = new ComponentName("eu.fiskaltrust.androidlauncher.grpc", "eu.fiskaltrust.androidlauncher.grpc.Start");
 
             var intent = new Intent(Intent.ActionSend);
