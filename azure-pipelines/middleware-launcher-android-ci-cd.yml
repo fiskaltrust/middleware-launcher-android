@@ -204,12 +204,12 @@ stages:
             parameters:
               subscription: ft-acp-csp-germany-production
               storage: fta110common
-              package: eu.fiskaltrust.androidlauncher.grpc.apk
+              package: eu.fiskaltrust.androidlauncher.grpc
           - template: templates/release-to-storage.yaml
             parameters:
               subscription: ft-acp-csp-germany-production
               storage: fta110common
-              package: eu.fiskaltrust.androidlauncher.http.apk
+              package: eu.fiskaltrust.androidlauncher.http
 
   - deployment: ReleaseProductionGooglePlay
     displayName: Release to Google Play
@@ -222,9 +222,9 @@ stages:
           steps:
           - template: templates/release-to-googleplay.yaml
             parameters:
-              package: eu.fiskaltrust.androidlauncher.grpc.apk
+              package: eu.fiskaltrust.androidlauncher.grpc
               serviceConnection: 'Google Play Store'
           - template: templates/release-to-googleplay.yaml
             parameters:
-              package: eu.fiskaltrust.androidlauncher.http.apk
+              package: eu.fiskaltrust.androidlauncher.http
               serviceConnection: 'Google Play Store'
