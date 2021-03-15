@@ -177,12 +177,12 @@ stages:
             parameters:
               subscription: fiskaltrust-develop
               storage: fta240commonde
-              package: eu.fiskaltrust.androidlauncher.grpc.apk
+              package: eu.fiskaltrust.androidlauncher.grpc
           - template: templates/release-to-storage.yaml
             parameters:
               subscription: fiskaltrust-develop
               storage: fta240commonde
-              package: eu.fiskaltrust.androidlauncher.http.apk
+              package: eu.fiskaltrust.androidlauncher.http
 
 
 - stage: ReleaseProduction
