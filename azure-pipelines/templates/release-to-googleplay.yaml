@@ -1,0 +1,16 @@
+parameters:
+  serviceConnection: ''
+  package: ''
+
+steps:
+- task: DownloadPipelineArtifact@1
+  inputs:
+    artifactName: 'drop'
+    downloadPath: '$(System.ArtifactsDirectory)/drop'
+
+- task: GooglePlayRelease@3
+  displayName: 'Publish to Google Play'
+  inputs:
+    apkFile: '$(System.ArtifactsDirectory)/drop/${{ parameters.package }}.*.apk'
+    track: 'production'
+    serviceConnection: '${{ parameters.serviceConnection }}'
