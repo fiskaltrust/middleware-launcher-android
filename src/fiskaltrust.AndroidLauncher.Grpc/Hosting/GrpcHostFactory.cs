@@ -75,17 +75,15 @@ namespace fiskaltrust.AndroidLauncher.Grpc.Hosting
             });
         }
 
-        public Task StartAsync(string url, IPOS instance)
+        public async Task StartAsync(string url, IPOS instance)
         {
             _url = url;
             if (_host != null)
             {
-                _host.ShutdownAsync().RunSynchronously();
+                await _host.ShutdownAsync();
             }
 
             _host = GrpcHelper.StartHost(url, instance);
-
-            return Task.CompletedTask;
         }
 
         public async Task StopAsync()
