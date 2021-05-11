@@ -5,12 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="100">
+    android:orientation="vertical">
     <Space        
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="30"/>
+        android:layout_height="62dp"/>
     <ImageView
         android:id="@+id/ftLogo"
         android:layout_width="wrap_content"
@@ -32,4 +30,16 @@
         android:text="@string/main_content"
         android:textSize="14dp"
         android:gravity="center"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginBottom="10dp">
+        <TextView
+            android:id="@+id/textViewVersion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14dp"
+            android:gravity="center"
+            android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
 </LinearLayout>

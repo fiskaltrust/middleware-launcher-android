@@ -356,6 +356,9 @@ namespace fiskaltrust.AndroidLauncher.Grpc
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.browser_actions_title_color = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Color.browser_actions_title_color;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.button_material_dark = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Color.button_material_dark;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.button_material_light = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Color.button_material_light;
+			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.colorAccent = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Color.colorAccent;
+			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.colorPrimary = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Color.colorPrimary;
+			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.colorPrimaryDark = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Color.colorPrimaryDark;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.dim_foreground_disabled_material_dark = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Color.dim_foreground_disabled_material_dark;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.dim_foreground_disabled_material_light = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Color.dim_foreground_disabled_material_light;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Color.dim_foreground_material_dark = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Color.dim_foreground_material_dark;
@@ -712,6 +715,7 @@ namespace fiskaltrust.AndroidLauncher.Grpc
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.fill_horizontal = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Id.fill_horizontal;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.fill_vertical = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Id.fill_vertical;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.forever = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Id.forever;
+			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.ftLogo = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Id.ftLogo;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.FUNCTION = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Id.FUNCTION;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.group_divider = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Id.group_divider;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.home = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Id.home;
@@ -786,6 +790,7 @@ namespace fiskaltrust.AndroidLauncher.Grpc
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.text2 = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Id.text2;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.textSpacerNoButtons = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Id.textSpacerNoButtons;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.textSpacerNoTitle = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Id.textSpacerNoTitle;
+			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.textViewVersion = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Id.textViewVersion;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.time = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Id.time;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.title = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Id.title;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.titleDividerNoCustom = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Id.titleDividerNoCustom;
@@ -830,6 +835,7 @@ namespace fiskaltrust.AndroidLauncher.Grpc
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_search_view = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Layout.abc_search_view;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_select_dialog_material = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Layout.abc_select_dialog_material;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.abc_tooltip = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Layout.abc_tooltip;
+			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.activity_main = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Layout.activity_main;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.browser_actions_context_menu_page = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Layout.browser_actions_context_menu_page;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.browser_actions_context_menu_row = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Layout.browser_actions_context_menu_row;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Layout.custom_dialog = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Layout.custom_dialog;
@@ -870,12 +876,15 @@ namespace fiskaltrust.AndroidLauncher.Grpc
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_shareactionprovider_share_with = global::fiskaltrust.AndroidLauncher.Grpc.Resource.String.abc_shareactionprovider_share_with;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_shareactionprovider_share_with_application = global::fiskaltrust.AndroidLauncher.Grpc.Resource.String.abc_shareactionprovider_share_with_application;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_toolbar_collapse_description = global::fiskaltrust.AndroidLauncher.Grpc.Resource.String.abc_toolbar_collapse_description;
+			global::fiskaltrust.AndroidLauncher.Common.Resource.String.action_settings = global::fiskaltrust.AndroidLauncher.Grpc.Resource.String.action_settings;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.app_name = global::fiskaltrust.AndroidLauncher.Grpc.Resource.String.app_name;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.copy_toast_msg = global::fiskaltrust.AndroidLauncher.Grpc.Resource.String.copy_toast_msg;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.fallback_menu_item_copy_link = global::fiskaltrust.AndroidLauncher.Grpc.Resource.String.fallback_menu_item_copy_link;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.fallback_menu_item_open_in_browser = global::fiskaltrust.AndroidLauncher.Grpc.Resource.String.fallback_menu_item_open_in_browser;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.fallback_menu_item_share_link = global::fiskaltrust.AndroidLauncher.Grpc.Resource.String.fallback_menu_item_share_link;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.hello = global::fiskaltrust.AndroidLauncher.Grpc.Resource.String.hello;
+			global::fiskaltrust.AndroidLauncher.Common.Resource.String.main_content = global::fiskaltrust.AndroidLauncher.Grpc.Resource.String.main_content;
+			global::fiskaltrust.AndroidLauncher.Common.Resource.String.main_title = global::fiskaltrust.AndroidLauncher.Grpc.Resource.String.main_title;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.search_menu_title = global::fiskaltrust.AndroidLauncher.Grpc.Resource.String.search_menu_title;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.status_bar_notification_info_overflow = global::fiskaltrust.AndroidLauncher.Grpc.Resource.String.status_bar_notification_info_overflow;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.AlertDialog_AppCompat = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Style.AlertDialog_AppCompat;
@@ -883,6 +892,7 @@ namespace fiskaltrust.AndroidLauncher.Grpc
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Animation_AppCompat_Dialog = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Style.Animation_AppCompat_Dialog;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Animation_AppCompat_DropDownUp = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Style.Animation_AppCompat_DropDownUp;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Animation_AppCompat_Tooltip = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Style.Animation_AppCompat_Tooltip;
+			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.AppTheme = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Style.AppTheme;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_AlertDialog_AppCompat = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Style.Base_AlertDialog_AppCompat;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_AlertDialog_AppCompat_Light = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Style.Base_AlertDialog_AppCompat_Light;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.Base_Animation_AppCompat_Dialog = global::fiskaltrust.AndroidLauncher.Grpc.Resource.Style.Base_Animation_AppCompat_Dialog;
@@ -7264,14 +7274,14 @@ namespace fiskaltrust.AndroidLauncher.Grpc
 			// aapt resource value: 0x7F0800CD
 			public const int text2 = 2131230925;
 			
-			// aapt resource value: 0x7F0800D2
-			public const int textinput_counter = 2131230930;
-			
 			// aapt resource value: 0x7F0800D3
-			public const int textinput_error = 2131230931;
+			public const int textinput_counter = 2131230931;
 			
 			// aapt resource value: 0x7F0800D4
-			public const int textinput_helper_text = 2131230932;
+			public const int textinput_error = 2131230932;
+			
+			// aapt resource value: 0x7F0800D5
+			public const int textinput_helper_text = 2131230933;
 			
 			// aapt resource value: 0x7F0800CE
 			public const int textSpacerNoButtons = 2131230926;
@@ -7283,70 +7293,73 @@ namespace fiskaltrust.AndroidLauncher.Grpc
 			public const int textStart = 2131230928;
 			
 			// aapt resource value: 0x7F0800D1
-			public const int text_input_password_toggle = 2131230929;
+			public const int textViewVersion = 2131230929;
 			
-			// aapt resource value: 0x7F0800D5
-			public const int time = 2131230933;
+			// aapt resource value: 0x7F0800D2
+			public const int text_input_password_toggle = 2131230930;
 			
 			// aapt resource value: 0x7F0800D6
-			public const int title = 2131230934;
+			public const int time = 2131230934;
 			
 			// aapt resource value: 0x7F0800D7
-			public const int titleDividerNoCustom = 2131230935;
+			public const int title = 2131230935;
 			
 			// aapt resource value: 0x7F0800D8
-			public const int title_template = 2131230936;
+			public const int titleDividerNoCustom = 2131230936;
 			
 			// aapt resource value: 0x7F0800D9
-			public const int top = 2131230937;
+			public const int title_template = 2131230937;
 			
 			// aapt resource value: 0x7F0800DA
-			public const int topPanel = 2131230938;
+			public const int top = 2131230938;
 			
 			// aapt resource value: 0x7F0800DB
-			public const int touch_outside = 2131230939;
+			public const int topPanel = 2131230939;
 			
 			// aapt resource value: 0x7F0800DC
-			public const int transition_current_scene = 2131230940;
+			public const int touch_outside = 2131230940;
 			
 			// aapt resource value: 0x7F0800DD
-			public const int transition_layout_save = 2131230941;
+			public const int transition_current_scene = 2131230941;
 			
 			// aapt resource value: 0x7F0800DE
-			public const int transition_position = 2131230942;
+			public const int transition_layout_save = 2131230942;
 			
 			// aapt resource value: 0x7F0800DF
-			public const int transition_scene_layoutid_cache = 2131230943;
+			public const int transition_position = 2131230943;
 			
 			// aapt resource value: 0x7F0800E0
-			public const int transition_transform = 2131230944;
+			public const int transition_scene_layoutid_cache = 2131230944;
 			
 			// aapt resource value: 0x7F0800E1
-			public const int @unchecked = 2131230945;
+			public const int transition_transform = 2131230945;
 			
 			// aapt resource value: 0x7F0800E2
-			public const int uniform = 2131230946;
+			public const int @unchecked = 2131230946;
 			
 			// aapt resource value: 0x7F0800E3
-			public const int unlabeled = 2131230947;
+			public const int uniform = 2131230947;
 			
 			// aapt resource value: 0x7F0800E4
-			public const int up = 2131230948;
+			public const int unlabeled = 2131230948;
 			
 			// aapt resource value: 0x7F0800E5
-			public const int useLogo = 2131230949;
+			public const int up = 2131230949;
 			
 			// aapt resource value: 0x7F0800E6
-			public const int view_offset_helper = 2131230950;
+			public const int useLogo = 2131230950;
 			
 			// aapt resource value: 0x7F0800E7
-			public const int visible = 2131230951;
+			public const int view_offset_helper = 2131230951;
 			
 			// aapt resource value: 0x7F0800E8
-			public const int withText = 2131230952;
+			public const int visible = 2131230952;
 			
 			// aapt resource value: 0x7F0800E9
-			public const int wrap_content = 2131230953;
+			public const int withText = 2131230953;
+			
+			// aapt resource value: 0x7F0800EA
+			public const int wrap_content = 2131230954;
 			
 			static Id()
 			{

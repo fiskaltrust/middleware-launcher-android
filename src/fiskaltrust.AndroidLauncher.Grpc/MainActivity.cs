@@ -10,6 +10,7 @@ using System;
 using Newtonsoft.Json;
 using fiskaltrust.ifPOS.v1;
 using Android.Widget;
+using Xamarin.Essentials;
 
 namespace fiskaltrust.AndroidLauncher.Grpc
 {
@@ -19,13 +20,22 @@ namespace fiskaltrust.AndroidLauncher.Grpc
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
-            SetContentView(Resource.Layout.activity_main);
+            Platform.Init(this, savedInstanceState);
+            VersionTracking.Track();
+
+            SetContentView(Common.Resource.Layout.activity_main);
+
+            Init();
+        }
+
+        private void Init()
+        {
+            FindViewById<TextView>(Common.Resource.Id.textViewVersion).Text = $"Version {VersionTracking.CurrentVersion}";
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
-            Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
