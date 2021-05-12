@@ -11,6 +11,8 @@ using fiskaltrust.Middleware.Interface.Client;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using fiskaltrust.ifPOS.v1;
+using Android.Util;
+using fiskaltrust.AndroidLauncher.Common.Helpers.Logging;
 
 namespace fiskaltrust.AndroidLauncher.Http
 {
@@ -53,8 +55,9 @@ namespace fiskaltrust.AndroidLauncher.Http
                 var pos = Task.Run(() => HttpPosFactory.CreatePosAsync(new HttpPosClientOptions { Url = new Uri(url), RetryPolicyOptions = null })).Result;
                 return Task.Run(() => pos.EchoAsync(new ifPOS.v1.EchoRequest { Message = message })).Result.Message;
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Error(AndroidLogger.TAG, ex.ToString());
                 return string.Empty;
             }
         }
@@ -69,8 +72,9 @@ namespace fiskaltrust.AndroidLauncher.Http
 
                 return JsonConvert.SerializeObject(response);
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Error(AndroidLogger.TAG, ex.ToString());
                 return string.Empty;
             }
         }
