@@ -37,7 +37,7 @@ namespace fiskaltrust.AndroidLauncher.Grpc.Hosting
             _url = url;
             if (_host != null)
             {
-                _host.ShutdownAsync().RunSynchronously();
+                _host.ShutdownAsync().Wait();
             }
 
             _host = GrpcHelper.StartHost(url, instance);
@@ -80,7 +80,7 @@ namespace fiskaltrust.AndroidLauncher.Grpc.Hosting
             _url = url;
             if (_host != null)
             {
-                _host.ShutdownAsync().RunSynchronously();
+                _host.ShutdownAsync().Wait();
             }
 
             _host = GrpcHelper.StartHost(url, instance);
