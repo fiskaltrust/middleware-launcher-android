@@ -22,7 +22,6 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
     {
         private const int NOTIFICATION_ID = 0x66746d77;
         private const string NOTIFICATION_CHANNEL_ID = "eu.fiskaltrust.launcher.android";
-        private StopLauncherBroadcastReceiver _stopLauncherBroadcastReceiver;
         private IPOSProvider _posProvider;
 
         public IBinder Binder { get; private set; }
@@ -48,33 +47,31 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
             _posProvider = new POSProvider(new LauncherParameters { CashboxId = cashboxId, AccessToken = accesstoken, IsSandbox = isSandbox, EnableCloseButton = enableCloseButton, LogLevel = logLevel, ScuParams = scuParams });
             Binder = new POSProviderBinder(this);
 
-            _stopLauncherBroadcastReceiver = new StopLauncherBroadcastReceiver();
+             var stopLauncherBroadcastReceiver = new StopBroadcastReceiver();
 
-            _stopLauncherBroadcastReceiver.StopLauncherReceived += async (sender, e) => {
-                var httpIntent = new Intent(Intent.ActionSend);
-                httpIntent.SetComponent(new ComponentName(Constants.PackageNames.Get(LauncherType.Http), Constants.BroadcastConstants.HttpStopBroadcastName));
-                SendBroadcast(httpIntent);
-
-                var grpcIntent = new Intent(Intent.ActionSend);
-                grpcIntent.SetComponent(new ComponentName(Constants.PackageNames.Get(LauncherType.Grpc), Constants.BroadcastConstants.GrpcStopBroadcastName));
-                SendBroadcast(grpcIntent);
+            stopLauncherBroadcastReceiver.StopLauncherReceived += async () => {
+                Android.Widget.Toast.MakeText(Application.Context, $"Stopped {Application.Context.PackageName}", Android.Widget.ToastLength.Short).Show();
 
                 try
                 {
-                    Stop(ServiceConnectionProvider.GetConnection());
-
                     await StopAsync();
+
+                    Stop(ServiceConnectionProvider.GetConnection());
                 }
                 finally
                 {
 
                     StopSelf();
 
-                    Android.Widget.Toast.MakeText(Application.Context, "Stopped fiskaltrust.Middleware", Android.Widget.ToastLength.Short).Show();
+                    Android.Widget.Toast.MakeText(Application.Context, $"Stopped {Application.Context.PackageName}", Android.Widget.ToastLength.Short).Show();
+
+                    var intent = new Intent(Constants.BroadcastConstants.StopLauncherBroadcastName);
+                    intent.SetPackage(Application.Context.PackageName);
+                    SendBroadcast(intent);
                 }
             };
 
-            RegisterReceiver(_stopLauncherBroadcastReceiver, new IntentFilter(Constants.BroadcastConstants.StopBroadcastName));
+            RegisterReceiver(stopLauncherBroadcastReceiver, new IntentFilter(Constants.BroadcastConstants.StopBroadcastName));
 
             return Binder;
         }
@@ -167,15 +164,17 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
                 text = contentText;
 
 
-        Intent snoozeIntent = new Intent(Constants.BroadcastConstants.StopBroadcastName);
-        PendingIntent snoozePendingIntent = PendingIntent.GetBroadcast(Application.Context, 0, snoozeIntent, 0);
+        Intent intent = new Intent(Constants.BroadcastConstants.StopBroadcastName);
+        intent.SetPackage(Application.Context.PackageName);
+
+        PendingIntent pendingIntent = PendingIntent.GetBroadcast(Application.Context, 0, intent, 0);
         
         var builder = new NotificationCompat.Builder(Application.Context, NOTIFICATION_CHANNEL_ID)
                 .SetContentTitle(Application.Context.Resources.GetString(Resource.String.app_name))
                 .SetContentText(text)
                 .SetCategory(Notification.CategoryService)
                 .SetSmallIcon(icon)
-                .AddAction(Android.Resource.Drawable.IcMenuCloseClearCancel, "Stop Service", snoozePendingIntent)
+                .AddAction(Android.Resource.Drawable.IcMenuCloseClearCancel, "Stop Service", pendingIntent)
                 .SetOngoing(true);
             return builder.Build();
         }
