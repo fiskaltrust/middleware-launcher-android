@@ -14,12 +14,15 @@ using fiskaltrust.ifPOS.v1;
 using Xamarin.Essentials;
 using Android.Util;
 using fiskaltrust.AndroidLauncher.Common.Helpers.Logging;
+using fiskaltrust.AndroidLauncher.Http.Broadcasting;
 
 namespace fiskaltrust.AndroidLauncher.Http
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
     public class MainActivity : AppCompatActivity
     {
+        private StopLauncherBroadcastReceiver _stopLauncherBroadcastReceiver;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -28,8 +31,23 @@ namespace fiskaltrust.AndroidLauncher.Http
 
             SetContentView(Common.Resource.Layout.activity_main);
 
+            _stopLauncherBroadcastReceiver = new StopLauncherBroadcastReceiver();
+            _stopLauncherBroadcastReceiver.StopLauncherReceived += delegate {
+                Android.Widget.Toast.MakeText(Application.Context, "Stopped fiskaltrust.Launcher", Android.Widget.ToastLength.Long).Show();
+
+                Finish();
+                FinishAffinity();
+
+                Java.Lang.JavaSystem.Exit(0);
+            };
+
+            RegisterReceiver(_stopLauncherBroadcastReceiver, new IntentFilter(Common.Constants.BroadcastConstants.HttpStopBroadcastName));
+
             Init();
+
+            SendStartIntentTestBackdoor("c7bdfec2-1c99-48d6-9ce0-5caaf613cd0b", "BBzMuxESso0z6h7Od/imq8wLCYYO2jkDfGVpd2q+9BbC/GttKt1Iqj0u7uE8LOpd74EnKYSZMg6Dim0ZeK2Yi+4=");
         }
+
 
         private void Init()
         {

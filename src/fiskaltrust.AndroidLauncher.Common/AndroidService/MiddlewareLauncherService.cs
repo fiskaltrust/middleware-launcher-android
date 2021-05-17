@@ -3,8 +3,10 @@ using Android.Content;
 using Android.OS;
 using Android.Runtime;
 using AndroidX.Core.App;
+using fiskaltrust.AndroidLauncher.Common.Broadcasting;
 using fiskaltrust.AndroidLauncher.Common.Enums;
 using fiskaltrust.AndroidLauncher.Common.Extensions;
+using fiskaltrust.AndroidLauncher.Common.Models;
 using fiskaltrust.AndroidLauncher.Common.Services;
 using fiskaltrust.ifPOS.v1;
 using Java.Util;
@@ -20,7 +22,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
     {
         private const int NOTIFICATION_ID = 0x66746d77;
         private const string NOTIFICATION_CHANNEL_ID = "eu.fiskaltrust.launcher.android";
-
+        private StopLauncherBroadcastReceiver _stopLauncherBroadcastReceiver;
         private IPOSProvider _posProvider;
 
         public IBinder Binder { get; private set; }
@@ -30,6 +32,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
             var cashboxIdString = intent.GetStringExtra("cashboxid");
             var accesstoken = intent.GetStringExtra("accesstoken");
             var isSandbox = intent.GetBooleanExtra("sandbox", false);
+            var enableCloseButton = intent.GetBooleanExtra("enableCloseButton", false);
             var logLevel = Enum.TryParse(intent.GetStringExtra("loglevel"), out LogLevel level) ? level : LogLevel.Information;
             var scuParams = intent.GetScuConfigParameters(removePrefix: true);
 
@@ -42,8 +45,37 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
                 throw new ArgumentException("The extra 'accesstoken' needs to be set in this intent.", "accesstoken");
             }
 
-            _posProvider = new POSProvider(cashboxId, accesstoken, isSandbox, logLevel, scuParams);
+            _posProvider = new POSProvider(new LauncherParameters { CashboxId = cashboxId, AccessToken = accesstoken, IsSandbox = isSandbox, EnableCloseButton = enableCloseButton, LogLevel = logLevel, ScuParams = scuParams });
             Binder = new POSProviderBinder(this);
+
+            _stopLauncherBroadcastReceiver = new StopLauncherBroadcastReceiver();
+
+            _stopLauncherBroadcastReceiver.StopLauncherReceived += async (sender, e) => {
+                var httpIntent = new Intent(Intent.ActionSend);
+                httpIntent.SetComponent(new ComponentName(Constants.PackageNames.Get(LauncherType.Http), Constants.BroadcastConstants.HttpStopBroadcastName));
+                SendBroadcast(httpIntent);
+
+                var grpcIntent = new Intent(Intent.ActionSend);
+                grpcIntent.SetComponent(new ComponentName(Constants.PackageNames.Get(LauncherType.Grpc), Constants.BroadcastConstants.GrpcStopBroadcastName));
+                SendBroadcast(grpcIntent);
+
+                try
+                {
+                    Stop(ServiceConnectionProvider.GetConnection());
+
+                    await StopAsync();
+                }
+                finally
+                {
+
+                    StopSelf();
+
+                    Android.Widget.Toast.MakeText(Application.Context, "Stopped fiskaltrust.Middleware", Android.Widget.ToastLength.Short).Show();
+                }
+            };
+
+            RegisterReceiver(_stopLauncherBroadcastReceiver, new IntentFilter(Constants.BroadcastConstants.StopBroadcastName));
+
             return Binder;
         }
 
@@ -78,16 +110,17 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
 
         public async Task StopAsync() => await _posProvider.StopAsync();
 
-        public static void Start(IMiddlewareServiceConnection serviceConnection, string cashboxId, string accessToken, bool isSandbox, LogLevel logLevel, Dictionary<string, object> additionalScuParams)
+        public static void Start(IMiddlewareServiceConnection serviceConnection, LauncherParameters parameters)
         {
             if (!IsRunning(typeof(MiddlewareLauncherService)))
             {
                 var intent = new Intent(Application.Context, typeof(MiddlewareLauncherService));
-                intent.PutExtra("cashboxid", cashboxId);
-                intent.PutExtra("accesstoken", accessToken);
-                intent.PutExtra("sandbox", isSandbox);
-                intent.PutExtra("loglevel", logLevel.ToString());
-                intent.PutExtras(additionalScuParams);
+                intent.PutExtra("cashboxid", parameters.CashboxId.ToString());
+                intent.PutExtra("accesstoken", parameters.AccessToken);
+                intent.PutExtra("sandbox", parameters.IsSandbox);
+                intent.PutExtra("enableCloseButton", parameters.EnableCloseButton);
+                intent.PutExtra("loglevel", parameters.LogLevel.ToString());
+                intent.PutExtras(parameters.ScuParams);
 
                 Application.Context.BindService(intent, serviceConnection, Bind.AutoCreate);
                 Application.Context.StartForegroundServiceCompat<MiddlewareLauncherService>();
@@ -133,11 +166,16 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
             if (contentText != null)
                 text = contentText;
 
-            var builder = new NotificationCompat.Builder(Application.Context, NOTIFICATION_CHANNEL_ID)
+
+        Intent snoozeIntent = new Intent(Constants.BroadcastConstants.StopBroadcastName);
+        PendingIntent snoozePendingIntent = PendingIntent.GetBroadcast(Application.Context, 0, snoozeIntent, 0);
+        
+        var builder = new NotificationCompat.Builder(Application.Context, NOTIFICATION_CHANNEL_ID)
                 .SetContentTitle(Application.Context.Resources.GetString(Resource.String.app_name))
                 .SetContentText(text)
                 .SetCategory(Notification.CategoryService)
                 .SetSmallIcon(icon)
+                .AddAction(Android.Resource.Drawable.IcMenuCloseClearCancel, "Stop Service", snoozePendingIntent)
                 .SetOngoing(true);
             return builder.Build();
         }

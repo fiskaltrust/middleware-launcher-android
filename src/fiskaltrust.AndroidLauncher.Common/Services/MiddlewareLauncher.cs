@@ -1,5 +1,6 @@
 ﻿using fiskaltrust.AndroidLauncher.Common.Helpers;
 using fiskaltrust.AndroidLauncher.Common.Hosting;
+using fiskaltrust.AndroidLauncher.Common.Models;
 using fiskaltrust.AndroidLauncher.Common.Services.Configuration;
 using fiskaltrust.AndroidLauncher.Common.Services.Helper;
 using fiskaltrust.AndroidLauncher.Common.Services.Queue;
@@ -38,13 +39,13 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
 
         public bool IsRunning { get; set; }
 
-        public MiddlewareLauncher(Guid cashboxId, string accessToken, bool isSandbox, LogLevel logLevel, Dictionary<string, object> scuParams)
+        public MiddlewareLauncher(LauncherParameters parameters)
         {
-            _cashboxId = cashboxId;
-            _accessToken = accessToken;
-            _isSandbox = isSandbox;
-            _scuParams = scuParams;
-            _logLevel = logLevel;
+            _cashboxId = parameters.CashboxId;
+            _accessToken = parameters.AccessToken;
+            _isSandbox = parameters.IsSandbox;
+            _scuParams = parameters.ScuParams;
+            _logLevel = parameters.LogLevel;
 
             _configurationProvider = new HelipadConfigurationProvider();
             _localConfigurationProvider = new LocalConfigurationProvider();

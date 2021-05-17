@@ -4,6 +4,7 @@ using fiskaltrust.AndroidLauncher.Common.Constants;
 using fiskaltrust.AndroidLauncher.Common.Enums;
 using fiskaltrust.AndroidLauncher.Common.Exceptions;
 using fiskaltrust.AndroidLauncher.Common.Extensions;
+using fiskaltrust.AndroidLauncher.Common.Models;
 using fiskaltrust.AndroidLauncher.Common.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -22,7 +23,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
             var logLevel = Enum.TryParse(startIntent.GetStringExtra("loglevel"), out LogLevel level) ? level : LogLevel.Information;
             var scuParams = startIntent.GetScuConfigParameters();
 
-            MiddlewareLauncherService.Start(ServiceConnectionProvider.GetConnection(), cashboxId, accessToken, isSandbox, logLevel, scuParams);
+            MiddlewareLauncherService.Start(ServiceConnectionProvider.GetConnection(), new LauncherParameters { CashboxId = new Guid(cashboxId), AccessToken = accessToken, IsSandbox = isSandbox, LogLevel = logLevel, ScuParams = scuParams });
 
             using var services = new ServiceCollection().AddLogProviders(logLevel).BuildServiceProvider();
             var logger = services.GetRequiredService<ILogger<MiddlewareLauncherService>>();
