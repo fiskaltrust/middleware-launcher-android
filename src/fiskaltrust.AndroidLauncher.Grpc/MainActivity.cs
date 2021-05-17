@@ -11,6 +11,8 @@ using Newtonsoft.Json;
 using fiskaltrust.ifPOS.v1;
 using Android.Widget;
 using Xamarin.Essentials;
+using Android.Util;
+using fiskaltrust.AndroidLauncher.Common.Helpers.Logging;
 
 namespace fiskaltrust.AndroidLauncher.Grpc
 {
@@ -62,8 +64,9 @@ namespace fiskaltrust.AndroidLauncher.Grpc
                 var pos = Task.Run(() => GrpcPosFactory.CreatePosAsync(new GrpcClientOptions { Url = new Uri(url), RetryPolicyOptions = null })).Result;
                 return Task.Run(() => pos.EchoAsync(new ifPOS.v1.EchoRequest { Message = message })).Result.Message;
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Error(AndroidLogger.TAG, ex.ToString());
                 return string.Empty;
             }
         }
@@ -78,8 +81,9 @@ namespace fiskaltrust.AndroidLauncher.Grpc
 
                 return JsonConvert.SerializeObject(response);
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Error(AndroidLogger.TAG, ex.ToString());
                 return string.Empty;
             }
         }
