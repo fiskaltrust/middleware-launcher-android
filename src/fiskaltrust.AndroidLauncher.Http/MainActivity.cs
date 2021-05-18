@@ -21,6 +21,8 @@ namespace fiskaltrust.AndroidLauncher.Http
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
     public class MainActivity : AppCompatActivity
     {
+        private StopLauncherBroadcastReceiver _stopLauncherBroadcastReceiver;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -29,15 +31,15 @@ namespace fiskaltrust.AndroidLauncher.Http
 
             SetContentView(Common.Resource.Layout.activity_main);
 
-            var stopLauncherBroadcastReceiver = new StopLauncherBroadcastReceiver();
+            _stopLauncherBroadcastReceiver = new StopLauncherBroadcastReceiver();
 
-            stopLauncherBroadcastReceiver.StopLauncherReceived += async () =>
+            _stopLauncherBroadcastReceiver.StopLauncherReceived += async () =>
             {
                 FinishAndRemoveTask();
 
                 Java.Lang.JavaSystem.Exit(0);
             };
-            RegisterReceiver(stopLauncherBroadcastReceiver, new IntentFilter(Common.Constants.BroadcastConstants.StopLauncherBroadcastName));
+            RegisterReceiver(_stopLauncherBroadcastReceiver, new IntentFilter(Common.Constants.BroadcastConstants.StopLauncherBroadcastName));
 
             Init();
         }

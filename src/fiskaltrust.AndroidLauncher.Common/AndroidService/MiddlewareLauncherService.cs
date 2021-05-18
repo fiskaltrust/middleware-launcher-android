@@ -22,6 +22,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
         private const int NOTIFICATION_ID = 0x66746d77;
         private const string NOTIFICATION_CHANNEL_ID = "eu.fiskaltrust.launcher.android";
         private IPOSProvider _posProvider;
+        private StopBroadcastReceiver _stopBroadcastReceiver;
 
         public IBinder Binder { get; private set; }
 
@@ -45,9 +46,9 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
             _posProvider = new POSProvider(cashboxId, accesstoken, isSandbox, logLevel, scuParams);
             Binder = new POSProviderBinder(this);
 
-             var stopLauncherBroadcastReceiver = new StopBroadcastReceiver();
+            _stopBroadcastReceiver = new StopBroadcastReceiver();
 
-            stopLauncherBroadcastReceiver.StopLauncherReceived += async () => {
+            _stopBroadcastReceiver.StopLauncherReceived += async () => {
                 try
                 {
                     await StopAsync();
@@ -66,7 +67,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
                 }
             };
 
-            RegisterReceiver(stopLauncherBroadcastReceiver, new IntentFilter(Constants.BroadcastConstants.StopBroadcastName));
+            RegisterReceiver(_stopBroadcastReceiver, new IntentFilter(Constants.BroadcastConstants.StopBroadcastName));
 
             return Binder;
         }
