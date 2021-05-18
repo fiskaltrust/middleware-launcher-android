@@ -22,6 +22,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
     {
         private const int NOTIFICATION_ID = 0x66746d77;
         private const string NOTIFICATION_CHANNEL_ID = "eu.fiskaltrust.launcher.android";
+        private const bool _enableCloseButton = false;
         private IPOSProvider _posProvider;
 
         public IBinder Binder { get; private set; }
@@ -31,7 +32,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
             var cashboxIdString = intent.GetStringExtra("cashboxid");
             var accesstoken = intent.GetStringExtra("accesstoken");
             var isSandbox = intent.GetBooleanExtra("sandbox", false);
-            var enableCloseButton = intent.GetBooleanExtra("enableCloseButton", false);
+            var _enableCloseButton = intent.GetBooleanExtra("enableCloseButton", false);
             var logLevel = Enum.TryParse(intent.GetStringExtra("loglevel"), out LogLevel level) ? level : LogLevel.Information;
             var scuParams = intent.GetScuConfigParameters(removePrefix: true);
 
@@ -164,18 +165,24 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
                 text = contentText;
 
 
-        Intent intent = new Intent(Constants.BroadcastConstants.StopBroadcastName);
-        intent.SetPackage(Application.Context.PackageName);
-
-        PendingIntent pendingIntent = PendingIntent.GetBroadcast(Application.Context, 0, intent, 0);
         
-        var builder = new NotificationCompat.Builder(Application.Context, NOTIFICATION_CHANNEL_ID)
+            var builder = new NotificationCompat.Builder(Application.Context, NOTIFICATION_CHANNEL_ID)
                 .SetContentTitle(Application.Context.Resources.GetString(Resource.String.app_name))
                 .SetContentText(text)
                 .SetCategory(Notification.CategoryService)
                 .SetSmallIcon(icon)
-                .AddAction(Android.Resource.Drawable.IcMenuCloseClearCancel, "Stop Service", pendingIntent)
                 .SetOngoing(true);
+
+            if(_enableCloseButton)
+            {
+                Intent intent = new Intent(Constants.BroadcastConstants.StopBroadcastName);
+                intent.SetPackage(Application.Context.PackageName);
+
+                PendingIntent pendingIntent = PendingIntent.GetBroadcast(Application.Context, 0, intent, 0);
+
+                builder.AddAction(Android.Resource.Drawable.IcMenuCloseClearCancel, "Stop Service", pendingIntent);
+            }
+
             return builder.Build();
         }
 
