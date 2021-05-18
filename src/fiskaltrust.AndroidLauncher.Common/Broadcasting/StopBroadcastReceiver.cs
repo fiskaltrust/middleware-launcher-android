@@ -10,16 +10,14 @@ namespace fiskaltrust.AndroidLauncher.Common.Broadcasting
     [IntentFilter(new[] { Intent.ActionSend }, Categories = new[] { Intent.CategoryDefault })]
     public class StopBroadcastReceiver : BroadcastReceiver
     {
-        public delegate void OnStopLauncherReceived();
-        public event OnStopLauncherReceived StopLauncherReceived;
+        public event StopLauncherReceivedEventHandler StopLauncherReceived;
+        public delegate void StopLauncherReceivedEventHandler();
 
         public override void OnReceive(Context context, Intent intent)
         {
             if(intent.Action != BroadcastConstants.StopBroadcastName) { return; }
-            if (StopLauncherReceived != null)
-            {
-                StopLauncherReceived();
-            }
+            
+            StopLauncherReceived?.Invoke();
         }
     }
 }

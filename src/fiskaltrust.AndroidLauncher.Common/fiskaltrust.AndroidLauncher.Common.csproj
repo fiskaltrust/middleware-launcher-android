@@ -56,10 +56,8 @@
     <Compile Include="Broadcasting\StopBroadcastReceiver.cs" />
     <Compile Include="Broadcasting\StopLauncherBroadcastReceiver.cs" />
     <Compile Include="Constants\BroadcastConstants.cs" />
-    <Compile Include="Constants\PackageNames.cs" />
     <Compile Include="Constants\StateReasons.cs" />
     <Compile Include="Enums\LauncherState.cs" />
-    <Compile Include="Enums\LauncherType.cs" />
     <Compile Include="Exceptions\ConfigurationNotFoundException.cs" />
     <Compile Include="Exceptions\RemountRequiredException.cs" />
     <Compile Include="Extensions\ContextExtensions.cs" />
