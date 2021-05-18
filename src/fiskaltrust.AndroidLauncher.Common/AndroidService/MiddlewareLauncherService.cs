@@ -6,7 +6,6 @@ using AndroidX.Core.App;
 using fiskaltrust.AndroidLauncher.Common.Broadcasting;
 using fiskaltrust.AndroidLauncher.Common.Enums;
 using fiskaltrust.AndroidLauncher.Common.Extensions;
-using fiskaltrust.AndroidLauncher.Common.Models;
 using fiskaltrust.AndroidLauncher.Common.Services;
 using fiskaltrust.ifPOS.v1;
 using Java.Util;
@@ -22,7 +21,6 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
     {
         private const int NOTIFICATION_ID = 0x66746d77;
         private const string NOTIFICATION_CHANNEL_ID = "eu.fiskaltrust.launcher.android";
-        private const bool _enableCloseButton = false;
         private IPOSProvider _posProvider;
 
         public IBinder Binder { get; private set; }
@@ -32,7 +30,6 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
             var cashboxIdString = intent.GetStringExtra("cashboxid");
             var accesstoken = intent.GetStringExtra("accesstoken");
             var isSandbox = intent.GetBooleanExtra("sandbox", false);
-            var _enableCloseButton = intent.GetBooleanExtra("enableCloseButton", false);
             var logLevel = Enum.TryParse(intent.GetStringExtra("loglevel"), out LogLevel level) ? level : LogLevel.Information;
             var scuParams = intent.GetScuConfigParameters(removePrefix: true);
 
@@ -45,14 +42,12 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
                 throw new ArgumentException("The extra 'accesstoken' needs to be set in this intent.", "accesstoken");
             }
 
-            _posProvider = new POSProvider(new LauncherParameters { CashboxId = cashboxId, AccessToken = accesstoken, IsSandbox = isSandbox, EnableCloseButton = _enableCloseButton, LogLevel = logLevel, ScuParams = scuParams });
+            _posProvider = new POSProvider(cashboxId, accesstoken, isSandbox, logLevel, scuParams);
             Binder = new POSProviderBinder(this);
 
              var stopLauncherBroadcastReceiver = new StopBroadcastReceiver();
 
             stopLauncherBroadcastReceiver.StopLauncherReceived += async () => {
-                Android.Widget.Toast.MakeText(Application.Context, $"Stopped {Application.Context.PackageName}", Android.Widget.ToastLength.Short).Show();
-
                 try
                 {
                     await StopAsync();
@@ -61,7 +56,6 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
                 }
                 finally
                 {
-
                     StopSelf();
 
                     Android.Widget.Toast.MakeText(Application.Context, $"Stopped {Application.Context.PackageName}", Android.Widget.ToastLength.Short).Show();
@@ -81,7 +75,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
         public override StartCommandResult OnStartCommand(Intent intent, [GeneratedEnum] StartCommandFlags flags, int startId)
         {
             CreateNotificationChannel();
-            var notification = GetNotification(LauncherState.NotConnected);
+            var notification = GetNotification(LauncherState.NotConnected, false);
 
             StartForeground(NOTIFICATION_ID, notification);
 
@@ -108,17 +102,17 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
 
         public async Task StopAsync() => await _posProvider.StopAsync();
 
-        public static void Start(IMiddlewareServiceConnection serviceConnection, LauncherParameters parameters)
+        public static void Start(IMiddlewareServiceConnection serviceConnection, string cashboxId, string accessToken, bool isSandbox, LogLevel logLevel, Dictionary<string, object> additionalScuParams, bool enableCloseButton)
         {
             if (!IsRunning(typeof(MiddlewareLauncherService)))
             {
                 var intent = new Intent(Application.Context, typeof(MiddlewareLauncherService));
-                intent.PutExtra("cashboxid", parameters.CashboxId.ToString());
-                intent.PutExtra("accesstoken", parameters.AccessToken);
-                intent.PutExtra("sandbox", parameters.IsSandbox);
-                intent.PutExtra("enableCloseButton", parameters.EnableCloseButton);
-                intent.PutExtra("loglevel", parameters.LogLevel.ToString());
-                intent.PutExtras(parameters.ScuParams);
+                intent.PutExtra("cashboxid", cashboxId);
+                intent.PutExtra("accesstoken", accessToken);
+                intent.PutExtra("sandbox", isSandbox);
+                intent.PutExtra("loglevel", logLevel.ToString());
+                intent.PutExtra("enableCloseButton", enableCloseButton);
+                intent.PutExtras(additionalScuParams);
 
                 Application.Context.BindService(intent, serviceConnection, Bind.AutoCreate);
                 Application.Context.StartForegroundServiceCompat<MiddlewareLauncherService>();
@@ -138,14 +132,14 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
             }
         }
 
-        public static void SetState(LauncherState state, string contentText = null)
+        public static void SetState(LauncherState state, bool enableCloseButton = false, string contentText = null)
         {
-            var notification = GetNotification(state, contentText);
+            var notification = GetNotification(state, enableCloseButton, contentText);
             var manager = (NotificationManager)Application.Context.GetSystemService(NotificationService);
             manager.Notify(NOTIFICATION_ID, notification);
         }
 
-        private static Notification GetNotification(LauncherState state, string contentText = null)
+        private static Notification GetNotification(LauncherState state, bool enableCloseButton, string contentText = null)
         {
             var icon = state switch
             {
@@ -164,8 +158,6 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
             if (contentText != null)
                 text = contentText;
 
-
-        
             var builder = new NotificationCompat.Builder(Application.Context, NOTIFICATION_CHANNEL_ID)
                 .SetContentTitle(Application.Context.Resources.GetString(Resource.String.app_name))
                 .SetContentText(text)
@@ -173,7 +165,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
                 .SetSmallIcon(icon)
                 .SetOngoing(true);
 
-            if(_enableCloseButton)
+            if(enableCloseButton)
             {
                 Intent intent = new Intent(Constants.BroadcastConstants.StopBroadcastName);
                 intent.SetPackage(Application.Context.PackageName);

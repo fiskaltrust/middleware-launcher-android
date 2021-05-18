@@ -74,7 +74,6 @@
     <Compile Include="Hosting\AdminEndpointService.cs" />
     <Compile Include="Hosting\IHost.cs" />
     <Compile Include="Hosting\IHostFactory.cs" />
-    <Compile Include="Models\LauncherParameters.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceLocator.cs" />

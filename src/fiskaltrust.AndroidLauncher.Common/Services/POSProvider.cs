@@ -1,5 +1,4 @@
 ﻿using fiskaltrust.AndroidLauncher.Common.Hosting;
-using fiskaltrust.AndroidLauncher.Common.Models;
 using fiskaltrust.ifPOS.v1;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,9 +12,9 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
         private MiddlewareLauncher _launcher;
         private IPOS _pos;
 
-        public POSProvider(LauncherParameters parameters)
+        public POSProvider(Guid cashboxId, string accessToken, bool isSandbox, LogLevel logLevel, Dictionary<string, object> scuParams)
         {
-            _launcher = new MiddlewareLauncher(parameters);
+            _launcher = new MiddlewareLauncher(cashboxId, accessToken, isSandbox, logLevel, scuParams);
         }
 
         public async Task<IPOS> GetPOSAsync()
