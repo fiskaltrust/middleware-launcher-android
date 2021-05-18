@@ -45,7 +45,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
                 throw new ArgumentException("The extra 'accesstoken' needs to be set in this intent.", "accesstoken");
             }
 
-            _posProvider = new POSProvider(new LauncherParameters { CashboxId = cashboxId, AccessToken = accesstoken, IsSandbox = isSandbox, EnableCloseButton = enableCloseButton, LogLevel = logLevel, ScuParams = scuParams });
+            _posProvider = new POSProvider(new LauncherParameters { CashboxId = cashboxId, AccessToken = accesstoken, IsSandbox = isSandbox, EnableCloseButton = _enableCloseButton, LogLevel = logLevel, ScuParams = scuParams });
             Binder = new POSProviderBinder(this);
 
              var stopLauncherBroadcastReceiver = new StopBroadcastReceiver();
