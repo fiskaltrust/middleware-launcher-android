@@ -3,6 +3,7 @@ using Android.Content;
 using Android.OS;
 using Android.Runtime;
 using AndroidX.Core.App;
+using fiskaltrust.AndroidLauncher.Common.Broadcasting;
 using fiskaltrust.AndroidLauncher.Common.Enums;
 using fiskaltrust.AndroidLauncher.Common.Extensions;
 using fiskaltrust.AndroidLauncher.Common.Services;
@@ -20,8 +21,8 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
     {
         private const int NOTIFICATION_ID = 0x66746d77;
         private const string NOTIFICATION_CHANNEL_ID = "eu.fiskaltrust.launcher.android";
-
         private IPOSProvider _posProvider;
+        private StopBroadcastReceiver _stopBroadcastReceiver;
 
         public IBinder Binder { get; private set; }
 
@@ -44,6 +45,30 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
 
             _posProvider = new POSProvider(cashboxId, accesstoken, isSandbox, logLevel, scuParams);
             Binder = new POSProviderBinder(this);
+
+            _stopBroadcastReceiver = new StopBroadcastReceiver();
+
+            _stopBroadcastReceiver.StopLauncherReceived += async () => {
+                try
+                {
+                    await StopAsync();
+
+                    Stop(ServiceConnectionProvider.GetConnection());
+                }
+                finally
+                {
+                    StopSelf();
+
+                    Android.Widget.Toast.MakeText(Application.Context, $"Stopped {Application.Context.PackageName}", Android.Widget.ToastLength.Short).Show();
+
+                    var intent = new Intent(Constants.BroadcastConstants.StopLauncherBroadcastName);
+                    intent.SetPackage(Application.Context.PackageName);
+                    SendBroadcast(intent);
+                }
+            };
+
+            RegisterReceiver(_stopBroadcastReceiver, new IntentFilter(Constants.BroadcastConstants.StopBroadcastName));
+
             return Binder;
         }
 
@@ -51,7 +76,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
         public override StartCommandResult OnStartCommand(Intent intent, [GeneratedEnum] StartCommandFlags flags, int startId)
         {
             CreateNotificationChannel();
-            var notification = GetNotification(LauncherState.NotConnected);
+            var notification = GetNotification(LauncherState.NotConnected, false);
 
             StartForeground(NOTIFICATION_ID, notification);
 
@@ -78,7 +103,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
 
         public async Task StopAsync() => await _posProvider.StopAsync();
 
-        public static void Start(IMiddlewareServiceConnection serviceConnection, string cashboxId, string accessToken, bool isSandbox, LogLevel logLevel, Dictionary<string, object> additionalScuParams)
+        public static void Start(IMiddlewareServiceConnection serviceConnection, string cashboxId, string accessToken, bool isSandbox, LogLevel logLevel, Dictionary<string, object> additionalScuParams, bool enableCloseButton)
         {
             if (!IsRunning(typeof(MiddlewareLauncherService)))
             {
@@ -87,6 +112,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
                 intent.PutExtra("accesstoken", accessToken);
                 intent.PutExtra("sandbox", isSandbox);
                 intent.PutExtra("loglevel", logLevel.ToString());
+                intent.PutExtra("enableCloseButton", enableCloseButton);
                 intent.PutExtras(additionalScuParams);
 
                 Application.Context.BindService(intent, serviceConnection, Bind.AutoCreate);
@@ -107,14 +133,14 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
             }
         }
 
-        public static void SetState(LauncherState state, string contentText = null)
+        public static void SetState(LauncherState state, bool enableCloseButton = false, string contentText = null)
         {
-            var notification = GetNotification(state, contentText);
+            var notification = GetNotification(state, enableCloseButton, contentText);
             var manager = (NotificationManager)Application.Context.GetSystemService(NotificationService);
             manager.Notify(NOTIFICATION_ID, notification);
         }
 
-        private static Notification GetNotification(LauncherState state, string contentText = null)
+        private static Notification GetNotification(LauncherState state, bool enableCloseButton, string contentText = null)
         {
             var icon = state switch
             {
@@ -139,6 +165,17 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
                 .SetCategory(Notification.CategoryService)
                 .SetSmallIcon(icon)
                 .SetOngoing(true);
+
+            if(enableCloseButton)
+            {
+                Intent intent = new Intent(Constants.BroadcastConstants.StopBroadcastName);
+                intent.SetPackage(Application.Context.PackageName);
+
+                PendingIntent pendingIntent = PendingIntent.GetBroadcast(Application.Context, 0, intent, 0);
+
+                builder.AddAction(Android.Resource.Drawable.IcMenuCloseClearCancel, "Stop Service", pendingIntent);
+            }
+
             return builder.Build();
         }
 

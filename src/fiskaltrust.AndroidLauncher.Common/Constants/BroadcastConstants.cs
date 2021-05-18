@@ -7,5 +7,9 @@
 
         public const string GrpcStopBroadcastName = "eu.fiskaltrust.androidlauncher.grpc.Stop";
         public const string HttpStopBroadcastName = "eu.fiskaltrust.androidlauncher.http.Stop";
+
+        public const string StopBroadcastName = "eu.fiskaltrust.androidlauncher.common.Stop";
+        public const string StopLauncherBroadcastName = "eu.fiskaltrust.androidlauncher.common.StopLauncher";
+
     }
 }

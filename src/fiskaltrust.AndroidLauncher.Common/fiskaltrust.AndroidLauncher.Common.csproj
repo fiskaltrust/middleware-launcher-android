@@ -53,6 +53,8 @@
     <Compile Include="AndroidService\MiddlewareServiceConnection.cs" />
     <Compile Include="AndroidService\ServiceConnectionProvider.cs" />
     <Compile Include="Bootstrapping\LauncherBootstrapper.cs" />
+    <Compile Include="Broadcasting\StopBroadcastReceiver.cs" />
+    <Compile Include="Broadcasting\StopLauncherBroadcastReceiver.cs" />
     <Compile Include="Constants\BroadcastConstants.cs" />
     <Compile Include="Constants\StateReasons.cs" />
     <Compile Include="Enums\LauncherState.cs" />

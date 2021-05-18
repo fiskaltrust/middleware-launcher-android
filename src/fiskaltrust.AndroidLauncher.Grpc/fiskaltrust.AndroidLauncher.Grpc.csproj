@@ -56,7 +56,8 @@
     <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
     <LangVersion>8.0</LangVersion>
     <MandroidI18n />
-    <AndroidSupportedAbis>armeabi-v7a;arm64-v8a</AndroidSupportedAbis>
+    <AndroidSupportedAbis>armeabi-v7a;x86;arm64-v8a</AndroidSupportedAbis>
+    <AndroidBuildApplicationPackage>true</AndroidBuildApplicationPackage>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android.Export" />
@@ -73,7 +74,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Broadcasting\StartLauncherBroadcastReceiver.cs" />
-    <Compile Include="Broadcasting\StopLauncherBroadcastReceiver.cs" />
     <Compile Include="Helpers\GrpcUrlResolver.cs" />
     <Compile Include="Hosting\DESSCDClientFactory.cs" />
     <Compile Include="Hosting\GrpcHelper.cs" />

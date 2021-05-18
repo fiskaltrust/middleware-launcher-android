@@ -1,4 +1,5 @@
-﻿using fiskaltrust.Middleware.Abstractions;
+﻿using fiskaltrust.AndroidLauncher.Common.Enums;
+using fiskaltrust.Middleware.Abstractions;
 using System.Threading.Tasks;
 
 namespace fiskaltrust.AndroidLauncher.Common.Hosting

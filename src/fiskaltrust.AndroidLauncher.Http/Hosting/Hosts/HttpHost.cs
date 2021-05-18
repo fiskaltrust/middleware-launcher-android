@@ -1,4 +1,5 @@
-﻿using fiskaltrust.AndroidLauncher.Common.Hosting;
+﻿using fiskaltrust.AndroidLauncher.Common.Enums;
+using fiskaltrust.AndroidLauncher.Common.Hosting;
 using fiskaltrust.Middleware.Abstractions;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;

@@ -56,8 +56,8 @@
     <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
     <LangVersion>8.0</LangVersion>
     <MandroidI18n />
-    <AndroidSupportedAbis>
-    </AndroidSupportedAbis>
+    <AndroidSupportedAbis>armeabi-v7a;x86;arm64-v8a</AndroidSupportedAbis>
+    <AndroidBuildApplicationPackage>true</AndroidBuildApplicationPackage>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android.Export" />
@@ -74,7 +74,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Broadcasting\StartLauncherBroadcastReceiver.cs" />
-    <Compile Include="Broadcasting\StopLauncherBroadcastReceiver.cs" />
     <Compile Include="Controllers\DESSCDController.cs" />
     <Compile Include="Controllers\POSController.cs" />
     <Compile Include="Helpers\RestUrlResolver.cs" />
