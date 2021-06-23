@@ -61,12 +61,12 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             ftCashBoxConfiguration configuration;
             try
             {
-                configuration = await _configurationProvider.GetCashboxConfigurationAsync(_cashboxId, _accessToken);
+                configuration = await _configurationProvider.GetCashboxConfigurationAsync(_cashboxId, _accessToken, _isSandbox);
                 await _localConfigurationProvider.PersistAsync(_cashboxId, _accessToken, configuration);
             }
             catch (Exception)
             {
-                configuration = await _localConfigurationProvider.GetCashboxConfigurationAsync(_cashboxId, _accessToken);
+                configuration = await _localConfigurationProvider.GetCashboxConfigurationAsync(_cashboxId, _accessToken, _isSandbox);
             }            
 
             foreach (var scuConfig in configuration.ftSignaturCreationDevices)
