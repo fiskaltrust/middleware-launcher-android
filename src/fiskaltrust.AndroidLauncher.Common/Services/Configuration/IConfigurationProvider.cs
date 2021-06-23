@@ -6,6 +6,6 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.Configuration
 {
     internal interface IConfigurationProvider
     {
-        Task<ftCashBoxConfiguration> GetCashboxConfigurationAsync(Guid cashboxId, string accessToken);
+        Task<ftCashBoxConfiguration> GetCashboxConfigurationAsync(Guid cashboxId, string accessToken, bool isSandbox);
     }
 }

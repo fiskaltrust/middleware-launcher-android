@@ -1,4 +1,5 @@
-﻿using fiskaltrust.storage.serialization.V0;
+﻿using fiskaltrust.AndroidLauncher.Common.Constants;
+using fiskaltrust.storage.serialization.V0;
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
@@ -8,11 +9,10 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.Configuration
 {
     public class HelipadConfigurationProvider : IConfigurationProvider
     {
-        private const string HELIPAD_URL = "https://helipad-sandbox.fiskaltrust.cloud/";
-
-        public async Task<ftCashBoxConfiguration> GetCashboxConfigurationAsync(Guid cashboxId, string accessToken)
+        public async Task<ftCashBoxConfiguration> GetCashboxConfigurationAsync(Guid cashboxId, string accessToken, bool isSandbox)
         {
-            using(var httpClient = new HttpClient { BaseAddress = new Uri(HELIPAD_URL) })
+            var helipadUrl = isSandbox ? Urls.HELIPAD_SANDBOX : Urls.HELIPAD_PRODUCTION;
+            using(var httpClient = new HttpClient { BaseAddress = new Uri(helipadUrl) })
             {
                 httpClient.DefaultRequestHeaders.Add("cashboxid", cashboxId.ToString());
                 httpClient.DefaultRequestHeaders.Add("accesstoken", accessToken);
