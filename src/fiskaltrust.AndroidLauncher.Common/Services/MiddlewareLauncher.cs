@@ -7,7 +7,6 @@ using fiskaltrust.AndroidLauncher.Common.Services.SCU;
 using fiskaltrust.ifPOS.v1;
 using fiskaltrust.ifPOS.v1.de;
 using fiskaltrust.Middleware.Abstractions;
-using fiskaltrust.Middleware.SCU.DE.Fiskaly;
 using fiskaltrust.storage.serialization.V0;
 using Microsoft.Extensions.Logging;
 using System;
@@ -15,12 +14,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using FiskalyV1SCUConfiguration = fiskaltrust.Middleware.SCU.DE.Fiskaly.FiskalySCUConfiguration;
+
 namespace fiskaltrust.AndroidLauncher.Common.Services
 {
     internal class MiddlewareLauncher
     {
         private const string PACKAGE_NAME_SWISSBIT = "fiskaltrust.Middleware.SCU.DE.Swissbit";
         private const string PACKAGE_NAME_FISKALY = "fiskaltrust.Middleware.SCU.DE.Fiskaly";
+        private const string PACKAGE_NAME_FISKALY_CERTIFIED = "fiskaltrust.Middleware.SCU.DE.FiskalyCertified";
 
         private readonly Guid _cashboxId;
         private readonly string _accessToken;
@@ -79,10 +81,13 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
                         await InitializeSwissbitScuAsync(scuConfig);
                         break;
                     case PACKAGE_NAME_FISKALY:
-                        if (_scuParams.TryGetValue(nameof(FiskalySCUConfiguration.FislayClientTimeout), out var clientTimeout)) scuConfig.Configuration[nameof(FiskalySCUConfiguration.FislayClientTimeout)] = clientTimeout;
-                        if (_scuParams.TryGetValue(nameof(FiskalySCUConfiguration.FislayClientSmaersTimeout), out var smaersTimeout)) scuConfig.Configuration[nameof(FiskalySCUConfiguration.FislayClientSmaersTimeout)] = smaersTimeout;
+                        if (_scuParams.TryGetValue(nameof(FiskalyV1SCUConfiguration.FiskalyClientTimeout), out var clientTimeout)) scuConfig.Configuration[nameof(FiskalyV1SCUConfiguration.FiskalyClientTimeout)] = clientTimeout;
+                        if (_scuParams.TryGetValue(nameof(FiskalyV1SCUConfiguration.FiskalyClientSmaersTimeout), out var smaersTimeout)) scuConfig.Configuration[nameof(FiskalyV1SCUConfiguration.FiskalyClientSmaersTimeout)] = smaersTimeout;
 
                         await InitializeFiskalyScuAsync(scuConfig);
+                        break;
+                    case PACKAGE_NAME_FISKALY_CERTIFIED:
+                        await InitializeFiskalyCertifiedScuAsync(scuConfig);
                         break;
                     default:
                         throw new ArgumentException($"The Android launcher currently only supports the following SCU packages: {PACKAGE_NAME_SWISSBIT}, {PACKAGE_NAME_FISKALY}.");
@@ -142,6 +147,15 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             string url = ServiceLocator.Resolve<IUrlResolver>().GetProtocolSpecificUrl(packageConfig);
 
             var scuProvider = new FiskalyScuProvider();
+            var scu = scuProvider.CreateSCU(packageConfig, _logLevel);
+            await _scuHost.StartAsync(url, scu);
+        }
+
+        private async Task InitializeFiskalyCertifiedScuAsync(PackageConfiguration packageConfig)
+        {
+            string url = ServiceLocator.Resolve<IUrlResolver>().GetProtocolSpecificUrl(packageConfig);
+
+            var scuProvider = new FiskalyCertifiedScuProvider();
             var scu = scuProvider.CreateSCU(packageConfig, _logLevel);
             await _scuHost.StartAsync(url, scu);
         }
