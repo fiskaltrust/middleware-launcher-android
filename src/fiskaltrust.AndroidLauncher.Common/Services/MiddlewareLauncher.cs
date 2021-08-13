@@ -81,8 +81,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
                         await InitializeSwissbitScuAsync(scuConfig);
                         break;
                     case PACKAGE_NAME_FISKALY:
-                        if (_scuParams.TryGetValue(nameof(FiskalyV1SCUConfiguration.FislayClientTimeout), out var clientTimeout)) scuConfig.Configuration[nameof(FiskalyV1SCUConfiguration.FislayClientTimeout)] = clientTimeout;
-                        if (_scuParams.TryGetValue(nameof(FiskalyV1SCUConfiguration.FislayClientSmaersTimeout), out var smaersTimeout)) scuConfig.Configuration[nameof(FiskalyV1SCUConfiguration.FislayClientSmaersTimeout)] = smaersTimeout;
+                        if (_scuParams.TryGetValue(nameof(FiskalyV1SCUConfiguration.FiskalyClientTimeout), out var clientTimeout)) scuConfig.Configuration[nameof(FiskalyV1SCUConfiguration.FiskalyClientTimeout)] = clientTimeout;
+                        if (_scuParams.TryGetValue(nameof(FiskalyV1SCUConfiguration.FiskalyClientSmaersTimeout), out var smaersTimeout)) scuConfig.Configuration[nameof(FiskalyV1SCUConfiguration.FiskalyClientSmaersTimeout)] = smaersTimeout;
 
                         await InitializeFiskalyScuAsync(scuConfig);
                         break;
