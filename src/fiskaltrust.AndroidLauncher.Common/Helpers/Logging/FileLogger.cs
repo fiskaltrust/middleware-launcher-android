@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace fiskaltrust.AndroidLauncher.Common.Helpers.Logging
 {
-    internal sealed class FileLogger : ILogger
+    public sealed class FileLogger : ILogger
     {
         public const string LogFilename = "fiskaltrust.log";
         public const string LogDirectory = "logs";
