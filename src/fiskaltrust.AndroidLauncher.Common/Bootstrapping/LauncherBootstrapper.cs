@@ -8,12 +8,15 @@ using fiskaltrust.AndroidLauncher.Common.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
 {
     public static class LauncherBootstrapper
     {
+        private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(0, 1);
+
         public static void Setup(Context context, Intent startIntent)
         {
             var cashboxId = startIntent.GetStringExtra("cashboxid");
@@ -22,11 +25,18 @@ namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
             var logLevel = Enum.TryParse(startIntent.GetStringExtra("loglevel"), out LogLevel level) ? level : LogLevel.Information;
             var scuParams = startIntent.GetScuConfigParameters();
             var enableCloseButton = startIntent.GetBooleanExtra("enableCloseButton", false);
-
-            MiddlewareLauncherService.Start(ServiceConnectionProvider.GetConnection(), cashboxId, accessToken, isSandbox, logLevel, scuParams, enableCloseButton);
-
+            
             using var services = new ServiceCollection().AddLogProviders(logLevel).BuildServiceProvider();
             var logger = services.GetRequiredService<ILogger<MiddlewareLauncherService>>();
+
+            if (!_semaphore.Wait(0))
+            {
+                logger.LogWarning("Received start intent, but the Middleware is already starting.");
+                return;
+            }
+
+            logger.LogInformation("Starting the Middleware..");
+            MiddlewareLauncherService.Start(ServiceConnectionProvider.GetConnection(), cashboxId, accessToken, isSandbox, logLevel, scuParams, enableCloseButton);
 
             Task.Run(async () =>
             {
@@ -43,6 +53,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
 
                     MiddlewareLauncherService.SetState(LauncherState.Connected, enableCloseButton);
                     StateProvider.Instance.SetState(State.Running);
+                    logger.LogInformation("Successfully started the Middleware.");
                 }
                 catch (Exception ex)
                 {
@@ -64,6 +75,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
                         MiddlewareLauncherService.SetState(LauncherState.Error, enableCloseButton);
                     }
                 }
+
+                _semaphore.Release();
             });
         }
 
