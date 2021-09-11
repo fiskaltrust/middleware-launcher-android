@@ -15,6 +15,7 @@ using Xamarin.Essentials;
 using Android.Util;
 using fiskaltrust.AndroidLauncher.Common.Helpers.Logging;
 using fiskaltrust.AndroidLauncher.Common.Broadcasting;
+using Android.Views;
 
 namespace fiskaltrust.AndroidLauncher.Http
 {
@@ -44,16 +45,31 @@ namespace fiskaltrust.AndroidLauncher.Http
             Init();
         }
 
-
-        private void Init()
+        public override bool OnCreateOptionsMenu(IMenu menu)
         {
-            FindViewById<TextView>(Common.Resource.Id.textViewVersion).Text = $"Version {VersionTracking.CurrentVersion}";
+            MenuInflater.Inflate(Common.Resource.Menu.top_menus, menu);
+            return base.OnCreateOptionsMenu(menu);
         }
+
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            if (item.ItemId == Common.Resource.Id.menuLogs)
+            {
+                StartActivity(typeof(LogActivity));
+            }
+            return base.OnOptionsItemSelected(item);
+        }
+
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
             Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+        private void Init()
+        {
+            FindViewById<TextView>(Common.Resource.Id.textViewVersion).Text = $"Version {VersionTracking.CurrentVersion}";
         }
 
         [Export("SendStartIntentTestBackdoor")]
