@@ -15,8 +15,7 @@ namespace fiskaltrust.AndroidLauncher.Http
             base.OnCreate(savedInstanceState);
             SetContentView(Common.Resource.Layout.activity_logs);
 
-            var files = new DirectoryInfo(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), FileLogger.LogDirectory))
-                .GetFiles("*.log").OrderBy(f=>f.LastWriteTime);
+            var files = FileLoggerHelper.LogDirectory.GetFiles("*.log").OrderByDescending(f => f.LastWriteTime);
             
             var txt = FindViewById<TextView>(Common.Resource.Id.txtLog);
             if (txt == null) return;

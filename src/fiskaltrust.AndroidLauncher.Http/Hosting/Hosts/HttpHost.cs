@@ -1,5 +1,4 @@
-﻿using fiskaltrust.AndroidLauncher.Common.Enums;
-using fiskaltrust.AndroidLauncher.Common.Hosting;
+﻿using fiskaltrust.AndroidLauncher.Common.Hosting;
 using fiskaltrust.Middleware.Abstractions;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -10,9 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 using fiskaltrust.AndroidLauncher.Common.Extensions;
-using fiskaltrust.AndroidLauncher.Common.Helpers.Logging;
 using Microsoft.Extensions.Logging;
-using Serilog;
 
 namespace fiskaltrust.AndroidLauncher.Http.Hosting
 {

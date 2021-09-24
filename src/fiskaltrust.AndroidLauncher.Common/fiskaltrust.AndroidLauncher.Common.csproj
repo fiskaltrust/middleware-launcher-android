@@ -68,11 +68,8 @@
     <Compile Include="Extensions\ServiceCollectionExtensions.cs" />
     <Compile Include="Helpers\IUrlResolver.cs" />
     <Compile Include="Helpers\Logging\AndroidLogger.cs" />
-    <Compile Include="Helpers\Logging\CachingMessageTemplateParser.cs" />
-    <Compile Include="Helpers\Logging\FileLogger.cs" />
-    <Compile Include="Helpers\Logging\FileLoggerProvider.cs" />
+    <Compile Include="Helpers\Logging\FileLoggerHelper.cs" />
     <Compile Include="Helpers\Logging\AndroidLoggerProvider.cs" />
-    <Compile Include="Helpers\Logging\LevelConvert.cs" />
     <Compile Include="Helpers\Logging\NoopDisposable.cs" />
     <Compile Include="Hosting\AdminEndpointService.cs" />
     <Compile Include="Hosting\IHost.cs" />
@@ -138,8 +135,8 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
     </PackageReference>
-    <PackageReference Include="Serilog.Extensions.Logging.File">
-      <Version>2.0.0</Version>
+    <PackageReference Include="Serilog.Extensions.Logging">
+      <Version>3.0.1</Version>
     </PackageReference>
     <PackageReference Include="Serilog.Sinks.File">
       <Version>5.0.0</Version>

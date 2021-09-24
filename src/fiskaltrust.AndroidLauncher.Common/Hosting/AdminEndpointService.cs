@@ -62,8 +62,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Hosting
                                 return;
                             }
 
-                            var files = new DirectoryInfo(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), FileLogger.LogDirectory))
-                                .GetFiles("*.log").OrderBy(f=>f.LastWriteTime);
+                            var files = FileLoggerHelper.LogDirectory.GetFiles("*.log").OrderByDescending(f=>f.LastWriteTime);
                             
                             if (files.Any())
                             {

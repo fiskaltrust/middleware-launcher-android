@@ -31,6 +31,7 @@ namespace fiskaltrust.AndroidLauncher.Http
             base.OnCreate(savedInstanceState);
             Platform.Init(this, savedInstanceState);
             VersionTracking.Track();
+            if (FileLoggerHelper.LogDirectory.Exists == false) FileLoggerHelper.LogDirectory.Create();
 
             SetContentView(Common.Resource.Layout.activity_main);
 
