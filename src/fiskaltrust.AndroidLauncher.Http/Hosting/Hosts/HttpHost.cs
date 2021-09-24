@@ -10,6 +10,7 @@ using System;
 using System.Threading.Tasks;
 using fiskaltrust.AndroidLauncher.Common.Extensions;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace fiskaltrust.AndroidLauncher.Http.Hosting
 {
@@ -50,7 +51,9 @@ namespace fiskaltrust.AndroidLauncher.Http.Hosting
                     if (uri.Segments.Length > 1)
                         app.UsePathBase(new PathString(uri.AbsolutePath));
                     app.UseMvc();
+                    app.UseSerilogRequestLogging();
                 })
+                .UseSerilog()
                 .UseUrls(uri.GetLeftPart(UriPartial.Authority))
                 .Build();
 

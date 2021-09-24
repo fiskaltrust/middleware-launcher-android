@@ -8,16 +8,11 @@ namespace fiskaltrust.AndroidLauncher.Common.Extensions
 {
   public static class ServiceCollectionExtensions
   {
-    private static readonly Serilog.Core.Logger Logger = new LoggerConfiguration()
-      .WriteTo.File(path: Path.Combine(FileLoggerHelper.LogDirectory.FullName, FileLoggerHelper.LogFilename), rollingInterval: RollingInterval.Day,
-        retainedFileCountLimit: 5)
-      .CreateLogger();
-    
     public static IServiceCollection AddLogProviders(this IServiceCollection serviceCollection, LogLevel logLevel)
     {
       return serviceCollection.AddLogging(builder =>
       {
-        builder.AddSerilog(Logger); 
+        builder.AddSerilog(); 
         builder.Services.AddSingleton<ILoggerProvider, AndroidLoggerProvider>();
         builder.SetMinimumLevel(logLevel);
       });

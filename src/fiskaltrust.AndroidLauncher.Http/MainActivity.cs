@@ -7,17 +7,14 @@ using Android.Content;
 using Android.Widget;
 using fiskaltrust.Middleware.Interface.Client.Http;
 using System;
-using System.Runtime;
-using fiskaltrust.Middleware.Interface.Client;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using fiskaltrust.ifPOS.v1;
 using Xamarin.Essentials;
-using Android.Util;
 using fiskaltrust.AndroidLauncher.Common.Helpers.Logging;
 using fiskaltrust.AndroidLauncher.Common.Broadcasting;
 using Android.Views;
-using Microsoft.Extensions.Logging;
+using Log = Android.Util.Log;
 
 namespace fiskaltrust.AndroidLauncher.Http
 {
@@ -34,7 +31,7 @@ namespace fiskaltrust.AndroidLauncher.Http
             if (FileLoggerHelper.LogDirectory.Exists == false) FileLoggerHelper.LogDirectory.Create();
 
             SetContentView(Common.Resource.Layout.activity_main);
-
+            
             _stopLauncherBroadcastReceiver = new StopLauncherBroadcastReceiver();
 
             _stopLauncherBroadcastReceiver.StopLauncherReceived += async () =>

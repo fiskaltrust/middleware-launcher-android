@@ -8,8 +8,11 @@ using fiskaltrust.AndroidLauncher.Common.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using fiskaltrust.AndroidLauncher.Common.Helpers.Logging;
+using Serilog;
 
 namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
 {
@@ -19,6 +22,11 @@ namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
 
         public static void Setup(Context context, Intent startIntent)
         {
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.File(path: Path.Combine(FileLoggerHelper.LogDirectory.FullName, FileLoggerHelper.LogFilename), rollingInterval: RollingInterval.Day,
+                    retainedFileCountLimit: 31)
+                .CreateLogger();
+            
             var cashboxId = startIntent.GetStringExtra("cashboxid");
             var accessToken = startIntent.GetStringExtra("accesstoken");
             var isSandbox = startIntent.GetBooleanExtra("sandbox", false);
