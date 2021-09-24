@@ -9,6 +9,7 @@ using fiskaltrust.ifPOS.v1.de;
 using fiskaltrust.Middleware.Abstractions;
 using fiskaltrust.storage.serialization.V0;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -143,6 +144,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             var scuProvider = new SwissbitScuProvider();
             var scu = scuProvider.CreateSCU(packageConfig, _logLevel);
             await _scuHost.StartAsync(url, scu, _logLevel);
+
+            Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.SCU.DE.Swissbit' is listening on '{url}'.");
         }
 
         private async Task InitializeFiskalyScuAsync(PackageConfiguration packageConfig)
@@ -152,6 +155,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             var scuProvider = new FiskalyScuProvider();
             var scu = scuProvider.CreateSCU(packageConfig, _logLevel);
             await _scuHost.StartAsync(url, scu, _logLevel);
+
+            Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.SCU.DE.Fiskaly' is listening on '{url}'.");
         }
 
         private async Task InitializeFiskalyCertifiedScuAsync(PackageConfiguration packageConfig)
@@ -161,6 +166,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             var scuProvider = new FiskalyCertifiedScuProvider();
             var scu = scuProvider.CreateSCU(packageConfig, _logLevel);
             await _scuHost.StartAsync(url, scu, _logLevel);
+
+            Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.SCU.DE.FiskalyCertified' is listening on '{url}'.");
         }
 
         private async Task InitializeQueueAsync(PackageConfiguration packageConfig)
@@ -171,6 +178,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             var pos = await Task.Run(() => queueProvider.CreatePOS(Environment.GetFolderPath(Environment.SpecialFolder.Personal), packageConfig, _logLevel, _scuHost));
 
             await _posHost.StartAsync(url, pos, _logLevel);
+
+            Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.Queue.SQLite' is listening on '{url}'.");
         }
 
         private async Task InitializeHelipadHelperAsync(ftCashBoxConfiguration configuration)

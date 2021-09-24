@@ -37,11 +37,6 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
             var notification = GetNotification(LauncherState.NotConnected);
             StartForeground(NOTIFICATION_ID, notification);
 
-            // TODO add app insights
-
-
-
-
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.File(path: Path.Combine(FileLoggerHelper.LogDirectory.FullName, FileLoggerHelper.LogFilename), rollingInterval: RollingInterval.Day,
                     retainedFileCountLimit: 31)
@@ -49,6 +44,8 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
 
             try
             {
+                Log.Logger.Information("Starting the fiskaltrust.Middleware...");
+
                 var cashboxIdString = intent.GetStringExtra("cashboxid");
                 var accessToken = intent.GetStringExtra("accesstoken");
                 var isSandbox = intent.GetBooleanExtra("sandbox", false);
@@ -64,6 +61,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
                     throw new ArgumentException("The extra 'accesstoken' needs to be set in this intent.", "accesstoken");
                 }
 
+                Log.Logger.Debug($"CashBox ID: {cashboxIdString}, IsSandbox: {isSandbox}");
                 _launcher = new MiddlewareLauncher(GetHostFactory(), GetUrlResolver(), cashboxId, accessToken, isSandbox, logLevel, scuParams);
                 Task.Run(async () =>
                 {
