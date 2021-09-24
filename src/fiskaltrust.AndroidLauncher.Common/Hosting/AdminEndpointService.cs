@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using Serilog;
 using System;
 using System.IO;
 using System.Linq;
@@ -19,6 +20,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Hosting
 {
     public class AdminEndpointService
     {
+        private const string URL = "http://localhost:4654";
+
         private static readonly Lazy<AdminEndpointService> _lazyInstance = new Lazy<AdminEndpointService>(() => new AdminEndpointService());
         private IWebHost _host;
 
@@ -33,7 +36,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Hosting
                 await StopAsync();
             }
 
-            var uri = new Uri("http://localhost:4654");
+            var uri = new Uri(URL);
             _host = WebHost
                 .CreateDefaultBuilder()
                 .UseKestrel()
@@ -81,6 +84,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Hosting
                 .Build();
 
             await _host.StartAsync();
+            
+            Log.Logger.Information($"Admin endpoint is listening at '{URL}'.");
         }
         
         private IFileInfo GetIFileInfo(string fileName)

@@ -3,64 +3,113 @@ using Android.Content;
 using Android.OS;
 using Android.Runtime;
 using AndroidX.Core.App;
+using fiskaltrust.AndroidLauncher.Common.Constants;
 using fiskaltrust.AndroidLauncher.Common.Enums;
+using fiskaltrust.AndroidLauncher.Common.Exceptions;
 using fiskaltrust.AndroidLauncher.Common.Extensions;
+using fiskaltrust.AndroidLauncher.Common.Helpers;
+using fiskaltrust.AndroidLauncher.Common.Helpers.Logging;
+using fiskaltrust.AndroidLauncher.Common.Hosting;
 using fiskaltrust.AndroidLauncher.Common.Services;
-using fiskaltrust.ifPOS.v1;
-using Java.Util;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace fiskaltrust.AndroidLauncher.Common.AndroidService
 {
-    [Service(Name = "eu.fiskaltrust.MiddlewareLauncherService")]
-    public class MiddlewareLauncherService : Service, IPOSProvider
+    public abstract class MiddlewareLauncherService : Service
     {
         private const int NOTIFICATION_ID = 0x66746d77;
         private const string NOTIFICATION_CHANNEL_ID = "eu.fiskaltrust.launcher.android";
-        private IPOSProvider _posProvider;
 
-        public IBinder Binder { get; private set; }
+        private MiddlewareLauncher _launcher;
 
-        public override IBinder OnBind(Intent intent)
-        {
-            var cashboxIdString = intent.GetStringExtra("cashboxid");
-            var accesstoken = intent.GetStringExtra("accesstoken");
-            var isSandbox = intent.GetBooleanExtra("sandbox", false);
-            var logLevel = Enum.TryParse(intent.GetStringExtra("loglevel"), out LogLevel level) ? level : LogLevel.Information;
-            var scuParams = intent.GetScuConfigParameters(removePrefix: true);
-
-            if (string.IsNullOrEmpty(cashboxIdString) || !Guid.TryParse(cashboxIdString, out var cashboxId))
-            {
-                throw new ArgumentException("The extra 'cashboxid' needs to be set in this intent.", "cashboxid");
-            }
-            if (string.IsNullOrEmpty(accesstoken))
-            {
-                throw new ArgumentException("The extra 'accesstoken' needs to be set in this intent.", "accesstoken");
-            }
-
-            _posProvider = new POSProvider(cashboxId, accesstoken, isSandbox, logLevel, scuParams);
-            Binder = new POSProviderBinder(this);
-
-            return Binder;
-        }
+        public abstract IHostFactory GetHostFactory();
+        public abstract IUrlResolver GetUrlResolver();
 
         [return: GeneratedEnum]
-        public override StartCommandResult OnStartCommand(Intent intent, [GeneratedEnum] StartCommandFlags flags, int startId)
+        public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
         {
             CreateNotificationChannel();
             var notification = GetNotification(LauncherState.NotConnected);
-
             StartForeground(NOTIFICATION_ID, notification);
 
-            return base.OnStartCommand(intent, flags, startId);
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.File(path: Path.Combine(FileLoggerHelper.LogDirectory.FullName, FileLoggerHelper.LogFilename), rollingInterval: RollingInterval.Day,
+                    retainedFileCountLimit: 31)
+                .CreateLogger();
+
+            try
+            {
+                Log.Logger.Information("Starting the fiskaltrust.Middleware...");
+
+                var cashboxIdString = intent.GetStringExtra("cashboxid");
+                var accessToken = intent.GetStringExtra("accesstoken");
+                var isSandbox = intent.GetBooleanExtra("sandbox", false);
+                var logLevel = Enum.TryParse(intent.GetStringExtra("loglevel"), out LogLevel level) ? level : LogLevel.Information;
+                var scuParams = intent.GetScuConfigParameters(removePrefix: true);
+
+                if (string.IsNullOrEmpty(cashboxIdString) || !Guid.TryParse(cashboxIdString, out var cashboxId))
+                {
+                    throw new ArgumentException("The extra 'cashboxid' needs to be set in this intent.", "cashboxid");
+                }
+                if (string.IsNullOrEmpty(accessToken))
+                {
+                    throw new ArgumentException("The extra 'accesstoken' needs to be set in this intent.", "accesstoken");
+                }
+
+                Log.Logger.Debug($"CashBox ID: {cashboxIdString}, IsSandbox: {isSandbox}");
+                _launcher = new MiddlewareLauncher(GetHostFactory(), GetUrlResolver(), cashboxId, accessToken, isSandbox, logLevel, scuParams);
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        await AdminEndpointService.Instance.StartAsync();
+                    }
+                    catch (Exception) { }
+
+                    await _launcher.StartAsync();
+
+                    SetState(LauncherState.Connected);
+                    StateProvider.Instance.SetState(State.Running);
+                }).Wait();
+
+                return StartCommandResult.RedeliverIntent;
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error(ex, "An error occured while trying to start the fiskaltrust Android Launcher.");
+
+                if (ex is RemountRequiredException remountRequiredEx)
+                {
+                    StateProvider.Instance.SetState(State.Error, StateReasons.RemountRequired);
+                    SetState(LauncherState.Error, remountRequiredEx.Message);
+                }
+                else if (ex is ConfigurationNotFoundException confNotFoundEx)
+                {
+                    StateProvider.Instance.SetState(State.Error, StateReasons.ConfigurationNotFound);
+                    SetState(LauncherState.Error, confNotFoundEx.Message);
+                }
+                else
+                {
+                    StateProvider.Instance.SetState(State.Error, ex.Message);
+                    SetState(LauncherState.Error);
+                }
+
+                throw;
+            }
         }
 
         public override void OnDestroy()
         {
-            Task.Run(() => StopAsync()).Wait();
+            Task.Run(async () =>
+            {
+                await AdminEndpointService.Instance.StopAsync();
+                await _launcher.StopAsync();
+            }).Wait();
 
             if (Build.VERSION.SdkInt >= BuildVersionCodes.N)
             {
@@ -74,35 +123,31 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
             base.OnDestroy();
         }
 
-        public async Task<IPOS> GetPOSAsync() => await _posProvider.GetPOSAsync();
-
-        public async Task StopAsync() => await _posProvider.StopAsync();
-
-        public static void Start(IMiddlewareServiceConnection serviceConnection, string cashboxId, string accessToken, bool isSandbox, LogLevel logLevel, Dictionary<string, object> additionalScuParams)
+        public static void Start<T>(string cashboxId, string accessToken, bool isSandbox, LogLevel logLevel, Dictionary<string, object> additionalScuParams) where T : MiddlewareLauncherService
         {
-            if (!IsRunning(typeof(MiddlewareLauncherService)))
+            if (!IsRunning(typeof(T)))
             {
-                var intent = new Intent(Application.Context, typeof(MiddlewareLauncherService));
-                intent.PutExtra("cashboxid", cashboxId);
-                intent.PutExtra("accesstoken", accessToken);
-                intent.PutExtra("sandbox", isSandbox);
-                intent.PutExtra("loglevel", logLevel.ToString());
-                intent.PutExtras(additionalScuParams);
+                var bundle = new Bundle();
+                bundle.PutString("cashboxid", cashboxId);
+                bundle.PutString("accesstoken", accessToken);
+                bundle.PutBoolean("sandbox", isSandbox);
+                bundle.PutString("loglevel", logLevel.ToString());
+                foreach (var extra in additionalScuParams)
+                {
+                    bundle.PutString(extra.Key, extra.Value.ToString());
+                }
 
-                Application.Context.BindService(intent, serviceConnection, Bind.AutoCreate);
-                Application.Context.StartForegroundServiceCompat<MiddlewareLauncherService>();
+                Application.Context.StartForegroundServiceCompat<T>(bundle);
             }
         }
 
-        public static void Stop(IMiddlewareServiceConnection serviceConnection)
+        public static void Stop<T>() where T : MiddlewareLauncherService
         {
             // TODO: helipad-upload
 
-            if (IsRunning(typeof(MiddlewareLauncherService)))
+            if (IsRunning(typeof(T)))
             {
-                serviceConnection.OnManualDisconnect();
-                Application.Context.UnbindService(serviceConnection);
-                var intent = new Intent(Application.Context, typeof(MiddlewareLauncherService));
+                var intent = new Intent(Application.Context, typeof(T));
                 Application.Context.StopService(intent);
             }
         }
@@ -112,6 +157,11 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
             var notification = GetNotification(state, contentText);
             var manager = (NotificationManager)Application.Context.GetSystemService(NotificationService);
             manager.Notify(NOTIFICATION_ID, notification);
+        }
+
+        public override IBinder OnBind(Intent intent)
+        {
+            return null;
         }
 
         private static Notification GetNotification(LauncherState state, string contentText = null)
