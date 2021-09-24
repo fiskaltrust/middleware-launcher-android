@@ -69,7 +69,10 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
                     {
                         await AdminEndpointService.Instance.StartAsync();
                     }
-                    catch (Exception) { }
+                    catch (Exception ex)
+                    {
+                        Log.Logger.Error(ex, "AdminEndpointService starting failed...");
+                    }
 
                     await _launcher.StartAsync();
 
@@ -105,6 +108,8 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
 
         public override void OnDestroy()
         {
+            Log.Logger.Information("Destroying the fiskaltrust.Middleware service");
+            
             Task.Run(async () =>
             {
                 await AdminEndpointService.Instance.StopAsync();
@@ -144,6 +149,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
         public static void Stop<T>() where T : MiddlewareLauncherService
         {
             // TODO: helipad-upload
+            Log.Logger.Information("Stopping the fiskaltrust.Middleware service");
 
             if (IsRunning(typeof(T)))
             {

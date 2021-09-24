@@ -14,7 +14,7 @@ namespace fiskaltrust.AndroidLauncher.Common
 {
 	
 	
-	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Xamarin.Android.Build.Tasks", "12.0.99.19")]
+	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Xamarin.Android.Build.Tasks", "1.0.0.0")]
 	public partial class Resource
 	{
 		
@@ -2427,19 +2427,22 @@ namespace fiskaltrust.AndroidLauncher.Common
 			public static int txtLog = 2131165359;
 			
 			// aapt resource value: 0x7F0700B0
-			public static int uniform = 2131165360;
+			public static int txtScrollView = 2131165360;
 			
 			// aapt resource value: 0x7F0700B1
-			public static int up = 2131165361;
+			public static int uniform = 2131165361;
 			
 			// aapt resource value: 0x7F0700B2
-			public static int useLogo = 2131165362;
+			public static int up = 2131165362;
 			
 			// aapt resource value: 0x7F0700B3
-			public static int withText = 2131165363;
+			public static int useLogo = 2131165363;
 			
 			// aapt resource value: 0x7F0700B4
-			public static int wrap_content = 2131165364;
+			public static int withText = 2131165364;
+			
+			// aapt resource value: 0x7F0700B5
+			public static int wrap_content = 2131165365;
 			
 			static Id()
 			{

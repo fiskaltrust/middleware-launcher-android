@@ -14,7 +14,7 @@ namespace fiskaltrust.AndroidLauncher.Http
 {
 	
 	
-	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Xamarin.Android.Build.Tasks", "12.0.99.19")]
+	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Xamarin.Android.Build.Tasks", "1.0.0.0")]
 	public partial class Resource
 	{
 		
@@ -799,6 +799,7 @@ namespace fiskaltrust.AndroidLauncher.Http
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.top = global::fiskaltrust.AndroidLauncher.Http.Resource.Id.top;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.topPanel = global::fiskaltrust.AndroidLauncher.Http.Resource.Id.topPanel;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.txtLog = global::fiskaltrust.AndroidLauncher.Http.Resource.Id.txtLog;
+			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.txtScrollView = global::fiskaltrust.AndroidLauncher.Http.Resource.Id.txtScrollView;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.uniform = global::fiskaltrust.AndroidLauncher.Http.Resource.Id.uniform;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.up = global::fiskaltrust.AndroidLauncher.Http.Resource.Id.up;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Id.useLogo = global::fiskaltrust.AndroidLauncher.Http.Resource.Id.useLogo;
@@ -7346,31 +7347,34 @@ namespace fiskaltrust.AndroidLauncher.Http
 			public const int txtLog = 2131230947;
 			
 			// aapt resource value: 0x7F0800E4
-			public const int @unchecked = 2131230948;
+			public const int txtScrollView = 2131230948;
 			
 			// aapt resource value: 0x7F0800E5
-			public const int uniform = 2131230949;
+			public const int @unchecked = 2131230949;
 			
 			// aapt resource value: 0x7F0800E6
-			public const int unlabeled = 2131230950;
+			public const int uniform = 2131230950;
 			
 			// aapt resource value: 0x7F0800E7
-			public const int up = 2131230951;
+			public const int unlabeled = 2131230951;
 			
 			// aapt resource value: 0x7F0800E8
-			public const int useLogo = 2131230952;
+			public const int up = 2131230952;
 			
 			// aapt resource value: 0x7F0800E9
-			public const int view_offset_helper = 2131230953;
+			public const int useLogo = 2131230953;
 			
 			// aapt resource value: 0x7F0800EA
-			public const int visible = 2131230954;
+			public const int view_offset_helper = 2131230954;
 			
 			// aapt resource value: 0x7F0800EB
-			public const int withText = 2131230955;
+			public const int visible = 2131230955;
 			
 			// aapt resource value: 0x7F0800EC
-			public const int wrap_content = 2131230956;
+			public const int withText = 2131230956;
+			
+			// aapt resource value: 0x7F0800ED
+			public const int wrap_content = 2131230957;
 			
 			static Id()
 			{

@@ -10,7 +10,6 @@ using System;
 using System.Threading.Tasks;
 using fiskaltrust.AndroidLauncher.Common.Extensions;
 using Microsoft.Extensions.Logging;
-using Serilog;
 
 namespace fiskaltrust.AndroidLauncher.Http.Hosting
 {

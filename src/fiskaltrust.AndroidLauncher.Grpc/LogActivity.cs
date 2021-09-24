@@ -2,8 +2,7 @@
 using Android.OS;
 using Android.Widget;
 using fiskaltrust.AndroidLauncher.Common.Helpers.Logging;
-using System.IO;
-using System.Linq;
+using Android.Views;
 
 namespace fiskaltrust.AndroidLauncher.Grpc
 {
@@ -15,14 +14,13 @@ namespace fiskaltrust.AndroidLauncher.Grpc
             base.OnCreate(savedInstanceState);
             SetContentView(Common.Resource.Layout.activity_logs);
 
-            base.OnCreate(savedInstanceState);
-            SetContentView(Common.Resource.Layout.activity_logs);
-
-            var files = FileLoggerHelper.LogDirectory.GetFiles("*.log").OrderByDescending(f => f.LastWriteTime);
-            
-            var txt = FindViewById<TextView>(Common.Resource.Id.txtLog);
+            TextView txt = FindViewById<TextView>(Common.Resource.Id.txtLog);
+            ScrollView scrollView = FindViewById<ScrollView>(Common.Resource.Id.txtScrollView);
             if (txt == null) return;
-            txt.Text = files.Any() ? File.ReadAllText(files.First().FullName) : "No log file found.";
+
+            var lines = FileLoggerHelper.GetLastLinesOfCurrentLogFile(1024);
+            txt.Text = string.IsNullOrEmpty(lines) ? "No log file found." : lines;
+            scrollView?.FullScroll(FocusSearchDirection.Down);
         }
     }
 }
