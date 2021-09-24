@@ -50,10 +50,8 @@ namespace fiskaltrust.AndroidLauncher.Http.Hosting
                 {
                     if (uri.Segments.Length > 1)
                         app.UsePathBase(new PathString(uri.AbsolutePath));
-                    app.UseSerilogRequestLogging();
                     app.UseMvc();
                 })
-                .UseSerilog()
                 .UseUrls(uri.GetLeftPart(UriPartial.Authority))
                 .Build();
 

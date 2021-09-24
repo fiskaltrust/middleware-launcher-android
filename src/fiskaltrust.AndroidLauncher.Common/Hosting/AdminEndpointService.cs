@@ -11,7 +11,9 @@ using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.FileProviders;
 
 namespace fiskaltrust.AndroidLauncher.Common.Hosting
 {
@@ -62,11 +64,11 @@ namespace fiskaltrust.AndroidLauncher.Common.Hosting
                                 return;
                             }
 
-                            var files = FileLoggerHelper.LogDirectory.GetFiles("*.log").OrderByDescending(f=>f.LastWriteTime);
-                            
-                            if (files.Any())
+                            var fileToSend = FileLoggerHelper.LogDirectory.GetFiles("*.log").OrderByDescending(f=>f.LastWriteTime).FirstOrDefault();
+
+                            if (fileToSend != null)
                             {
-                                await response.WriteAsync(files.First().FullName);
+                                await response.SendFileAsync(GetIFileInfo(fileToSend.FullName));
                             }
                             else
                             {
@@ -79,6 +81,13 @@ namespace fiskaltrust.AndroidLauncher.Common.Hosting
                 .Build();
 
             await _host.StartAsync();
+        }
+        
+        private IFileInfo GetIFileInfo(string fileName)
+        {
+            IFileProvider provider = new PhysicalFileProvider(AppDomain.CurrentDomain.BaseDirectory);
+            IFileInfo fileInfo = provider.GetFileInfo(fileName);
+            return fileInfo;
         }
 
         private async Task<bool> AuthenticateAsync(string cashboxid, string accesstoken)
