@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Broadcasting\StartLauncherBroadcastReceiver.cs" />
+    <Compile Include="Broadcasting\StopLauncherBroadcastReceiver.cs" />
     <Compile Include="Helpers\GrpcUrlResolver.cs" />
     <Compile Include="Hosting\DESSCDClientFactory.cs" />
     <Compile Include="Hosting\GrpcHelper.cs" />

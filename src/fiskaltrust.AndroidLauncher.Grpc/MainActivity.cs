@@ -13,7 +13,6 @@ using Android.Widget;
 using Xamarin.Essentials;
 using Android.Util;
 using fiskaltrust.AndroidLauncher.Common.Helpers.Logging;
-using fiskaltrust.AndroidLauncher.Common.Broadcasting;
 using Android.Views;
 
 namespace fiskaltrust.AndroidLauncher.Grpc
@@ -28,17 +27,6 @@ namespace fiskaltrust.AndroidLauncher.Grpc
             VersionTracking.Track();
 
             SetContentView(Common.Resource.Layout.activity_main);
-
-            var stopLauncherBroadcastReceiver = new StopLauncherBroadcastReceiver();
-
-            stopLauncherBroadcastReceiver.StopLauncherReceived += async () =>
-            {
-                FinishAndRemoveTask();
-
-                Java.Lang.JavaSystem.Exit(0);
-            };
-
-            RegisterReceiver(stopLauncherBroadcastReceiver, new IntentFilter(Common.Constants.BroadcastConstants.StopLauncherBroadcastName));
 
             Init();
         }

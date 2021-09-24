@@ -32,7 +32,6 @@ namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
             var isSandbox = startIntent.GetBooleanExtra("sandbox", false);
             var logLevel = Enum.TryParse(startIntent.GetStringExtra("loglevel"), out LogLevel level) ? level : LogLevel.Information;
             var scuParams = startIntent.GetScuConfigParameters();
-            var enableCloseButton = startIntent.GetBooleanExtra("enableCloseButton", false);
             
             using var services = new ServiceCollection().AddLogProviders(logLevel).BuildServiceProvider();
             var logger = services.GetRequiredService<ILogger<MiddlewareLauncherService>>();
@@ -44,7 +43,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
             }
 
             logger.LogInformation("Starting the Middleware..");
-            MiddlewareLauncherService.Start(ServiceConnectionProvider.GetConnection(), cashboxId, accessToken, isSandbox, logLevel, scuParams, enableCloseButton);
+            MiddlewareLauncherService.Start(ServiceConnectionProvider.GetConnection(), cashboxId, accessToken, isSandbox, logLevel, scuParams);
 
             Task.Run(async () =>
             {
@@ -59,7 +58,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
                         logger.LogWarning("GetPOSAsync returned null while starting the Launcher.");
                     }
 
-                    MiddlewareLauncherService.SetState(LauncherState.Connected, enableCloseButton);
+                    MiddlewareLauncherService.SetState(LauncherState.Connected);
                     StateProvider.Instance.SetState(State.Running);
                     logger.LogInformation("Successfully started the Middleware.");
                 }
@@ -70,17 +69,17 @@ namespace fiskaltrust.AndroidLauncher.Common.Bootstrapping
                     if (ex is RemountRequiredException remountRequiredEx)
                     {
                         StateProvider.Instance.SetState(State.Error, StateReasons.RemountRequired);
-                        MiddlewareLauncherService.SetState(LauncherState.Error, enableCloseButton, remountRequiredEx.Message);
+                        MiddlewareLauncherService.SetState(LauncherState.Error, remountRequiredEx.Message);
                     }
                     else if (ex is ConfigurationNotFoundException confNotFoundEx)
                     {
                         StateProvider.Instance.SetState(State.Error, StateReasons.ConfigurationNotFound);
-                        MiddlewareLauncherService.SetState(LauncherState.Error, enableCloseButton, confNotFoundEx.Message);
+                        MiddlewareLauncherService.SetState(LauncherState.Error, confNotFoundEx.Message);
                     }
                     else
                     {
                         StateProvider.Instance.SetState(State.Error, ex.Message);
-                        MiddlewareLauncherService.SetState(LauncherState.Error, enableCloseButton);
+                        MiddlewareLauncherService.SetState(LauncherState.Error);
                     }
                 }
 

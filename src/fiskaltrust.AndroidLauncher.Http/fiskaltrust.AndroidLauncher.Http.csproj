@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Broadcasting\StartLauncherBroadcastReceiver.cs" />
+    <Compile Include="Broadcasting\StopLauncherBroadcastReceiver.cs" />
     <Compile Include="Controllers\DESSCDController.cs" />
     <Compile Include="Controllers\POSController.cs" />
     <Compile Include="Helpers\RestUrlResolver.cs" />

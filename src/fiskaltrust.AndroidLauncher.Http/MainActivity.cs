@@ -12,7 +12,6 @@ using Newtonsoft.Json;
 using fiskaltrust.ifPOS.v1;
 using Xamarin.Essentials;
 using fiskaltrust.AndroidLauncher.Common.Helpers.Logging;
-using fiskaltrust.AndroidLauncher.Common.Broadcasting;
 using Android.Views;
 using Log = Android.Util.Log;
 
@@ -21,8 +20,6 @@ namespace fiskaltrust.AndroidLauncher.Http
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
     public class MainActivity : AppCompatActivity
     {
-        private StopLauncherBroadcastReceiver _stopLauncherBroadcastReceiver;
-
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -32,16 +29,6 @@ namespace fiskaltrust.AndroidLauncher.Http
 
             SetContentView(Common.Resource.Layout.activity_main);
             
-            _stopLauncherBroadcastReceiver = new StopLauncherBroadcastReceiver();
-
-            _stopLauncherBroadcastReceiver.StopLauncherReceived += async () =>
-            {
-                FinishAndRemoveTask();
-
-                Java.Lang.JavaSystem.Exit(0);
-            };
-            RegisterReceiver(_stopLauncherBroadcastReceiver, new IntentFilter(Common.Constants.BroadcastConstants.StopLauncherBroadcastName));
-
             Init();
         }
 
@@ -59,7 +46,6 @@ namespace fiskaltrust.AndroidLauncher.Http
             }
             return base.OnOptionsItemSelected(item);
         }
-
         
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
