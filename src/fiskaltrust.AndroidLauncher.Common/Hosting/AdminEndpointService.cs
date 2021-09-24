@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace fiskaltrust.AndroidLauncher.Common.Hosting
@@ -61,11 +62,12 @@ namespace fiskaltrust.AndroidLauncher.Common.Hosting
                                 return;
                             }
 
-                            var logFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), FileLogger.LogDirectory, FileLogger.LogFilename);
-
-                            if (File.Exists(logFile))
+                            var files = new DirectoryInfo(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), FileLogger.LogDirectory))
+                                .GetFiles("*.log").OrderBy(f=>f.LastWriteTime);
+                            
+                            if (files.Any())
                             {
-                                await response.WriteAsync(File.ReadAllText(logFile));
+                                await response.WriteAsync(files.First().FullName);
                             }
                             else
                             {

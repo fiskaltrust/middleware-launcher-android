@@ -7,6 +7,7 @@ using Android.Content;
 using Android.Widget;
 using fiskaltrust.Middleware.Interface.Client.Http;
 using System;
+using System.Runtime;
 using fiskaltrust.Middleware.Interface.Client;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -16,6 +17,7 @@ using Android.Util;
 using fiskaltrust.AndroidLauncher.Common.Helpers.Logging;
 using fiskaltrust.AndroidLauncher.Common.Broadcasting;
 using Android.Views;
+using Microsoft.Extensions.Logging;
 
 namespace fiskaltrust.AndroidLauncher.Http
 {
@@ -60,6 +62,7 @@ namespace fiskaltrust.AndroidLauncher.Http
             return base.OnOptionsItemSelected(item);
         }
 
+        
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
             Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);

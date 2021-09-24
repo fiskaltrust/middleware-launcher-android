@@ -9,6 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
+using fiskaltrust.AndroidLauncher.Common.Extensions;
+using fiskaltrust.AndroidLauncher.Common.Helpers.Logging;
+using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace fiskaltrust.AndroidLauncher.Http.Hosting
 {
@@ -23,7 +27,7 @@ namespace fiskaltrust.AndroidLauncher.Http.Hosting
 
         public abstract Task<T> GetProxyAsync();
 
-        public async Task StartAsync(string url, T instance)
+        public async Task StartAsync(string url, T instance, LogLevel logLevel)
         {
             if (_host != null)
             {
@@ -37,6 +41,7 @@ namespace fiskaltrust.AndroidLauncher.Http.Hosting
                 .UseKestrel()
                 .ConfigureServices(services =>
                 {
+                    services.AddLogProviders(logLevel);
                     services.AddMvc(options =>
                     {
                         options.Conventions.Add(new IncludeControllerConvention<TController>());

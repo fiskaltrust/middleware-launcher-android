@@ -7,6 +7,7 @@ using fiskaltrust.Middleware.Interface.Client.Grpc;
 using Grpc.Core;
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace fiskaltrust.AndroidLauncher.Grpc.Hosting
 {
@@ -32,7 +33,7 @@ namespace fiskaltrust.AndroidLauncher.Grpc.Hosting
             });
         }
 
-        public Task StartAsync(string url, IDESSCD instance)
+        public Task StartAsync(string url, IDESSCD instance, LogLevel logLevel)
         {
             _url = url;
             if (_host != null)
@@ -75,7 +76,7 @@ namespace fiskaltrust.AndroidLauncher.Grpc.Hosting
             });
         }
 
-        public Task StartAsync(string url, IPOS instance)
+        public Task StartAsync(string url, IPOS instance, LogLevel logLevel)
         {
             _url = url;
             if (_host != null)
