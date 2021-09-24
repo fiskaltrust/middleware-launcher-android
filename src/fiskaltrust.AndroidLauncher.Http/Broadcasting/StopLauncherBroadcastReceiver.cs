@@ -1,7 +1,8 @@
 ﻿using Android.App;
 using Android.Content;
-using fiskaltrust.AndroidLauncher.Common.Bootstrapping;
+using fiskaltrust.AndroidLauncher.Common.AndroidService;
 using fiskaltrust.AndroidLauncher.Common.Constants;
+using fiskaltrust.AndroidLauncher.Common.Services;
 
 namespace fiskaltrust.AndroidLauncher.Http.Broadcasting
 {
@@ -11,7 +12,8 @@ namespace fiskaltrust.AndroidLauncher.Http.Broadcasting
     {
         public override void OnReceive(Context context, Intent intent)
         {
-            LauncherBootstrapper.Teardown(context);
+            MiddlewareLauncherService.Stop<MiddlewareLauncherHttpService>();
+            StateProvider.Instance.SetState(State.Uninitialized);
         }
     }
 }

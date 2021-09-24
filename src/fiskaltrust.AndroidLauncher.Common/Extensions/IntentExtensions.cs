@@ -16,13 +16,5 @@ namespace fiskaltrust.AndroidLauncher.Common.Extensions
                 .Where(x => x.StartsWith(SCU_CONFIG_PREFIX))
                 .ToDictionary<string, string, object>(key => GetKey(key), key => intent.Extras.Get(key));
         }
-
-        public static void PutExtras(this Intent intent, Dictionary<string, object> dict)
-        {
-            foreach (var extra in dict)
-            {
-                intent.PutExtra(extra.Key, extra.Value.ToString());
-            }
-        }
     }
 }

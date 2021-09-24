@@ -22,16 +22,19 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
         private const string PACKAGE_NAME_SWISSBIT = "fiskaltrust.Middleware.SCU.DE.Swissbit";
         private const string PACKAGE_NAME_FISKALY = "fiskaltrust.Middleware.SCU.DE.Fiskaly";
         private const string PACKAGE_NAME_FISKALY_CERTIFIED = "fiskaltrust.Middleware.SCU.DE.FiskalyCertified";
+      
+        private readonly IHostFactory _hostFactory;
+        private readonly IUrlResolver _urlResolver;
+        private readonly IConfigurationProvider _configurationProvider;
+        private readonly ILocalConfigurationProvider _localConfigurationProvider;
 
         private readonly Guid _cashboxId;
         private readonly string _accessToken;
         private readonly bool _isSandbox;
         private readonly Dictionary<string, object> _scuParams;
         private readonly LogLevel _logLevel;
-        private readonly IConfigurationProvider _configurationProvider;
-        private readonly ILocalConfigurationProvider _localConfigurationProvider;
+        
         private List<IHelper> _helpers;
-
         private IHost<IPOS> _posHost;
         private IHost<IDESSCD> _scuHost;
 
@@ -39,8 +42,11 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
 
         public bool IsRunning { get; set; }
 
-        public MiddlewareLauncher(Guid cashboxId, string accessToken, bool isSandbox, LogLevel logLevel, Dictionary<string, object> scuParams)
+        public MiddlewareLauncher(IHostFactory hostFactory, IUrlResolver urlResolver, Guid cashboxId, string accessToken, bool isSandbox, LogLevel logLevel, Dictionary<string, object> scuParams)
         {
+            _hostFactory = hostFactory;
+            _urlResolver = urlResolver;
+
             _cashboxId = cashboxId;
             _accessToken = accessToken;
             _isSandbox = isSandbox;
@@ -54,10 +60,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
 
         public async Task StartAsync()
         {
-            var hostFactory = ServiceLocator.Resolve<IHostFactory>();
-
-            _posHost = hostFactory.CreatePosHost();
-            _scuHost = hostFactory.CreateDeSscdHost();
+            _posHost = _hostFactory.CreatePosHost();
+            _scuHost = _hostFactory.CreateDeSscdHost();
 
             ftCashBoxConfiguration configuration;
             try
@@ -98,7 +102,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
                 queueConfig.Configuration["sandbox"] = _isSandbox;
 
                 if (_defaultUrl == null)
-                    _defaultUrl = ServiceLocator.Resolve<IUrlResolver>().GetProtocolSpecificUrl(queueConfig);
+                    _defaultUrl = _urlResolver.GetProtocolSpecificUrl(queueConfig);
                 await InitializeQueueAsync(queueConfig);
             }
 
@@ -134,7 +138,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
 
         private async Task InitializeSwissbitScuAsync(PackageConfiguration packageConfig)
         {
-            string url = ServiceLocator.Resolve<IUrlResolver>().GetProtocolSpecificUrl(packageConfig);
+            string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
 
             var scuProvider = new SwissbitScuProvider();
             var scu = scuProvider.CreateSCU(packageConfig, _logLevel);
@@ -143,7 +147,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
 
         private async Task InitializeFiskalyScuAsync(PackageConfiguration packageConfig)
         {
-            string url = ServiceLocator.Resolve<IUrlResolver>().GetProtocolSpecificUrl(packageConfig);
+            string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
 
             var scuProvider = new FiskalyScuProvider();
             var scu = scuProvider.CreateSCU(packageConfig, _logLevel);
@@ -152,7 +156,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
 
         private async Task InitializeFiskalyCertifiedScuAsync(PackageConfiguration packageConfig)
         {
-            string url = ServiceLocator.Resolve<IUrlResolver>().GetProtocolSpecificUrl(packageConfig);
+            string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
 
             var scuProvider = new FiskalyCertifiedScuProvider();
             var scu = scuProvider.CreateSCU(packageConfig, _logLevel);
@@ -161,7 +165,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
 
         private async Task InitializeQueueAsync(PackageConfiguration packageConfig)
         {
-            string url = ServiceLocator.Resolve<IUrlResolver>().GetProtocolSpecificUrl(packageConfig);
+            string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
 
             var queueProvider = new SQLiteQueueProvider();
             var pos = await Task.Run(() => queueProvider.CreatePOS(Environment.GetFolderPath(Environment.SpecialFolder.Personal), packageConfig, _logLevel, _scuHost));

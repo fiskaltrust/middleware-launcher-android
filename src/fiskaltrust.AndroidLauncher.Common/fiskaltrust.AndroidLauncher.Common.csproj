@@ -50,11 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AndroidService\IMiddlewareServiceConnection.cs" />
     <Compile Include="AndroidService\MiddlewareLauncherService.cs" />
-    <Compile Include="AndroidService\MiddlewareServiceConnection.cs" />
-    <Compile Include="AndroidService\ServiceConnectionProvider.cs" />
-    <Compile Include="Bootstrapping\LauncherBootstrapper.cs" />
     <Compile Include="Constants\BroadcastConstants.cs" />
     <Compile Include="Constants\StateReasons.cs" />
     <Compile Include="Constants\Urls.cs" />
@@ -74,16 +70,12 @@
     <Compile Include="Hosting\IHostFactory.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServiceLocator.cs" />
     <Compile Include="Services\Configuration\HelipadConfigurationProvider.cs" />
     <Compile Include="Services\Configuration\IConfigurationProvider.cs" />
     <Compile Include="Services\Configuration\ILocalConfigurationProvider.cs" />
     <Compile Include="Services\Configuration\LocalConfigurationProvider.cs" />
     <Compile Include="Services\Helper\HelipadHelperProvider.cs" />
-    <Compile Include="Services\IPOSProvider.cs" />
     <Compile Include="Services\MiddlewareLauncher.cs" />
-    <Compile Include="Services\POSProvider.cs" />
-    <Compile Include="Services\POSProviderBinder.cs" />
     <Compile Include="Services\Queue\SQLiteQueueProvider.cs" />
     <Compile Include="Services\SCU\FiskalyCertifiedScuProvider.cs" />
     <Compile Include="Services\SCU\FiskalyScuProvider.cs" />
