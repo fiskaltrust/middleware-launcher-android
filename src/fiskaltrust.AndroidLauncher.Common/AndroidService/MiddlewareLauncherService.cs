@@ -60,6 +60,8 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
 
         public override void OnDestroy()
         {
+            Task.Run(() => StopAsync()).Wait();
+
             if (Build.VERSION.SdkInt >= BuildVersionCodes.N)
             {
                 StopForeground(StopForegroundFlags.Remove);
@@ -69,8 +71,6 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
                 StopForeground(true);
             }
 
-            StopSelf();
-            Task.Run(() => StopAsync()).Wait();
             base.OnDestroy();
         }
 
