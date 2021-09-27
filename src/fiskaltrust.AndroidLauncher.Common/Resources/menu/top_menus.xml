@@ -3,5 +3,9 @@
   <item
        android:id="@+id/menuLogs"
        android:showAsAction="never"
-       android:title="Developer Logs" />
+       android:title="Show Developer Logs" />
+  <item
+          android:id="@+id/menuCopyLogs"
+          android:showAsAction="never"
+          android:title="Copy Developer Logs" />
 </menu>

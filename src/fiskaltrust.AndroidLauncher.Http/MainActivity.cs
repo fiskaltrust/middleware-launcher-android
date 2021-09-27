@@ -13,52 +13,14 @@ using fiskaltrust.ifPOS.v1;
 using Xamarin.Essentials;
 using fiskaltrust.AndroidLauncher.Common.Helpers.Logging;
 using Android.Views;
+using fiskaltrust.AndroidLauncher.Common.Activitites;
 using Log = Android.Util.Log;
 
 namespace fiskaltrust.AndroidLauncher.Http
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
-    public class MainActivity : AppCompatActivity
+    public class MainActivity : BaseMainActivity
     {
-        protected override void OnCreate(Bundle savedInstanceState)
-        {
-            base.OnCreate(savedInstanceState);
-            Platform.Init(this, savedInstanceState);
-            VersionTracking.Track();
-            if (FileLoggerHelper.LogDirectory.Exists == false) FileLoggerHelper.LogDirectory.Create();
-
-            SetContentView(Common.Resource.Layout.activity_main);
-            
-            Init();
-        }
-
-        public override bool OnCreateOptionsMenu(IMenu menu)
-        {
-            MenuInflater.Inflate(Common.Resource.Menu.top_menus, menu);
-            return base.OnCreateOptionsMenu(menu);
-        }
-
-        public override bool OnOptionsItemSelected(IMenuItem item)
-        {
-            if (item.ItemId == Common.Resource.Id.menuLogs)
-            {
-                StartActivity(typeof(LogActivity));
-            }
-            return base.OnOptionsItemSelected(item);
-        }
-        
-        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
-        {
-            Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-
-            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-
-        private void Init()
-        {
-            FindViewById<TextView>(Common.Resource.Id.textViewVersion).Text = $"Version {VersionTracking.CurrentVersion}";
-        }
-
         [Export("SendStartIntentTestBackdoor")]
         public void SendStartIntentTestBackdoor(string cashboxid, string accesstoken)
         {

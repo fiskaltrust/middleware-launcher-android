@@ -80,7 +80,6 @@
     <Compile Include="Hosting\GrpcHelper.cs" />
     <Compile Include="Hosting\GrpcHostFactory.cs" />
     <Compile Include="Hosting\POSClientFactory.cs" />
-    <Compile Include="LogActivity.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="MiddlewareLauncherGrpcService.cs" />
     <Compile Include="Resources\Resource.designer.cs" />

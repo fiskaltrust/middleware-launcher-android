@@ -1,7 +1,4 @@
 ﻿using Android.App;
-using Android.OS;
-using Android.Support.V7.App;
-using Android.Runtime;
 using Java.Interop;
 using Android.Content;
 using System.Threading.Tasks;
@@ -9,55 +6,15 @@ using fiskaltrust.Middleware.Interface.Client.Grpc;
 using System;
 using Newtonsoft.Json;
 using fiskaltrust.ifPOS.v1;
-using Android.Widget;
-using Xamarin.Essentials;
 using Android.Util;
 using fiskaltrust.AndroidLauncher.Common.Helpers.Logging;
-using Android.Views;
+using fiskaltrust.AndroidLauncher.Common.Activitites;
 
 namespace fiskaltrust.AndroidLauncher.Grpc
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
-    public class MainActivity : AppCompatActivity
+    public class MainActivity : BaseMainActivity
     {
-        protected override void OnCreate(Bundle savedInstanceState)
-        {
-            base.OnCreate(savedInstanceState);
-            Platform.Init(this, savedInstanceState);
-            VersionTracking.Track();
-
-            SetContentView(Common.Resource.Layout.activity_main);
-
-            Init();
-        }
-
-        public override bool OnCreateOptionsMenu(IMenu menu)
-        {
-            MenuInflater.Inflate(Common.Resource.Menu.top_menus, menu);
-            return base.OnCreateOptionsMenu(menu);
-        }
-
-        public override bool OnOptionsItemSelected(IMenuItem item)
-        {
-            if (item.ItemId == Common.Resource.Id.menuLogs)
-            {
-                StartActivity(typeof(LogActivity));
-            }
-            return base.OnOptionsItemSelected(item);
-        }
-
-        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
-        {
-            Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-
-            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-
-        private void Init()
-        {
-            FindViewById<TextView>(Common.Resource.Id.textViewVersion).Text = $"Version {VersionTracking.CurrentVersion}";
-        }
-
         [Export("SendStartIntentTestBackdoor")]
         public void SendStartIntentTestBackdoor(string cashboxid, string accesstoken)
         {

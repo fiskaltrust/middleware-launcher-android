@@ -85,7 +85,6 @@
     <Compile Include="Hosting\IncludeControllerConvention.cs" />
     <Compile Include="Hosting\HttpHostFactory.cs" />
     <Compile Include="Hosting\POSClientFactory.cs" />
-    <Compile Include="LogActivity.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="MiddlewareLauncherHttpService.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
