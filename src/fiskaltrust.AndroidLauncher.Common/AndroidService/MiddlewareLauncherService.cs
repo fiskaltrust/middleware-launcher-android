@@ -16,7 +16,9 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 
 namespace fiskaltrust.AndroidLauncher.Common.AndroidService
 {
@@ -80,6 +82,8 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
                     StateProvider.Instance.SetState(State.Running);
                 }).Wait();
 
+                Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
+
                 return StartCommandResult.RedeliverIntent;
             }
             catch (Exception ex)
@@ -109,7 +113,8 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
         public override void OnDestroy()
         {
             Log.Logger.Information("Destroying the fiskaltrust.Middleware service");
-            
+            Connectivity.ConnectivityChanged -= Connectivity_ConnectivityChanged;
+
             Task.Run(async () =>
             {
                 await AdminEndpointService.Instance.StopAsync();
@@ -126,6 +131,11 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
             }
 
             base.OnDestroy();
+        }
+
+        private void Connectivity_ConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
+        {
+            Log.Logger.Warning($"Connectivity state has changed to {e.NetworkAccess}. Current connection profiles: {string.Join(", ", e.ConnectionProfiles.Select(x => x.ToString()))}");
         }
 
         public static void Start<T>(string cashboxId, string accessToken, bool isSandbox, LogLevel logLevel, Dictionary<string, object> additionalScuParams) where T : MiddlewareLauncherService
