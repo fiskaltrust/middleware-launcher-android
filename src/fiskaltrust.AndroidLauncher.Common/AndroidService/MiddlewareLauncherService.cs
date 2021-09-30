@@ -204,7 +204,8 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
                 .SetContentText(text)
                 .SetCategory(Notification.CategoryService)
                 .SetSmallIcon(icon)
-                .SetOngoing(true);
+                .SetOngoing(true)
+                .SetNotificationSilent();
 
             return builder.Build();
         }
