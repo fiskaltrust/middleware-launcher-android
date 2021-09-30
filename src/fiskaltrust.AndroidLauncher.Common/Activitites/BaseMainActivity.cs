@@ -72,7 +72,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Activitites
             {
                 var targetDir = new DirectoryInfo(Path.Combine(targetPath, "logs"));
                 if (!targetDir.Exists) targetDir.Create();
-                
+
                 foreach (var file in FileLoggerHelper.LogDirectory.GetFiles("*.log"))
                 {
                     var destFile = new FileInfo(Path.Combine(targetDir.FullName, file.Name));
@@ -90,7 +90,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Activitites
 
         private async Task CopyFileAsync(string sourcePath, string destinationPath)
         {
-            await using Stream source = File.Open(sourcePath, FileMode.Open);
+            await using Stream source = File.Open(sourcePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             await using Stream destination = File.Create(destinationPath);
             await source.CopyToAsync(destination);
         }
