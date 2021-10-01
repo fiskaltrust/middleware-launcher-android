@@ -74,6 +74,7 @@ stages:
         apksignerKeystorePassword: '$(KeystorePassword)'
         apksignerKeystoreAlias: 'fiskaltrust-build'
         apksignerKeyPassword: '$(KeyPassword)'
+        apksignerArguments: '--verbose --v2-signing-enabled true'
       displayName: Sign APKs
 
     - task: CopyFiles@2
