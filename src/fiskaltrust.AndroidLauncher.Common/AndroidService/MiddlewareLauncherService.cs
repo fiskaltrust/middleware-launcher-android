@@ -41,7 +41,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
 
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.File(path: Path.Combine(FileLoggerHelper.LogDirectory.FullName, FileLoggerHelper.LogFilename), rollingInterval: RollingInterval.Day,
-                    retainedFileCountLimit: 31)
+                    retainedFileCountLimit: 31, shared: true)
                 .CreateLogger();
 
             try
@@ -129,7 +129,8 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
             {
                 StopForeground(true);
             }
-
+            
+            Log.CloseAndFlush();
             base.OnDestroy();
         }
 
