@@ -1,5 +1,4 @@
-﻿using fiskaltrust.AndroidLauncher.Common.Enums;
-using fiskaltrust.AndroidLauncher.Common.Hosting;
+﻿using fiskaltrust.AndroidLauncher.Common.Hosting;
 using fiskaltrust.Middleware.Abstractions;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -9,6 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
+using fiskaltrust.AndroidLauncher.Common.Extensions;
+using Microsoft.Extensions.Logging;
+using System.IO;
 
 namespace fiskaltrust.AndroidLauncher.Http.Hosting
 {
@@ -23,7 +25,7 @@ namespace fiskaltrust.AndroidLauncher.Http.Hosting
 
         public abstract Task<T> GetProxyAsync();
 
-        public async Task StartAsync(string url, T instance)
+        public async Task StartAsync(string url, T instance, LogLevel logLevel)
         {
             if (_host != null)
             {
@@ -32,15 +34,13 @@ namespace fiskaltrust.AndroidLauncher.Http.Hosting
 
             Url = url;
             var uri = new Uri(url);
-            _host = WebHost
-                .CreateDefaultBuilder()
+            _host = new WebHostBuilder()
+                .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseKestrel()
                 .ConfigureServices(services =>
                 {
-                    services.AddMvc(options =>
-                    {
-                        options.Conventions.Add(new IncludeControllerConvention<TController>());
-                    });
+                    services.AddLogProviders(logLevel);
+                    services.AddMvc();
                     services.AddSingleton<T>(instance);
                 })
                 .Configure(app =>

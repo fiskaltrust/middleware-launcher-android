@@ -9,9 +9,9 @@ using fiskaltrust.ifPOS.v1.de;
 using fiskaltrust.Middleware.Abstractions;
 using fiskaltrust.storage.serialization.V0;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 using FiskalyV1SCUConfiguration = fiskaltrust.Middleware.SCU.DE.Fiskaly.FiskalySCUConfiguration;
@@ -23,16 +23,19 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
         private const string PACKAGE_NAME_SWISSBIT = "fiskaltrust.Middleware.SCU.DE.Swissbit";
         private const string PACKAGE_NAME_FISKALY = "fiskaltrust.Middleware.SCU.DE.Fiskaly";
         private const string PACKAGE_NAME_FISKALY_CERTIFIED = "fiskaltrust.Middleware.SCU.DE.FiskalyCertified";
+      
+        private readonly IHostFactory _hostFactory;
+        private readonly IUrlResolver _urlResolver;
+        private readonly IConfigurationProvider _configurationProvider;
+        private readonly ILocalConfigurationProvider _localConfigurationProvider;
 
         private readonly Guid _cashboxId;
         private readonly string _accessToken;
         private readonly bool _isSandbox;
         private readonly Dictionary<string, object> _scuParams;
         private readonly LogLevel _logLevel;
-        private readonly IConfigurationProvider _configurationProvider;
-        private readonly ILocalConfigurationProvider _localConfigurationProvider;
+        
         private List<IHelper> _helpers;
-
         private IHost<IPOS> _posHost;
         private IHost<IDESSCD> _scuHost;
 
@@ -40,8 +43,11 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
 
         public bool IsRunning { get; set; }
 
-        public MiddlewareLauncher(Guid cashboxId, string accessToken, bool isSandbox, LogLevel logLevel, Dictionary<string, object> scuParams)
+        public MiddlewareLauncher(IHostFactory hostFactory, IUrlResolver urlResolver, Guid cashboxId, string accessToken, bool isSandbox, LogLevel logLevel, Dictionary<string, object> scuParams)
         {
+            _hostFactory = hostFactory;
+            _urlResolver = urlResolver;
+
             _cashboxId = cashboxId;
             _accessToken = accessToken;
             _isSandbox = isSandbox;
@@ -55,10 +61,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
 
         public async Task StartAsync()
         {
-            var hostFactory = ServiceLocator.Resolve<IHostFactory>();
-
-            _posHost = hostFactory.CreatePosHost();
-            _scuHost = hostFactory.CreateDeSscdHost();
+            _posHost = _hostFactory.CreatePosHost();
+            _scuHost = _hostFactory.CreateDeSscdHost();
 
             ftCashBoxConfiguration configuration;
             try
@@ -99,7 +103,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
                 queueConfig.Configuration["sandbox"] = _isSandbox;
 
                 if (_defaultUrl == null)
-                    _defaultUrl = ServiceLocator.Resolve<IUrlResolver>().GetProtocolSpecificUrl(queueConfig);
+                    _defaultUrl = _urlResolver.GetProtocolSpecificUrl(queueConfig);
                 await InitializeQueueAsync(queueConfig);
             }
 
@@ -135,39 +139,47 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
 
         private async Task InitializeSwissbitScuAsync(PackageConfiguration packageConfig)
         {
-            string url = ServiceLocator.Resolve<IUrlResolver>().GetProtocolSpecificUrl(packageConfig);
+            string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
 
             var scuProvider = new SwissbitScuProvider();
             var scu = scuProvider.CreateSCU(packageConfig, _logLevel);
-            await _scuHost.StartAsync(url, scu);
+            await _scuHost.StartAsync(url, scu, _logLevel);
+
+            Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.SCU.DE.Swissbit' is listening on '{url}'.");
         }
 
         private async Task InitializeFiskalyScuAsync(PackageConfiguration packageConfig)
         {
-            string url = ServiceLocator.Resolve<IUrlResolver>().GetProtocolSpecificUrl(packageConfig);
+            string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
 
             var scuProvider = new FiskalyScuProvider();
             var scu = scuProvider.CreateSCU(packageConfig, _logLevel);
-            await _scuHost.StartAsync(url, scu);
+            await _scuHost.StartAsync(url, scu, _logLevel);
+
+            Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.SCU.DE.Fiskaly' is listening on '{url}'.");
         }
 
         private async Task InitializeFiskalyCertifiedScuAsync(PackageConfiguration packageConfig)
         {
-            string url = ServiceLocator.Resolve<IUrlResolver>().GetProtocolSpecificUrl(packageConfig);
+            string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
 
             var scuProvider = new FiskalyCertifiedScuProvider();
             var scu = scuProvider.CreateSCU(packageConfig, _logLevel);
-            await _scuHost.StartAsync(url, scu);
+            await _scuHost.StartAsync(url, scu, _logLevel);
+
+            Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.SCU.DE.FiskalyCertified' is listening on '{url}'.");
         }
 
         private async Task InitializeQueueAsync(PackageConfiguration packageConfig)
         {
-            string url = ServiceLocator.Resolve<IUrlResolver>().GetProtocolSpecificUrl(packageConfig);
+            string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
 
             var queueProvider = new SQLiteQueueProvider();
             var pos = await Task.Run(() => queueProvider.CreatePOS(Environment.GetFolderPath(Environment.SpecialFolder.Personal), packageConfig, _logLevel, _scuHost));
 
-            await _posHost.StartAsync(url, pos);
+            await _posHost.StartAsync(url, pos, _logLevel);
+
+            Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.Queue.SQLite' is listening on '{url}'.");
         }
 
         private async Task InitializeHelipadHelperAsync(ftCashBoxConfiguration configuration)

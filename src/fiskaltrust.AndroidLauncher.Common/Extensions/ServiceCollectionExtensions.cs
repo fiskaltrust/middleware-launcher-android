@@ -1,9 +1,8 @@
 ﻿using fiskaltrust.AndroidLauncher.Common.Helpers.Logging;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Serilog;
-using System;
 using System.IO;
+using Microsoft.Extensions.Logging;
 
 namespace fiskaltrust.AndroidLauncher.Common.Extensions
 {
@@ -13,8 +12,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Extensions
         {
             return serviceCollection.AddLogging(builder =>
             {
+                builder.AddSerilog();
                 builder.Services.AddSingleton<ILoggerProvider, AndroidLoggerProvider>();
-                builder.Services.AddSingleton<ILoggerProvider, FileLoggerProvider>();
                 builder.SetMinimumLevel(logLevel);
             });
         }

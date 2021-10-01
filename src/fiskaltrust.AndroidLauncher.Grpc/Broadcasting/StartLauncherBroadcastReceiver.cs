@@ -1,11 +1,10 @@
 ﻿using Android.App;
 using Android.Content;
-using fiskaltrust.AndroidLauncher.Common;
-using fiskaltrust.AndroidLauncher.Common.Bootstrapping;
+using fiskaltrust.AndroidLauncher.Common.AndroidService;
 using fiskaltrust.AndroidLauncher.Common.Constants;
-using fiskaltrust.AndroidLauncher.Common.Helpers;
-using fiskaltrust.AndroidLauncher.Grpc.Hosting;
-using fiskaltrust.AndroidLauncher.Helpers;
+using fiskaltrust.AndroidLauncher.Common.Extensions;
+using Microsoft.Extensions.Logging;
+using System;
 
 namespace fiskaltrust.AndroidLauncher.Grpc.Broadcasting
 {
@@ -15,10 +14,13 @@ namespace fiskaltrust.AndroidLauncher.Grpc.Broadcasting
     {
         public override void OnReceive(Context context, Intent intent)
         {
-            ServiceLocator.Register<IHostFactory>(new GrpcHostFactory());
-            ServiceLocator.Register<IUrlResolver>(new GrpcUrlResolver());
+            var cashboxId = intent.GetStringExtra("cashboxid");
+            var accessToken = intent.GetStringExtra("accesstoken");
+            var isSandbox = intent.GetBooleanExtra("sandbox", false);
+            var logLevel = Enum.TryParse(intent.GetStringExtra("loglevel"), out LogLevel level) ? level : LogLevel.Information;
+            var scuParams = intent.GetScuConfigParameters();
 
-            LauncherBootstrapper.Setup(context, intent);
+            MiddlewareLauncherService.Start<MiddlewareLauncherGrpcService>(cashboxId, accessToken, isSandbox, logLevel, scuParams);
         }
     }
 }

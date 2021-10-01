@@ -17,7 +17,7 @@
     <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
-    <TargetFrameworkVersion>v10.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v11.0</TargetFrameworkVersion>
     <AndroidUseAapt2>true</AndroidUseAapt2>
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
@@ -29,6 +29,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AndroidSupportedAbis>armeabi-v7a;x86;arm64-v8a;x86_64</AndroidSupportedAbis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>portable</DebugType>
@@ -37,6 +38,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AndroidSupportedAbis>armeabi-v7a;x86;arm64-v8a;x86_64</AndroidSupportedAbis>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -48,13 +50,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AndroidService\IMiddlewareServiceConnection.cs" />
+    <Compile Include="Activitites\BaseMainActivity.cs" />
+    <Compile Include="Activitites\LogActivity.cs" />
     <Compile Include="AndroidService\MiddlewareLauncherService.cs" />
-    <Compile Include="AndroidService\MiddlewareServiceConnection.cs" />
-    <Compile Include="AndroidService\ServiceConnectionProvider.cs" />
-    <Compile Include="Bootstrapping\LauncherBootstrapper.cs" />
-    <Compile Include="Broadcasting\StopBroadcastReceiver.cs" />
-    <Compile Include="Broadcasting\StopLauncherBroadcastReceiver.cs" />
     <Compile Include="Constants\BroadcastConstants.cs" />
     <Compile Include="Constants\StateReasons.cs" />
     <Compile Include="Constants\Urls.cs" />
@@ -66,8 +64,7 @@
     <Compile Include="Extensions\ServiceCollectionExtensions.cs" />
     <Compile Include="Helpers\IUrlResolver.cs" />
     <Compile Include="Helpers\Logging\AndroidLogger.cs" />
-    <Compile Include="Helpers\Logging\FileLogger.cs" />
-    <Compile Include="Helpers\Logging\FileLoggerProvider.cs" />
+    <Compile Include="Helpers\Logging\FileLoggerHelper.cs" />
     <Compile Include="Helpers\Logging\AndroidLoggerProvider.cs" />
     <Compile Include="Helpers\Logging\NoopDisposable.cs" />
     <Compile Include="Hosting\AdminEndpointService.cs" />
@@ -75,16 +72,12 @@
     <Compile Include="Hosting\IHostFactory.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServiceLocator.cs" />
     <Compile Include="Services\Configuration\HelipadConfigurationProvider.cs" />
     <Compile Include="Services\Configuration\IConfigurationProvider.cs" />
     <Compile Include="Services\Configuration\ILocalConfigurationProvider.cs" />
     <Compile Include="Services\Configuration\LocalConfigurationProvider.cs" />
     <Compile Include="Services\Helper\HelipadHelperProvider.cs" />
-    <Compile Include="Services\IPOSProvider.cs" />
     <Compile Include="Services\MiddlewareLauncher.cs" />
-    <Compile Include="Services\POSProvider.cs" />
-    <Compile Include="Services\POSProviderBinder.cs" />
     <Compile Include="Services\Queue\SQLiteQueueProvider.cs" />
     <Compile Include="Services\SCU\FiskalyCertifiedScuProvider.cs" />
     <Compile Include="Services\SCU\FiskalyScuProvider.cs" />
@@ -134,11 +127,11 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
     </PackageReference>
-    <PackageReference Include="Serilog.Extensions.Logging.File">
-      <Version>2.0.0</Version>
+    <PackageReference Include="Serilog.Extensions.Logging">
+      <Version>3.0.1</Version>
     </PackageReference>
     <PackageReference Include="Serilog.Sinks.File">
-      <Version>4.1.0</Version>
+      <Version>5.0.0</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="28.0.0.3" />
     <PackageReference Include="Xamarin.AndroidX.AppCompat.Resources">

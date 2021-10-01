@@ -8,14 +8,20 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using Serilog;
 using System;
 using System.IO;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.FileProviders;
 
 namespace fiskaltrust.AndroidLauncher.Common.Hosting
 {
     public class AdminEndpointService
     {
+        private const string URL = "http://localhost:4654";
+
         private static readonly Lazy<AdminEndpointService> _lazyInstance = new Lazy<AdminEndpointService>(() => new AdminEndpointService());
         private IWebHost _host;
 
@@ -30,10 +36,10 @@ namespace fiskaltrust.AndroidLauncher.Common.Hosting
                 await StopAsync();
             }
 
-            var uri = new Uri("http://localhost:4654");
-            _host = WebHost
-                .CreateDefaultBuilder()
+            var uri = new Uri(URL);
+            _host = new WebHostBuilder()                
                 .UseKestrel()
+                .UseContentRoot(Directory.GetCurrentDirectory())
                 .ConfigureServices(services =>
                 {
                     services.AddRouting();
@@ -61,11 +67,11 @@ namespace fiskaltrust.AndroidLauncher.Common.Hosting
                                 return;
                             }
 
-                            var logFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), FileLogger.LogDirectory, FileLogger.LogFilename);
+                            var fileToSend = FileLoggerHelper.LogDirectory.GetFiles("*.log").OrderByDescending(f=>f.LastWriteTime).FirstOrDefault();
 
-                            if (File.Exists(logFile))
+                            if (fileToSend != null)
                             {
-                                await response.WriteAsync(File.ReadAllText(logFile));
+                                await response.SendFileAsync(GetIFileInfo(fileToSend.FullName));
                             }
                             else
                             {
@@ -78,6 +84,15 @@ namespace fiskaltrust.AndroidLauncher.Common.Hosting
                 .Build();
 
             await _host.StartAsync();
+            
+            Log.Logger.Information($"Admin endpoint is listening at '{URL}'.");
+        }
+        
+        private IFileInfo GetIFileInfo(string fileName)
+        {
+            IFileProvider provider = new PhysicalFileProvider(AppDomain.CurrentDomain.BaseDirectory);
+            IFileInfo fileInfo = provider.GetFileInfo(fileName);
+            return fileInfo;
         }
 
         private async Task<bool> AuthenticateAsync(string cashboxid, string accesstoken)
