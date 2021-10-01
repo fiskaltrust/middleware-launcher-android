@@ -37,9 +37,9 @@ namespace fiskaltrust.AndroidLauncher.Common.Hosting
             }
 
             var uri = new Uri(URL);
-            _host = new WebHostBuilder()                
+            _host = WebHost
+                .CreateDefaultBuilder()
                 .UseKestrel()
-                .UseContentRoot(Directory.GetCurrentDirectory())
                 .ConfigureServices(services =>
                 {
                     services.AddRouting();

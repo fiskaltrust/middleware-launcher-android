@@ -34,13 +34,16 @@ namespace fiskaltrust.AndroidLauncher.Http.Hosting
 
             Url = url;
             var uri = new Uri(url);
-            _host = new WebHostBuilder()
-                .UseContentRoot(Directory.GetCurrentDirectory())
+            _host = WebHost
+                .CreateDefaultBuilder()
                 .UseKestrel()
                 .ConfigureServices(services =>
                 {
                     services.AddLogProviders(logLevel);
-                    services.AddMvc();
+                    services.AddMvc(options =>
+                    {
+                        options.Conventions.Add(new IncludeControllerConvention<TController>());
+                    });
                     services.AddSingleton<T>(instance);
                 })
                 .Configure(app =>
