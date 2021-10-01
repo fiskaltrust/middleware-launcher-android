@@ -41,7 +41,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
 
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.File(path: Path.Combine(FileLoggerHelper.LogDirectory.FullName, FileLoggerHelper.LogFilename), rollingInterval: RollingInterval.Day,
-                    retainedFileCountLimit: 31, shared: true)
+                    retainedFileCountLimit: 31, shared: true, fileSizeLimitBytes: 100 * 1024 * 1024)
                 .CreateLogger();
 
             try
