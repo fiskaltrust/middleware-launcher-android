@@ -3,6 +3,7 @@ using Android.Content;
 using fiskaltrust.AndroidLauncher.Common.AndroidService;
 using fiskaltrust.AndroidLauncher.Common.Constants;
 using fiskaltrust.AndroidLauncher.Common.Extensions;
+using fiskaltrust.AndroidLauncher.Common.Services;
 using Microsoft.Extensions.Logging;
 using System;
 
@@ -19,6 +20,11 @@ namespace fiskaltrust.AndroidLauncher.Http.Broadcasting
             var isSandbox = intent.GetBooleanExtra("sandbox", false);
             var logLevel = Enum.TryParse(intent.GetStringExtra("loglevel"), out LogLevel level) ? level : LogLevel.Information;
             var scuParams = intent.GetScuConfigParameters();
+
+            if (StateProvider.Instance.CurrentValue.CurrentState == State.Error)
+            {
+                MiddlewareLauncherService.Stop<MiddlewareLauncherHttpService>();
+            }
 
             MiddlewareLauncherService.Start<MiddlewareLauncherHttpService>(cashboxId, accessToken, isSandbox, logLevel, scuParams);
         }
