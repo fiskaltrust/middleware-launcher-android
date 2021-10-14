@@ -41,7 +41,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
 
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.File(path: Path.Combine(FileLoggerHelper.LogDirectory.FullName, FileLoggerHelper.LogFilename), rollingInterval: RollingInterval.Day,
-                    retainedFileCountLimit: 31, shared: true, fileSizeLimitBytes: 100 * 1024 * 1024)
+                    retainedFileCountLimit: 31)
                 .CreateLogger();
 
             try
@@ -73,7 +73,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
                     }
                     catch (Exception ex)
                     {
-                        Log.Logger.Error(ex, "AdminEndpointService starting failed...");
+                        Log.Logger.Error(ex, "AdminEndpointService starting failed.");
                     }
 
                     await _launcher.StartAsync();
@@ -88,6 +88,9 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
             }
             catch (Exception ex)
             {
+                if (ex.InnerException != null)
+                    ex = ex.InnerException;
+
                 Log.Logger.Error(ex, "An error occured while trying to start the fiskaltrust Android Launcher.");
 
                 if (ex is RemountRequiredException remountRequiredEx)
@@ -106,7 +109,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
                     SetState(LauncherState.Error);
                 }
 
-                throw;
+                return StartCommandResult.NotSticky;
             }
         }
 
@@ -129,7 +132,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
             {
                 StopForeground(true);
             }
-            
+
             Log.CloseAndFlush();
             base.OnDestroy();
         }
@@ -192,7 +195,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
             };
             var text = state switch
             {
-                LauncherState.NotConnected => "The fiskaltrust Middleware is on standby. Starting will take a few seconds, depending on the TSE.",
+                LauncherState.NotConnected => "The fiskaltrust Middleware is starting. This will take a few seconds, depending on the TSE.",
                 LauncherState.Connected => "The fiskaltrust Middleware is running.",
                 LauncherState.Error => "An error occured in the fiskaltrust Middleware. Please restart it.",
                 _ => throw new NotImplementedException(),

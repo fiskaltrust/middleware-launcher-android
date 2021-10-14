@@ -31,7 +31,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Hosting
 
         public async Task StartAsync()
         {
-            if(_host != null)
+            if (_host != null)
             {
                 await StopAsync();
             }
@@ -61,13 +61,13 @@ namespace fiskaltrust.AndroidLauncher.Common.Hosting
                                 return;
                             }
 
-                            if(!await AuthenticateAsync(request.Headers["cashboxid"], request.Headers["accesstoken"]))
+                            if (!await AuthenticateAsync(request.Headers["cashboxid"], request.Headers["accesstoken"]))
                             {
                                 response.StatusCode = StatusCodes.Status403Forbidden;
                                 return;
                             }
 
-                            var fileToSend = FileLoggerHelper.LogDirectory.GetFiles("*.log").OrderByDescending(f=>f.LastWriteTime).FirstOrDefault();
+                            var fileToSend = FileLoggerHelper.LogDirectory.GetFiles("*.log").OrderByDescending(f => f.LastWriteTime).FirstOrDefault();
 
                             if (fileToSend != null)
                             {
@@ -84,10 +84,10 @@ namespace fiskaltrust.AndroidLauncher.Common.Hosting
                 .Build();
 
             await _host.StartAsync();
-            
+
             Log.Logger.Information($"Admin endpoint is listening at '{URL}'.");
         }
-        
+
         private IFileInfo GetIFileInfo(string fileName)
         {
             IFileProvider provider = new PhysicalFileProvider(AppDomain.CurrentDomain.BaseDirectory);
