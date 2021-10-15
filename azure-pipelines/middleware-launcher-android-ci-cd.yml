@@ -118,7 +118,6 @@ stages:
         targetType: 'filePath'
         filePath: azure-pipelines/scripts/create-fiskaly-tse.ps1
         arguments: > 
-          -ScuId "$(TestScuId)"
           -FiskalyApiKey "$(TestFiskalyApiKey)"
           -FiskalyApiSecret "$(TestFiskalyApiSecret)"
           -TssAdminPin "$(setTssVariablesStep.adminPin)"
