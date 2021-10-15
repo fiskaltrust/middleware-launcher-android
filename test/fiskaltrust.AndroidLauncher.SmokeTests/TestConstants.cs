@@ -4,15 +4,15 @@
     {
         public static class Http
         {
-            public const string CashboxId = "c7bdfec2-1c99-48d6-9ce0-5caaf613cd0b";
-            public const string AccessToken = "BBzMuxESso0z6h7Od/imq8wLCYYO2jkDfGVpd2q+9BbC/GttKt1Iqj0u7uE8LOpd74EnKYSZMg6Dim0ZeK2Yi+4=";
-            public const string Url = "http://localhost:1910/7ad0b5ee-56fb-42b7-89e4-1828b1450f68";
+            public const string CashboxId = "0a54122c-e247-4498-9e40-cc667c17e6aa";
+            public const string AccessToken = "BH0MPsyWk3uqFy6fL3W2fPCRmjhXJrobOYSL9reW7c44kR7ycBN3G1vWmc1bdUbh4grU/c6CsQzYGcMH6RTJPr8=";
+            public const string Url = "http://localhost:1500/dec70a9c-4bb4-47e3-9686-78995b2c9f4e";
         }
 
         public static class Grpc
         {
-            public const string CashboxId = "b957c72b-3321-4024-96bd-02f5c633623d";
-            public const string AccessToken = "BD2Oyo2HOvOArjkcHYYlMEbl0rgmch4WzGFoSL4ZMlAXX4PVm5lc4qoUXsiLKou0/IdrDHIkh0rtYNPk+LMvDlU=";
+            public const string CashboxId = "61385be4-7d8d-403b-8860-fbc5a07ed128";
+            public const string AccessToken = "BKmQdtsJvAmhT12xewUXW39XyzJZhePtUN//u4svDPLAVlEs2nRefmZ9iFH7dCARdQjB7XYG6yILXmsmSVMtheE=";
             public const string Url = "grpc://localhost:1400";
         }
 
