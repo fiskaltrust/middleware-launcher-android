@@ -12,15 +12,17 @@ $authBody = @{
     "api_secret" = $FiskalyApiSecret;
 } | ConvertTo-Json
 $headers = @{ "Content-Type" = "application/json" }
-$authResponse = Invoke-WebRequest -Method POST -Uri "$baseUrl/auth" -Headers $headers -Body $authBody | ConvertFrom-Json
-  
-$default = @{
-    "Authentication" = "Bearer";
-    "Token"          = $authResponse.access_token;
-    "Headers"        = $headers;
+$authResponse = Invoke-WebRequest -Method POST -Uri "$baseUrl/auth" -Headers $headers -Body $authBody
+if ($authResponse.StatusCode -ne 200) {
+    throw "Could not authenticate"
+}
+$auth = $authResponse | ConvertFrom-Json
+$defaultHeaders = @{
+    "Authorization"  = "Bearer $($auth.access_token)";
+    "Content-Type"   = "application/json"
 }
 
-$tssResponse = Invoke-WebRequest @default -Method PUT -Uri "$baseUrl/tss/$TssId" -Body "{}"
+$tssResponse = Invoke-WebRequest -Headers $defaultHeaders -Method PUT -Uri "$baseUrl/tss/$TssId" -Body "{}"
 if ($tssResponse.StatusCode -ne 200) {
     throw "Could not create TSS"
 }
@@ -31,7 +33,7 @@ $updateStateBody = @{
     "state" = "UNINITIALIZED";
 } | ConvertTo-Json
 
-$updateStateResponse = Invoke-WebRequest @default -Method PATCH -Uri "$baseUrl/tss/$TssId" -Body $updateStateBody
+$updateStateResponse = Invoke-WebRequest -Headers $defaultHeaders -Method PATCH -Uri "$baseUrl/tss/$TssId" -Body $updateStateBody
 if ($updateStateResponse.StatusCode -ne 200) {
     throw "Could not update TSS state"
 }
@@ -41,7 +43,7 @@ $updatePinBody = @{
     "new_admin_pin" = "$TssAdminPin";
 } | ConvertTo-Json
 
-$updatePinResponse = Invoke-WebRequest @default -Method PATCH -Uri "$baseUrl/tss/$TssId/admin" -Body $updatePinBody
+$updatePinResponse = Invoke-WebRequest -Headers $defaultHeaders -Method PATCH -Uri "$baseUrl/tss/$TssId/admin" -Body $updatePinBody
 if ($updatePinResponse.StatusCode -ne 200) {
     throw "Could not set admin_pin"
 }
