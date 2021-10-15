@@ -20,7 +20,7 @@ $default = @{
     "Headers"        = $headers;
 }
 
-$tssResponse = Invoke-WebRequest @default -Method PUT -Uri "$baseUrl/tss/$TssId" -Body "{}" -Headers $headers
+$tssResponse = Invoke-WebRequest @default -Method PUT -Uri "$baseUrl/tss/$TssId" -Body "{}"
 if ($tssResponse.StatusCode -ne 200) {
     throw "Could not create TSS"
 }
