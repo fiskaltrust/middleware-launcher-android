@@ -16,7 +16,7 @@ $authResponse = Invoke-WebRequest -Method POST -Uri "$baseUrl/auth" -Headers $he
   
 $default = @{
     "Authentication" = "Bearer";
-    "Token"          = $(ConvertTo-SecureString $authResponse.access_token -AsPlainText);
+    "Token"          = $authResponse.access_token;
     "Headers"        = $headers;
 }
 
