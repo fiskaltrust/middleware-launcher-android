@@ -116,7 +116,7 @@ stages:
     - task: PowerShell@2
       inputs:
         targetType: 'filePath'
-        filePath: scripts/create-fiskaly-tse.ps1
+        filePath: azure-pipelines/scripts/create-fiskaly-tse.ps1
         arguments: > 
           -ScuId "$(TestScuId)"
           -FiskalyApiKey "$(TestFiskalyApiKey)"
@@ -128,7 +128,7 @@ stages:
     - task: PowerShell@2
       inputs:
         targetType: 'filePath'
-        filePath: scripts/update-scu.ps1
+        filePath: azure-pipelines/scripts/update-scu.ps1
         arguments: > 
           -AccountId "$(TestAccountId)"
           -AccountAccessToken "$(TestAccountAccessToken)"
@@ -142,7 +142,7 @@ stages:
     - task: PowerShell@2
       inputs:
         targetType: 'filePath'
-        filePath: scripts/update-scu.ps1
+        filePath: azure-pipelines/scripts/update-scu.ps1
         arguments: > 
           -AccountId "$(TestAccountId)"
           -AccountAccessToken "$(TestAccountAccessToken)"
