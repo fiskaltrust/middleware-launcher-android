@@ -135,7 +135,7 @@ stages:
           -FiskalyApiKey "$(TestFiskalyApiKey)"
           -FiskalyApiSecret "$(TestFiskalyApiSecret)"
           -TssAdminPin "$(setTssVariablesStep.adminPin)"
-          -TssId "$(setTssIdStep.tssId)"
+          -TssId "$(setTssVariablesStep.tssId)"
       displayName: 'Update TSS values in HTTP SCU'
 
     - task: PowerShell@2
@@ -149,7 +149,7 @@ stages:
           -FiskalyApiKey "$(TestFiskalyApiKey)"
           -FiskalyApiSecret "$(TestFiskalyApiSecret)"
           -TssAdminPin "$(setTssVariablesStep.adminPin)"
-          -TssId "$(setTssIdStep.tssId)"
+          -TssId "$(setTssVariablesStep.tssId)"
       displayName: 'Update TSS values in gRPC SCU'
 
     - powershell: |
