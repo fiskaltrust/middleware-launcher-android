@@ -217,6 +217,21 @@ stages:
         prepareOptions: '--include-category http'
       displayName: Smoke tests (HTTP)
 
+  - job: Cleanup
+    dependsOn: SmokeTest
+    condition: and(succeededOrFailed(), or(eq(variables['build.sourceBranch'], 'refs/heads/master'), startsWith(variables['build.sourceBranch'], 'refs/tags')))
+    steps:
+    - task: PowerShell@2
+      inputs:
+        targetType: 'filePath'
+        filePath: azure-pipelines/scripts/delete-fiskaly-tse.ps1
+        arguments: > 
+          -FiskalyApiKey "$(TestFiskalyApiKey)"
+          -FiskalyApiSecret "$(TestFiskalyApiSecret)"
+          -TssAdminPin "$(setTssVariablesStep.adminPin)"
+          -TssId "$(setTssVariablesStep.tssId)"
+      displayName: 'Disable fiskaly test TSE'
+
 - stage: ReleaseSandbox
   displayName: Release packages to sandbox
   condition: and(succeeded(), or(eq(variables['DeployToSandbox'], 'true'), startsWith(variables['Build.SourceBranch'], 'refs/tags/')))
