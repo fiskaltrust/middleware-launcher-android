@@ -220,6 +220,9 @@ stages:
   - job: Cleanup
     dependsOn: SmokeTest
     condition: and(succeededOrFailed(), or(eq(variables['build.sourceBranch'], 'refs/heads/master'), startsWith(variables['build.sourceBranch'], 'refs/tags')))
+    variables:
+      FiskalyAdminPin: $[ dependencies.SmokeTest.outputs['setTssVariablesStep.adminPin'] ]
+      FiskalyTssId: $[ dependencies.SmokeTest.outputs['setTssVariablesStep.tssId'] ]
     steps:
     - task: PowerShell@2
       inputs:
@@ -228,8 +231,8 @@ stages:
         arguments: > 
           -FiskalyApiKey "$(TestFiskalyApiKey)"
           -FiskalyApiSecret "$(TestFiskalyApiSecret)"
-          -TssAdminPin "$(setTssVariablesStep.adminPin)"
-          -TssId "$(setTssVariablesStep.tssId)"
+          -TssAdminPin "$(FiskalyAdminPin)"
+          -TssId "$(FiskalyTssId)"
       displayName: 'Disable fiskaly test TSE'
 
 - stage: ReleaseSandbox
