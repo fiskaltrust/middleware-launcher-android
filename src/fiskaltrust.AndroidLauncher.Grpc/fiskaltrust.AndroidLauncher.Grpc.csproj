@@ -119,7 +119,7 @@
       <Version>1.3.3</Version>
     </PackageReference>
     <PackageReference Include="fiskaltrust.Middleware.Helper.Helipad">
-      <Version>1.3.22</Version>
+      <Version>1.3.26</Version>
     </PackageReference>
     <PackageReference Include="fiskaltrust.Middleware.Interface.Client.Grpc">
       <Version>1.3.3</Version>
