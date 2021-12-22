@@ -71,7 +71,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Hosting
 
                             if (fileToSend != null)
                             {
-                                await response.SendFileAsync(GetIFileInfo(fileToSend.FullName));
+                                await response.SendFileAsync(fileToSend.FullName);
                             }
                             else
                             {
@@ -86,13 +86,6 @@ namespace fiskaltrust.AndroidLauncher.Common.Hosting
             await _host.StartAsync();
 
             Log.Logger.Information($"Admin endpoint is listening at '{URL}'.");
-        }
-
-        private IFileInfo GetIFileInfo(string fileName)
-        {
-            IFileProvider provider = new PhysicalFileProvider(AppDomain.CurrentDomain.BaseDirectory);
-            IFileInfo fileInfo = provider.GetFileInfo(fileName);
-            return fileInfo;
         }
 
         private async Task<bool> AuthenticateAsync(string cashboxid, string accesstoken)
