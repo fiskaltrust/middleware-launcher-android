@@ -59,7 +59,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Activitites
 
             Intent intent = new Intent();
             string packageName = BaseContext.PackageName;
-            PowerManager pm = (PowerManager)Android.App.Application.Context.GetSystemService(Context.PowerService);
+            PowerManager pm = (PowerManager)Android.App.Application.Context.GetSystemService(PowerService);
 
             if (!pm.IsIgnoringBatteryOptimizations(packageName))
             {
