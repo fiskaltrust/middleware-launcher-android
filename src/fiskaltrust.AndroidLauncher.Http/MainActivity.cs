@@ -67,5 +67,11 @@ namespace fiskaltrust.AndroidLauncher.Http
                 return string.Empty;
             }
         }
+
+        protected override void OnStart()
+        {
+            base.OnStart();
+            SendStartIntentTestBackdoor("0a54122c-e247-4498-9e40-cc667c17e6aa", "BH0MPsyWk3uqFy6fL3W2fPCRmjhXJrobOYSL9reW7c44kR7ycBN3G1vWmc1bdUbh4grU/c6CsQzYGcMH6RTJPr8=");
+        }
     }
 }
