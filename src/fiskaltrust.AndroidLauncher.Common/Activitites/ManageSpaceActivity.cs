@@ -19,7 +19,6 @@ namespace fiskaltrust.AndroidLauncher.Common.Activitites
         public void ButtonClearDataOnCLick(View v)
         {
             ((ActivityManager)GetSystemService(ActivityService)).ClearApplicationUserData();
-            Toast.MakeText(Application.Context, "Cleared AppData", ToastLength.Long).Show();
         }
     }
 }
