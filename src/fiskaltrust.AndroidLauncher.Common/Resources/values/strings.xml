@@ -4,4 +4,6 @@
   <string name="main_title">You\'re all set!</string>
   <string name="log_title">Developer logs</string>
   <string name="main_content">The Launcher for the fiskaltrust.Middleware is installed on this device and will listen for incoming start requests.</string>
+  <string name="manage_space_content">Clearing the app data will delete your queue and all your data.</string>
+  <string name="manage_space_button">Clear Data</string>
 </resources>
