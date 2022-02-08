@@ -78,6 +78,7 @@
     <Compile Include="Services\Configuration\LocalConfigurationProvider.cs" />
     <Compile Include="Services\Helper\HelipadHelperProvider.cs" />
     <Compile Include="Services\MiddlewareLauncher.cs" />
+    <Compile Include="Services\POSProviderBinder.cs" />
     <Compile Include="Services\Queue\SQLiteQueueProvider.cs" />
     <Compile Include="Services\SCU\FiskalyCertifiedScuProvider.cs" />
     <Compile Include="Services\SCU\FiskalyScuProvider.cs" />
@@ -110,7 +111,7 @@
       <Version>1.3.25</Version>
     </PackageReference>
     <PackageReference Include="fiskaltrust.Middleware.SCU.DE.Fiskaly">
-      <Version>1.3.21</Version>
+      <Version>1.3.22</Version>
     </PackageReference>
     <PackageReference Include="fiskaltrust.Middleware.SCU.DE.FiskalyCertified">
       <Version>1.3.26</Version>
