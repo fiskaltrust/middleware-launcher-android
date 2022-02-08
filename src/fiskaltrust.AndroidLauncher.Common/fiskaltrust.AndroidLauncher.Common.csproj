@@ -78,7 +78,6 @@
     <Compile Include="Services\Configuration\LocalConfigurationProvider.cs" />
     <Compile Include="Services\Helper\HelipadHelperProvider.cs" />
     <Compile Include="Services\MiddlewareLauncher.cs" />
-    <Compile Include="Services\POSProviderBinder.cs" />
     <Compile Include="Services\Queue\SQLiteQueueProvider.cs" />
     <Compile Include="Services\SCU\FiskalyCertifiedScuProvider.cs" />
     <Compile Include="Services\SCU\FiskalyScuProvider.cs" />

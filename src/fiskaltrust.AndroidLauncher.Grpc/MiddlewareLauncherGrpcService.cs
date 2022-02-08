@@ -21,10 +21,9 @@ namespace fiskaltrust.AndroidLauncher.Grpc
 
         public override IBinder OnBind(Intent intent)
         {
-            var binder = new POSProviderBinder(this);
             var stopBroadcastReceiver = new StopLauncherBroadcastReceiver();
             RegisterReceiver(stopBroadcastReceiver, new IntentFilter(BroadcastConstants.StopBroadcastName));
-            return binder;
+            return null;
         }
     }
 }

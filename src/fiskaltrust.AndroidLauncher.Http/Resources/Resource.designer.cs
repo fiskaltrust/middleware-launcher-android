@@ -14,7 +14,7 @@ namespace fiskaltrust.AndroidLauncher.Http
 {
 	
 	
-	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Xamarin.Android.Build.Tasks", "12.2.0.155")]
+	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Xamarin.Android.Build.Tasks", "12.2.0.153")]
 	public partial class Resource
 	{
 		
