@@ -3,6 +3,7 @@ using Android.Content;
 using fiskaltrust.AndroidLauncher.Common.AndroidService;
 using fiskaltrust.AndroidLauncher.Common.Constants;
 using fiskaltrust.AndroidLauncher.Common.Extensions;
+using fiskaltrust.AndroidLauncher.Common.Helpers;
 using fiskaltrust.AndroidLauncher.Common.Services;
 using Microsoft.Extensions.Logging;
 using System;
@@ -28,6 +29,7 @@ namespace fiskaltrust.AndroidLauncher.Http.Broadcasting
             }
 
             MiddlewareLauncherService.Start<MiddlewareLauncherHttpService>(cashboxId, accessToken, isSandbox, logLevel, scuParams, enableCloseButton);
+            PowerManagerHelper.AskUserToDisableBatteryOptimization(context);
         }
     }
 }

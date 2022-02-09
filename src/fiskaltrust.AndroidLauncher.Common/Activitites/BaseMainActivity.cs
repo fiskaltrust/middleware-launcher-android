@@ -57,16 +57,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Activitites
         {
             FindViewById<TextView>(Resource.Id.textViewVersion).Text = $"Version {VersionTracking.CurrentVersion}";
 
-            Intent intent = new Intent();
-            string packageName = BaseContext.PackageName;
-            var pm = (PowerManager)Android.App.Application.Context.GetSystemService(PowerService);
-
-            if (!pm.IsIgnoringBatteryOptimizations(packageName))
-            {
-                intent.SetAction(Android.Provider.Settings.ActionRequestIgnoreBatteryOptimizations);
-                intent.SetData(Android.Net.Uri.Parse("package:" + packageName));
-                StartActivity(intent);
-            }
+            
         }
 
         private async Task CopyLogs()

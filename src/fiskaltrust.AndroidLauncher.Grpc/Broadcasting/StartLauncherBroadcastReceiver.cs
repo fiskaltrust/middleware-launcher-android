@@ -3,6 +3,7 @@ using Android.Content;
 using fiskaltrust.AndroidLauncher.Common.AndroidService;
 using fiskaltrust.AndroidLauncher.Common.Constants;
 using fiskaltrust.AndroidLauncher.Common.Extensions;
+using fiskaltrust.AndroidLauncher.Common.Helpers;
 using Microsoft.Extensions.Logging;
 using System;
 
@@ -21,6 +22,7 @@ namespace fiskaltrust.AndroidLauncher.Grpc.Broadcasting
             var logLevel = Enum.TryParse(intent.GetStringExtra("loglevel"), out LogLevel level) ? level : LogLevel.Information;
             var scuParams = intent.GetScuConfigParameters();
             MiddlewareLauncherService.Start<MiddlewareLauncherGrpcService>(cashboxId, accessToken, isSandbox, logLevel, scuParams, enableCloseButton);
+            PowerManagerHelper.AskUserToDisableBatteryOptimization(context);
         }
     }
 }
