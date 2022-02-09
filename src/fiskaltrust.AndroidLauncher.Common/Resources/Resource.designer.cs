@@ -14,7 +14,7 @@ namespace fiskaltrust.AndroidLauncher.Common
 {
 	
 	
-	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Xamarin.Android.Build.Tasks", "12.1.0.11")]
+	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Xamarin.Android.Build.Tasks", "12.2.0.153")]
 	public partial class Resource
 	{
 		
@@ -2806,10 +2806,13 @@ namespace fiskaltrust.AndroidLauncher.Common
 			public static int manage_space_content = 2131427378;
 			
 			// aapt resource value: 0x7F0B0033
-			public static int search_menu_title = 2131427379;
+			public static int manage_space_warning = 2131427379;
 			
 			// aapt resource value: 0x7F0B0034
-			public static int status_bar_notification_info_overflow = 2131427380;
+			public static int search_menu_title = 2131427380;
+			
+			// aapt resource value: 0x7F0B0035
+			public static int status_bar_notification_info_overflow = 2131427381;
 			
 			static String()
 			{

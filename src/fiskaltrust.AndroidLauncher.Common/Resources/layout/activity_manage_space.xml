@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <Space        
+    <Space
         android:layout_width="match_parent"
         android:layout_height="62dp"/>
     <TextView
@@ -15,7 +15,20 @@
         android:layout_height="wrap_content"
         android:text="@string/manage_space_content"
         android:textSize="14dp"
+        android:textStyle="bold"
         android:gravity="center"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="10dp"
+        android:layout_height="wrap_content"
+        android:text="@string/manage_space_warning"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="#4b1113"
+        android:padding="10px"
+        android:layout_marginTop="20px"
+        />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="fill_parent"

@@ -14,7 +14,7 @@ namespace fiskaltrust.AndroidLauncher.Http
 {
 	
 	
-	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Xamarin.Android.Build.Tasks", "12.1.0.11")]
+	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Xamarin.Android.Build.Tasks", "12.2.0.153")]
 	public partial class Resource
 	{
 		
@@ -896,6 +896,7 @@ namespace fiskaltrust.AndroidLauncher.Http
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.main_title = global::fiskaltrust.AndroidLauncher.Http.Resource.String.main_title;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.manage_space_button = global::fiskaltrust.AndroidLauncher.Http.Resource.String.manage_space_button;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.manage_space_content = global::fiskaltrust.AndroidLauncher.Http.Resource.String.manage_space_content;
+			global::fiskaltrust.AndroidLauncher.Common.Resource.String.manage_space_warning = global::fiskaltrust.AndroidLauncher.Http.Resource.String.manage_space_warning;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.search_menu_title = global::fiskaltrust.AndroidLauncher.Http.Resource.String.search_menu_title;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.status_bar_notification_info_overflow = global::fiskaltrust.AndroidLauncher.Http.Resource.String.status_bar_notification_info_overflow;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.AlertDialog_AppCompat = global::fiskaltrust.AndroidLauncher.Http.Resource.Style.AlertDialog_AppCompat;
@@ -7868,28 +7869,31 @@ namespace fiskaltrust.AndroidLauncher.Http
 			public const int manage_space_content = 2131623981;
 			
 			// aapt resource value: 0x7F0E002E
-			public const int mtrl_chip_close_icon_content_description = 2131623982;
+			public const int manage_space_warning = 2131623982;
 			
 			// aapt resource value: 0x7F0E002F
-			public const int password_toggle_content_description = 2131623983;
+			public const int mtrl_chip_close_icon_content_description = 2131623983;
 			
 			// aapt resource value: 0x7F0E0030
-			public const int path_password_eye = 2131623984;
+			public const int password_toggle_content_description = 2131623984;
 			
 			// aapt resource value: 0x7F0E0031
-			public const int path_password_eye_mask_strike_through = 2131623985;
+			public const int path_password_eye = 2131623985;
 			
 			// aapt resource value: 0x7F0E0032
-			public const int path_password_eye_mask_visible = 2131623986;
+			public const int path_password_eye_mask_strike_through = 2131623986;
 			
 			// aapt resource value: 0x7F0E0033
-			public const int path_password_strike_through = 2131623987;
+			public const int path_password_eye_mask_visible = 2131623987;
 			
 			// aapt resource value: 0x7F0E0034
-			public const int search_menu_title = 2131623988;
+			public const int path_password_strike_through = 2131623988;
 			
 			// aapt resource value: 0x7F0E0035
-			public const int status_bar_notification_info_overflow = 2131623989;
+			public const int search_menu_title = 2131623989;
+			
+			// aapt resource value: 0x7F0E0036
+			public const int status_bar_notification_info_overflow = 2131623990;
 			
 			static String()
 			{
