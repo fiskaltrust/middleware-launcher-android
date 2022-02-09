@@ -35,8 +35,12 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
         [return: GeneratedEnum]
         public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
         {
+            OnBind(null);
             CreateNotificationChannel();
-            var notification = GetNotification(LauncherState.NotConnected);
+
+            var enableCloseButton = intent.GetBooleanExtra("enableCloseButton", false);
+            var notification = GetNotification(LauncherState.NotConnected, enableCloseButton) ;
+
             StartForeground(NOTIFICATION_ID, notification);
 
             Log.Logger = new LoggerConfiguration()
@@ -78,7 +82,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
 
                     await _launcher.StartAsync();
 
-                    SetState(LauncherState.Connected);
+                    SetState(LauncherState.Connected, enableCloseButton);
                     StateProvider.Instance.SetState(State.Running);
                 }).Wait();
 
@@ -96,17 +100,17 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
                 if (ex is RemountRequiredException remountRequiredEx)
                 {
                     StateProvider.Instance.SetState(State.Error, StateReasons.RemountRequired);
-                    SetState(LauncherState.Error, remountRequiredEx.Message);
+                    SetState(LauncherState.Error, enableCloseButton, remountRequiredEx.Message);
                 }
                 else if (ex is ConfigurationNotFoundException confNotFoundEx)
                 {
                     StateProvider.Instance.SetState(State.Error, StateReasons.ConfigurationNotFound);
-                    SetState(LauncherState.Error, confNotFoundEx.Message);
+                    SetState(LauncherState.Error, enableCloseButton, confNotFoundEx.Message);
                 }
                 else
                 {
                     StateProvider.Instance.SetState(State.Error, ex.Message);
-                    SetState(LauncherState.Error);
+                    SetState(LauncherState.Error, enableCloseButton);
                 }
 
                 return StartCommandResult.NotSticky;
@@ -142,7 +146,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
             Log.Logger.Warning($"Connectivity state has changed to {e.NetworkAccess}. Current connection profiles: {string.Join(", ", e.ConnectionProfiles.Select(x => x.ToString()))}");
         }
 
-        public static void Start<T>(string cashboxId, string accessToken, bool isSandbox, LogLevel logLevel, Dictionary<string, object> additionalScuParams) where T : MiddlewareLauncherService
+        public static void Start<T>(string cashboxId, string accessToken, bool isSandbox, LogLevel logLevel, Dictionary<string, object> additionalScuParams, bool enableCloseButton) where T : MiddlewareLauncherService
         {
             if (!IsRunning(typeof(T)))
             {
@@ -151,6 +155,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
                 bundle.PutString("accesstoken", accessToken);
                 bundle.PutBoolean("sandbox", isSandbox);
                 bundle.PutString("loglevel", logLevel.ToString());
+                bundle.PutBoolean("enableCloseButton", enableCloseButton);
                 foreach (var extra in additionalScuParams)
                 {
                     bundle.PutString(extra.Key, extra.Value.ToString());
@@ -172,19 +177,14 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
             }
         }
 
-        public static void SetState(LauncherState state, string contentText = null)
+        public static void SetState(LauncherState state, bool enableCloseButton, string contentText = null)
         {
-            var notification = GetNotification(state, contentText);
+            var notification = GetNotification(state, enableCloseButton, contentText);
             var manager = (NotificationManager)Application.Context.GetSystemService(NotificationService);
             manager.Notify(NOTIFICATION_ID, notification);
         }
 
-        public override IBinder OnBind(Intent intent)
-        {
-            return null;
-        }
-
-        private static Notification GetNotification(LauncherState state, string contentText = null)
+        private static Notification GetNotification(LauncherState state, bool enableCloseButton, string contentText = null)
         {
             var icon = state switch
             {
@@ -210,6 +210,16 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
                 .SetSmallIcon(icon)
                 .SetOngoing(true)
                 .SetNotificationSilent();
+
+            if (enableCloseButton)
+            {
+                Intent intent = new Intent(BroadcastConstants.StopBroadcastName);
+                intent.SetPackage(Application.Context.PackageName);
+
+                PendingIntent pendingIntent = PendingIntent.GetBroadcast(Application.Context, 0, intent, 0);
+
+                builder.AddAction(Android.Resource.Drawable.IcMenuCloseClearCancel, "Stop Service", pendingIntent);
+            }
 
             return builder.Build();
         }
