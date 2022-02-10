@@ -25,7 +25,6 @@ namespace fiskaltrust.AndroidLauncher.Http
             intent.PutExtra("cashboxid", cashboxid);
             intent.PutExtra("accesstoken", accesstoken);
             intent.PutExtra("sandbox", true);
-            intent.PutExtra("enableCloseButton", true);
 
             SendBroadcast(intent);
         }
