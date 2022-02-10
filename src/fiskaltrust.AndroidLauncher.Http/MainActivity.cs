@@ -1,18 +1,12 @@
 ﻿using Android.App;
-using Android.OS;
-using Android.Support.V7.App;
-using Android.Runtime;
 using Java.Interop;
 using Android.Content;
-using Android.Widget;
 using fiskaltrust.Middleware.Interface.Client.Http;
 using System;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using fiskaltrust.ifPOS.v1;
-using Xamarin.Essentials;
 using fiskaltrust.AndroidLauncher.Common.Helpers.Logging;
-using Android.Views;
 using fiskaltrust.AndroidLauncher.Common.Activitites;
 using Log = Android.Util.Log;
 

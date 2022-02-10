@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="Activitites\BaseMainActivity.cs" />
     <Compile Include="Activitites\LogActivity.cs" />
+    <Compile Include="Activitites\ManageSpaceActivity.cs" />
     <Compile Include="AndroidService\MiddlewareLauncherService.cs" />
     <Compile Include="Constants\BroadcastConstants.cs" />
     <Compile Include="Constants\StateReasons.cs" />
@@ -193,6 +194,12 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\activity_logs.xml">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\activity_manage_space.xml">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
       <SubType>Designer</SubType>
     </AndroidResource>
