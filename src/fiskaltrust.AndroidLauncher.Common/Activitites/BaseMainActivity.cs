@@ -1,5 +1,6 @@
 using System.IO;
 using System.Threading.Tasks;
+using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
@@ -55,6 +56,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Activitites
         private void Init()
         {
             FindViewById<TextView>(Resource.Id.textViewVersion).Text = $"Version {VersionTracking.CurrentVersion}";
+
+            
         }
 
         private async Task CopyLogs()
