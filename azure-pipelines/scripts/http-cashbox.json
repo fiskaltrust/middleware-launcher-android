@@ -2,10 +2,15 @@
   "ftCashBoxId": "|[cashbox_id]|",
   "ftSignaturCreationDevices": [
     {
-      "Id": "|[reference_scu_FiskalyCertified_counter_0_id]|",
+      "Id": "|[scu0_id]|",
       "Package": "fiskaltrust.Middleware.SCU.DE.FiskalyCertified",
+      "Configuration": {
+        "ApiKey": "|[fyapikey]|",
+        "ApiSecret": "|[fyapisecret]|",
+        "TssId": "|[fytssid]|"
+      },
       "Url": [
-        "rest://localhost:18000"
+        "rest://localhost:18004"
       ]
     }
   ],
@@ -25,19 +30,24 @@
         "init_ftQueueDE": [
           {
             "ftQueueDEId": "|[queue0_id]|",
-            "ftSignaturCreationUnitDEId": "|[reference_scu_FiskalyCertified_counter_0_id]|",
+            "ftSignaturCreationUnitDEId": "|[scu0_id]|",
             "CashBoxIdentification": "ft|[queue0_id_base64withoutspecialchars]|"
           }
         ],
+        "init_ftSignaturCreationUnitAT": [],
         "init_ftSignaturCreationUnitDE": [
           {
-            "ftSignaturCreationUnitDEId": "|[reference_scu_FiskalyCertified_counter_0_id]|",
-            "Url": "[\"|[reference_scu_FiskalyCertified_counter_0_url]|\"]"
+            "ftSignaturCreationUnitDEId": "|[scu0_id]|",
+            "Url": "[\"grpc://localhost:18004\"]"
           }
-        ]
+        ],
+        "init_ftSignaturCreationUnitFR": [],
+        "init_ftCashBox": {
+          "ftCashBoxId": "|[cashbox_id]|"
+        }
       },
       "Url": [
-        "rest://localhost:14002"
+      	"rest://localhost:1200"
       ]
     }
   ]

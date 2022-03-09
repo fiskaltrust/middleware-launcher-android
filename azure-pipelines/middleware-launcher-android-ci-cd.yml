@@ -105,6 +105,26 @@ stages:
         artifactName: 'drop'
         targetPath: '$(Build.ArtifactStagingDirectory)'
     
+    - powershell: |
+        $tssId = "$([guid]::NewGuid())"
+        $adminPin = "$(Get-Random -Minimum 100000 -Maximum 10000000)"
+
+        echo "##vso[task.setvariable variable=tssId;isOutput=true]$tssId"
+        echo "##vso[task.setvariable variable=adminPin;isOutput=true]$adminPin"
+      name: setTssVariablesStep
+      displayName: 'Set TSS variables'
+
+    - task: PowerShell@2
+      inputs:
+        targetType: 'filePath'
+        filePath: azure-pipelines/scripts/create-fiskaly-tse.ps1
+        arguments: > 
+          -FiskalyApiKey "$(TestFiskalyApiKey)"
+          -FiskalyApiSecret "$(TestFiskalyApiSecret)"
+          -TssAdminPin "$(setTssVariablesStep.adminPin)"
+          -TssId "$(setTssVariablesStep.tssId)"
+      displayName: 'Re-create test TSE'
+
     - task: PowerShell@2
       inputs:
         targetType: 'filePath'
@@ -113,6 +133,9 @@ stages:
           -AccountId "$(TestAccountId)"
           -AccountAccessToken "$(TestAccountAccessToken)"
           -TemplatePath "azure-pipelines/scripts/http-cashbox.json"
+          -FiskalyApiKey "$(TestFiskalyApiKey)"
+          -FiskalyApiSecret "$(TestFiskalyApiSecret)"
+          -TssId "$(setTssVariablesStep.tssId)"
       name: CreateHttpCashBox
       displayName: 'Create cashbox with HTTP SCU'
 
@@ -124,6 +147,9 @@ stages:
           -AccountId "$(TestAccountId)"
           -AccountAccessToken "$(TestAccountAccessToken)"
           -TemplatePath "azure-pipelines/scripts/grpc-cashbox.json"
+          -FiskalyApiKey "$(TestFiskalyApiKey)"
+          -FiskalyApiSecret "$(TestFiskalyApiSecret)"
+          -TssId "$(setTssVariablesStep.tssId)"
       name: CreateGrpcCashBox
       displayName: 'Create cashbox with gRPC SCU'
 
@@ -183,6 +209,24 @@ stages:
         prepareOptions: '--include-category http'
         runOptions: --test-parameter "test_env=CASHBOXID=$(CreateHttpCashBox.cashboxId)" --test-parameter "test_env=CASHBOXID=$(CreateHttpCashBox.accessToken)" --test-parameter "test_env=CASHBOXID=$(CreateHttpCashBox.url)"
       displayName: Smoke tests (HTTP)
+
+  - job: Cleanup
+    dependsOn: SmokeTest
+    condition: and(succeededOrFailed(), or(eq(variables['build.sourceBranch'], 'refs/heads/master'), startsWith(variables['build.sourceBranch'], 'refs/tags')))
+    variables:
+      FiskalyAdminPin: $[ dependencies.SmokeTest.outputs['setTssVariablesStep.adminPin'] ]
+      FiskalyTssId: $[ dependencies.SmokeTest.outputs['setTssVariablesStep.tssId'] ]
+    steps:
+    - task: PowerShell@2
+      inputs:
+        targetType: 'filePath'
+        filePath: azure-pipelines/scripts/delete-fiskaly-tse.ps1
+        arguments: > 
+          -FiskalyApiKey "$(TestFiskalyApiKey)"
+          -FiskalyApiSecret "$(TestFiskalyApiSecret)"
+          -TssAdminPin "$(FiskalyAdminPin)"
+          -TssId "$(FiskalyTssId)"
+      displayName: 'Disable fiskaly test TSE'
 
 - stage: ReleaseSandbox
   displayName: Release packages to sandbox
