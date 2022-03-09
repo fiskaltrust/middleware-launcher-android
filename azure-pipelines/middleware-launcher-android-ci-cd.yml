@@ -96,7 +96,8 @@ stages:
 
   - job: SmokeTest
     dependsOn: Build
-    condition: and(succeeded(), or(eq(variables['build.sourceBranch'], 'refs/heads/master'), startsWith(variables['build.sourceBranch'], 'refs/tags')))
+    condition: succeeded()
+    # condition: and(succeeded(), or(eq(variables['build.sourceBranch'], 'refs/heads/master'), startsWith(variables['build.sourceBranch'], 'refs/tags')))
     steps:
     - task: DownloadPipelineArtifact@2
       inputs:
@@ -104,63 +105,27 @@ stages:
         artifactName: 'drop'
         targetPath: '$(Build.ArtifactStagingDirectory)'
     
-    # - powershell: |
-    #     $tssId = "$([guid]::NewGuid())"
-    #     $adminPin = "$(Get-Random -Minimum 100000 -Maximum 10000000)"
+    - task: PowerShell@2
+      inputs:
+        targetType: 'filePath'
+        filePath: azure-pipelines/scripts/create-cashbox.ps1
+        arguments: > 
+          -AccountId "$(TestAccountId)"
+          -AccountAccessToken "$(TestAccountAccessToken)"
+          -TemplatePath "azure-pipelines/scripts/http-cashbox.json"
+      name: CreateHttpCashBox
+      displayName: 'Create cashbox with HTTP SCU'
 
-    #     echo "##vso[task.setvariable variable=tssId;isOutput=true]$tssId"
-    #     echo "##vso[task.setvariable variable=adminPin;isOutput=true]$adminPin"
-    #   name: setTssVariablesStep
-    #   displayName: 'Set TSS variables'
-
-    # - task: PowerShell@2
-    #   inputs:
-    #     targetType: 'filePath'
-    #     filePath: azure-pipelines/scripts/create-fiskaly-tse.ps1
-    #     arguments: > 
-    #       -FiskalyApiKey "$(TestFiskalyApiKey)"
-    #       -FiskalyApiSecret "$(TestFiskalyApiSecret)"
-    #       -TssAdminPin "$(setTssVariablesStep.adminPin)"
-    #       -TssId "$(setTssVariablesStep.tssId)"
-    #   displayName: 'Re-create test TSE'
-
-    # - task: PowerShell@2
-    #   inputs:
-    #     targetType: 'filePath'
-    #     filePath: azure-pipelines/scripts/update-scu.ps1
-    #     arguments: > 
-    #       -AccountId "$(TestAccountId)"
-    #       -AccountAccessToken "$(TestAccountAccessToken)"
-    #       -ScuId "$(TestScuIdHttp)"
-    #       -FiskalyApiKey "$(TestFiskalyApiKey)"
-    #       -FiskalyApiSecret "$(TestFiskalyApiSecret)"
-    #       -TssAdminPin "$(setTssVariablesStep.adminPin)"
-    #       -TssId "$(setTssVariablesStep.tssId)"
-    #   displayName: 'Update TSS values in HTTP SCU'
-
-    # - task: PowerShell@2
-    #   inputs:
-    #     targetType: 'filePath'
-    #     filePath: azure-pipelines/scripts/update-scu.ps1
-    #     arguments: > 
-    #       -AccountId "$(TestAccountId)"
-    #       -AccountAccessToken "$(TestAccountAccessToken)"
-    #       -ScuId "$(TestScuIdGrpc)"
-    #       -FiskalyApiKey "$(TestFiskalyApiKey)"
-    #       -FiskalyApiSecret "$(TestFiskalyApiSecret)"
-    #       -TssAdminPin "$(setTssVariablesStep.adminPin)"
-    #       -TssId "$(setTssVariablesStep.tssId)"
-    #   displayName: 'Update TSS values in gRPC SCU'
-
-    # - powershell: |
-    #     function Rebuild-Configuration($cashboxId, $accesstoken) {    
-    #       $headers = @{ accesstoken = $accesstoken ; cashboxid = $cashboxid }
-    #       $uri = "https://helipad-sandbox.fiskaltrust.cloud/api/Configuration?rebuild=true"
-    #       Invoke-WebRequest -uri $uri -Headers $headers    
-    #     }
-    #     Rebuild-Configuration "0a54122c-e247-4498-9e40-cc667c17e6aa" "BH0MPsyWk3uqFy6fL3W2fPCRmjhXJrobOYSL9reW7c44kR7ycBN3G1vWmc1bdUbh4grU/c6CsQzYGcMH6RTJPr8="
-    #     Rebuild-Configuration "61385be4-7d8d-403b-8860-fbc5a07ed128" "BKmQdtsJvAmhT12xewUXW39XyzJZhePtUN//u4svDPLAVlEs2nRefmZ9iFH7dCARdQjB7XYG6yILXmsmSVMtheE="
-    #   displayName: 'Rebuild test cashboxes'
+    - task: PowerShell@2
+      inputs:
+        targetType: 'filePath'
+        filePath: azure-pipelines/scripts/create-cashbox.ps1
+        arguments: > 
+          -AccountId "$(TestAccountId)"
+          -AccountAccessToken "$(TestAccountAccessToken)"
+          -TemplatePath "azure-pipelines/scripts/grpc-cashbox.json"
+      name: CreateGrpcCashBox
+      displayName: 'Create cashbox with gRPC SCU'
 
     - task: NuGetToolInstaller@1
 
@@ -200,6 +165,7 @@ stages:
         devices: 'fdd661d1'
         localeOption: 'en_US'
         prepareOptions: '--include-category grpc'
+        runOptions: --test-parameter "test_env=CASHBOXID=$(CreateGrpcCashBox.cashboxId)" --test-parameter "test_env=CASHBOXID=$(CreateGrpcCashBox.accessToken)" --test-parameter "test_env=CASHBOXID=$(CreateGrpcCashBox.url)"
       displayName: Smoke tests (gRPC)
       
     - task: AppCenterTest@1
@@ -215,25 +181,8 @@ stages:
         devices: 'fdd661d1'
         localeOption: 'en_US'
         prepareOptions: '--include-category http'
+        runOptions: --test-parameter "test_env=CASHBOXID=$(CreateHttpCashBox.cashboxId)" --test-parameter "test_env=CASHBOXID=$(CreateHttpCashBox.accessToken)" --test-parameter "test_env=CASHBOXID=$(CreateHttpCashBox.url)"
       displayName: Smoke tests (HTTP)
-
-  # - job: Cleanup
-  #   dependsOn: SmokeTest
-  #   condition: and(succeededOrFailed(), or(eq(variables['build.sourceBranch'], 'refs/heads/master'), startsWith(variables['build.sourceBranch'], 'refs/tags')))
-  #   variables:
-  #     FiskalyAdminPin: $[ dependencies.SmokeTest.outputs['setTssVariablesStep.adminPin'] ]
-  #     FiskalyTssId: $[ dependencies.SmokeTest.outputs['setTssVariablesStep.tssId'] ]
-  #   steps:
-  #   - task: PowerShell@2
-  #     inputs:
-  #       targetType: 'filePath'
-  #       filePath: azure-pipelines/scripts/delete-fiskaly-tse.ps1
-  #       arguments: > 
-  #         -FiskalyApiKey "$(TestFiskalyApiKey)"
-  #         -FiskalyApiSecret "$(TestFiskalyApiSecret)"
-  #         -TssAdminPin "$(FiskalyAdminPin)"
-  #         -TssId "$(FiskalyTssId)"
-  #     displayName: 'Disable fiskaly test TSE'
 
 - stage: ReleaseSandbox
   displayName: Release packages to sandbox
