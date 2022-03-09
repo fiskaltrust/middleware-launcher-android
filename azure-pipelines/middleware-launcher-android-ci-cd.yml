@@ -193,7 +193,7 @@ stages:
         devices: 'fdd661d1'
         localeOption: 'en_US'
         prepareOptions: '--include-category grpc'
-        runOptions: --test-parameter "test_env=CASHBOXID=$(CreateGrpcCashBox.cashboxId)" --test-parameter "test_env=CASHBOXID=$(CreateGrpcCashBox.accessToken)" --test-parameter "test_env=CASHBOXID=$(CreateGrpcCashBox.url)"
+        runOptions: --test-parameter "test_env=CASHBOXID=$(CreateGrpcCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateGrpcCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateGrpcCashBox.url)"
       displayName: Smoke tests (gRPC)
       
     - task: AppCenterTest@1
@@ -209,7 +209,7 @@ stages:
         devices: 'fdd661d1'
         localeOption: 'en_US'
         prepareOptions: '--include-category http'
-        runOptions: --test-parameter "test_env=CASHBOXID=$(CreateHttpCashBox.cashboxId)" --test-parameter "test_env=CASHBOXID=$(CreateHttpCashBox.accessToken)" --test-parameter "test_env=CASHBOXID=$(CreateHttpCashBox.url)"
+        runOptions: --test-parameter "test_env=CASHBOXID=$(CreateHttpCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateHttpCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateHttpCashBox.url)"
       displayName: Smoke tests (HTTP)
 
   - job: Cleanup
