@@ -7,7 +7,8 @@
       "Configuration": {
         "ApiKey": "|[fyapikey]|",
         "ApiSecret": "|[fyapisecret]|",
-        "TssId": "|[fytssid]|"
+        "TssId": "|[fytssid]|",
+        "AdminPin": "|[fyadminpin]|"
       },
       "Url": [
         "rest://localhost:18004"

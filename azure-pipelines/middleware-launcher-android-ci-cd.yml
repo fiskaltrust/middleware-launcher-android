@@ -132,9 +132,10 @@ stages:
         arguments: > 
           -AccountId "$(TestAccountId)"
           -AccountAccessToken "$(TestAccountAccessToken)"
-          -TemplatePath "azure-pipelines/scripts/http-cashbox.json"
+          -TemplatePath "$(Build.SourcesDirectory)/azure-pipelines/scripts/http-cashbox.json"
           -FiskalyApiKey "$(TestFiskalyApiKey)"
           -FiskalyApiSecret "$(TestFiskalyApiSecret)"
+          -TssAdminPin "$(setTssVariablesStep.adminPin)"
           -TssId "$(setTssVariablesStep.tssId)"
       name: CreateHttpCashBox
       displayName: 'Create cashbox with HTTP SCU'
@@ -146,9 +147,10 @@ stages:
         arguments: > 
           -AccountId "$(TestAccountId)"
           -AccountAccessToken "$(TestAccountAccessToken)"
-          -TemplatePath "azure-pipelines/scripts/grpc-cashbox.json"
+          -TemplatePath "$(Build.SourcesDirectory)/azure-pipelines/scripts/grpc-cashbox.json"
           -FiskalyApiKey "$(TestFiskalyApiKey)"
           -FiskalyApiSecret "$(TestFiskalyApiSecret)"
+          -TssAdminPin "$(setTssVariablesStep.adminPin)"
           -TssId "$(setTssVariablesStep.tssId)"
       name: CreateGrpcCashBox
       displayName: 'Create cashbox with gRPC SCU'
