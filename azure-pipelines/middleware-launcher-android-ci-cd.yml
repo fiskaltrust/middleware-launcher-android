@@ -107,7 +107,7 @@ stages:
     
     - powershell: |
         $tssId = "$([guid]::NewGuid())"
-        $adminPin = "$(Get-Random -Minimum 100000 -Maximum 10000000)"
+        $adminPin = "1234567890"
 
         echo "##vso[task.setvariable variable=tssId;isOutput=true]$tssId"
         echo "##vso[task.setvariable variable=adminPin;isOutput=true]$adminPin"
