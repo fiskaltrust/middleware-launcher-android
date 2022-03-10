@@ -19,6 +19,13 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
         [Test]
         public async Task LauncherShouldStart_AndAcceptSignRequests_WhenIntentIsSent()
         {
+            if (string.IsNullOrEmpty(TestConstants.Grpc.CashboxId))
+                throw new ArgumentNullException(nameof(TestConstants.Grpc.CashboxId));
+            if (string.IsNullOrEmpty(TestConstants.Grpc.AccessToken))
+                throw new ArgumentNullException(nameof(TestConstants.Grpc.AccessToken));
+            if (string.IsNullOrEmpty(TestConstants.Grpc.Url))
+                throw new ArgumentNullException(nameof(TestConstants.Grpc.Url));
+
             StartLauncher(TestConstants.Grpc.CashboxId, TestConstants.Grpc.AccessToken);
             await Task.Delay(5000);
 
