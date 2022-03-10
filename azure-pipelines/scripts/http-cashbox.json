@@ -48,7 +48,7 @@
         }
       },
       "Url": [
-      	"rest://localhost:1200"
+      	"rest://localhost:18005"
       ]
     }
   ]
