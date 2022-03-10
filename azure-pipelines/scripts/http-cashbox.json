@@ -39,7 +39,7 @@
         "init_ftSignaturCreationUnitDE": [
           {
             "ftSignaturCreationUnitDEId": "|[scu0_id]|",
-            "Url": "[\"grpc://localhost:18004\"]"
+            "Url": "[\"rest://localhost:18004\"]"
           }
         ],
         "init_ftSignaturCreationUnitFR": [],
