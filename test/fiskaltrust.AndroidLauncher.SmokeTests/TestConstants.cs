@@ -15,7 +15,7 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
         {
             public static readonly string CashboxId = Environment.GetEnvironmentVariable("CASHBOXID") ?? "61385be4-7d8d-403b-8860-fbc5a07ed128";
             public static readonly string AccessToken = Environment.GetEnvironmentVariable("ACCESSTOKEN") ?? "BKmQdtsJvAmhT12xewUXW39XyzJZhePtUN//u4svDPLAVlEs2nRefmZ9iFH7dCARdQjB7XYG6yILXmsmSVMtheE=";
-            public static readonly string Url = Environment.GetEnvironmentVariable("URL") ?? "grpc://localhost:1400";
+            public static readonly string Url = "grpc://localhost:1200";
         }
 
         public const string InitialOperationReceipt = @"
