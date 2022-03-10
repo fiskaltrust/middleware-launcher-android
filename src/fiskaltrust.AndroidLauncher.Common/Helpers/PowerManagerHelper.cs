@@ -12,11 +12,11 @@ namespace fiskaltrust.AndroidLauncher.Common.Helpers
 
             if (!pm.IsIgnoringBatteryOptimizations(packageName))
             {
-                var powerIntent = new Intent();
-                powerIntent.SetAction(Android.Provider.Settings.ActionRequestIgnoreBatteryOptimizations);
-                powerIntent.SetData(Android.Net.Uri.Parse("package:" + packageName));
-                powerIntent.SetFlags(ActivityFlags.NewTask);
-                context.StartActivity(powerIntent);
+                // var powerIntent = new Intent();
+                // powerIntent.SetAction(Android.Provider.Settings.ActionRequestIgnoreBatteryOptimizations);
+                // powerIntent.SetData(Android.Net.Uri.Parse("package:" + packageName));
+                // powerIntent.SetFlags(ActivityFlags.NewTask);
+                // context.StartActivity(powerIntent);
             }
         }
     }
