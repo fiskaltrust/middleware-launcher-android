@@ -180,6 +180,11 @@ stages:
         msbuildArgs: '/p:OutputPath=$(testOutputDirectory)'
         configuration: '$(buildConfiguration)'
 
+    - task: Npm@1
+      inputs:
+        command: 'custom'
+        customCommand: '-g install appcenter-cli@latest'
+
     - task: AppCenterTest@1
       inputs:
         appFile: '$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk'
