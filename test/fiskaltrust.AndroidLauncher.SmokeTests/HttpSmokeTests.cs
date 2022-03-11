@@ -24,7 +24,7 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
 
             await WaitForStart(TestConstants.Http.Url, TimeSpan.FromMinutes(1));
 
-            var serializedSignResponse = App.Invoke("SendSignTestBackdoor", new object[] { TestConstants.Http.Url, TestConstants.InitialOperationReceipt.Replace("{{cashbox_id}}", TestConstants.Http.CashboxId)}) as string;
+            var serializedSignResponse = App.Invoke("SendSignTestBackdoor", new object[] { TestConstants.Http.Url.Replace("rest://", "http://"), TestConstants.InitialOperationReceipt.Replace("{{cashbox_id}}", TestConstants.Http.CashboxId)}) as string;
             serializedSignResponse.Should().NotBeNullOrEmpty();
 
             var signResponse = JsonConvert.DeserializeObject<ReceiptResponse>(serializedSignResponse);
