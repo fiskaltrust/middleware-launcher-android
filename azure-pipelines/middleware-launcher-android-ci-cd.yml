@@ -195,7 +195,7 @@ stages:
         credentialsOption: 'serviceEndpoint'
         serverEndpoint: 'VS App Center'
         appSlug: 'fiskaltrust/fiskaltrust.Launcher'
-        devices: 'fdd661d1'
+        devices: 'fiskaltrust/smoke-tests'
         localeOption: 'en_US'
         prepareOptions: '--include-category grpc'
         runOptions: --test-parameter "test_env=CASHBOXID=$(CreateGrpcCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateGrpcCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateGrpcCashBox.url)"
@@ -211,7 +211,7 @@ stages:
         credentialsOption: 'serviceEndpoint'
         serverEndpoint: 'VS App Center'
         appSlug: 'fiskaltrust/fiskaltrust.Launcher'
-        devices: 'fdd661d1'
+        devices: 'fiskaltrust/smoke-tests'
         localeOption: 'en_US'
         prepareOptions: '--include-category http'
         runOptions: --test-parameter "test_env=CASHBOXID=$(CreateHttpCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateHttpCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateHttpCashBox.url)"
