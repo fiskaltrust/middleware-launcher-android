@@ -19,6 +19,19 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
         [Test]
         public async Task LauncherShouldStart_AndAcceptSignRequests_WhenIntentIsSent()
         {
+            Console.WriteLine("All Environment Variables:");
+            foreach(System.Collections.DictionaryEntry env in Environment.GetEnvironmentVariables())
+            {
+                Console.WriteLine($"{env.Key}={env.Value}");
+            }
+            
+            string tmp = "";
+            foreach(System.Collections.DictionaryEntry env in Environment.GetEnvironmentVariables())
+            {
+               tmp += $"{env.Key}={env.Value}\n";
+            }
+            throw new Exception(tmp);
+
             if (string.IsNullOrEmpty(TestConstants.Http.CashboxId))
                 throw new ArgumentNullException(nameof(TestConstants.Http.CashboxId));
             if (string.IsNullOrEmpty(TestConstants.Http.AccessToken))
