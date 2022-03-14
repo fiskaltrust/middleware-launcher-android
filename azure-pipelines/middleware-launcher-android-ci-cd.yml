@@ -96,8 +96,7 @@ stages:
 
   - job: SmokeTest
     dependsOn: Build
-    condition: succeeded()
-    # condition: and(succeeded(), or(eq(variables['build.sourceBranch'], 'refs/heads/master'), startsWith(variables['build.sourceBranch'], 'refs/tags')))
+    condition: and(succeeded(), or(eq(variables['build.sourceBranch'], 'refs/heads/master'), startsWith(variables['build.sourceBranch'], 'refs/tags')))
     steps:
     - task: DownloadPipelineArtifact@2
       inputs:
@@ -219,8 +218,7 @@ stages:
 
   - job: Cleanup
     dependsOn: SmokeTest
-    condition: succeededOrFailed()
-    # condition: and(succeededOrFailed(), or(eq(variables['build.sourceBranch'], 'refs/heads/master'), startsWith(variables['build.sourceBranch'], 'refs/tags')))
+    condition: and(succeededOrFailed(), or(eq(variables['build.sourceBranch'], 'refs/heads/master'), startsWith(variables['build.sourceBranch'], 'refs/tags')))
     variables:
       FiskalyAdminPin: $[ dependencies.SmokeTest.outputs['setTssVariablesStep.adminPin'] ]
       FiskalyTssId: $[ dependencies.SmokeTest.outputs['setTssVariablesStep.tssId'] ]
