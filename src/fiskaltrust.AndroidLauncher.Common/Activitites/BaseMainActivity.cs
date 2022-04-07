@@ -9,6 +9,9 @@ using Android.Views;
 using Android.Widget;
 using fiskaltrust.AndroidLauncher.Common.Helpers.Logging;
 using Xamarin.Essentials;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 
 namespace fiskaltrust.AndroidLauncher.Common.Activitites
 {
@@ -16,6 +19,9 @@ namespace fiskaltrust.AndroidLauncher.Common.Activitites
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            AppCenter.Start(Resources.GetString(Resource.String.app_center_api_key), typeof(Analytics), typeof(Crashes));
+            Analytics.TrackEvent("Launcher starting");
+            
             base.OnCreate(savedInstanceState);
             Platform.Init(this, savedInstanceState);
             VersionTracking.Track();

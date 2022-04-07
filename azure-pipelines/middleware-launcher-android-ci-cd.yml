@@ -6,9 +6,13 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  buildConfiguration: 'Release'
-  outputDirectory: '$(build.binariesDirectory)/$(buildConfiguration)'
-  testOutputDirectory: '$(build.binariesDirectory)/test/$(buildConfiguration)'
+  - name: buildConfiguration
+    value: 'Release'
+  - name: outputDirectory
+    value: '$(build.binariesDirectory)/$(buildConfiguration)'
+  - name: testOutputDirectory
+    value: '$(build.binariesDirectory)/test/$(buildConfiguration)'
+  - group: middleware-launcher-android
 
 stages:
 - stage: BuildAndTest
@@ -22,6 +26,10 @@ stages:
       inputs:
         pathToVersionJson: 'version.json'
         semverVersion: 'v1'
+
+    - pwsh: |
+        $file = "./src/fiskaltrust.AndroidLauncher.Common/Resources/values/appSettings.xml"
+        (Get-Content $file).Replace("{{AppCenterAnalyticsApiKey}}", $AppCenterAnalyticsApiKey) | Set-Content $file
 
     - task: android-manifest-version@1
       inputs:
