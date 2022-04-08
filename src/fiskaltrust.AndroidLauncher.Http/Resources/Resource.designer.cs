@@ -14,7 +14,7 @@ namespace fiskaltrust.AndroidLauncher.Http
 {
 	
 	
-	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Xamarin.Android.Build.Tasks", "12.2.0.153")]
+	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Xamarin.Android.Build.Tasks", "12.2.99.0")]
 	public partial class Resource
 	{
 		
@@ -12450,7 +12450,10 @@ namespace fiskaltrust.AndroidLauncher.Http
 			public const int image_share_filepaths = 2131820544;
 			
 			// aapt resource value: 0x7F110001
-			public const int xamarin_essentials_fileprovider_file_paths = 2131820545;
+			public const int log_paths = 2131820545;
+			
+			// aapt resource value: 0x7F110002
+			public const int xamarin_essentials_fileprovider_file_paths = 2131820546;
 			
 			static Xml()
 			{
