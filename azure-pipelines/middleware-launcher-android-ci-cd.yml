@@ -233,7 +233,7 @@ stages:
 
   - job: Cleanup
     dependsOn: SmokeTest
-    condition: and(succeededOrFailed(), or(eq(variables['build.sourceBranch'], 'refs/heads/master'), startsWith(variables['build.sourceBranch'], 'refs/tags')))
+    condition: succeededOrFailed()
     variables:
       FiskalyAdminPin: $[ dependencies.SmokeTest.outputs['setTssVariablesStep.adminPin'] ]
       FiskalyTssId: $[ dependencies.SmokeTest.outputs['setTssVariablesStep.tssId'] ]
