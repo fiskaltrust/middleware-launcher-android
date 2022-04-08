@@ -2773,49 +2773,52 @@ namespace fiskaltrust.AndroidLauncher.Common
 			public static int action_settings = 2131427367;
 			
 			// aapt resource value: 0x7F0B0028
-			public static int app_center_api_key = 2131427368;
+			public static int app_insights_instrumentation_key_production = 2131427368;
 			
 			// aapt resource value: 0x7F0B0029
-			public static int app_name = 2131427369;
+			public static int app_insights_instrumentation_key_sandbox = 2131427369;
 			
 			// aapt resource value: 0x7F0B002A
-			public static int copy_toast_msg = 2131427370;
+			public static int app_name = 2131427370;
 			
 			// aapt resource value: 0x7F0B002B
-			public static int fallback_menu_item_copy_link = 2131427371;
+			public static int copy_toast_msg = 2131427371;
 			
 			// aapt resource value: 0x7F0B002C
-			public static int fallback_menu_item_open_in_browser = 2131427372;
+			public static int fallback_menu_item_copy_link = 2131427372;
 			
 			// aapt resource value: 0x7F0B002D
-			public static int fallback_menu_item_share_link = 2131427373;
+			public static int fallback_menu_item_open_in_browser = 2131427373;
 			
 			// aapt resource value: 0x7F0B002E
-			public static int hello = 2131427374;
+			public static int fallback_menu_item_share_link = 2131427374;
 			
 			// aapt resource value: 0x7F0B002F
-			public static int log_title = 2131427375;
+			public static int hello = 2131427375;
 			
 			// aapt resource value: 0x7F0B0030
-			public static int main_content = 2131427376;
+			public static int log_title = 2131427376;
 			
 			// aapt resource value: 0x7F0B0031
-			public static int main_title = 2131427377;
+			public static int main_content = 2131427377;
 			
 			// aapt resource value: 0x7F0B0032
-			public static int manage_space_button = 2131427378;
+			public static int main_title = 2131427378;
 			
 			// aapt resource value: 0x7F0B0033
-			public static int manage_space_content = 2131427379;
+			public static int manage_space_button = 2131427379;
 			
 			// aapt resource value: 0x7F0B0034
-			public static int manage_space_warning = 2131427380;
+			public static int manage_space_content = 2131427380;
 			
 			// aapt resource value: 0x7F0B0035
-			public static int search_menu_title = 2131427381;
+			public static int manage_space_warning = 2131427381;
 			
 			// aapt resource value: 0x7F0B0036
-			public static int status_bar_notification_info_overflow = 2131427382;
+			public static int search_menu_title = 2131427382;
+			
+			// aapt resource value: 0x7F0B0037
+			public static int status_bar_notification_info_overflow = 2131427383;
 			
 			static String()
 			{

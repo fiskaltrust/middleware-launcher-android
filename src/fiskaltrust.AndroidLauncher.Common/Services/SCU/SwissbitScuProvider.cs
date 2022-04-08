@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using Android.App;
 using Android.Support.V4.Content;
@@ -14,7 +15,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
 {
     class SwissbitScuProvider : IScuProvider
     {
-        public IDESSCD CreateSCU(PackageConfiguration scuConfiguration, LogLevel logLevel)
+        public IDESSCD CreateSCU(PackageConfiguration scuConfiguration, Guid ftCashBoxId, bool isSandbox, LogLevel logLevel)
         {
             var dir = InitializeTseAsync();
             scuConfiguration.Configuration["devicePath"] = dir;
@@ -26,6 +27,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
 
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddLogProviders(logLevel);
+            serviceCollection.AddAppInsightsLogging(Helpers.Configuration.GetAppInsightsInstrumentationKey(isSandbox), "fiskaltrust.Middleware.SCU.DE.Swissbit", ftCashBoxId, logLevel);
+
             bootstrapper.ConfigureServices(serviceCollection);
             return serviceCollection.BuildServiceProvider().GetRequiredService<IDESSCD>();
         }

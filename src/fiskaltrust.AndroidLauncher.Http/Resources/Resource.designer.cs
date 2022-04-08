@@ -885,7 +885,8 @@ namespace fiskaltrust.AndroidLauncher.Http
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_shareactionprovider_share_with_application = global::fiskaltrust.AndroidLauncher.Http.Resource.String.abc_shareactionprovider_share_with_application;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.abc_toolbar_collapse_description = global::fiskaltrust.AndroidLauncher.Http.Resource.String.abc_toolbar_collapse_description;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.action_settings = global::fiskaltrust.AndroidLauncher.Http.Resource.String.action_settings;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.app_center_api_key = global::fiskaltrust.AndroidLauncher.Http.Resource.String.app_center_api_key;
+			global::fiskaltrust.AndroidLauncher.Common.Resource.String.app_insights_instrumentation_key_production = global::fiskaltrust.AndroidLauncher.Http.Resource.String.app_insights_instrumentation_key_production;
+			global::fiskaltrust.AndroidLauncher.Common.Resource.String.app_insights_instrumentation_key_sandbox = global::fiskaltrust.AndroidLauncher.Http.Resource.String.app_insights_instrumentation_key_sandbox;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.app_name = global::fiskaltrust.AndroidLauncher.Http.Resource.String.app_name;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.copy_toast_msg = global::fiskaltrust.AndroidLauncher.Http.Resource.String.copy_toast_msg;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.fallback_menu_item_copy_link = global::fiskaltrust.AndroidLauncher.Http.Resource.String.fallback_menu_item_copy_link;
@@ -7815,89 +7816,92 @@ namespace fiskaltrust.AndroidLauncher.Http
 			// aapt resource value: 0x7F0E001B
 			public const int action_settings = 2131623963;
 			
-			// aapt resource value: 0x7F0E001E
-			public const int appbar_scrolling_view_behavior = 2131623966;
+			// aapt resource value: 0x7F0E001F
+			public const int appbar_scrolling_view_behavior = 2131623967;
 			
 			// aapt resource value: 0x7F0E001C
-			public const int app_center_api_key = 2131623964;
+			public const int app_insights_instrumentation_key_production = 2131623964;
 			
 			// aapt resource value: 0x7F0E001D
-			public const int app_name = 2131623965;
+			public const int app_insights_instrumentation_key_sandbox = 2131623965;
 			
-			// aapt resource value: 0x7F0E001F
-			public const int bottom_sheet_behavior = 2131623967;
+			// aapt resource value: 0x7F0E001E
+			public const int app_name = 2131623966;
 			
 			// aapt resource value: 0x7F0E0020
-			public const int character_counter_content_description = 2131623968;
+			public const int bottom_sheet_behavior = 2131623968;
 			
 			// aapt resource value: 0x7F0E0021
-			public const int character_counter_pattern = 2131623969;
+			public const int character_counter_content_description = 2131623969;
 			
 			// aapt resource value: 0x7F0E0022
-			public const int copy_toast_msg = 2131623970;
+			public const int character_counter_pattern = 2131623970;
 			
 			// aapt resource value: 0x7F0E0023
-			public const int fab_transformation_scrim_behavior = 2131623971;
+			public const int copy_toast_msg = 2131623971;
 			
 			// aapt resource value: 0x7F0E0024
-			public const int fab_transformation_sheet_behavior = 2131623972;
+			public const int fab_transformation_scrim_behavior = 2131623972;
 			
 			// aapt resource value: 0x7F0E0025
-			public const int fallback_menu_item_copy_link = 2131623973;
+			public const int fab_transformation_sheet_behavior = 2131623973;
 			
 			// aapt resource value: 0x7F0E0026
-			public const int fallback_menu_item_open_in_browser = 2131623974;
+			public const int fallback_menu_item_copy_link = 2131623974;
 			
 			// aapt resource value: 0x7F0E0027
-			public const int fallback_menu_item_share_link = 2131623975;
+			public const int fallback_menu_item_open_in_browser = 2131623975;
 			
 			// aapt resource value: 0x7F0E0028
-			public const int hello = 2131623976;
+			public const int fallback_menu_item_share_link = 2131623976;
 			
 			// aapt resource value: 0x7F0E0029
-			public const int hide_bottom_view_on_scroll_behavior = 2131623977;
+			public const int hello = 2131623977;
 			
 			// aapt resource value: 0x7F0E002A
-			public const int log_title = 2131623978;
+			public const int hide_bottom_view_on_scroll_behavior = 2131623978;
 			
 			// aapt resource value: 0x7F0E002B
-			public const int main_content = 2131623979;
+			public const int log_title = 2131623979;
 			
 			// aapt resource value: 0x7F0E002C
-			public const int main_title = 2131623980;
+			public const int main_content = 2131623980;
 			
 			// aapt resource value: 0x7F0E002D
-			public const int manage_space_button = 2131623981;
+			public const int main_title = 2131623981;
 			
 			// aapt resource value: 0x7F0E002E
-			public const int manage_space_content = 2131623982;
+			public const int manage_space_button = 2131623982;
 			
 			// aapt resource value: 0x7F0E002F
-			public const int manage_space_warning = 2131623983;
+			public const int manage_space_content = 2131623983;
 			
 			// aapt resource value: 0x7F0E0030
-			public const int mtrl_chip_close_icon_content_description = 2131623984;
+			public const int manage_space_warning = 2131623984;
 			
 			// aapt resource value: 0x7F0E0031
-			public const int password_toggle_content_description = 2131623985;
+			public const int mtrl_chip_close_icon_content_description = 2131623985;
 			
 			// aapt resource value: 0x7F0E0032
-			public const int path_password_eye = 2131623986;
+			public const int password_toggle_content_description = 2131623986;
 			
 			// aapt resource value: 0x7F0E0033
-			public const int path_password_eye_mask_strike_through = 2131623987;
+			public const int path_password_eye = 2131623987;
 			
 			// aapt resource value: 0x7F0E0034
-			public const int path_password_eye_mask_visible = 2131623988;
+			public const int path_password_eye_mask_strike_through = 2131623988;
 			
 			// aapt resource value: 0x7F0E0035
-			public const int path_password_strike_through = 2131623989;
+			public const int path_password_eye_mask_visible = 2131623989;
 			
 			// aapt resource value: 0x7F0E0036
-			public const int search_menu_title = 2131623990;
+			public const int path_password_strike_through = 2131623990;
 			
 			// aapt resource value: 0x7F0E0037
-			public const int status_bar_notification_info_overflow = 2131623991;
+			public const int search_menu_title = 2131623991;
+			
+			// aapt resource value: 0x7F0E0038
+			public const int status_bar_notification_info_overflow = 2131623992;
 			
 			static String()
 			{
