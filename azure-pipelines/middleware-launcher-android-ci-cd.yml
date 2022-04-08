@@ -29,7 +29,12 @@ stages:
 
     - pwsh: |
         $file = "./src/fiskaltrust.AndroidLauncher.Common/Resources/values/appSettings.xml"
-        (Get-Content $file).Replace("{{AppCenterAnalyticsApiKey}}", $AppCenterAnalyticsApiKey) | Set-Content $file
+        $content = (Get-Content $file)
+        
+        $content = $content.Replace("{{AppInsightsInstrumentationKeyProduction}}", $AppInsightsInstrumentationKeyProduction)
+        $content = $content.Replace("{{AppInsightsInstrumentationKeySandbox}}", $AppInsightsInstrumentationKeySandbox)
+        
+        $content | Set-Content $file
 
     - task: android-manifest-version@1
       inputs:
