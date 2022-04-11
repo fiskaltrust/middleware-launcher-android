@@ -33,11 +33,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Activitites
 
         private async Task<bool> AuthenticateAsync(string cashboxid, string accesstoken)
         {
-            if (!Guid.TryParse(cashboxid, out var id))
-                return false;
-
             var configProvider = new LocalConfigurationProvider();
-            return await configProvider.IsConfigStoreEmptyAsync() || await configProvider.ConfigurationExistsAsync(id, accesstoken);
+            return await configProvider.IsConfigStoreEmptyAsync() || !Guid.TryParse(cashboxid, out var id) || await configProvider.ConfigurationExistsAsync(id, accesstoken);
         }
     }
 }
