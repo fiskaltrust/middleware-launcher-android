@@ -210,7 +210,7 @@ stages:
         devices: 'fiskaltrust/smoke-tests'
         localeOption: 'en_US'
         prepareOptions: '--include-category grpc'
-        runOptions: --test-parameter "test_env=CASHBOXID=$(CreateGrpcCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateGrpcCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateGrpcCashBox.url)"
+        runOptions: --test-parameter "test_env=CASHBOXID=$(CreateGrpcCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateGrpcCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateGrpcCashBox.url)" --uitest-tools-dir "test-tools/"
       displayName: Smoke tests (gRPC)
 
     - task: AppCenterTest@1
@@ -226,7 +226,7 @@ stages:
         devices: 'fiskaltrust/smoke-tests'
         localeOption: 'en_US'
         prepareOptions: '--include-category http'
-        runOptions: --test-parameter "test_env=CASHBOXID=$(CreateHttpCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateHttpCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateHttpCashBox.url)"
+        runOptions: --test-parameter "test_env=CASHBOXID=$(CreateHttpCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateHttpCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateHttpCashBox.url)" --uitest-tools-dir "test-tools/"
       displayName: Smoke tests (HTTP)
 
   - job: Cleanup
