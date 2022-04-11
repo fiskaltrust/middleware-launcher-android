@@ -184,7 +184,7 @@ stages:
     - task: NuGetCommand@2
       inputs:
         command: 'custom'
-        arguments: 'install xamarin.uitest -Version 3.2.3 -OutputDirectory "test-tools/"'
+        arguments: 'install xamarin.uitest -Version 3.2.6 -OutputDirectory "test-tools/"'
 
     - task: VSBuild@1
       inputs:
@@ -210,7 +210,7 @@ stages:
         devices: 'fiskaltrust/smoke-tests'
         localeOption: 'en_US'
         prepareOptions: '--include-category grpc'
-        runOptions: --test-parameter "test_env=CASHBOXID=$(CreateGrpcCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateGrpcCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateGrpcCashBox.url)" --uitest-tools-dir "test-tools/"
+        runOptions: --test-parameter "test_env=CASHBOXID=$(CreateGrpcCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateGrpcCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateGrpcCashBox.url)"
       displayName: Smoke tests (gRPC)
 
     - task: AppCenterTest@1
@@ -226,7 +226,7 @@ stages:
         devices: 'fiskaltrust/smoke-tests'
         localeOption: 'en_US'
         prepareOptions: '--include-category http'
-        runOptions: --test-parameter "test_env=CASHBOXID=$(CreateHttpCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateHttpCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateHttpCashBox.url)" --uitest-tools-dir "test-tools/"
+        runOptions: --test-parameter "test_env=CASHBOXID=$(CreateHttpCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateHttpCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateHttpCashBox.url)"
       displayName: Smoke tests (HTTP)
 
   - job: Cleanup
