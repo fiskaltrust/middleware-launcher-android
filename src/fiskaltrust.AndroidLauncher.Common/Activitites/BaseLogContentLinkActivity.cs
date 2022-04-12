@@ -19,7 +19,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Activitites
             var latestLogPath = FileLoggerHelper.LogDirectory.GetFiles("*.log").OrderByDescending(f => f.LastWriteTime).FirstOrDefault();
             if (await AuthenticateAsync(cashboxId, accessToken) && latestLogPath != null)
             {
-                var uri = AndroidX.Core.Content.FileProvider.GetUriForFile(ApplicationContext, "eu.fiskaltrust.androidlauncher.http.logprovider", new Java.IO.File(latestLogPath.FullName));
+                var uri = AndroidX.Core.Content.FileProvider.GetUriForFile(ApplicationContext, $"{ApplicationContext.PackageName}.logprovider", new Java.IO.File(latestLogPath.FullName));
                 var result = new Intent().SetData(uri).SetFlags(ActivityFlags.GrantReadUriPermission);
                 SetResult(Result.Ok, result);
             }
