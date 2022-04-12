@@ -76,6 +76,7 @@
   <ItemGroup>
     <Compile Include="Broadcasting\StartLauncherBroadcastReceiver.cs" />
     <Compile Include="Broadcasting\StopLauncherBroadcastReceiver.cs" />
+    <Compile Include="Content\LogContentProvider.cs" />
     <Compile Include="Controllers\DESSCDController.cs" />
     <Compile Include="Controllers\POSController.cs" />
     <Compile Include="Helpers\RestUrlResolver.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Hosting\IncludeControllerConvention.cs" />
     <Compile Include="Hosting\HttpHostFactory.cs" />
     <Compile Include="Hosting\POSClientFactory.cs" />
+    <Compile Include="LogContentLinkActivity.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="MiddlewareLauncherHttpService.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
@@ -186,6 +188,7 @@
     <AndroidResource Include="Resources\mipmap-xhdpi\ic_launcher.png" />
     <AndroidResource Include="Resources\mipmap-xxhdpi\ic_launcher.png" />
     <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher.png" />
+    <AndroidResource Include="Resources\xml\log_paths.xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\drawable\" />
