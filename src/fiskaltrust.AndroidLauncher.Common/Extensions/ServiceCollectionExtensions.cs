@@ -33,7 +33,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Extensions
                     new DependencyTrackingTelemetryModule().Initialize(config);
                 });
 
-                services.AddLogging(builder => // what happens if we call this multiple times?
+                services.AddLogging(builder =>
                 {
                     builder.SetMinimumLevel(verbosity);
 
