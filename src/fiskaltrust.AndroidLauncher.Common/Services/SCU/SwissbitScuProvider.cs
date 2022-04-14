@@ -26,7 +26,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
             };
 
             var serviceCollection = new ServiceCollection();
-            serviceCollection.AddAppInsightsAndLogProviders(Helpers.Configuration.GetAppInsightsInstrumentationKey(isSandbox), "fiskaltrust.Middleware.SCU.DE.Swissbit", ftCashBoxId, logLevel);
+            serviceCollection.AddLogProviders(logLevel);
+            serviceCollection.AddAppInsights(Helpers.Configuration.GetAppInsightsInstrumentationKey(isSandbox), "fiskaltrust.Middleware.SCU.DE.Swissbit", ftCashBoxId);
 
             bootstrapper.ConfigureServices(serviceCollection);
             return serviceCollection.BuildServiceProvider().GetRequiredService<IDESSCD>();

@@ -7,6 +7,7 @@ using Microsoft.ApplicationInsights.DependencyCollector;
 using Microsoft.ApplicationInsights.Extensibility;
 using System;
 using Xamarin.Essentials;
+using Microsoft.Extensions.Logging.ApplicationInsights;
 
 namespace fiskaltrust.AndroidLauncher.Common.Extensions
 {
@@ -22,7 +23,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Extensions
             });
         }
         
-        public static IServiceCollection AddAppInsightsAndLogProviders(this IServiceCollection services, string instrumentationKey, string package, Guid cashBoxId, LogLevel verbosity)
+        public static IServiceCollection AddAppInsights(this IServiceCollection services, string instrumentationKey, string package, Guid cashBoxId)
         {
             var channel = new InMemoryChannel();
             {
@@ -35,9 +36,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Extensions
 
                 services.AddLogging(builder =>
                 {
-                    builder.SetMinimumLevel(verbosity);
-                    builder.AddSerilog();
-                    builder.Services.AddSingleton<ILoggerProvider, AndroidLoggerProvider>();
+                    builder.AddFilter<ApplicationInsightsLoggerProvider>("", LogLevel.Warning);
                     builder.AddApplicationInsights(instrumentationKey);
                 });
                 services.AddSingleton<ITelemetryChannel>(channel);

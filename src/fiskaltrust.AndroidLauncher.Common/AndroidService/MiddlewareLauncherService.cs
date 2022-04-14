@@ -69,7 +69,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
 
                 Log.Logger = new LoggerConfiguration()
                     .WriteTo.File(path: Path.Combine(FileLoggerHelper.LogDirectory.FullName, FileLoggerHelper.LogFilename), rollingInterval: RollingInterval.Day, retainedFileCountLimit: 31)
-                    .WriteTo.ApplicationInsights(telemetryConfiguration, TelemetryConverter.Traces)
+                    .WriteTo.ApplicationInsights(telemetryConfiguration, TelemetryConverter.Traces, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning)
                     .CreateLogger();
 
                 Log.Logger.Information("Starting the fiskaltrust.Middleware...");
