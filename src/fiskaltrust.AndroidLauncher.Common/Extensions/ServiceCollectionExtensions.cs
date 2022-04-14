@@ -21,8 +21,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Extensions
                 builder.SetMinimumLevel(logLevel);
             });
         }
-
-        public static IServiceCollection AddAppInsightsLogging(this IServiceCollection services, string instrumentationKey, string package, Guid cashBoxId, LogLevel verbosity)
+        
+        public static IServiceCollection AddAppInsightsAndLogProviders(this IServiceCollection services, string instrumentationKey, string package, Guid cashBoxId, LogLevel verbosity)
         {
             var channel = new InMemoryChannel();
             {
@@ -36,7 +36,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Extensions
                 services.AddLogging(builder =>
                 {
                     builder.SetMinimumLevel(verbosity);
-
+                    builder.AddSerilog();
+                    builder.Services.AddSingleton<ILoggerProvider, AndroidLoggerProvider>();
                     builder.AddApplicationInsights(instrumentationKey);
                 });
                 services.AddSingleton<ITelemetryChannel>(channel);

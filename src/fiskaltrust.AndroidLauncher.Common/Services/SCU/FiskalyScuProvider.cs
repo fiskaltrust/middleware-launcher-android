@@ -19,8 +19,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
             };
 
             var serviceCollection = new ServiceCollection();
-            serviceCollection.AddLogProviders(logLevel);
-            serviceCollection.AddAppInsightsLogging(Helpers.Configuration.GetAppInsightsInstrumentationKey(isSandbox), "fiskaltrust.Middleware.SCU.DE.Fiskaly", ftCashBoxId, logLevel);
+            serviceCollection.AddAppInsightsAndLogProviders(Helpers.Configuration.GetAppInsightsInstrumentationKey(isSandbox), "fiskaltrust.Middleware.SCU.DE.Fiskaly", ftCashBoxId, logLevel);
 
             bootstrapper.ConfigureServices(serviceCollection);
             return serviceCollection.BuildServiceProvider().GetRequiredService<IDESSCD>();

@@ -32,8 +32,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.Queue
 
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddSingleton<IClientFactory<IDESSCD>>(scuHost.GetClientFactory());
-            serviceCollection.AddLogProviders(logLevel);
-            serviceCollection.AddAppInsightsLogging(Helpers.Configuration.GetAppInsightsInstrumentationKey(isSandbox), "fiskaltrust.Middleware.Queue.SQLite", ftCashBoxId, logLevel);
+            serviceCollection.AddAppInsightsAndLogProviders(Helpers.Configuration.GetAppInsightsInstrumentationKey(isSandbox), "fiskaltrust.Middleware.Queue.SQLite", ftCashBoxId, logLevel);
 
             bootstrapper.ConfigureServices(serviceCollection);
             return serviceCollection.BuildServiceProvider().GetRequiredService<IPOS>();
