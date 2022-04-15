@@ -4,7 +4,6 @@ using Android.OS;
 using fiskaltrust.AndroidLauncher.Common;
 using fiskaltrust.AndroidLauncher.Common.AndroidService;
 using fiskaltrust.AndroidLauncher.Common.Helpers;
-using fiskaltrust.AndroidLauncher.Common.Services;
 using fiskaltrust.AndroidLauncher.Grpc.Broadcasting;
 using fiskaltrust.AndroidLauncher.Grpc.Hosting;
 using fiskaltrust.AndroidLauncher.Helpers;

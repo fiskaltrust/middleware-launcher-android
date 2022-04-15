@@ -11,6 +11,7 @@ using fiskaltrust.AndroidLauncher.Common.Helpers;
 using fiskaltrust.AndroidLauncher.Common.Helpers.Logging;
 using fiskaltrust.AndroidLauncher.Common.Hosting;
 using fiskaltrust.AndroidLauncher.Common.Services;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using System;
@@ -43,18 +44,11 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
 
             StartForeground(NOTIFICATION_ID, notification);
 
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.File(path: Path.Combine(FileLoggerHelper.LogDirectory.FullName, FileLoggerHelper.LogFilename), rollingInterval: RollingInterval.Day,
-                    retainedFileCountLimit: 31)
-                .CreateLogger();
-
             try
             {
-                Log.Logger.Information("Starting the fiskaltrust.Middleware...");
-
+                var isSandbox = intent.GetBooleanExtra("sandbox", false);
                 var cashboxIdString = intent.GetStringExtra("cashboxid");
                 var accessToken = intent.GetStringExtra("accesstoken");
-                var isSandbox = intent.GetBooleanExtra("sandbox", false);
                 var logLevel = Enum.TryParse(intent.GetStringExtra("loglevel"), out LogLevel level) ? level : LogLevel.Information;
                 var scuParams = intent.GetScuConfigParameters(removePrefix: true);
 
@@ -66,6 +60,20 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
                 {
                     throw new ArgumentException("The extra 'accesstoken' needs to be set in this intent.", "accesstoken");
                 }
+
+
+                var middlewareTelemetryInitializer = new MiddlewareTelemetryInitializer("fiskaltrust.AndroidLauncher", VersionTracking.CurrentVersion, cashboxId);
+
+                var telemetryConfiguration = new TelemetryConfiguration(Configuration.GetAppInsightsInstrumentationKey(isSandbox));
+                telemetryConfiguration.TelemetryInitializers.Add(middlewareTelemetryInitializer);
+
+                Log.Logger = new LoggerConfiguration()
+                    .WriteTo.File(path: Path.Combine(FileLoggerHelper.LogDirectory.FullName, FileLoggerHelper.LogFilename), rollingInterval: RollingInterval.Day, retainedFileCountLimit: 31)
+                    .WriteTo.ApplicationInsights(telemetryConfiguration, TelemetryConverter.Traces, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning)
+                    .CreateLogger();
+
+                Log.Logger.Information("Starting the fiskaltrust.Middleware...");
+
 
                 Log.Logger.Debug($"CashBox ID: {cashboxIdString}, IsSandbox: {isSandbox}");
                 _launcher = new MiddlewareLauncher(GetHostFactory(), GetUrlResolver(), cashboxId, accessToken, isSandbox, logLevel, scuParams);
@@ -96,7 +104,6 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
                     ex = ex.InnerException;
 
                 Log.Logger.Error(ex, "An error occured while trying to start the fiskaltrust Android Launcher.");
-
                 if (ex is RemountRequiredException remountRequiredEx)
                 {
                     StateProvider.Instance.SetState(State.Error, StateReasons.RemountRequired);

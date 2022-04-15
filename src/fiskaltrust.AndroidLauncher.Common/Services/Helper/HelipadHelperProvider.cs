@@ -1,4 +1,5 @@
-﻿using fiskaltrust.AndroidLauncher.Common.Constants;
+﻿using Android.App;
+using fiskaltrust.AndroidLauncher.Common.Constants;
 using fiskaltrust.AndroidLauncher.Common.Extensions;
 using fiskaltrust.AndroidLauncher.Common.Hosting;
 using fiskaltrust.ifPOS.v1;
@@ -31,6 +32,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.Helper
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddSingleton<IClientFactory<IPOS>>(posHost.GetClientFactory());
             serviceCollection.AddLogProviders(logLevel);
+            serviceCollection.AddAppInsights(Helpers.Configuration.GetAppInsightsInstrumentationKey(isSandbox), "fiskaltrust.Middleware.Helper.Helipad", cashBoxConfiguration.ftCashBoxId);
 
             bootstrapper.ConfigureServices(serviceCollection);
             return serviceCollection.BuildServiceProvider().GetRequiredService<IHelper>();

@@ -6,9 +6,13 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  buildConfiguration: 'Release'
-  outputDirectory: '$(build.binariesDirectory)/$(buildConfiguration)'
-  testOutputDirectory: '$(build.binariesDirectory)/test/$(buildConfiguration)'
+  - name: buildConfiguration
+    value: 'Release'
+  - name: outputDirectory
+    value: '$(build.binariesDirectory)/$(buildConfiguration)'
+  - name: testOutputDirectory
+    value: '$(build.binariesDirectory)/test/$(buildConfiguration)'
+  - group: middleware-launcher-android
 
 stages:
 - stage: BuildAndTest
@@ -22,6 +26,15 @@ stages:
       inputs:
         pathToVersionJson: 'version.json'
         semverVersion: 'v1'
+
+    - pwsh: |
+        $file = "./src/fiskaltrust.AndroidLauncher.Common/Resources/values/appSettings.xml"
+        $content = (Get-Content $file)
+        
+        $content = $content.Replace("{{AppInsightsInstrumentationKeyProduction}}", $AppInsightsInstrumentationKeyProduction)
+        $content = $content.Replace("{{AppInsightsInstrumentationKeySandbox}}", $AppInsightsInstrumentationKeySandbox)
+        
+        $content | Set-Content $file
 
     - task: android-manifest-version@1
       inputs:
@@ -171,7 +184,7 @@ stages:
     - task: NuGetCommand@2
       inputs:
         command: 'custom'
-        arguments: 'install xamarin.uitest -Version 3.2.3 -OutputDirectory "test-tools/"'
+        arguments: 'install xamarin.uitest -Version 3.2.6 -OutputDirectory "test-tools/"'
 
     - task: VSBuild@1
       inputs:
@@ -190,7 +203,7 @@ stages:
         artifactsDirectory: '$(Build.ArtifactStagingDirectory)/AppCenterTest'
         frameworkOption: 'uitest'
         uiTestBuildDirectory: '$(testOutputDirectory)'
-        uiTestToolsDirectory: 'test-tools/Xamarin.UITest.3.2.3/tools'
+        uiTestToolsDirectory: 'test-tools/Xamarin.UITest.3.2.6/tools'
         credentialsOption: 'serviceEndpoint'
         serverEndpoint: 'VS App Center'
         appSlug: 'fiskaltrust/fiskaltrust.Launcher'
@@ -206,7 +219,7 @@ stages:
         artifactsDirectory: '$(Build.ArtifactStagingDirectory)/AppCenterTest'
         frameworkOption: 'uitest'
         uiTestBuildDirectory: '$(testOutputDirectory)'
-        uiTestToolsDirectory: 'test-tools/Xamarin.UITest.3.2.3/tools'
+        uiTestToolsDirectory: 'test-tools/Xamarin.UITest.3.2.6/tools'
         credentialsOption: 'serviceEndpoint'
         serverEndpoint: 'VS App Center'
         appSlug: 'fiskaltrust/fiskaltrust.Launcher'

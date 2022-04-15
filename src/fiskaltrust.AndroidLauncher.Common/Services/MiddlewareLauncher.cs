@@ -142,7 +142,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
 
             var scuProvider = new SwissbitScuProvider();
-            var scu = scuProvider.CreateSCU(packageConfig, _logLevel);
+            var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
             await _scuHost.StartAsync(url, scu, _logLevel);
 
             Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.SCU.DE.Swissbit' is listening on '{url}'.");
@@ -153,7 +153,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
 
             var scuProvider = new FiskalyScuProvider();
-            var scu = scuProvider.CreateSCU(packageConfig, _logLevel);
+            var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
             await _scuHost.StartAsync(url, scu, _logLevel);
 
             Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.SCU.DE.Fiskaly' is listening on '{url}'.");
@@ -164,7 +164,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
 
             var scuProvider = new FiskalyCertifiedScuProvider();
-            var scu = scuProvider.CreateSCU(packageConfig, _logLevel);
+            var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
             await _scuHost.StartAsync(url, scu, _logLevel);
 
             Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.SCU.DE.FiskalyCertified' is listening on '{url}'.");
@@ -175,7 +175,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
 
             var queueProvider = new SQLiteQueueProvider();
-            var pos = await Task.Run(() => queueProvider.CreatePOS(Environment.GetFolderPath(Environment.SpecialFolder.Personal), packageConfig, _logLevel, _scuHost));
+            var pos = await Task.Run(() => queueProvider.CreatePOS(Environment.GetFolderPath(Environment.SpecialFolder.Personal), packageConfig, _cashboxId, _isSandbox, _logLevel, _scuHost));
 
             await _posHost.StartAsync(url, pos, _logLevel);
 

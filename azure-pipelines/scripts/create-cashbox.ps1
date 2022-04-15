@@ -14,6 +14,8 @@ $headers = @{ accountid = $AccountId; accesstoken = $AccountAccessToken }
 
 $response = Invoke-WebRequest -uri $uri -Headers $headers -Method POST -ContentType "application/json; charset=utf-8" -Body $($template | ConvertTo-Json) | ConvertFrom-Json
 
+echo "CashBoxId: $($response.cashboxid)"
+
 echo "##vso[task.setvariable variable=cashboxId;isOutput=true]$($response.cashboxid)"
 echo "##vso[task.setvariable variable=accessToken;isOutput=true]$($response.accesstoken)"
 echo "##vso[task.setvariable variable=url;isOutput=true]$($($response.configuration | ConvertFrom-Json).ftQueues[0].Url[0])"

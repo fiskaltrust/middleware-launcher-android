@@ -6,7 +6,7 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
     {
         public static class Http
         {
-            public static readonly string CashboxId =  Environment.GetEnvironmentVariable("CASHBOXID");
+            public static readonly string CashboxId = Environment.GetEnvironmentVariable("CASHBOXID");
             public static readonly string AccessToken = Environment.GetEnvironmentVariable("ACCESSTOKEN");
             public static readonly string Url = Environment.GetEnvironmentVariable("URL").Replace("rest://", "http://");
         }
