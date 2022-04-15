@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activitites\BaseLogContentLinkActivity.cs" />
     <Compile Include="Activitites\BaseMainActivity.cs" />
     <Compile Include="Activitites\LogActivity.cs" />
     <Compile Include="Activitites\ManageSpaceActivity.cs" />

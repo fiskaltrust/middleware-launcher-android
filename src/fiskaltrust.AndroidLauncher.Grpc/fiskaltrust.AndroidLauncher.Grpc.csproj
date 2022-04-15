@@ -76,11 +76,13 @@
   <ItemGroup>
     <Compile Include="Broadcasting\StartLauncherBroadcastReceiver.cs" />
     <Compile Include="Broadcasting\StopLauncherBroadcastReceiver.cs" />
+    <Compile Include="Content\LogContentProvider.cs" />
     <Compile Include="Helpers\GrpcUrlResolver.cs" />
     <Compile Include="Hosting\DESSCDClientFactory.cs" />
     <Compile Include="Hosting\GrpcHelper.cs" />
     <Compile Include="Hosting\GrpcHostFactory.cs" />
     <Compile Include="Hosting\POSClientFactory.cs" />
+    <Compile Include="LogContentLinkActivity.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="MiddlewareLauncherGrpcService.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
@@ -178,6 +180,10 @@
     <AndroidResource Include="Resources\mipmap-xhdpi\ic_launcher.png" />
     <AndroidResource Include="Resources\mipmap-xxhdpi\ic_launcher.png" />
     <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher.png" />
+    <AndroidResource Include="Resources\xml\log_paths.xml">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\drawable\" />
