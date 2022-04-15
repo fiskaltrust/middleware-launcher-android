@@ -2,6 +2,7 @@
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
 using System;
+using Xamarin.Essentials;
 
 namespace fiskaltrust.AndroidLauncher.Common.Helpers.Logging
 {
@@ -36,21 +37,12 @@ namespace fiskaltrust.AndroidLauncher.Common.Helpers.Logging
             {
                 AddDefaultProperties(exceptionTelemetry);
 
-                AddProperty(exceptionTelemetry, "CurrentDirectory", Environment.CurrentDirectory);
                 AddProperty(exceptionTelemetry, "StackTrace", Environment.StackTrace);
-                AddProperty(exceptionTelemetry, "Is64BitProcess", Environment.Is64BitProcess);
-                AddProperty(exceptionTelemetry, "CLRVersion", Environment.Version);
-                AddProperty(exceptionTelemetry, "OSVersion", Environment.OSVersion);
-                AddProperty(exceptionTelemetry, "Is64BitOperatingSystem", Environment.Is64BitOperatingSystem);
-                AddProperty(exceptionTelemetry, "SystemDirectory", Environment.SystemDirectory);
-                AddProperty(exceptionTelemetry, "SystemPageSize", Environment.SystemPageSize);
-                AddProperty(exceptionTelemetry, "UserInteractive", Environment.UserInteractive);
-                AddProperty(exceptionTelemetry, "HasShutdownStarted", Environment.HasShutdownStarted);
-                AddProperty(exceptionTelemetry, "ProcessorCount", Environment.ProcessorCount);
-                AddProperty(exceptionTelemetry, "WorkingSet", Environment.WorkingSet);
+                AddProperty(exceptionTelemetry, "Device", DeviceInfo.Model);
+                AddProperty(exceptionTelemetry, "DeviceManufacturer", DeviceInfo.Manufacturer);
+                AddProperty(exceptionTelemetry, "DeviceType", DeviceInfo.Idiom);
+                AddProperty(exceptionTelemetry, "AndroidVersion", DeviceInfo.VersionString);
             }
-
-            telemetry.Context.Operation.Id = CorrelationManager.GetOperationId();
         }
 
         private void AddDefaultProperties(ISupportProperties traceTelemetry)

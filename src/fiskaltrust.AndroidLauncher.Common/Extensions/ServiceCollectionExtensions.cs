@@ -41,21 +41,5 @@ namespace fiskaltrust.AndroidLauncher.Common.Extensions
             services.AddSingleton<ITelemetryChannel>(channel);
             return services;
         }
-
-        public static IServiceCollection FlushAppInsightsLogging(this IServiceCollection services, bool useOffline)
-        {
-            if (useOffline)
-            {
-                return services;
-            }
-            var channels = services.BuildServiceProvider().GetServices<ITelemetryChannel>();
-            foreach (var channel in channels)
-            {
-                channel.Flush();
-                channel.Dispose();
-            }
-
-            return services;
-        }
     }
 }
