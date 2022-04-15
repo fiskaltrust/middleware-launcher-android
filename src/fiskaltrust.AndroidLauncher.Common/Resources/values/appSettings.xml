@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="app_insights_instrumentation_key_production">{{AppInsightsInstrumentationKeyProduction}}</string>
-	<string name="app_insights_instrumentation_key_sandbox">{{AppInsightsInstrumentationKeySandbox}}</string>
+	<string name="app_insights_instrumentation_key_production">f970733e-ba1f-44a0-a5b3-95d2849ebfad</string>
+	<string name="app_insights_instrumentation_key_sandbox">f970733e-ba1f-44a0-a5b3-95d2849ebfad</string>
 </resources>

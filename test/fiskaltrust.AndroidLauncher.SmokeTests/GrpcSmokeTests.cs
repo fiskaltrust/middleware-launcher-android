@@ -32,9 +32,6 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
             signResponse.ftState.Should().Be(0x4445000000000000);
             signResponse.ftSignatures.Should().HaveCountGreaterThan(10);
             signResponse.ftSignatures.Should().Contain(x => x.Caption == "<transaktions-nummer>");
-
-            serializedSignResponse = App.Invoke("SendSignTestBackdoor", new object[] { TestConstants.Grpc.Url, TestConstants.Receipt.Replace("{{cashbox_id}}", TestConstants.Grpc.CashboxId) }) as string;
-            serializedSignResponse.Should().NotBeNullOrEmpty();
         }
     }
 }

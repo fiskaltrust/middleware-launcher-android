@@ -26,22 +26,20 @@ namespace fiskaltrust.AndroidLauncher.Common.Extensions
         public static IServiceCollection AddAppInsights(this IServiceCollection services, string instrumentationKey, string package, Guid cashBoxId)
         {
             var channel = new InMemoryChannel();
+            services.Configure<TelemetryConfiguration>(config =>
             {
-                services.Configure<TelemetryConfiguration>(config =>
-                {
-                    config.TelemetryChannel = channel;
-                    config.TelemetryInitializers.Add(new MiddlewareTelemetryInitializer(package, VersionTracking.CurrentVersion, cashBoxId));
-                    new DependencyTrackingTelemetryModule().Initialize(config);
-                });
+                config.TelemetryChannel = channel;
+                config.TelemetryInitializers.Add(new MiddlewareTelemetryInitializer(package, VersionTracking.CurrentVersion, cashBoxId));
+                new DependencyTrackingTelemetryModule().Initialize(config);
+            });
 
-                services.AddLogging(builder =>
-                {
-                    builder.AddFilter<ApplicationInsightsLoggerProvider>("", LogLevel.Warning);
-                    builder.AddApplicationInsights(instrumentationKey);
-                });
-                services.AddSingleton<ITelemetryChannel>(channel);
-                return services;
-            }
+            services.AddLogging(builder =>
+            {
+                builder.AddFilter<ApplicationInsightsLoggerProvider>("", LogLevel.Warning);
+                builder.AddApplicationInsights(instrumentationKey);
+            });
+            services.AddSingleton<ITelemetryChannel>(channel);
+            return services;
         }
 
         public static IServiceCollection FlushAppInsightsLogging(this IServiceCollection services, bool useOffline)

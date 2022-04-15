@@ -41,7 +41,7 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
                         return;
                     TestContext.Out.WriteLine("Echo result: " + result);
                 }
-                catch(Exception ex) 
+                catch (Exception ex)
                 {
                     TestContext.Error.WriteLine(ex);
                 }
