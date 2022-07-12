@@ -184,7 +184,7 @@ stages:
     - task: NuGetCommand@2
       inputs:
         command: 'custom'
-        arguments: 'install xamarin.uitest -Version 3.2.6 -OutputDirectory "test-tools/"'
+        arguments: 'install xamarin.uitest -Version 3.2.8 -OutputDirectory "test-tools/"'
 
     - task: VSBuild@1
       inputs:
@@ -203,7 +203,7 @@ stages:
         artifactsDirectory: '$(Build.ArtifactStagingDirectory)/AppCenterTest'
         frameworkOption: 'uitest'
         uiTestBuildDirectory: '$(testOutputDirectory)'
-        uiTestToolsDirectory: 'test-tools/Xamarin.UITest.3.2.6/tools'
+        uiTestToolsDirectory: 'test-tools/Xamarin.UITest.3.2.8/tools'
         credentialsOption: 'serviceEndpoint'
         serverEndpoint: 'VS App Center'
         appSlug: 'fiskaltrust/fiskaltrust.Launcher'
@@ -219,7 +219,7 @@ stages:
         artifactsDirectory: '$(Build.ArtifactStagingDirectory)/AppCenterTest'
         frameworkOption: 'uitest'
         uiTestBuildDirectory: '$(testOutputDirectory)'
-        uiTestToolsDirectory: 'test-tools/Xamarin.UITest.3.2.6/tools'
+        uiTestToolsDirectory: 'test-tools/Xamarin.UITest.3.2.8/tools'
         credentialsOption: 'serviceEndpoint'
         serverEndpoint: 'VS App Center'
         appSlug: 'fiskaltrust/fiskaltrust.Launcher'
