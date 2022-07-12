@@ -1,0 +1,11 @@
+<resources>
+	<string name="app_name">fiskaltrust.AndroidLauncher.Common</string>
+	<string name="action_settings">Einstellungen</string>
+	<string name="main_title">Alles bereit!</string>
+	<string name="log_title">Entwickler-Logs</string>
+	<string name="main_content">Der Launcher für die fiskaltrust.Middleware ist auf diesem Gerät installiert und wartet auf eingehende Startanfragen.</string>
+	<string name="manage_space_content">Das Löschen der App-Daten wird alle auf diesem Gerät gespeicherten Fiskalisierungdaten löschen.</string>
+	<string name="manage_space_warning">Diese Akion kann nicht rückgängig gemacht werden. Fahren Sie nicht fort, es sei denn, Sie werden vom technischen Support dazu aufgefordert.</string>
+	<string name="manage_space_button">Daten Löschen</string>
+	<string name="no_logs">Keine Log-Datei gefunden.</string>
+</resources>
