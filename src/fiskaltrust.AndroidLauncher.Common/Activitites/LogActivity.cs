@@ -19,7 +19,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Activitites
             if (txt == null) return;
 
             var lines = FileLoggerHelper.GetLastLinesOfCurrentLogFile(1024);
-            txt.Text = string.IsNullOrEmpty(lines) ? "No log file found." : lines;
+            txt.Text = string.IsNullOrEmpty(lines) ? Resources.GetString(Resource.String.no_logs) : lines;
             scrollView?.Post(() => scrollView.FullScroll(FocusSearchDirection.Down));
         }
     }

@@ -7,4 +7,5 @@
 	<string name="manage_space_content">Clearing the app data will delete all fiscalization data stored on this device.</string>
 	<string name="manage_space_warning">This action cannot be undone. Don\'t proceed, unless you\'re instructed to do so by technical support.</string>
 	<string name="manage_space_button">Clear Data</string>
+	<string name="no_logs">No log file found.</string>
 </resources>
