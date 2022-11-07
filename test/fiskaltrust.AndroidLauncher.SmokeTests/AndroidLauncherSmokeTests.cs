@@ -50,7 +50,7 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
             }
 
             App.Screenshot("Timeout");
-            throw new TimeoutException($"REST endpoint at {TestConstants.Http.Url} was not reachable after {timeSpan}.");
+            throw new TimeoutException($"endpoint at {url} was not reachable after {timeSpan}.");
         }
     }
 }
