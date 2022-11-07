@@ -69,6 +69,7 @@
     <Compile Include="Helpers\Logging\AndroidLogger.cs" />
     <Compile Include="Helpers\Logging\FileLoggerHelper.cs" />
     <Compile Include="Helpers\Logging\AndroidLoggerProvider.cs" />
+    <Compile Include="Helpers\Logging\LogCatSink.cs" />
     <Compile Include="Helpers\Logging\MiddlewareTelemetryInitializer.cs" />
     <Compile Include="Helpers\Logging\NoopDisposable.cs" />
     <Compile Include="Helpers\PowerManagerHelper.cs" />

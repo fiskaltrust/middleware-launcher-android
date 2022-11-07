@@ -1,5 +1,6 @@
 ﻿using Android.App;
 using Android.Content;
+using Android.Nfc;
 using Android.OS;
 using Android.Runtime;
 using AndroidX.Core.App;
@@ -14,6 +15,7 @@ using fiskaltrust.AndroidLauncher.Common.Services;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using Serilog.Formatting.Display;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -40,7 +42,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
             CreateNotificationChannel();
 
             var enableCloseButton = intent.GetBooleanExtra("enableCloseButton", false);
-            var notification = GetNotification(LauncherState.NotConnected, enableCloseButton) ;
+            var notification = GetNotification(LauncherState.NotConnected, enableCloseButton);
 
             StartForeground(NOTIFICATION_ID, notification);
 
@@ -70,6 +72,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
                 Log.Logger = new LoggerConfiguration()
                     .WriteTo.File(path: Path.Combine(FileLoggerHelper.LogDirectory.FullName, FileLoggerHelper.LogFilename), rollingInterval: RollingInterval.Day, retainedFileCountLimit: 31)
                     .WriteTo.ApplicationInsights(telemetryConfiguration, TelemetryConverter.Traces, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning)
+                    .WriteTo.Sink(new LogcatSink(AndroidLogger.TAG, logLevel))
                     .CreateLogger();
 
                 Log.Logger.Information("Starting the fiskaltrust.Middleware...");
