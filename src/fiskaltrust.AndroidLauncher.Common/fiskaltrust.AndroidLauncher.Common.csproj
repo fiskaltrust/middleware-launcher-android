@@ -100,6 +100,9 @@
     <AndroidAsset Include="Migrations\005_MasterData.sqlite3" />
     <AndroidAsset Include="Migrations\006_DailyClosingNumber.sqlite3" />
     <AndroidAsset Include="Migrations\007_ScuMode.sqlite3" />
+    <AndroidAsset Include="Migrations\008_Indices.sqlite3" />
+    <AndroidAsset Include="Migrations\009_QueueME.sqlite3" />
+    <AndroidAsset Include="Migrations\010_ExtendedMasterData.sqlite3" />
     <None Include="Resources\AboutResources.txt" />
   </ItemGroup>
   <ItemGroup>
