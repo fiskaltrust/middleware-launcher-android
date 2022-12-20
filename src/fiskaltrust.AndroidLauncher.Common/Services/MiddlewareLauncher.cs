@@ -14,8 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using FiskalyV1SCUConfiguration = fiskaltrust.Middleware.SCU.DE.Fiskaly.FiskalySCUConfiguration;
-
 namespace fiskaltrust.AndroidLauncher.Common.Services
 {
     internal class MiddlewareLauncher
@@ -83,13 +81,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
                 {
                     case PACKAGE_NAME_SWISSBIT:
                         await InitializeSwissbitScuAsync(scuConfig);
-                        break;
-                    case PACKAGE_NAME_FISKALY:
-                        if (_scuParams.TryGetValue(nameof(FiskalyV1SCUConfiguration.FiskalyClientTimeout), out var clientTimeout)) scuConfig.Configuration[nameof(FiskalyV1SCUConfiguration.FiskalyClientTimeout)] = clientTimeout;
-                        if (_scuParams.TryGetValue(nameof(FiskalyV1SCUConfiguration.FiskalyClientSmaersTimeout), out var smaersTimeout)) scuConfig.Configuration[nameof(FiskalyV1SCUConfiguration.FiskalyClientSmaersTimeout)] = smaersTimeout;
-
-                        await InitializeFiskalyScuAsync(scuConfig);
-                        break;
+                        break;                  
                     case PACKAGE_NAME_FISKALY_CERTIFIED:
                         await InitializeFiskalyCertifiedScuAsync(scuConfig);
                         break;
@@ -146,17 +138,6 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             await _scuHost.StartAsync(url, scu, _logLevel);
 
             Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.SCU.DE.Swissbit' is listening on '{url}'.");
-        }
-
-        private async Task InitializeFiskalyScuAsync(PackageConfiguration packageConfig)
-        {
-            string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
-
-            var scuProvider = new FiskalyScuProvider();
-            var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
-            await _scuHost.StartAsync(url, scu, _logLevel);
-
-            Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.SCU.DE.Fiskaly' is listening on '{url}'.");
         }
 
         private async Task InitializeFiskalyCertifiedScuAsync(PackageConfiguration packageConfig)
