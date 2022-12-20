@@ -37,7 +37,7 @@ However, there are some limitations due to the used platform:
 ## Contributing
 We welcome all kinds of contributions and feedback, e.g. via issues or pull requests, and want to thank every future contributors in advance!
 
-Please check out the [contribution guidelines](CONTRIBUTING.md) for more detailed information about how to proceed.
+Please check out the [contribution guidelines](https://github.com/fiskaltrust/.github/blob/main/CONTRIBUTING.md) for more detailed information about how to proceed.
 
 ## License
 The fiskaltrust Middleware is released under the [EUPL 1.2](./LICENSE). 
