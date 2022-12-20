@@ -1,7 +1,7 @@
 # fiskaltrust Android Launcher
 The **fiskaltrust Android Launcher** is an application that hosts the packages of the **fiskaltrust Middleware** on Android, a modular fiscalization and POS platform that can be embedded into POS systems to suffice international fiscalization regulations.
 
-For samples on how to **implement and roll-out** this App, please refer to the [Android demo repository](https://github.com/fiskaltrust/middleware-demo-android).
+For samples on how to **implement and roll-out** this App, please refer to our [documentation platform](https://docs.fiskaltrust.cloud) the [Android demo repository](https://github.com/fiskaltrust/middleware-demo-android).
 
 ## Overview
 The Launcher for Android is - similar to our [Desktop Launcher](https://github.com/fiskaltrust/middleware-launcher) for Windows, Linux and macOS - responsible for hosting our dynamic Middleware packages on mobile devices running the Android operating system (version 7+). 
@@ -15,7 +15,7 @@ There are two ways of using the fiskaltrust.Middleware on Android:
 1. By using the App directly from Google's Play store ([gRPC](https://play.google.com/store/apps/details?id=eu.fiskaltrust.androidlauncher.grpc) | [HTTP](https://play.google.com/store/apps/details?id=eu.fiskaltrust.androidlauncher.http))
 2. By downloading the APK files from the _Cashbox_ section in our management portal, and installing them on the devices (ideally via device management). Please note that the download option is only available for cashboxes that contain supported packages and communication protocols only (as described under _Features and Limitations_ below).
 
-## Implementaion details & architecture
+## Implementation details & architecture
 The `fiskaltrust.AndroidLauncher` App contains a foreground service that can be started or stopped from POS System Apps via **intents**. This allows the POS software to maintain full control about the fiscalization dependencies, and reduces the signing time when e.g. using hardware TSEs that can take up to 45 seconds to initialize (a delay that would not be acceptable for each receipt).
 
 In both our internal tests and on-site at installations, the foreground service has been proven to be very energy-efficient in standby, not consuming notable battery amounts.
