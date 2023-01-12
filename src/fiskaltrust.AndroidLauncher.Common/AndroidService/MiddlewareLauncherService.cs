@@ -226,7 +226,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
                 Intent intent = new Intent(BroadcastConstants.StopBroadcastName);
                 intent.SetPackage(Application.Context.PackageName);
 
-                PendingIntent pendingIntent = PendingIntent.GetBroadcast(Application.Context, 0, intent, 0);
+                PendingIntent pendingIntent = PendingIntent.GetBroadcast(Application.Context, 0, intent, PendingIntentFlags.Immutable);
 
                 builder.AddAction(Android.Resource.Drawable.IcMenuCloseClearCancel, "Stop Service", pendingIntent);
             }
