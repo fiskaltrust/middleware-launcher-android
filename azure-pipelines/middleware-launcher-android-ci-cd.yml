@@ -109,7 +109,7 @@ stages:
 
   - job: SmokeTest
     dependsOn: Build
-    condition: and(succeeded(), or(eq(variables['build.sourceBranch'], 'refs/heads/master'), startsWith(variables['build.sourceBranch'], 'refs/tags')))
+    condition: and(succeeded(), or(eq(variables['RunSmokeTests'], 'true'), or(eq(variables['build.sourceBranch'], 'refs/heads/master'), startsWith(variables['build.sourceBranch'], 'refs/tags'))))
     steps:
     - task: DownloadPipelineArtifact@2
       inputs:
