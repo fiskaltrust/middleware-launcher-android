@@ -110,7 +110,7 @@
     <PackageReference Include="Microsoft.ApplicationInsights.DependencyCollector" Version="2.21.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.ApplicationInsights" Version="2.20.0" />
     <PackageReference Include="fiskaltrust.Exports.DSFinVK">
-      <Version>1.5.1</Version>
+      <Version>1.5.2</Version>
     </PackageReference>
     <PackageReference Include="fiskaltrust.interface">
       <Version>1.3.40</Version>
@@ -119,7 +119,7 @@
       <Version>1.3.41</Version>
     </PackageReference>
     <PackageReference Include="fiskaltrust.Middleware.Queue.SQLite">
-      <Version>1.3.42</Version>
+      <Version>1.3.43</Version>
     </PackageReference>
     <PackageReference Include="fiskaltrust.Middleware.SCU.DE.FiskalyCertified">
       <Version>1.3.42</Version>
