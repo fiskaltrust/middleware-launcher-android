@@ -26,7 +26,7 @@ namespace fiskaltrust.AndroidLauncher.Http.Hosting
                 Retries = configuration.RetryCount ?? DEFAULT_RETRIES
             };
 
-            return HttpDESSCDFactory.CreateSSCDAsync(new ClientOptions { Url = new Uri(configuration.Url.Replace("rest://", "http://")), RetryPolicyOptions = retryPolicyoptions }).Result;
+            return HttpDESSCDFactory.CreateSSCDAsync(new HttpDESSCDClientOptions { Url = new Uri(configuration.Url.Replace("rest://", "http://")), RetryPolicyOptions = retryPolicyoptions }).Result;
         }
     }
 }
