@@ -14,7 +14,7 @@ namespace fiskaltrust.AndroidLauncher.Http.Hosting
 
         public override async Task<IDESSCD> GetProxyAsync()
         {
-            return await HttpDESSCDFactory.CreateSSCDAsync(new ClientOptions
+            return await HttpDESSCDFactory.CreateSSCDAsync(new HttpDESSCDClientOptions
             {
                 Url = new Uri(Url)
             });
