@@ -1,25 +1,25 @@
 ﻿using fiskaltrust.AndroidLauncher.Common.Services.SCU;
-using fiskaltrust.ifPOS.v1.de;
+using fiskaltrust.ifPOS.v1.it;
 using fiskaltrust.Middleware.Abstractions;
 using fiskaltrust.Middleware.Interface.Client;
-using fiskaltrust.Middleware.Interface.Client.Grpc;
+using fiskaltrust.Middleware.Interface.Client.Http;
 using System;
 
-namespace fiskaltrust.AndroidLauncher.Grpc.Hosting
+namespace fiskaltrust.AndroidLauncher.Http.Hosting
 {
-    internal class DESSCDClientFactory : IClientFactory<DESSCD>
+    internal class ITSSCDClientFactory : IClientFactory<ITSSCD>
     {
         private const int DEFAULT_TIMEOUT_SEC = 70;
         private const int DEFAULT_DELAY_BETWEEN_RETRIES_SEC = 2;
         private const int DEFAULT_RETRIES = 2;
 
-        public DESSCD CreateClient(ClientConfiguration configuration)
+        public ITSSCD CreateClient(ClientConfiguration configuration)
         {
             if (configuration == null)
             {
                 throw new ArgumentNullException(nameof(configuration));
             }
-            
+
             var retryPolicyoptions = new RetryPolicyOptions
             {
                 ClientTimeout = configuration.Timeout == default ? TimeSpan.FromSeconds(DEFAULT_TIMEOUT_SEC) : configuration.Timeout,
@@ -27,7 +27,7 @@ namespace fiskaltrust.AndroidLauncher.Grpc.Hosting
                 Retries = configuration.RetryCount ?? DEFAULT_RETRIES
             };
 
-            return new DESSCD(GrpcDESSCDFactory.CreateSSCDAsync(new GrpcClientOptions { Url = new Uri(configuration.Url), RetryPolicyOptions = retryPolicyoptions }).Result);
+            return new ITSSCD(HttpITSSCDFactory.CreateSSCDAsync(new HttpITSSCDClientOptions { Url = new Uri(configuration.Url.Replace("rest://", "http://")), RetryPolicyOptions = retryPolicyoptions }).Result);
         }
     }
 }

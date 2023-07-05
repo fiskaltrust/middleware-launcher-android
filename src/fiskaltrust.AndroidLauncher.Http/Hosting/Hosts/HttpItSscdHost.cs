@@ -1,6 +1,6 @@
 ﻿using fiskaltrust.AndroidLauncher.Common.Services.SCU;
 using fiskaltrust.AndroidLauncher.Http.Controllers;
-using fiskaltrust.ifPOS.v1.de;
+using fiskaltrust.ifPOS.v1.it;
 using fiskaltrust.Middleware.Abstractions;
 using fiskaltrust.Middleware.Interface.Client;
 using fiskaltrust.Middleware.Interface.Client.Http;
@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace fiskaltrust.AndroidLauncher.Http.Hosting
 {
-    public class HttpDeSscdHost : HttpHost<DESSCD, DESSCDController>
+    public class HttpItSscdHost : HttpHost<ITSSCD, ITSSCDController>
     {
-        public override IClientFactory<DESSCD> GetClientFactory() => new DESSCDClientFactory();
+        public override IClientFactory<ITSSCD> GetClientFactory() => new ITSSCDClientFactory();
 
-        public override async Task<DESSCD> GetProxyAsync()
+        public override async Task<ITSSCD> GetProxyAsync()
         {
-            return new DESSCD(await HttpDESSCDFactory.CreateSSCDAsync(new HttpDESSCDClientOptions
+            return new ITSSCD(await HttpITSSCDFactory.CreateSSCDAsync(new HttpITSSCDClientOptions
             {
                 Url = new Uri(Url)
             }));

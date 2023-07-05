@@ -12,16 +12,18 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace fiskaltrust.AndroidLauncher.Common.Services
 {
     internal class MiddlewareLauncher
     {
-        private const string PACKAGE_NAME_SWISSBIT = "fiskaltrust.Middleware.SCU.DE.Swissbit";
-        private const string PACKAGE_NAME_FISKALY = "fiskaltrust.Middleware.SCU.DE.Fiskaly";
-        private const string PACKAGE_NAME_FISKALY_CERTIFIED = "fiskaltrust.Middleware.SCU.DE.FiskalyCertified";
-      
+        private const string PACKAGE_NAME_DE_SWISSBIT = "fiskaltrust.Middleware.SCU.DE.Swissbit";
+        private const string PACKAGE_NAME_DE_FISKALY = "fiskaltrust.Middleware.SCU.DE.Fiskaly";
+        private const string PACKAGE_NAME_DE_FISKALY_CERTIFIED = "fiskaltrust.Middleware.SCU.DE.FiskalyCertified";
+        private const string PACKAGE_NAME_IT_EPSON = "fiskaltrust.Middleware.SCU.IT.Epson";
+
         private readonly IHostFactory _hostFactory;
         private readonly IUrlResolver _urlResolver;
         private readonly IConfigurationProvider _configurationProvider;
@@ -34,8 +36,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
         private readonly LogLevel _logLevel;
         
         private List<IHelper> _helpers;
-        private IHost<IPOS> _posHost;
-        private IHost<IDESSCD> _scuHost;
+        private List<IHost<IPOS>> _posHosts;
+        private List<IHost<SSCD>> _scuHosts;
 
         private string _defaultUrl = null;
 
@@ -59,9 +61,6 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
 
         public async Task StartAsync()
         {
-            _posHost = _hostFactory.CreatePosHost();
-            _scuHost = _hostFactory.CreateDeSscdHost();
-
             ftCashBoxConfiguration configuration;
             try
             {
@@ -79,14 +78,17 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
                 
                 switch (scuConfig.Package)
                 {
-                    case PACKAGE_NAME_SWISSBIT:
-                        await InitializeSwissbitScuAsync(scuConfig);
+                    case PACKAGE_NAME_DE_SWISSBIT:
+                        await InitializeDESwissbitScuAsync(scuConfig);
                         break;                  
-                    case PACKAGE_NAME_FISKALY_CERTIFIED:
-                        await InitializeFiskalyCertifiedScuAsync(scuConfig);
+                    case PACKAGE_NAME_DE_FISKALY_CERTIFIED:
+                        await InitializeDEFiskalyCertifiedScuAsync(scuConfig);
+                        break;
+                    case PACKAGE_NAME_IT_EPSON:
+                        await InitializeITEpsonScuAsync(scuConfig);
                         break;
                     default:
-                        throw new ArgumentException($"The Android launcher currently only supports the following SCU packages: {PACKAGE_NAME_SWISSBIT}, {PACKAGE_NAME_FISKALY}.");
+                        throw new ArgumentException($"The Android launcher currently only supports the following SCU packages: {PACKAGE_NAME_DE_SWISSBIT}, {PACKAGE_NAME_DE_FISKALY_CERTIFIED}, {PACKAGE_NAME_IT_EPSON}.");
                 }
             }
 
@@ -106,13 +108,13 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
 
         public async Task StopAsync()
         {
-            if (_posHost != null)
+            if (_posHosts != null)
             {
-                await _posHost.StopAsync();
+                await Task.WhenAll(_posHosts.Select(h => h.StopAsync())).ConfigureAwait(false);
             }
-            if (_scuHost != null)
+            if (_scuHosts != null)
             {
-                await _scuHost.StopAsync();
+                await Task.WhenAll(_scuHosts.Select(h => h.StopAsync())).ConfigureAwait(false);
             }
 
             foreach (var helper in _helpers)
@@ -124,29 +126,49 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             IsRunning = false;
         }
 
-        public async Task<IPOS> GetPOS()
+        public async IAsyncEnumerable<IPOS> GetPOSs()
         {
-            return await _posHost.GetProxyAsync();
+            foreach (var host in _posHosts)
+            {
+                yield return await host.GetProxyAsync();
+            }
         }
 
-        private async Task InitializeSwissbitScuAsync(PackageConfiguration packageConfig)
+        private async Task InitializeDESwissbitScuAsync(PackageConfiguration packageConfig)
         {
             string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
 
-            var scuProvider = new SwissbitScuProvider();
+            var scuProvider = new DESwissbitScuProvider();
             var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
-            await _scuHost.StartAsync(url, scu, _logLevel);
+            var host = _hostFactory.CreateSscdHost<DESSCD>();
+            _scuHosts.Add(host);
+            await host.StartAsync(url, scu, _logLevel);
 
             Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.SCU.DE.Swissbit' is listening on '{url}'.");
         }
 
-        private async Task InitializeFiskalyCertifiedScuAsync(PackageConfiguration packageConfig)
+        private async Task InitializeDEFiskalyCertifiedScuAsync(PackageConfiguration packageConfig)
         {
             string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
 
-            var scuProvider = new FiskalyCertifiedScuProvider();
+            var scuProvider = new DEFiskalyCertifiedScuProvider();
             var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
-            await _scuHost.StartAsync(url, scu, _logLevel);
+            var host = _hostFactory.CreateSscdHost<DESSCD>();
+            _scuHosts.Add(host);
+            await host.StartAsync(url, scu, _logLevel).ConfigureAwait(false);
+
+            Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.SCU.DE.FiskalyCertified' is listening on '{url}'.");
+        }
+
+        private async Task InitializeITEpsonScuAsync(PackageConfiguration packageConfig)
+        {
+            string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
+
+            var scuProvider = new ITEpsonScuProvider();
+            var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
+            var host = _hostFactory.CreateSscdHost<ITSSCD>();
+            _scuHosts.Add(host);
+            await host.StartAsync(url, scu, _logLevel).ConfigureAwait(false);
 
             Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.SCU.DE.FiskalyCertified' is listening on '{url}'.");
         }
@@ -156,9 +178,10 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
 
             var queueProvider = new SQLiteQueueProvider();
-            var pos = await Task.Run(() => queueProvider.CreatePOS(Environment.GetFolderPath(Environment.SpecialFolder.Personal), packageConfig, _cashboxId, _isSandbox, _logLevel, _scuHost));
-
-            await _posHost.StartAsync(url, pos, _logLevel);
+            var pos = await Task.Run(() => queueProvider.CreatePOS(Environment.GetFolderPath(Environment.SpecialFolder.Personal), packageConfig, _cashboxId, _isSandbox, _logLevel, _scuHosts));
+            var host = _hostFactory.CreatePosHost();
+            _posHosts.Add(host);
+            await host.StartAsync(url, pos, _logLevel).ConfigureAwait(false);
 
             Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.Queue.SQLite' is listening on '{url}'.");
         }
@@ -166,7 +189,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
         private async Task InitializeHelipadHelperAsync(ftCashBoxConfiguration configuration)
         {
             var helipadHelperProvider = new HelipadHelperProvider();
-            var helper = await Task.Run(() => helipadHelperProvider.CreateHelper(configuration, _accessToken, _isSandbox, _logLevel, _posHost));
+            var helper = await Task.Run(() => helipadHelperProvider.CreateHelper(configuration, _accessToken, _isSandbox, _logLevel, _posHosts));
             helper.StartBegin();
             helper.StartEnd();
 

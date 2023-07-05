@@ -13,9 +13,9 @@ using Microsoft.Extensions.Logging;
 
 namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
 {
-    class SwissbitScuProvider : IScuProvider
+    class DESwissbitScuProvider : IScuProvider
     {
-        public IDESSCD CreateSCU(PackageConfiguration scuConfiguration, Guid ftCashBoxId, bool isSandbox, LogLevel logLevel)
+        public SSCD CreateSCU(PackageConfiguration scuConfiguration, Guid ftCashBoxId, bool isSandbox, LogLevel logLevel)
         {
             var dir = InitializeTseAsync();
             scuConfiguration.Configuration["devicePath"] = dir;
@@ -30,7 +30,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
             serviceCollection.AddAppInsights(Helpers.Configuration.GetAppInsightsInstrumentationKey(isSandbox), "fiskaltrust.Middleware.SCU.DE.Swissbit", ftCashBoxId);
 
             bootstrapper.ConfigureServices(serviceCollection);
-            return serviceCollection.BuildServiceProvider().GetRequiredService<IDESSCD>();
+            return new DESSCD(serviceCollection.BuildServiceProvider().GetRequiredService<IDESSCD>());
         }
 
         private string InitializeTseAsync()
