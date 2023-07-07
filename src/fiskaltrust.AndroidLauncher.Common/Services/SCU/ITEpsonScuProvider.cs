@@ -14,7 +14,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
     {
         public T CreateSCU<T>(PackageConfiguration scuConfiguration, Guid ftCashBoxId, bool isSandbox, LogLevel logLevel)
         {
-            if (typeof(T) is not IDESSCD)
+            if (typeof(T) != typeof(IITSSCD))
             {
                 throw new Exception($"Requested {nameof(T)} scu from {nameof(IITSSCD)} scuPRovider");
             }

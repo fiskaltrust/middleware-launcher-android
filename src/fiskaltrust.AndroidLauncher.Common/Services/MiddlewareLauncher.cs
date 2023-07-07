@@ -113,7 +113,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
         {
             if (_posHosts != null)
             {
-                await Task.WhenAll(_posHosts.Select(h => h.StopAsync())).ConfigureAwait(false);
+                await Task.WhenAll(_posHosts.Select(h => h.StopAsync()));
             }
             if (_scuHosts != null)
             {
@@ -122,7 +122,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
                     Type t when t == typeof(IDESSCD) => h.GetHost<IDESSCD>().StopAsync(),
                     Type t when t == typeof(IITSSCD) => h.GetHost<IITSSCD>().StopAsync(),
                     _ => throw new NotImplementedException(),
-                }))).ConfigureAwait(false);
+                })));
             }
 
             foreach (var helper in _helpers)
@@ -163,7 +163,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             var scu = scuProvider.CreateSCU<IDESSCD>(packageConfig, _cashboxId, _isSandbox, _logLevel);
             var host = _hostFactory.CreateSscdHost<IDESSCD>();
             _scuHosts.Add(ScuHost.FromHost(host));
-            await host.StartAsync(url, scu, _logLevel).ConfigureAwait(false);
+            await host.StartAsync(url, scu, _logLevel);
 
             Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.SCU.DE.FiskalyCertified' is listening on '{url}'.");
         }
@@ -176,7 +176,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             var scu = scuProvider.CreateSCU<IITSSCD>(packageConfig, _cashboxId, _isSandbox, _logLevel);
             var host = _hostFactory.CreateSscdHost<IITSSCD>();
             _scuHosts.Add(ScuHost.FromHost(host));
-            await host.StartAsync(url, scu, _logLevel).ConfigureAwait(false);
+            await host.StartAsync(url, scu, _logLevel);
 
             Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.SCU.DE.FiskalyCertified' is listening on '{url}'.");
         }
@@ -189,7 +189,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             var pos = await Task.Run(() => queueProvider.CreatePOS(Environment.GetFolderPath(Environment.SpecialFolder.Personal), packageConfig, _cashboxId, _isSandbox, _logLevel, _scuHosts));
             var host = _hostFactory.CreatePosHost();
             _posHosts.Add(host);
-            await host.StartAsync(url, pos, _logLevel).ConfigureAwait(false);
+            await host.StartAsync(url, pos, _logLevel);
 
             Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.Queue.SQLite' is listening on '{url}'.");
         }
