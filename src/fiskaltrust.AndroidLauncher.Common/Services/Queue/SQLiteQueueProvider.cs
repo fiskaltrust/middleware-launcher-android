@@ -20,7 +20,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.Queue
 {
     public class SQLiteQueueProvider
     {
-        public IPOS CreatePOS(string workingDir, PackageConfiguration queueConfiguration, Guid ftCashBoxId, bool isSandbox, LogLevel logLevel, IEnumerable<IHost<SSCD>> scuHosts)
+        public IPOS CreatePOS(string workingDir, PackageConfiguration queueConfiguration, Guid ftCashBoxId, bool isSandbox, LogLevel logLevel, IEnumerable<ScuHost> scuHosts)
         {
             var migrationsFolder = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "Migrations");
 
@@ -37,13 +37,13 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.Queue
 
             var serviceCollection = new ServiceCollection();
             foreach (var host in scuHosts) {
-                if(host is IHost<DESSCD>)
+                if(host.Interface == typeof(IDESSCD))
                 {
-                    serviceCollection.TryAddSingleton(host.GetClientFactoryForSSCD<IDESSCD>());
+                    serviceCollection.TryAddSingleton(host.GetHost<IDESSCD>().GetClientFactory());
                 }
-                if (host is IHost<ITSSCD>)
+                if (host.Interface == typeof(IITSSCD))
                 {
-                    serviceCollection.TryAddSingleton(host.GetClientFactoryForSSCD<IITSSCD>());
+                    serviceCollection.TryAddSingleton(host.GetHost<IITSSCD>().GetClientFactory());
                 }
             };
 

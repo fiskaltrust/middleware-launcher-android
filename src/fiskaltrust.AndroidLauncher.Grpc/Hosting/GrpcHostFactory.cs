@@ -10,35 +10,36 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using fiskaltrust.AndroidLauncher.Common.Services.SCU;
 using fiskaltrust.ifPOS.v1.it;
+using System.Collections.Generic;
 
 namespace fiskaltrust.AndroidLauncher.Grpc.Hosting
 {
     public class GrpcHostFactory : IHostFactory
     {
-        public IHost<SSCD> CreateSscdHost<T>() where T : SSCD => typeof(T) switch {
-            Type t when t == typeof(DESSCD) => (IHost<SSCD>) new GrpcDeSscdHost(),
-            Type t when t == typeof(ITSSCD) => (IHost<SSCD>) new GrpcItSscdHost()
+        public IHost<T> CreateSscdHost<T>() => typeof(T) switch {
+            Type t when t == typeof(IDESSCD) => (IHost<T>)new GrpcDeSscdHost(),
+            Type t when t == typeof(IITSSCD) => (IHost<T>)new GrpcItSscdHost()
             };
 
         public IHost<IPOS> CreatePosHost() => new GrpcPosHost();
     }
 
-    public class GrpcDeSscdHost : IHost<DESSCD>, IDisposable
+    public class GrpcDeSscdHost : IHost<IDESSCD>, IDisposable
     {
         private Server _host;
         private string _url;
 
-        public IClientFactory<DESSCD> GetClientFactory() => new DESSCDClientFactory();
+        public IClientFactory<IDESSCD> GetClientFactory() => new DESSCDClientFactory();
 
-        public async Task<DESSCD> GetProxyAsync()
+        public async Task<IDESSCD> GetProxyAsync()
         {
-            return new DESSCD(await GrpcDESSCDFactory.CreateSSCDAsync(new GrpcClientOptions
+            return await GrpcDESSCDFactory.CreateSSCDAsync(new GrpcClientOptions
             {
                 Url = new Uri(_url)
-            }));
+            });
         }
 
-        public Task StartAsync(string url, DESSCD instance, LogLevel logLevel)
+        public Task StartAsync(string url, IDESSCD instance, LogLevel logLevel)
         {
             _url = url;
             if (_host != null)
@@ -66,22 +67,22 @@ namespace fiskaltrust.AndroidLauncher.Grpc.Hosting
         }
     }
 
-    public class GrpcItSscdHost : IHost<ITSSCD>, IDisposable
+    public class GrpcItSscdHost : IHost<IITSSCD>, IDisposable
     {
         private Server _host;
         private string _url;
 
-        public IClientFactory<ITSSCD> GetClientFactory() => new ITSSCDClientFactory();
+        public IClientFactory<IITSSCD> GetClientFactory() => new ITSSCDClientFactory();
 
-        public async Task<ITSSCD> GetProxyAsync()
+        public async Task<IITSSCD> GetProxyAsync()
         {
-            return new ITSSCD(await GrpcITSSCDFactory.CreateSSCDAsync(new GrpcClientOptions
+            return await GrpcITSSCDFactory.CreateSSCDAsync(new GrpcClientOptions
             {
                 Url = new Uri(_url)
-            }));
+            });
         }
 
-        public Task StartAsync(string url, ITSSCD instance, LogLevel logLevel)
+        public Task StartAsync(string url, IITSSCD instance, LogLevel logLevel)
         {
             _url = url;
             if (_host != null)

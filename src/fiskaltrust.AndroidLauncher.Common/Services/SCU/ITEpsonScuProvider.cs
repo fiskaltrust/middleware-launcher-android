@@ -12,8 +12,12 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
 {
     class ITEpsonScuProvider : IScuProvider
     {
-        public SSCD CreateSCU(PackageConfiguration scuConfiguration, Guid ftCashBoxId, bool isSandbox, LogLevel logLevel)
+        public T CreateSCU<T>(PackageConfiguration scuConfiguration, Guid ftCashBoxId, bool isSandbox, LogLevel logLevel)
         {
+            if (typeof(T) is not IDESSCD)
+            {
+                throw new Exception($"Requested {nameof(T)} scu from {nameof(IITSSCD)} scuPRovider");
+            }
             var bootstrapper = new ScuBootstrapper
             {
                 Configuration = scuConfiguration.Configuration,
@@ -24,7 +28,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
             serviceCollection.AddAppInsights(Helpers.Configuration.GetAppInsightsInstrumentationKey(isSandbox), "fiskaltrust.Middleware.SCU.IT.Epson", ftCashBoxId);
 
             bootstrapper.ConfigureServices(serviceCollection);
-            return new ITSSCD(serviceCollection.BuildServiceProvider().GetRequiredService<IITSSCD>());
+            return serviceCollection.BuildServiceProvider().GetRequiredService<T>();
         }
     }
 }

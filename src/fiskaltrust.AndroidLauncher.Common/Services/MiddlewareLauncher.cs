@@ -1,4 +1,5 @@
-﻿using fiskaltrust.AndroidLauncher.Common.Helpers;
+﻿using fiskaltrust.AndroidLauncher.Common.Enums;
+using fiskaltrust.AndroidLauncher.Common.Helpers;
 using fiskaltrust.AndroidLauncher.Common.Hosting;
 using fiskaltrust.AndroidLauncher.Common.Services.Configuration;
 using fiskaltrust.AndroidLauncher.Common.Services.Helper;
@@ -6,12 +7,14 @@ using fiskaltrust.AndroidLauncher.Common.Services.Queue;
 using fiskaltrust.AndroidLauncher.Common.Services.SCU;
 using fiskaltrust.ifPOS.v1;
 using fiskaltrust.ifPOS.v1.de;
+using fiskaltrust.ifPOS.v1.it;
 using fiskaltrust.Middleware.Abstractions;
 using fiskaltrust.storage.serialization.V0;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -37,7 +40,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
         
         private List<IHelper> _helpers;
         private List<IHost<IPOS>> _posHosts;
-        private List<IHost<SSCD>> _scuHosts;
+        private List<ScuHost> _scuHosts;
 
         private string _defaultUrl = null;
 
@@ -114,7 +117,12 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             }
             if (_scuHosts != null)
             {
-                await Task.WhenAll(_scuHosts.Select(h => h.StopAsync())).ConfigureAwait(false);
+                await Task.WhenAll(_scuHosts.Select(h => (h.Interface switch
+                {
+                    Type t when t == typeof(IDESSCD) => h.GetHost<IDESSCD>().StopAsync(),
+                    Type t when t == typeof(IITSSCD) => h.GetHost<IITSSCD>().StopAsync(),
+                    _ => throw new NotImplementedException(),
+                }))).ConfigureAwait(false);
             }
 
             foreach (var helper in _helpers)
@@ -139,9 +147,9 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
 
             var scuProvider = new DESwissbitScuProvider();
-            var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
-            var host = _hostFactory.CreateSscdHost<DESSCD>();
-            _scuHosts.Add(host);
+            var scu = scuProvider.CreateSCU<IDESSCD>(packageConfig, _cashboxId, _isSandbox, _logLevel);
+            var host = _hostFactory.CreateSscdHost<IDESSCD>();
+            _scuHosts.Add(ScuHost.FromHost(host));
             await host.StartAsync(url, scu, _logLevel);
 
             Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.SCU.DE.Swissbit' is listening on '{url}'.");
@@ -152,9 +160,9 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
 
             var scuProvider = new DEFiskalyCertifiedScuProvider();
-            var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
-            var host = _hostFactory.CreateSscdHost<DESSCD>();
-            _scuHosts.Add(host);
+            var scu = scuProvider.CreateSCU<IDESSCD>(packageConfig, _cashboxId, _isSandbox, _logLevel);
+            var host = _hostFactory.CreateSscdHost<IDESSCD>();
+            _scuHosts.Add(ScuHost.FromHost(host));
             await host.StartAsync(url, scu, _logLevel).ConfigureAwait(false);
 
             Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.SCU.DE.FiskalyCertified' is listening on '{url}'.");
@@ -165,9 +173,9 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
 
             var scuProvider = new ITEpsonScuProvider();
-            var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
-            var host = _hostFactory.CreateSscdHost<ITSSCD>();
-            _scuHosts.Add(host);
+            var scu = scuProvider.CreateSCU<IITSSCD>(packageConfig, _cashboxId, _isSandbox, _logLevel);
+            var host = _hostFactory.CreateSscdHost<IITSSCD>();
+            _scuHosts.Add(ScuHost.FromHost(host));
             await host.StartAsync(url, scu, _logLevel).ConfigureAwait(false);
 
             Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.SCU.DE.FiskalyCertified' is listening on '{url}'.");

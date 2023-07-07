@@ -8,6 +8,6 @@ namespace fiskaltrust.AndroidLauncher.Common
     public interface IHostFactory
     {
         IHost<IPOS> CreatePosHost();
-        IHost<SSCD> CreateSscdHost<T>() where T : SSCD;
+        IHost<T> CreateSscdHost<T>();
     }
 }

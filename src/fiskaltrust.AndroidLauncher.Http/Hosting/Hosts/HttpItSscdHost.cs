@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace fiskaltrust.AndroidLauncher.Http.Hosting
 {
-    public class HttpItSscdHost : HttpHost<ITSSCD, ITSSCDController>
+    public class HttpItSscdHost : HttpHost<IITSSCD, ITSSCDController>
     {
-        public override IClientFactory<ITSSCD> GetClientFactory() => new ITSSCDClientFactory();
+        public override IClientFactory<IITSSCD> GetClientFactory() => new ITSSCDClientFactory();
 
-        public override async Task<ITSSCD> GetProxyAsync()
+        public override async Task<IITSSCD> GetProxyAsync()
         {
-            return new ITSSCD(await HttpITSSCDFactory.CreateSSCDAsync(new HttpITSSCDClientOptions
+            return await HttpITSSCDFactory.CreateSSCDAsync(new HttpITSSCDClientOptions
             {
                 Url = new Uri(Url)
-            }));
+            });
         }
     }
 }

@@ -7,13 +7,13 @@ using System;
 
 namespace fiskaltrust.AndroidLauncher.Http.Hosting
 {
-    internal class DESSCDClientFactory : IClientFactory<DESSCD>
+    internal class DESSCDClientFactory : IClientFactory<IDESSCD>
     {
         private const int DEFAULT_TIMEOUT_SEC = 70;
         private const int DEFAULT_DELAY_BETWEEN_RETRIES_SEC = 2;
         private const int DEFAULT_RETRIES = 2;
 
-        public DESSCD CreateClient(ClientConfiguration configuration)
+        public IDESSCD CreateClient(ClientConfiguration configuration)
         {
             if (configuration == null)
             {
@@ -27,7 +27,7 @@ namespace fiskaltrust.AndroidLauncher.Http.Hosting
                 Retries = configuration.RetryCount ?? DEFAULT_RETRIES
             };
 
-            return new DESSCD(HttpDESSCDFactory.CreateSSCDAsync(new HttpDESSCDClientOptions { Url = new Uri(configuration.Url.Replace("rest://", "http://")), RetryPolicyOptions = retryPolicyoptions }).Result);
+            return HttpDESSCDFactory.CreateSSCDAsync(new HttpDESSCDClientOptions { Url = new Uri(configuration.Url.Replace("rest://", "http://")), RetryPolicyOptions = retryPolicyoptions }).Result;
         }
     }
 }
