@@ -47,14 +47,11 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
 
                 if (File.Exists(Path.Combine(dir, "TSE_INFO.DAT")))
                 {
+                    Log.Logger.Information($"Found: '{Path.Combine(dir, "TSE_INFO.DAT")}'.");
                     return dir;
                 }
 
-                var triggerFile = Path.Combine(dir, ".SwissbitWorm");
-                if (File.Exists(triggerFile))
-                    File.Delete(triggerFile);
-
-                File.Create(triggerFile).Dispose();
+                CreateTriggerFile(dir);
             }
             UsbManager manager = (UsbManager)Application.Context.GetSystemService("usb");
             var deviceList = manager.DeviceList.Keys;
@@ -67,17 +64,23 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
 
                 if (File.Exists(Path.Combine(dir, "TSE_INFO.DAT")))
                 {
+                    Log.Logger.Information($"Found: '{Path.Combine(dir, "TSE_INFO.DAT")}'.");
                     return dir;
                 }
 
-                var triggerFile = Path.Combine(dir, ".SwissbitWorm");
-                if (File.Exists(triggerFile))
-                    File.Delete(triggerFile);
-
-                File.Create(triggerFile).Dispose();
+                CreateTriggerFile(dir);
             }
 
             throw new RemountRequiredException("First call to an uninitialized TSE; please either remount the SD card, or restart your device.");
+        }
+
+        private static void CreateTriggerFile(string dir)
+        {
+            var triggerFile = Path.Combine(dir, ".SwissbitWorm");
+            if (File.Exists(triggerFile))
+                File.Delete(triggerFile);
+
+            File.Create(triggerFile).Dispose();
         }
     }
 }
