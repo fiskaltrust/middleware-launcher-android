@@ -60,6 +60,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             _configurationProvider = new HelipadConfigurationProvider();
             _localConfigurationProvider = new LocalConfigurationProvider();
             _helpers = new List<IHelper>();
+            _posHosts = new List<IHost<IPOS>>();
+            _scuHosts = new List<ScuHost>();
         }
 
         public async Task StartAsync()
