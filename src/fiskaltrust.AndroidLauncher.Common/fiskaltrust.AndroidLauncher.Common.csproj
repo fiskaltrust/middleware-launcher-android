@@ -86,10 +86,15 @@
     <Compile Include="Services\MiddlewareLauncher.cs" />
     <Compile Include="Services\Queue\SQLiteQueueProvider.cs" />
     <Compile Include="Services\SCU\DEFiskalyCertifiedScuProvider.cs" />
+    <Compile Include="Services\SCU\IITSSCDProvider.cs" />
     <Compile Include="Services\SCU\ITEpsonScuProvider.cs" />
-    <Compile Include="Services\SCU\IScuProvider.cs" />
+    <Compile Include="Services\SCU\IDESSCDProvider.cs" />
     <Compile Include="Services\SCU\DESwissbitScuProvider.cs" />
     <Compile Include="Services\StateProvider.cs" />
+    <Compile Include="Signing\AbstractScuList.cs" />
+    <Compile Include="Signing\DESSCDClientFactory.cs" />
+    <Compile Include="Signing\ITSSCDClientFactory.cs" />
+    <Compile Include="Signing\ProxyConnectionHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Migrations\000_ftSchema.sqlite3" />
@@ -106,12 +111,6 @@
     <None Include="Resources\AboutResources.txt" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="fiskaltrust.Middleware.Interface.Client.Grpc">
-      <Version>1.3.47-rc2</Version>
-    </PackageReference>
-    <PackageReference Include="fiskaltrust.Middleware.Interface.Client.Http">
-      <Version>1.3.47-rc2</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.ApplicationInsights" Version="2.21.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.Web" Version="2.21.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.DependencyCollector" Version="2.21.0" />

@@ -1,31 +1,28 @@
 ﻿using Android.App;
 using fiskaltrust.AndroidLauncher.Common.Extensions;
-using fiskaltrust.AndroidLauncher.Common.Hosting;
-using fiskaltrust.AndroidLauncher.Common.Services.SCU;
 using fiskaltrust.ifPOS.v1;
-using fiskaltrust.ifPOS.v1.de;
-using fiskaltrust.ifPOS.v1.it;
-using fiskaltrust.Middleware.Abstractions;
 using fiskaltrust.Middleware.Queue.SQLite;
 using fiskaltrust.storage.serialization.V0;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
-using fiskaltrust.AndroidLauncher.Common.Services.SCU;
-using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using fiskaltrust.AndroidLauncher.Common.Signing;
+using fiskaltrust.ifPOS.v1.de;
+using fiskaltrust.ifPOS.v1.it;
+using fiskaltrust.Middleware.Abstractions;
 
 namespace fiskaltrust.AndroidLauncher.Common.Services.Queue
 {
     public class SQLiteQueueProvider
     {
-        public IPOS CreatePOS(string workingDir, PackageConfiguration queueConfiguration, Guid ftCashBoxId, bool isSandbox, LogLevel logLevel, IEnumerable<ScuHost> scuHosts)
+        public IPOS CreatePOS(string workingDir, PackageConfiguration queueConfiguration, Guid ftCashBoxId, bool isSandbox, LogLevel logLevel, AbstractScuList scus)
         {
-            var migrationsFolder = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "Migrations");
+            var migrationsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Migrations");
 
             CopyMigrationsToDataDir(migrationsFolder);
-            
+
             queueConfiguration.Configuration["servicefolder"] = workingDir;
             queueConfiguration.Configuration["migrationDirectory"] = migrationsFolder;
 
@@ -36,16 +33,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.Queue
             };
 
             var serviceCollection = new ServiceCollection();
-            foreach (var host in scuHosts) {
-                if(host.Interface == typeof(IDESSCD))
-                {
-                    serviceCollection.TryAddSingleton(host.GetHost<IDESSCD>().GetClientFactory());
-                }
-                if (host.Interface == typeof(IITSSCD))
-                {
-                    serviceCollection.TryAddSingleton(host.GetHost<IITSSCD>().GetClientFactory());
-                }
-            };
+            serviceCollection.TryAddSingleton<IClientFactory<IDESSCD>>(new DESSCDClientFactory(scus.OfType<IDESSCD>()));
+            serviceCollection.TryAddSingleton<IClientFactory<IITSSCD>>(new ITSSCDClientFactory(scus.OfType<IITSSCD>()));
 
             serviceCollection.AddLogProviders(logLevel);
             serviceCollection.AddAppInsights(Helpers.Configuration.GetAppInsightsInstrumentationKey(isSandbox), "fiskaltrust.Middleware.Queue.SQLite", ftCashBoxId);

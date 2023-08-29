@@ -9,14 +9,10 @@ using System;
 
 namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
 {
-    class DEFiskalyCertifiedScuProvider : IScuProvider
+    class DEFiskalyCertifiedScuProvider : IDESSCDProvider
     {
-        public T CreateSCU<T>(PackageConfiguration scuConfiguration, Guid ftCashBoxId, bool isSandbox, LogLevel logLevel)
+        public IDESSCD CreateSCU(PackageConfiguration scuConfiguration, Guid ftCashBoxId, bool isSandbox, LogLevel logLevel)
         {
-            if(typeof(T) is not IDESSCD)
-            {
-                throw new Exception($"Requested {nameof(T)} scu from {nameof(IDESSCD)} scuPRovider");
-            }
             var bootstrapper = new ScuBootstrapper
             {
                 Configuration = scuConfiguration.Configuration,
@@ -27,7 +23,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
             serviceCollection.AddAppInsights(Helpers.Configuration.GetAppInsightsInstrumentationKey(isSandbox), "fiskaltrust.Middleware.SCU.DE.FiskalyCertified", ftCashBoxId);
 
             bootstrapper.ConfigureServices(serviceCollection);
-            return serviceCollection.BuildServiceProvider().GetRequiredService<T>();
+            return serviceCollection.BuildServiceProvider().GetRequiredService<IDESSCD>();
         }
     }
 }

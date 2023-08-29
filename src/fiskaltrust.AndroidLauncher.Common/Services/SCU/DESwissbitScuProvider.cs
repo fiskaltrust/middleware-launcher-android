@@ -6,7 +6,6 @@ using Android.Support.V4.Content;
 using fiskaltrust.AndroidLauncher.Common.Exceptions;
 using fiskaltrust.AndroidLauncher.Common.Extensions;
 using fiskaltrust.ifPOS.v1.de;
-using fiskaltrust.ifPOS.v1.it;
 using fiskaltrust.Middleware.SCU.DE.SwissbitAndroid;
 using fiskaltrust.storage.serialization.V0;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,14 +13,10 @@ using Microsoft.Extensions.Logging;
 
 namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
 {
-    class DESwissbitScuProvider : IScuProvider
+    class DESwissbitScuProvider : IDESSCDProvider
     {
-        public T CreateSCU<T>(PackageConfiguration scuConfiguration, Guid ftCashBoxId, bool isSandbox, LogLevel logLevel)
+        public IDESSCD CreateSCU(PackageConfiguration scuConfiguration, Guid ftCashBoxId, bool isSandbox, LogLevel logLevel)
         {
-            if (typeof(T) is not IDESSCD)
-            {
-                throw new Exception($"Requested {nameof(T)} scu from {nameof(IDESSCD)} scuPRovider");
-            }
             var dir = InitializeTseAsync();
             scuConfiguration.Configuration["devicePath"] = dir;
 
@@ -35,7 +30,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
             serviceCollection.AddAppInsights(Helpers.Configuration.GetAppInsightsInstrumentationKey(isSandbox), "fiskaltrust.Middleware.SCU.DE.Swissbit", ftCashBoxId);
 
             bootstrapper.ConfigureServices(serviceCollection);
-            return serviceCollection.BuildServiceProvider().GetRequiredService<T>();
+            return serviceCollection.BuildServiceProvider().GetRequiredService<IDESSCD>();
         }
 
         private string InitializeTseAsync()

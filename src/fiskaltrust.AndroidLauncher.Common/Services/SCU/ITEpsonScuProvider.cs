@@ -1,6 +1,4 @@
-﻿using Android.App;
-using fiskaltrust.AndroidLauncher.Common.Extensions;
-using fiskaltrust.ifPOS.v1.de;
+﻿using fiskaltrust.AndroidLauncher.Common.Extensions;
 using fiskaltrust.ifPOS.v1.it;
 using fiskaltrust.Middleware.SCU.IT.Epson;
 using fiskaltrust.storage.serialization.V0;
@@ -10,14 +8,10 @@ using System;
 
 namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
 {
-    class ITEpsonScuProvider : IScuProvider
+    class ITEpsonScuProvider : IITSSCDProvider
     {
-        public T CreateSCU<T>(PackageConfiguration scuConfiguration, Guid ftCashBoxId, bool isSandbox, LogLevel logLevel)
+        public IITSSCD CreateSCU(PackageConfiguration scuConfiguration, Guid ftCashBoxId, bool isSandbox, LogLevel logLevel)
         {
-            if (typeof(T) != typeof(IITSSCD))
-            {
-                throw new Exception($"Requested {nameof(T)} scu from {nameof(IITSSCD)} scuPRovider");
-            }
             var bootstrapper = new ScuBootstrapper
             {
                 Configuration = scuConfiguration.Configuration,
@@ -28,7 +22,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
             serviceCollection.AddAppInsights(Helpers.Configuration.GetAppInsightsInstrumentationKey(isSandbox), "fiskaltrust.Middleware.SCU.IT.Epson", ftCashBoxId);
 
             bootstrapper.ConfigureServices(serviceCollection);
-            return serviceCollection.BuildServiceProvider().GetRequiredService<T>();
+            return serviceCollection.BuildServiceProvider().GetRequiredService<IITSSCD>();
         }
     }
 }

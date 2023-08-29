@@ -10,12 +10,6 @@ namespace fiskaltrust.AndroidLauncher.Http.Hosting
 {
     public class HttpHostFactory : IHostFactory
     {
-        public IHost<T> CreateSscdHost<T>() => typeof(T) switch
-        {
-            Type t when t == typeof(IDESSCD) => (IHost<T>)new HttpDeSscdHost(),
-            Type t when t == typeof(IITSSCD) => (IHost<T>)new HttpItSscdHost()
-        };
-
         public IHost<IPOS> CreatePosHost() => new HttpPosHost();
     }
 }

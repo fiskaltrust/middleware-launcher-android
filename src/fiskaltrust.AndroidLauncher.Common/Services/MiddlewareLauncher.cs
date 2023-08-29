@@ -5,6 +5,7 @@ using fiskaltrust.AndroidLauncher.Common.Services.Configuration;
 using fiskaltrust.AndroidLauncher.Common.Services.Helper;
 using fiskaltrust.AndroidLauncher.Common.Services.Queue;
 using fiskaltrust.AndroidLauncher.Common.Services.SCU;
+using fiskaltrust.AndroidLauncher.Common.Signing;
 using fiskaltrust.ifPOS.v1;
 using fiskaltrust.ifPOS.v1.de;
 using fiskaltrust.ifPOS.v1.it;
@@ -23,7 +24,6 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
     internal class MiddlewareLauncher
     {
         private const string PACKAGE_NAME_DE_SWISSBIT = "fiskaltrust.Middleware.SCU.DE.Swissbit";
-        private const string PACKAGE_NAME_DE_FISKALY = "fiskaltrust.Middleware.SCU.DE.Fiskaly";
         private const string PACKAGE_NAME_DE_FISKALY_CERTIFIED = "fiskaltrust.Middleware.SCU.DE.FiskalyCertified";
         private const string PACKAGE_NAME_IT_EPSON = "fiskaltrust.Middleware.SCU.IT.Epson";
 
@@ -40,7 +40,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
         
         private List<IHelper> _helpers;
         private List<IHost<IPOS>> _posHosts;
-        private List<ScuHost> _scuHosts;
+        private AbstractScuList _scus;
 
         private string _defaultUrl = null;
 
@@ -61,7 +61,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             _localConfigurationProvider = new LocalConfigurationProvider();
             _helpers = new List<IHelper>();
             _posHosts = new List<IHost<IPOS>>();
-            _scuHosts = new List<ScuHost>();
+            _scus = new AbstractScuList();
         }
 
         public async Task StartAsync()
@@ -117,15 +117,6 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             {
                 await Task.WhenAll(_posHosts.Select(h => h.StopAsync()));
             }
-            if (_scuHosts != null)
-            {
-                await Task.WhenAll(_scuHosts.Select(h => (h.Interface switch
-                {
-                    Type t when t == typeof(IDESSCD) => h.GetHost<IDESSCD>().StopAsync(),
-                    Type t when t == typeof(IITSSCD) => h.GetHost<IITSSCD>().StopAsync(),
-                    _ => throw new NotImplementedException(),
-                })));
-            }
 
             foreach (var helper in _helpers)
             {
@@ -149,12 +140,9 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
 
             var scuProvider = new DESwissbitScuProvider();
-            var scu = scuProvider.CreateSCU<IDESSCD>(packageConfig, _cashboxId, _isSandbox, _logLevel);
-            var host = _hostFactory.CreateSscdHost<IDESSCD>();
-            _scuHosts.Add(ScuHost.FromHost(host));
-            await host.StartAsync(url, scu, _logLevel);
-
-            Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.SCU.DE.Swissbit' is listening on '{url}'.");
+            var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
+            _scus.Add(GetPrimaryUriForSignaturCreationUnit(packageConfig), scu);
+            Log.Logger.Debug($"Created German SCU of type 'fiskaltrust.Middleware.SCU.DE.Swissbit'.");
         }
 
         private async Task InitializeDEFiskalyCertifiedScuAsync(PackageConfiguration packageConfig)
@@ -162,12 +150,9 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
 
             var scuProvider = new DEFiskalyCertifiedScuProvider();
-            var scu = scuProvider.CreateSCU<IDESSCD>(packageConfig, _cashboxId, _isSandbox, _logLevel);
-            var host = _hostFactory.CreateSscdHost<IDESSCD>();
-            _scuHosts.Add(ScuHost.FromHost(host));
-            await host.StartAsync(url, scu, _logLevel);
-
-            Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.SCU.DE.FiskalyCertified' is listening on '{url}'.");
+            var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
+            _scus.Add(GetPrimaryUriForSignaturCreationUnit(packageConfig), scu);
+            Log.Logger.Debug($"Created German SCU of type 'fiskaltrust.Middleware.SCU.DE.FiskalyCertified'.");
         }
 
         private async Task InitializeITEpsonScuAsync(PackageConfiguration packageConfig)
@@ -175,12 +160,9 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
 
             var scuProvider = new ITEpsonScuProvider();
-            var scu = scuProvider.CreateSCU<IITSSCD>(packageConfig, _cashboxId, _isSandbox, _logLevel);
-            var host = _hostFactory.CreateSscdHost<IITSSCD>();
-            _scuHosts.Add(ScuHost.FromHost(host));
-            await host.StartAsync(url, scu, _logLevel);
-
-            Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.SCU.DE.FiskalyCertified' is listening on '{url}'.");
+            var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
+            _scus.Add(GetPrimaryUriForSignaturCreationUnit(packageConfig), scu);
+            Log.Logger.Debug($"Created German SCU of type 'fiskaltrust.Middleware.SCU.IT.Epson'.");
         }
 
         private async Task InitializeQueueAsync(PackageConfiguration packageConfig)
@@ -188,7 +170,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
 
             var queueProvider = new SQLiteQueueProvider();
-            var pos = await Task.Run(() => queueProvider.CreatePOS(Environment.GetFolderPath(Environment.SpecialFolder.Personal), packageConfig, _cashboxId, _isSandbox, _logLevel, _scuHosts));
+            var pos = await Task.Run(() => queueProvider.CreatePOS(Environment.GetFolderPath(Environment.SpecialFolder.Personal), packageConfig, _cashboxId, _isSandbox, _logLevel, _scus));
             var host = _hostFactory.CreatePosHost();
             _posHosts.Add(host);
             await host.StartAsync(url, pos, _logLevel);
@@ -204,6 +186,12 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             helper.StartEnd();
 
             _helpers.Add(helper);
+        }
+
+        private static string GetPrimaryUriForSignaturCreationUnit(PackageConfiguration scuConfiguration)
+        {
+            var grpcUrl = scuConfiguration.Url.FirstOrDefault(x => x.StartsWith("grpc://", StringComparison.InvariantCulture));
+            return new Uri(grpcUrl ?? scuConfiguration.Url.First()).ToString();
         }
     }
 }

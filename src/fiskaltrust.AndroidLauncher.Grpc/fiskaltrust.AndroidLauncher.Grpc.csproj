@@ -78,8 +78,6 @@
     <Compile Include="Broadcasting\StopLauncherBroadcastReceiver.cs" />
     <Compile Include="Content\LogContentProvider.cs" />
     <Compile Include="Helpers\GrpcUrlResolver.cs" />
-    <Compile Include="Hosting\ITSSCDClientFactory.cs" />
-    <Compile Include="Hosting\DESSCDClientFactory.cs" />
     <Compile Include="Hosting\GrpcHelper.cs" />
     <Compile Include="Hosting\GrpcHostFactory.cs" />
     <Compile Include="Hosting\POSClientFactory.cs" />
