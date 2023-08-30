@@ -25,6 +25,7 @@ stages:
     # Temporarly use a submodule to speed up the dev speed while we integrate the Custom RT Server
     # TODO: Remove this together with the submodule before merging
     - pwsh: |
+        git submodule update --init
         cd submodules/middleware
         git checkout user/ske/newitinterfacesupport
         git pull
