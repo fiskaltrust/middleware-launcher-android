@@ -9,13 +9,19 @@ namespace fiskaltrust.AndroidLauncher.Helpers
     {
         public string GetProtocolSpecificUrl(PackageConfiguration packageConfiguration)
         {
-            var url = packageConfiguration.Url.FirstOrDefault(x => x.StartsWith("grpc"));
-            if (string.IsNullOrEmpty(url))
-            {
-                throw new ArgumentException($"At least one gRPC URL has to be set in the configuration of the {packageConfiguration.Package} package with the ID {packageConfiguration.Id}.");
-            }
+            if (packageConfiguration.Package.StartsWith("fiskaltrust.Middleware.Queue")) {
+                var url = packageConfiguration.Url.FirstOrDefault(x => x.StartsWith("grpc"));
+                if (string.IsNullOrEmpty(url))
+                {
+                    throw new ArgumentException($"At least one gRPC URL has to be set in the configuration of the {packageConfiguration.Package} package with the ID {packageConfiguration.Id}.");
+                }
 
-            return url;
+                return url;
+            }
+            else
+            {
+                return packageConfiguration.Url.FirstOrDefault();
+            }
         }
     }
 }
