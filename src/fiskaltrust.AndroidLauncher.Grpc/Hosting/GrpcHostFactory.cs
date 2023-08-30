@@ -8,57 +8,15 @@ using Grpc.Core;
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using fiskaltrust.AndroidLauncher.Common.Services.SCU;
+using fiskaltrust.ifPOS.v1.it;
+using System.Collections.Generic;
 
 namespace fiskaltrust.AndroidLauncher.Grpc.Hosting
 {
     public class GrpcHostFactory : IHostFactory
     {
-        public IHost<IDESSCD> CreateDeSscdHost() => new GrpcDeSscdHost();
-
         public IHost<IPOS> CreatePosHost() => new GrpcPosHost();
-    }
-
-    public class GrpcDeSscdHost : IHost<IDESSCD>, IDisposable
-    {
-        private Server _host;
-        private string _url;
-
-        public IClientFactory<IDESSCD> GetClientFactory() => new DESSCDClientFactory();
-
-        public async Task<IDESSCD> GetProxyAsync()
-        {
-            return await GrpcDESSCDFactory.CreateSSCDAsync(new GrpcClientOptions
-            {
-                Url = new Uri(_url)
-            });
-        }
-
-        public Task StartAsync(string url, IDESSCD instance, LogLevel logLevel)
-        {
-            _url = url;
-            if (_host != null)
-            {
-                _host.ShutdownAsync().Wait();
-            }
-
-            _host = GrpcHelper.StartHost(url, instance);
-
-            return Task.CompletedTask;
-        }
-
-        public async Task StopAsync()
-        {
-            if (_host != null)
-            {
-                await _host.ShutdownAsync();
-                _host = null;
-            }
-        }
-
-        public void Dispose()
-        {
-            StopAsync().Wait();
-        }
     }
 
     public class GrpcPosHost : IHost<IPOS>, IDisposable

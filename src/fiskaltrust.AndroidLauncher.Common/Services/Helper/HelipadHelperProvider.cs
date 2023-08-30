@@ -10,12 +10,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace fiskaltrust.AndroidLauncher.Common.Services.Helper
 {
     public class HelipadHelperProvider
     {
-        public IHelper CreateHelper(ftCashBoxConfiguration cashBoxConfiguration, string accessToken, bool isSandbox, LogLevel logLevel, IHost<IPOS> posHost)
+        public IHelper CreateHelper(ftCashBoxConfiguration cashBoxConfiguration, string accessToken, bool isSandbox, LogLevel logLevel, IEnumerable<IHost<IPOS>> posHosts)
         {
             var config = new Dictionary<string, object>();
             config["cashboxid"] = cashBoxConfiguration.ftCashBoxId;
@@ -30,7 +31,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.Helper
             };
 
             var serviceCollection = new ServiceCollection();
-            serviceCollection.AddSingleton<IClientFactory<IPOS>>(posHost.GetClientFactory());
+            serviceCollection.AddSingleton<IClientFactory<IPOS>>(posHosts.First().GetClientFactory());
             serviceCollection.AddLogProviders(logLevel);
             serviceCollection.AddAppInsights(Helpers.Configuration.GetAppInsightsInstrumentationKey(isSandbox), "fiskaltrust.Middleware.Helper.Helipad", cashBoxConfiguration.ftCashBoxId);
 

@@ -2,6 +2,7 @@
 using fiskaltrust.Middleware.Abstractions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace fiskaltrust.AndroidLauncher.Common.Hosting
 {

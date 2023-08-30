@@ -9,13 +9,20 @@ namespace fiskaltrust.AndroidLauncher.Http.Helpers
     {
         public string GetProtocolSpecificUrl(PackageConfiguration packageConfiguration)
         {
-            var url = packageConfiguration.Url.FirstOrDefault(x => x.StartsWith("rest"));
-            if (string.IsNullOrEmpty(url))
+            if (packageConfiguration.Package.StartsWith("fiskaltrust.Middleware.Queue"))
             {
-                throw new ArgumentException($"At least one REST URL has to be set in the configuration of the {packageConfiguration.Package} package with the ID {packageConfiguration.Id}.");
-            }
+                var url = packageConfiguration.Url.FirstOrDefault(x => x.StartsWith("rest"));
+                if (string.IsNullOrEmpty(url))
+                {
+                    throw new ArgumentException($"At least one REST URL has to be set in the configuration of the {packageConfiguration.Package} package with the ID {packageConfiguration.Id}.");
+                }
 
-            return url.Replace("rest://", "http://");
+                return url.Replace("rest://", "http://");
+            }
+            else
+            {
+                return packageConfiguration.Url.FirstOrDefault();
+            }
         }
     }
 }

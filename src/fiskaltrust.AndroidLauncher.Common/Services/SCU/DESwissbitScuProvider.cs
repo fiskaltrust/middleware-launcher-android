@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
 {
-    class SwissbitScuProvider : IScuProvider
+    class DESwissbitScuProvider : IDESSCDProvider
     {
         public IDESSCD CreateSCU(PackageConfiguration scuConfiguration, Guid ftCashBoxId, bool isSandbox, LogLevel logLevel)
         {

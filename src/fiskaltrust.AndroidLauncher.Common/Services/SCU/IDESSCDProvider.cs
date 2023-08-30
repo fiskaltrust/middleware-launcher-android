@@ -5,7 +5,7 @@ using System;
 
 namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
 {
-    interface IScuProvider
+    interface IDESSCDProvider
     {
         IDESSCD CreateSCU(PackageConfiguration scuConfiguration, Guid ftCashBoxId, bool isSandbox, LogLevel logLevel);
     }

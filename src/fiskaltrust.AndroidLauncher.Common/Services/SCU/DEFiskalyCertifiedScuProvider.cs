@@ -9,7 +9,7 @@ using System;
 
 namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
 {
-    class FiskalyCertifiedScuProvider : IScuProvider
+    class DEFiskalyCertifiedScuProvider : IDESSCDProvider
     {
         public IDESSCD CreateSCU(PackageConfiguration scuConfiguration, Guid ftCashBoxId, bool isSandbox, LogLevel logLevel)
         {
