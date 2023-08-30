@@ -1,0 +1,3 @@
+[submodule "submodules/middleware"]
+	path = submodules/middleware
+	url = https://github.com/fiskaltrust/middleware.git
