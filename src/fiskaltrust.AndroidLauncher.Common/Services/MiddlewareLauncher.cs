@@ -26,7 +26,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
         private const string PACKAGE_NAME_DE_SWISSBIT = "fiskaltrust.Middleware.SCU.DE.Swissbit";
         private const string PACKAGE_NAME_DE_FISKALY_CERTIFIED = "fiskaltrust.Middleware.SCU.DE.FiskalyCertified";
         private const string PACKAGE_NAME_IT_EPSON = "fiskaltrust.Middleware.SCU.IT.Epson";
-
+        private const string PACKAGE_NAME_IT_CUSTOM_RT_SERVER = "fiskaltrust.Middleware.SCU.IT.CustomRTServer";
+        
         private readonly IHostFactory _hostFactory;
         private readonly IUrlResolver _urlResolver;
         private readonly IConfigurationProvider _configurationProvider;
@@ -92,6 +93,9 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
                     case PACKAGE_NAME_IT_EPSON:
                         await InitializeITEpsonScuAsync(scuConfig);
                         break;
+                    case PACKAGE_NAME_IT_CUSTOM_RT_SERVER:
+                        await InitializeITCustomRTServerScuAsync(scuConfig);
+                        break;
                     default:
                         throw new ArgumentException($"The Android launcher currently only supports the following SCU packages: {PACKAGE_NAME_DE_SWISSBIT}, {PACKAGE_NAME_DE_FISKALY_CERTIFIED}, {PACKAGE_NAME_IT_EPSON}.");
                 }
@@ -137,8 +141,6 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
 
         private async Task InitializeDESwissbitScuAsync(PackageConfiguration packageConfig)
         {
-            string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
-
             var scuProvider = new DESwissbitScuProvider();
             var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
             _scus.Add(GetPrimaryUriForSignaturCreationUnit(packageConfig), scu);
@@ -147,8 +149,6 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
 
         private async Task InitializeDEFiskalyCertifiedScuAsync(PackageConfiguration packageConfig)
         {
-            string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
-
             var scuProvider = new DEFiskalyCertifiedScuProvider();
             var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
             _scus.Add(GetPrimaryUriForSignaturCreationUnit(packageConfig), scu);
@@ -157,12 +157,18 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
 
         private async Task InitializeITEpsonScuAsync(PackageConfiguration packageConfig)
         {
-            string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
-
             var scuProvider = new ITEpsonScuProvider();
             var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
             _scus.Add(GetPrimaryUriForSignaturCreationUnit(packageConfig), scu);
             Log.Logger.Debug($"Created German SCU of type 'fiskaltrust.Middleware.SCU.IT.Epson'.");
+        }
+
+        private async Task InitializeITCustomRTServerScuAsync(PackageConfiguration packageConfig)
+        {
+            var scuProvider = new ITCustomRTServerScuProvider();
+            var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
+            _scus.Add(GetPrimaryUriForSignaturCreationUnit(packageConfig), scu);
+            Log.Logger.Debug($"Created German SCU of type 'fiskaltrust.Middleware.SCU.IT.CustomRTServer'.");
         }
 
         private async Task InitializeQueueAsync(PackageConfiguration packageConfig)
