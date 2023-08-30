@@ -22,6 +22,13 @@ stages:
     steps:
     - task: NuGetToolInstaller@1
 
+    # Temporarly use a submodule to speed up the dev speed while we integrate the Custom RT Server
+    # TODO: Remove this together with the submodule before merging
+    - pwsh: |
+        cd submodules/middleware
+        git checkout user/ske/newitinterfacesupport
+        git pull
+
     - task: yavt@1
       inputs:
         pathToVersionJson: 'version.json'
