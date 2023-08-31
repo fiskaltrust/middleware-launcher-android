@@ -80,7 +80,6 @@
     <Compile Include="Helpers\GrpcUrlResolver.cs" />
     <Compile Include="Hosting\GrpcHelper.cs" />
     <Compile Include="Hosting\GrpcHostFactory.cs" />
-    <Compile Include="Hosting\POSClientFactory.cs" />
     <Compile Include="LogContentLinkActivity.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="MiddlewareLauncherGrpcService.cs" />
@@ -128,9 +127,6 @@
     </PackageReference>
     <PackageReference Include="fiskaltrust.Middleware.Interface.Client.Http">
       <Version>1.3.47-rc2</Version>
-    </PackageReference>
-    <PackageReference Include="fiskaltrust.Middleware.Queue.SQLite">
-      <Version>1.3.47</Version>
     </PackageReference>
     <PackageReference Include="Grpc.Core">
       <Version>2.31.0</Version>

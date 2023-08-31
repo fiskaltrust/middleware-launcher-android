@@ -40,10 +40,11 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
         private readonly LogLevel _logLevel;
         
         private List<IHelper> _helpers;
-        private List<IHost<IPOS>> _posHosts;
+        private List<IPOS> _poss;
         private AbstractScuList _scus;
 
         private string _defaultUrl = null;
+        private List<IHost<IPOS>> _hosts;
 
         public bool IsRunning { get; set; }
 
@@ -61,7 +62,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             _configurationProvider = new HelipadConfigurationProvider();
             _localConfigurationProvider = new LocalConfigurationProvider();
             _helpers = new List<IHelper>();
-            _posHosts = new List<IHost<IPOS>>();
+            _poss = new List<IPOS>();
+            _hosts = new List<IHost<IPOS>>();
             _scus = new AbstractScuList();
         }
 
@@ -117,9 +119,9 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
 
         public async Task StopAsync()
         {
-            if (_posHosts != null)
+            if (_poss != null)
             {
-                await Task.WhenAll(_posHosts.Select(h => h.StopAsync()));
+                await Task.WhenAll(_hosts.Select(h => h.StopAsync()));
             }
 
             foreach (var helper in _helpers)
@@ -129,14 +131,6 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             }
 
             IsRunning = false;
-        }
-
-        public async IAsyncEnumerable<IPOS> GetPOSs()
-        {
-            foreach (var host in _posHosts)
-            {
-                yield return await host.GetProxyAsync();
-            }
         }
 
         private async Task InitializeDESwissbitScuAsync(PackageConfiguration packageConfig)
@@ -178,7 +172,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             var queueProvider = new SQLiteQueueProvider();
             var pos = await Task.Run(() => queueProvider.CreatePOS(Environment.GetFolderPath(Environment.SpecialFolder.Personal), packageConfig, _cashboxId, _isSandbox, _logLevel, _scus));
             var host = _hostFactory.CreatePosHost();
-            _posHosts.Add(host);
+            _poss.Add(pos);
+            _hosts.Add(host);
             await host.StartAsync(url, pos, _logLevel);
 
             Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.Queue.SQLite' is listening on '{url}'.");
@@ -187,7 +182,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
         private async Task InitializeHelipadHelperAsync(ftCashBoxConfiguration configuration)
         {
             var helipadHelperProvider = new HelipadHelperProvider();
-            var helper = await Task.Run(() => helipadHelperProvider.CreateHelper(configuration, _accessToken, _isSandbox, _logLevel, _posHosts));
+            var helper = await Task.Run(() => helipadHelperProvider.CreateHelper(configuration, _accessToken, _isSandbox, _logLevel, _poss));
             helper.StartBegin();
             helper.StartEnd();
 

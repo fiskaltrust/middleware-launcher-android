@@ -10,7 +10,5 @@ namespace fiskaltrust.AndroidLauncher.Common.Hosting
     {
         Task StartAsync(string url, T instance, LogLevel logLevel);
         Task StopAsync();
-        Task<T> GetProxyAsync();
-        IClientFactory<T> GetClientFactory();
     }
 }

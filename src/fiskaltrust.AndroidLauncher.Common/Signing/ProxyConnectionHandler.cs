@@ -1,9 +1,8 @@
-﻿using fiskaltrust.Middleware.Interface.Client.Common.RetryLogic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace fiskaltrust.AndroidLauncher.Common.Signing
 {
-    internal class ProxyConnectionHandler<T> : IProxyConnectionHandler<T> where T : class
+    internal class ProxyConnectionHandler<T> 
     {
         private readonly T _proxy;
 

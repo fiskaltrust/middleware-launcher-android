@@ -1,5 +1,6 @@
 ﻿using fiskaltrust.ifPOS.v1;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -32,7 +33,17 @@ namespace fiskaltrust.AndroidLauncher.Http.Controllers
         [HttpPost("json/v1/sign")]
         [HttpPost("xml/v1/sign")]
         [HttpPost("sign")]
-        public async Task<ActionResult<ReceiptResponse>> SignAsync([FromBody] ReceiptRequest request) => await _pos.SignAsync(request);
+        public async Task<ActionResult<ReceiptResponse>> SignAsync([FromBody] ReceiptRequest request)
+        {
+            try
+            {
+                return await _pos.SignAsync(request);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
 
         [HttpPost("v0/journal")]
         [HttpPost("json/v0/journal")]
