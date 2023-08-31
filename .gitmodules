@@ -1,3 +1,4 @@
 [submodule "submodules/middleware"]
 	path = submodules/middleware
+	branch = user/ske/newitinterfacesupport
 	url = https://github.com/fiskaltrust/middleware.git
