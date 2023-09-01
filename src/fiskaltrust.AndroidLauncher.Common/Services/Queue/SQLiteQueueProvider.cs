@@ -12,12 +12,14 @@ using fiskaltrust.AndroidLauncher.Common.Signing;
 using fiskaltrust.ifPOS.v1.de;
 using fiskaltrust.ifPOS.v1.it;
 using fiskaltrust.Middleware.Abstractions;
+using fiskaltrust.AndroidLauncher.Common.PosApiPrint;
 
 namespace fiskaltrust.AndroidLauncher.Common.Services.Queue
 {
+ 
     public class SQLiteQueueProvider
     {
-        public IPOS CreatePOS(string workingDir, PackageConfiguration queueConfiguration, Guid ftCashBoxId, bool isSandbox, LogLevel logLevel, AbstractScuList scus)
+        public IPOS CreatePOS(string workingDir, PackageConfiguration queueConfiguration, Guid ftCashBoxId, string accessToken, bool isSandbox, LogLevel logLevel, AbstractScuList scus)
         {
             var migrationsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Migrations");
 
@@ -40,7 +42,14 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.Queue
             serviceCollection.AddAppInsights(Helpers.Configuration.GetAppInsightsInstrumentationKey(isSandbox), "fiskaltrust.Middleware.Queue.SQLite", ftCashBoxId);
 
             bootstrapper.ConfigureServices(serviceCollection);
-            return serviceCollection.BuildServiceProvider().GetRequiredService<IPOS>();
+            var services = serviceCollection.BuildServiceProvider();
+            var pos = services.GetRequiredService<IPOS>();
+            if (queueConfiguration.Configuration.ContainsKey("useposapi"))
+            {
+                var posApiHelper = new PosApiHelper(new PosApiProvider(ftCashBoxId, accessToken, isSandbox ? new Uri("https://pos-api-sandbox.fiskaltrust.cloud/") : new Uri("https://pos-api.fiskaltrust.cloud/"), services.GetRequiredService<ILogger<PosApiProvider>>()), pos);
+                return posApiHelper;
+            }
+            return pos;
         }
 
         public static void CopyMigrationsToDataDir(string targetDirectory)
