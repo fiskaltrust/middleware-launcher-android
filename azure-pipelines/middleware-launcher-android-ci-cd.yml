@@ -65,7 +65,7 @@ stages:
     - task: NuGetCommand@2
       inputs:
         command: 'restore'
-        restoreSolution: '**/*.sln'
+        restoreSolution: 'fiskaltrust.AndroidLauncher.sln'
         feedsToUse: 'config'
         nugetConfigPath: 'NuGet.config'
       displayName: Restore NuGet packages
