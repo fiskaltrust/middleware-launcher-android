@@ -1,3 +1,4 @@
 {
-  "dotnet.defaultSolution": "fiskaltrust.AndroidLauncher.sln"
+  "dotnet.defaultSolution": "fiskaltrust.AndroidLauncher.sln",
+  "xml.downloadExternalResources.enabled": true
 }
