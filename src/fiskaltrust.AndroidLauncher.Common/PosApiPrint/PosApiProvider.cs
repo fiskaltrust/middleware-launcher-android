@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using fiskaltrust.AndroidLauncher.Common.PosApiPrint.Models;
 using fiskaltrust.ifPOS.v1;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
