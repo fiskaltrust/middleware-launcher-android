@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using fiskaltrust.ifPOS.v1;
 using fiskaltrust.AndroidLauncher.Common.PosApiPrint.Helpers;
+using Microsoft.Extensions.Logging;
 
 namespace fiskaltrust.AndroidLauncher.Common.PosApiPrint
 {
@@ -11,17 +12,25 @@ namespace fiskaltrust.AndroidLauncher.Common.PosApiPrint
     {
         private readonly PosApiProvider _posApiProvider;
         private IPOS _targetPOS;
+        private readonly ILogger<PosApiHelper> _logger;
 
-        public PosApiHelper(PosApiProvider provider, IPOS targetPos)
+        public PosApiHelper(PosApiProvider provider, IPOS targetPos, ILogger<PosApiHelper> logger)
         {
             _posApiProvider = provider;
             _targetPOS = targetPos;
+            _logger = logger;
         }
 
         public async Task<ReceiptResponse> SignAsync(ReceiptRequest request)
         {
-            var response = await _targetPOS.SignAsync(request);
-            await _posApiProvider.PrintAsync(request, response);
+            var response = await _targetPOS.SignAsync(request).ConfigureAwait(false); 
+            Task.Run(() => _posApiProvider.PrintAsync(request, response)).ContinueWith(x =>
+            {
+                if (x.IsFaulted)
+                {
+                    _logger.LogError("Failed to print", x.Exception);
+                }
+            }).ConfigureAwait(false);
             return response;
         }
 

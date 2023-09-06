@@ -46,7 +46,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.Queue
             var pos = services.GetRequiredService<IPOS>();
             if (queueConfiguration.Configuration.ContainsKey("useposapi"))
             {
-                var posApiHelper = new PosApiHelper(new PosApiProvider(ftCashBoxId, accessToken, isSandbox ? new Uri("https://pos-api-sandbox.fiskaltrust.cloud/") : new Uri("https://pos-api.fiskaltrust.cloud/"), services.GetRequiredService<ILogger<PosApiProvider>>()), pos);
+                var posApiHelper = new PosApiHelper(new PosApiProvider(ftCashBoxId, accessToken, isSandbox ? new Uri("https://pos-api-sandbox.fiskaltrust.cloud/") : new Uri("https://pos-api.fiskaltrust.cloud/"), services.GetRequiredService<ILogger<PosApiProvider>>()), pos, services.GetRequiredService<ILogger<PosApiHelper>>());
                 return posApiHelper;
             }
             return pos;
