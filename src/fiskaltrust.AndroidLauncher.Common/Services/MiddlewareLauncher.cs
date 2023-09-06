@@ -25,7 +25,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
     {
         private const string PACKAGE_NAME_DE_SWISSBIT = "fiskaltrust.Middleware.SCU.DE.Swissbit";
         private const string PACKAGE_NAME_DE_FISKALY_CERTIFIED = "fiskaltrust.Middleware.SCU.DE.FiskalyCertified";
-        private const string PACKAGE_NAME_IT_EPSON = "fiskaltrust.Middleware.SCU.IT.Epson";
+        private const string PACKAGE_NAME_IT_EPSON_RT_PRINTER = "fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter";
         private const string PACKAGE_NAME_IT_CUSTOM_RT_SERVER = "fiskaltrust.Middleware.SCU.IT.CustomRTServer";
         
         private readonly IHostFactory _hostFactory;
@@ -92,14 +92,14 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
                     case PACKAGE_NAME_DE_FISKALY_CERTIFIED:
                         await InitializeDEFiskalyCertifiedScuAsync(scuConfig);
                         break;
-                    case PACKAGE_NAME_IT_EPSON:
-                        await InitializeITEpsonScuAsync(scuConfig);
+                    case PACKAGE_NAME_IT_EPSON_RT_PRINTER:
+                        await InitializeITEpsonRTPrinterSCUAsync(scuConfig);
                         break;
                     case PACKAGE_NAME_IT_CUSTOM_RT_SERVER:
                         await InitializeITCustomRTServerScuAsync(scuConfig);
                         break;
                     default:
-                        throw new ArgumentException($"The Android launcher currently only supports the following SCU packages: {PACKAGE_NAME_DE_SWISSBIT}, {PACKAGE_NAME_DE_FISKALY_CERTIFIED}, {PACKAGE_NAME_IT_EPSON}.");
+                        throw new ArgumentException($"The Android launcher currently only supports the following SCU packages: {PACKAGE_NAME_DE_SWISSBIT}, {PACKAGE_NAME_DE_FISKALY_CERTIFIED}, {PACKAGE_NAME_IT_EPSON_RT_PRINTER}.");
                 }
             }
 
@@ -149,7 +149,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             Log.Logger.Debug($"Created German SCU of type 'fiskaltrust.Middleware.SCU.DE.FiskalyCertified'.");
         }
 
-        private async Task InitializeITEpsonScuAsync(PackageConfiguration packageConfig)
+        private async Task InitializeITEpsonRTPrinterSCUAsync(PackageConfiguration packageConfig)
         {
             var scuProvider = new ITEpsonRTPrinterSCUProvider();
             var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
