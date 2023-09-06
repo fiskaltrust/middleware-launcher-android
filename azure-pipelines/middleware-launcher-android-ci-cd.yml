@@ -118,7 +118,6 @@ stages:
         releaseNotesOption: 'input' 
         releaseNotesInput: "CI Release for $(Build.BuildNumber)"
         destinationType: 'groups'
-        distributionGroupId: 'preview'
         isSilent: true
 
     - task: AppCenterDistribute@3
@@ -129,7 +128,6 @@ stages:
         releaseNotesOption: 'input' 
         releaseNotesInput: "CI Release for $(Build.BuildNumber)"
         destinationType: 'groups'
-        distributionGroupId: 'preview'
         isSilent: true
         
     - task: PublishPipelineArtifact@0
