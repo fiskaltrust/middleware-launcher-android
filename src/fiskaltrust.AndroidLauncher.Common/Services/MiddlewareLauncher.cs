@@ -154,7 +154,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             var scuProvider = new ITEpsonRTPrinterSCUProvider();
             var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
             _scus.Add(GetPrimaryUriForSignaturCreationUnit(packageConfig), scu);
-            Log.Logger.Debug($"Created German SCU of type 'fiskaltrust.Middleware.SCU.IT.Epson'.");
+            Log.Logger.Debug($"Created German SCU of type 'fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter'.");
         }
 
         private async Task InitializeITCustomRTServerScuAsync(PackageConfiguration packageConfig)
