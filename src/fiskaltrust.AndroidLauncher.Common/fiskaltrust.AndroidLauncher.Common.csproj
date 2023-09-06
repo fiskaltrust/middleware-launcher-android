@@ -92,7 +92,7 @@
     <Compile Include="Services\SCU\DEFiskalyCertifiedScuProvider.cs" />
     <Compile Include="Services\SCU\IITSSCDProvider.cs" />
     <Compile Include="Services\SCU\ITCustomRTServerScuProvider.cs" />
-    <Compile Include="Services\SCU\ITEpsonScuProvider.cs" />
+    <Compile Include="Services\SCU\ITEpsonRTPrinterSCUProvider.cs" />
     <Compile Include="Services\SCU\IDESSCDProvider.cs" />
     <Compile Include="Services\SCU\DESwissbitScuProvider.cs" />
     <Compile Include="Services\StateProvider.cs" />
@@ -252,9 +252,9 @@
       <Project>{425a56a6-d841-44ad-8d20-80da26c7dc47}</Project>
       <Name>fiskaltrust.Middleware.SCU.IT.CustomRTServer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\submodules\middleware\scu-it\src\fiskaltrust.Middleware.SCU.IT.Epson\fiskaltrust.Middleware.SCU.IT.Epson.csproj">
-      <Project>{3e1d5af7-15f3-40e5-9ed8-422340700cd3}</Project>
-      <Name>fiskaltrust.Middleware.SCU.IT.Epson</Name>
+    <ProjectReference Include="..\..\submodules\middleware\scu-it\src\fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter\fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter.csproj">
+      <Project>{d830f663-ca89-46fd-987a-b3ec104f3b1b}</Project>
+      <Name>fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
