@@ -109,6 +109,28 @@ stages:
         Rename-Item -Path "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.apk" -NewName "eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk";
         Rename-Item -Path "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.apk" -NewName "eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk";
       displayName: Rename APK files
+
+    - task: AppCenterDistribute@3
+      inputs:
+        serverEndpoint: "fiskaltrust-appcenter" 
+        appSlug: "fiskaltrust/fiskaltrust-launcher-http"
+        appFile: "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk"
+        releaseNotesOption: 'input' 
+        releaseNotesInput: "CI Release for $(Build.BuildNumber)"
+        destinationType: 'groups'
+        distributionGroupId: 'preview'
+        isSilent: true
+
+    - task: AppCenterDistribute@3
+      inputs:
+        serverEndpoint: "fiskaltrust-appcenter" 
+        appSlug: "fiskaltrust/fiskaltrust-Launcher-gRPC"
+        appFile: "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk"
+        releaseNotesOption: 'input' 
+        releaseNotesInput: "CI Release for $(Build.BuildNumber)"
+        destinationType: 'groups'
+        distributionGroupId: 'preview'
+        isSilent: true
         
     - task: PublishPipelineArtifact@0
       inputs:
