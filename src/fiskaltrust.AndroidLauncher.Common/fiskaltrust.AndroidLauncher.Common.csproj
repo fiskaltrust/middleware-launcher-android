@@ -244,20 +244,6 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\submodules\middleware\queue\src\fiskaltrust.Middleware.Queue.SQLite\fiskaltrust.Middleware.Queue.SQLite.csproj">
-      <Project>{e7b0899d-229e-46de-93f8-747fc9e76a7a}</Project>
-      <Name>fiskaltrust.Middleware.Queue.SQLite</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\submodules\middleware\scu-it\src\fiskaltrust.Middleware.SCU.IT.CustomRTServer\fiskaltrust.Middleware.SCU.IT.CustomRTServer.csproj">
-      <Project>{425a56a6-d841-44ad-8d20-80da26c7dc47}</Project>
-      <Name>fiskaltrust.Middleware.SCU.IT.CustomRTServer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\submodules\middleware\scu-it\src\fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter\fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter.csproj">
-      <Project>{d830f663-ca89-46fd-987a-b3ec104f3b1b}</Project>
-      <Name>fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <AndroidResource Include="Resources\menu\top_menus_logs.xml">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
       <SubType>Designer</SubType>
