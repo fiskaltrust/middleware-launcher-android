@@ -16,7 +16,7 @@ There are two ways of using the fiskaltrust.Middleware on Android:
 2. By downloading the APK files from the _Cashbox_ section in our management portal, and installing them on the devices (ideally via device management). Please note that the download option is only available for cashboxes that contain supported packages and communication protocols only (as described under _Features and Limitations_ below).
 
 ## Implementation details & architecture
-The `fiskaltrust.AndroidLauncher` App contains a foreground service that can be started or stopped from POS System Apps via **intents**. This allows the POS software to maintain full control about the fiscalization dependencies, and reduces the signing time when e.g. using hardware TSEs that can take up to 45 seconds to initialize (a delay that would not be acceptable for each receipt).
+The `fiskaltrust.AndroidLauncher` App consists of a foreground service runnint the fiskaltrust.Middleware that is started or stopped from POS System Apps via **intents**. This allows the POS software to maintain full control about the fiscalization dependencies, and reduces the signing time when e.g. using hardware TSEs that can take up to 45 seconds to initialize (a delay that would not be acceptable for each receipt).
 
 In both our internal tests and on-site at installations, the foreground service has been proven to be very energy-efficient in standby, not consuming notable battery amounts.
 
