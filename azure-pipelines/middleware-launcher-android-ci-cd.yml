@@ -62,6 +62,12 @@ stages:
               nugetConfigPath: "NuGet.config"
             displayName: Restore NuGet packages
 
+          - task: JavaToolInstaller@0
+            inputs:
+              versionSpec: "11"
+              jdkArchitectureOption: "x64"
+              jdkSourceOption: "PreInstalled"
+
           - task: XamarinAndroid@1
             inputs:
               projectFile: "**/fiskaltrust.AndroidLauncher.Http.csproj"
