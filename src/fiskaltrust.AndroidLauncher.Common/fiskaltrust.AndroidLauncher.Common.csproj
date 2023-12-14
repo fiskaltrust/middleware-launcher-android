@@ -147,7 +147,7 @@
       <Version>1.3.48</Version>
     </PackageReference>
     <PackageReference Include="fiskaltrust.Middleware.SCU.DE.SwissbitAndroid">
-      <Version>1.3.25</Version>
+      <Version>1.3.48</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore">
       <Version>2.2.0</Version>
