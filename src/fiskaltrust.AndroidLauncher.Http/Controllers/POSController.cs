@@ -33,17 +33,7 @@ namespace fiskaltrust.AndroidLauncher.Http.Controllers
         [HttpPost("json/v1/sign")]
         [HttpPost("xml/v1/sign")]
         [HttpPost("sign")]
-        public async Task<ActionResult<ReceiptResponse>> SignAsync([FromBody] ReceiptRequest request)
-        {
-            try
-            {
-                return await _pos.SignAsync(request);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
+        public async Task<ActionResult<ReceiptResponse>> SignAsync([FromBody] ReceiptRequest request) => await _pos.SignAsync(request);
 
         [HttpPost("v0/journal")]
         [HttpPost("json/v0/journal")]
