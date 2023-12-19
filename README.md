@@ -34,6 +34,18 @@ However, there are some limitations due to the used platform:
 - Unlike the Desktop Launcher, the Android launcher **cannot** dynamically download packages at runtime, since this is not allowed due to Google's Play Store guidelines. Hence, the SCU and Queue packages are hardwired to the App, which must be updated to get new versions.
 - We currently only support the _SQLite queue_ (which is sufficient for the use cases we heard of until now), and two SCUs: _fiskaly_ (cloud) and _Swissbit_ (hardware). The latter can be plugged into the device as an SD card. _If a cashbox is used that includes other Queues or SCUs, an exception is thrown_. If you need support for additional SCUs, we'd be happy to add it - please reach out to us in that case!
 
+### Access Restrictions to SD Card Root Directory in Android
+
+In recent Android versions, applications are restricted from accessing the root directory of SD cards. This security measure limits the potential risks associated with unauthorized access to critical system files and user data.
+
+### Android and Swissbit
+
+#### Swissbit Support for Additional.DAT Files
+
+Swissbit supports additional .DAT files, and they are automatically created by putting a ".swissbitworm" file into any folder of the TSE. 
+The creation of .DAT files is exclusively handled by the TSE during the startup process. To ensure the proper generation of these files, the TSE needs to be remounted or the device must be restarted. Failure to do so may result in a remount error, preventing the successful creation of .DAT files.
+
+
 ## Contributing
 We welcome all kinds of contributions and feedback, e.g. via issues or pull requests, and want to thank every future contributors in advance!
 
