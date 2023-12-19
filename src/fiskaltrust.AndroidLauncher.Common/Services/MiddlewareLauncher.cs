@@ -25,8 +25,9 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
     {
         private const string PACKAGE_NAME_DE_SWISSBIT = "fiskaltrust.Middleware.SCU.DE.Swissbit";
         private const string PACKAGE_NAME_DE_FISKALY_CERTIFIED = "fiskaltrust.Middleware.SCU.DE.FiskalyCertified";
-        private const string PACKAGE_NAME_IT_EPSON = "fiskaltrust.Middleware.SCU.IT.Epson";
-
+        private const string PACKAGE_NAME_IT_EPSON_RT_PRINTER = "fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter";
+        private const string PACKAGE_NAME_IT_CUSTOM_RT_SERVER = "fiskaltrust.Middleware.SCU.IT.CustomRTServer";
+        
         private readonly IHostFactory _hostFactory;
         private readonly IUrlResolver _urlResolver;
         private readonly IConfigurationProvider _configurationProvider;
@@ -39,10 +40,11 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
         private readonly LogLevel _logLevel;
         
         private List<IHelper> _helpers;
-        private List<IHost<IPOS>> _posHosts;
+        private List<IPOS> _poss;
         private AbstractScuList _scus;
 
         private string _defaultUrl = null;
+        private List<IHost<IPOS>> _hosts;
 
         public bool IsRunning { get; set; }
 
@@ -60,7 +62,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             _configurationProvider = new HelipadConfigurationProvider();
             _localConfigurationProvider = new LocalConfigurationProvider();
             _helpers = new List<IHelper>();
-            _posHosts = new List<IHost<IPOS>>();
+            _poss = new List<IPOS>();
+            _hosts = new List<IHost<IPOS>>();
             _scus = new AbstractScuList();
         }
 
@@ -89,11 +92,14 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
                     case PACKAGE_NAME_DE_FISKALY_CERTIFIED:
                         await InitializeDEFiskalyCertifiedScuAsync(scuConfig);
                         break;
-                    case PACKAGE_NAME_IT_EPSON:
-                        await InitializeITEpsonScuAsync(scuConfig);
+                    case PACKAGE_NAME_IT_EPSON_RT_PRINTER:
+                        await InitializeITEpsonRTPrinterSCUAsync(scuConfig);
+                        break;
+                    case PACKAGE_NAME_IT_CUSTOM_RT_SERVER:
+                        await InitializeITCustomRTServerScuAsync(scuConfig);
                         break;
                     default:
-                        throw new ArgumentException($"The Android launcher currently only supports the following SCU packages: {PACKAGE_NAME_DE_SWISSBIT}, {PACKAGE_NAME_DE_FISKALY_CERTIFIED}, {PACKAGE_NAME_IT_EPSON}.");
+                        throw new ArgumentException($"The Android launcher currently only supports the following SCU packages: {PACKAGE_NAME_DE_SWISSBIT}, {PACKAGE_NAME_DE_FISKALY_CERTIFIED}, {PACKAGE_NAME_IT_EPSON_RT_PRINTER}.");
                 }
             }
 
@@ -113,9 +119,9 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
 
         public async Task StopAsync()
         {
-            if (_posHosts != null)
+            if (_poss != null)
             {
-                await Task.WhenAll(_posHosts.Select(h => h.StopAsync()));
+                await Task.WhenAll(_hosts.Select(h => h.StopAsync()));
             }
 
             foreach (var helper in _helpers)
@@ -127,18 +133,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             IsRunning = false;
         }
 
-        public async IAsyncEnumerable<IPOS> GetPOSs()
-        {
-            foreach (var host in _posHosts)
-            {
-                yield return await host.GetProxyAsync();
-            }
-        }
-
         private async Task InitializeDESwissbitScuAsync(PackageConfiguration packageConfig)
         {
-            string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
-
             var scuProvider = new DESwissbitScuProvider();
             var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
             _scus.Add(GetPrimaryUriForSignaturCreationUnit(packageConfig), scu);
@@ -147,22 +143,26 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
 
         private async Task InitializeDEFiskalyCertifiedScuAsync(PackageConfiguration packageConfig)
         {
-            string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
-
             var scuProvider = new DEFiskalyCertifiedScuProvider();
             var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
             _scus.Add(GetPrimaryUriForSignaturCreationUnit(packageConfig), scu);
             Log.Logger.Debug($"Created German SCU of type 'fiskaltrust.Middleware.SCU.DE.FiskalyCertified'.");
         }
 
-        private async Task InitializeITEpsonScuAsync(PackageConfiguration packageConfig)
+        private async Task InitializeITEpsonRTPrinterSCUAsync(PackageConfiguration packageConfig)
         {
-            string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
-
-            var scuProvider = new ITEpsonScuProvider();
+            var scuProvider = new ITEpsonRTPrinterSCUProvider();
             var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
             _scus.Add(GetPrimaryUriForSignaturCreationUnit(packageConfig), scu);
-            Log.Logger.Debug($"Created German SCU of type 'fiskaltrust.Middleware.SCU.IT.Epson'.");
+            Log.Logger.Debug($"Created German SCU of type 'fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter'.");
+        }
+
+        private async Task InitializeITCustomRTServerScuAsync(PackageConfiguration packageConfig)
+        {
+            var scuProvider = new ITCustomRTServerScuProvider();
+            var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
+            _scus.Add(GetPrimaryUriForSignaturCreationUnit(packageConfig), scu);
+            Log.Logger.Debug($"Created German SCU of type 'fiskaltrust.Middleware.SCU.IT.CustomRTServer'.");
         }
 
         private async Task InitializeQueueAsync(PackageConfiguration packageConfig)
@@ -170,9 +170,10 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
             string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
 
             var queueProvider = new SQLiteQueueProvider();
-            var pos = await Task.Run(() => queueProvider.CreatePOS(Environment.GetFolderPath(Environment.SpecialFolder.Personal), packageConfig, _cashboxId, _isSandbox, _logLevel, _scus));
+            var pos = await Task.Run(() => queueProvider.CreatePOS(Environment.GetFolderPath(Environment.SpecialFolder.Personal), packageConfig, _cashboxId, _accessToken, _isSandbox, _logLevel, _scus));
             var host = _hostFactory.CreatePosHost();
-            _posHosts.Add(host);
+            _poss.Add(pos);
+            _hosts.Add(host);
             await host.StartAsync(url, pos, _logLevel);
 
             Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.Queue.SQLite' is listening on '{url}'.");
@@ -181,7 +182,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
         private async Task InitializeHelipadHelperAsync(ftCashBoxConfiguration configuration)
         {
             var helipadHelperProvider = new HelipadHelperProvider();
-            var helper = await Task.Run(() => helipadHelperProvider.CreateHelper(configuration, _accessToken, _isSandbox, _logLevel, _posHosts));
+            var helper = await Task.Run(() => helipadHelperProvider.CreateHelper(configuration, _accessToken, _isSandbox, _logLevel, _poss));
             helper.StartBegin();
             helper.StartEnd();
 

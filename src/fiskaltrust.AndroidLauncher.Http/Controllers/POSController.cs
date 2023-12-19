@@ -1,5 +1,6 @@
 ﻿using fiskaltrust.ifPOS.v1;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 

@@ -1,319 +1,344 @@
 trigger:
-- master
-- refs/tags/*
+  - master
+  - refs/tags/*
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: "windows-latest"
 
 variables:
   - name: buildConfiguration
-    value: 'Release'
+    value: "Release"
   - name: outputDirectory
-    value: '$(build.binariesDirectory)/$(buildConfiguration)'
+    value: "$(build.binariesDirectory)/$(buildConfiguration)"
   - name: testOutputDirectory
-    value: '$(build.binariesDirectory)/test/$(buildConfiguration)'
+    value: "$(build.binariesDirectory)/test/$(buildConfiguration)"
   - group: middleware-launcher-android
 
 stages:
-- stage: BuildAndTest
-  displayName: Build and test
-  jobs:
-  - job: Build
-    steps:
-    - task: NuGetToolInstaller@1
+  - stage: BuildAndTest
+    displayName: Build and test
+    jobs:
+      - job: Build
+        steps:
+          - task: NuGetToolInstaller@1
 
-    - task: yavt@1
-      inputs:
-        pathToVersionJson: 'version.json'
-        semverVersion: 'v1'
+          - task: yavt@1
+            inputs:
+              pathToVersionJson: "version.json"
+              semverVersion: "v1"
 
-    - pwsh: |
-        $file = "./src/fiskaltrust.AndroidLauncher.Common/Resources/values/appSettings.xml"
-        $content = (Get-Content $file)
-        
-        $content = $content.Replace("{{AppInsightsInstrumentationKeyProduction}}", $AppInsightsInstrumentationKeyProduction)
-        $content = $content.Replace("{{AppInsightsInstrumentationKeySandbox}}", $AppInsightsInstrumentationKeySandbox)
-        
-        $content | Set-Content $file
+          - pwsh: |
+              $file = "./src/fiskaltrust.AndroidLauncher.Common/Resources/values/appSettings.xml"
+              $content = (Get-Content $file)
 
-    - task: android-manifest-version@1
-      inputs:
-        sourcePath: 'src/fiskaltrust.AndroidLauncher.Http/Properties/AndroidManifest.xml'
-        versionCodeOption: 'buildid'
-        versionCode: '$(Build.BuildId)'
-        versionName: '$(Build.BuildNumber)'
-        printFile: true
-      displayName: Version HTTP Launcher
+              $content = $content.Replace("{{AppInsightsInstrumentationKeyProduction}}", $AppInsightsInstrumentationKeyProduction)
+              $content = $content.Replace("{{AppInsightsInstrumentationKeySandbox}}", $AppInsightsInstrumentationKeySandbox)
 
-    - task: android-manifest-version@1
-      inputs:
-        sourcePath: 'src/fiskaltrust.AndroidLauncher.Grpc/Properties/AndroidManifest.xml'
-        versionCodeOption: 'buildid'
-        versionCode: '$(Build.BuildId)'
-        versionName: '$(Build.BuildNumber)'
-        printFile: true
-      displayName: Version gRPC Launcher
+              $content | Set-Content $file
 
-    - task: NuGetCommand@2
-      inputs:
-        command: 'restore'
-        restoreSolution: '**/*.sln'
-        feedsToUse: 'config'
-        nugetConfigPath: 'NuGet.config'
-      displayName: Restore NuGet packages
+          - task: android-manifest-version@1
+            inputs:
+              sourcePath: "src/fiskaltrust.AndroidLauncher.Http/Properties/AndroidManifest.xml"
+              versionCodeOption: "buildid"
+              versionCode: "$(Build.BuildId)"
+              versionName: "$(Build.BuildNumber)"
+              printFile: true
+            displayName: Version HTTP Launcher
 
-    - task: XamarinAndroid@1
-      inputs:
-        projectFile: '**/fiskaltrust.AndroidLauncher.Http.csproj'
-        outputDirectory: '$(outputDirectory)'
-        configuration: '$(buildConfiguration)'
-        msbuildVersionOption: 'latest'
-        jdkOption: 'JDKVersion'
-      displayName: Build HTTP Launcher
-      
-    - task: XamarinAndroid@1
-      inputs:
-        projectFile: '**/fiskaltrust.AndroidLauncher.Grpc.csproj'
-        outputDirectory: '$(outputDirectory)'
-        configuration: '$(buildConfiguration)'
-        msbuildVersionOption: 'latest'
-        jdkOption: 'JDKVersion'
-      displayName: Build gRPC Launcher
+          - task: android-manifest-version@1
+            inputs:
+              sourcePath: "src/fiskaltrust.AndroidLauncher.Grpc/Properties/AndroidManifest.xml"
+              versionCodeOption: "buildid"
+              versionCode: "$(Build.BuildId)"
+              versionName: "$(Build.BuildNumber)"
+              printFile: true
+            displayName: Version gRPC Launcher
 
-    - task: AndroidSigning@3
-      inputs:
-        apkFiles: '**/*.apk'
-        apksignerKeystoreFile: 'fiskaltrust_android.keystore'
-        apksignerKeystorePassword: '$(KeystorePassword)'
-        apksignerKeystoreAlias: 'fiskaltrust-build'
-        apksignerKeyPassword: '$(KeyPassword)'
-        apksignerArguments: '--verbose --v2-signing-enabled true'
-      displayName: Sign APKs
+          - task: NuGetCommand@2
+            inputs:
+              command: "restore"
+              restoreSolution: "fiskaltrust.AndroidLauncher.sln"
+              feedsToUse: "config"
+              nugetConfigPath: "NuGet.config"
+            displayName: Restore NuGet packages
 
-    - task: CopyFiles@2
-      inputs:
-        contents: '**/*.apk'
-        targetFolder: '$(build.artifactStagingDirectory)'
-        flattenFolders: true
-      displayName: Copy APKs to staging directory
+          - task: JavaToolInstaller@0
+            inputs:
+              versionSpec: "11"
+              jdkArchitectureOption: "x64"
+              jdkSourceOption: "PreInstalled"
 
-    - powershell: 
-        Rename-Item -Path "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.apk" -NewName "eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk";
-        Rename-Item -Path "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.apk" -NewName "eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk";
-      displayName: Rename APK files
-        
-    - task: PublishPipelineArtifact@0
-      inputs:
-        artifactName: 'drop'
-        targetPath: '$(Build.ArtifactStagingDirectory)'
+          - task: XamarinAndroid@1
+            inputs:
+              projectFile: "**/fiskaltrust.AndroidLauncher.Http.csproj"
+              outputDirectory: "$(outputDirectory)"
+              configuration: "$(buildConfiguration)"
+              msbuildVersionOption: "latest"
+              jdkOption: "JDKVersion"
+            displayName: Build HTTP Launcher
 
-  - job: SmokeTest
-    dependsOn: Build
-    condition: and(succeeded(), or(eq(variables['RunSmokeTests'], 'true'), or(eq(variables['build.sourceBranch'], 'refs/heads/master'), startsWith(variables['build.sourceBranch'], 'refs/tags'))))
-    steps:
-    - task: DownloadPipelineArtifact@2
-      inputs:
-        buildType: 'current'
-        artifactName: 'drop'
-        targetPath: '$(Build.ArtifactStagingDirectory)'
-    
-    - powershell: |
-        $tssId = "$([guid]::NewGuid())"
-        $adminPin = "1234567890"
+          - task: XamarinAndroid@1
+            inputs:
+              projectFile: "**/fiskaltrust.AndroidLauncher.Grpc.csproj"
+              outputDirectory: "$(outputDirectory)"
+              configuration: "$(buildConfiguration)"
+              msbuildVersionOption: "latest"
+              jdkOption: "JDKVersion"
+            displayName: Build gRPC Launcher
 
-        echo "##vso[task.setvariable variable=tssId;isOutput=true]$tssId"
-        echo "##vso[task.setvariable variable=adminPin;isOutput=true]$adminPin"
-      name: setTssVariablesStep
-      displayName: 'Set TSS variables'
+          - task: AndroidSigning@3
+            inputs:
+              apkFiles: "**/*.apk"
+              apksignerKeystoreFile: "fiskaltrust_android.keystore"
+              apksignerKeystorePassword: "$(KeystorePassword)"
+              apksignerKeystoreAlias: "fiskaltrust-build"
+              apksignerKeyPassword: "$(KeyPassword)"
+              apksignerArguments: "--verbose --v2-signing-enabled true"
+            displayName: Sign APKs
 
-    - task: PowerShell@2
-      inputs:
-        targetType: 'filePath'
-        filePath: azure-pipelines/scripts/create-fiskaly-tse.ps1
-        arguments: > 
-          -FiskalyApiKey "$(TestFiskalyApiKey)"
-          -FiskalyApiSecret "$(TestFiskalyApiSecret)"
-          -TssAdminPin "$(setTssVariablesStep.adminPin)"
-          -TssId "$(setTssVariablesStep.tssId)"
-      displayName: 'Re-create test TSE'
+          - task: CopyFiles@2
+            inputs:
+              contents: "**/*.apk"
+              targetFolder: "$(build.artifactStagingDirectory)"
+              flattenFolders: true
+            displayName: Copy APKs to staging directory
 
-    - task: PowerShell@2
-      inputs:
-        targetType: 'filePath'
-        filePath: azure-pipelines/scripts/create-cashbox.ps1
-        arguments: > 
-          -AccountId "$(TestAccountId)"
-          -AccountAccessToken "$(TestAccountAccessToken)"
-          -TemplatePath "$(Build.SourcesDirectory)/azure-pipelines/scripts/http-cashbox.json"
-          -FiskalyApiKey "$(TestFiskalyApiKey)"
-          -FiskalyApiSecret "$(TestFiskalyApiSecret)"
-          -TssAdminPin "$(setTssVariablesStep.adminPin)"
-          -TssId "$(setTssVariablesStep.tssId)"
-      name: CreateHttpCashBox
-      displayName: 'Create cashbox with HTTP SCU'
+          - powershell:
+              Rename-Item -Path "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.apk" -NewName "eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk";
+              Rename-Item -Path "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.apk" -NewName "eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk";
+            displayName: Rename APK files
 
-    - task: PowerShell@2
-      inputs:
-        targetType: 'filePath'
-        filePath: azure-pipelines/scripts/create-cashbox.ps1
-        arguments: > 
-          -AccountId "$(TestAccountId)"
-          -AccountAccessToken "$(TestAccountAccessToken)"
-          -TemplatePath "$(Build.SourcesDirectory)/azure-pipelines/scripts/grpc-cashbox.json"
-          -FiskalyApiKey "$(TestFiskalyApiKey)"
-          -FiskalyApiSecret "$(TestFiskalyApiSecret)"
-          -TssAdminPin "$(setTssVariablesStep.adminPin)"
-          -TssId "$(setTssVariablesStep.tssId)"
-      name: CreateGrpcCashBox
-      displayName: 'Create cashbox with gRPC SCU'
+          - task: AppCenterDistribute@3
+            inputs:
+              serverEndpoint: "fiskaltrust-appcenter"
+              appSlug: "fiskaltrust/fiskaltrust-launcher-http"
+              appFile: "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk"
+              releaseNotesOption: "input"
+              releaseNotesInput: "CI Release for $(Build.BuildNumber)"
+              destinationType: "groups"
+              isSilent: true
 
-    - task: NuGetToolInstaller@1
+          - task: AppCenterDistribute@3
+            inputs:
+              serverEndpoint: "fiskaltrust-appcenter"
+              appSlug: "fiskaltrust/fiskaltrust-Launcher-gRPC"
+              appFile: "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk"
+              releaseNotesOption: "input"
+              releaseNotesInput: "CI Release for $(Build.BuildNumber)"
+              destinationType: "groups"
+              isSilent: true
 
-    - task: UseNode@1
-      inputs:
-        version: '10.15.1'
+          - task: PublishPipelineArtifact@0
+            inputs:
+              artifactName: "drop"
+              targetPath: "$(Build.ArtifactStagingDirectory)"
 
-    - task: NuGetCommand@2
-      inputs:
-        command: 'restore'
-        restoreSolution: '**/*.sln'
-        feedsToUse: 'config'
-        nugetConfigPath: 'NuGet.config'
-      displayName: Restore NuGet packages
-      
-    - task: NuGetCommand@2
-      inputs:
-        command: 'custom'
-        arguments: 'install xamarin.uitest -Version 3.2.8 -OutputDirectory "test-tools/"'
+      - job: SmokeTest
+        dependsOn: Build
+        condition: and(succeeded(), or(eq(variables['RunSmokeTests'], 'true'), or(eq(variables['build.sourceBranch'], 'refs/heads/master'), startsWith(variables['build.sourceBranch'], 'refs/tags'))))
+        steps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              buildType: "current"
+              artifactName: "drop"
+              targetPath: "$(Build.ArtifactStagingDirectory)"
 
-    - task: VSBuild@1
-      inputs:
-        solution: '**\fiskaltrust.AndroidLauncher.SmokeTests.csproj'
-        msbuildArgs: '/p:OutputPath=$(testOutputDirectory)'
-        configuration: '$(buildConfiguration)'
+          - powershell: |
+              $tssId = "$([guid]::NewGuid())"
+              $adminPin = "1234567890"
 
-    - task: Npm@1
-      inputs:
-        command: 'custom'
-        customCommand: '-g install appcenter-cli@latest'
+              echo "##vso[task.setvariable variable=tssId;isOutput=true]$tssId"
+              echo "##vso[task.setvariable variable=adminPin;isOutput=true]$adminPin"
+            name: setTssVariablesStep
+            displayName: "Set TSS variables"
 
-    - task: AppCenterTest@1
-      inputs:
-        appFile: '$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk'
-        artifactsDirectory: '$(Build.ArtifactStagingDirectory)/AppCenterTest'
-        frameworkOption: 'uitest'
-        uiTestBuildDirectory: '$(testOutputDirectory)'
-        uiTestToolsDirectory: 'test-tools/Xamarin.UITest.3.2.8/tools'
-        credentialsOption: 'serviceEndpoint'
-        serverEndpoint: 'VS App Center'
-        appSlug: 'fiskaltrust/fiskaltrust.Launcher'
-        devices: 'fiskaltrust/launcher'
-        localeOption: 'en_US'
-        prepareOptions: '--include-category grpc'
-        runOptions: --test-parameter "test_env=CASHBOXID=$(CreateGrpcCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateGrpcCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateGrpcCashBox.url)"
-      displayName: Smoke tests (gRPC)
+          - task: PowerShell@2
+            inputs:
+              targetType: "filePath"
+              filePath: azure-pipelines/scripts/create-fiskaly-tse.ps1
+              arguments: >
+                -FiskalyApiKey "$(TestFiskalyApiKey)"
+                -FiskalyApiSecret "$(TestFiskalyApiSecret)"
+                -TssAdminPin "$(setTssVariablesStep.adminPin)"
+                -TssId "$(setTssVariablesStep.tssId)"
+            displayName: "Re-create test TSE"
 
-    - task: AppCenterTest@1
-      inputs:
-        appFile: '$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk'
-        artifactsDirectory: '$(Build.ArtifactStagingDirectory)/AppCenterTest'
-        frameworkOption: 'uitest'
-        uiTestBuildDirectory: '$(testOutputDirectory)'
-        uiTestToolsDirectory: 'test-tools/Xamarin.UITest.3.2.8/tools'
-        credentialsOption: 'serviceEndpoint'
-        serverEndpoint: 'VS App Center'
-        appSlug: 'fiskaltrust/fiskaltrust.Launcher'
-        devices: 'fiskaltrust/launcher'
-        localeOption: 'en_US'
-        prepareOptions: '--include-category http'
-        runOptions: --test-parameter "test_env=CASHBOXID=$(CreateHttpCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateHttpCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateHttpCashBox.url)"
-      displayName: Smoke tests (HTTP)
+          - task: PowerShell@2
+            inputs:
+              targetType: "filePath"
+              filePath: azure-pipelines/scripts/create-cashbox.ps1
+              arguments: >
+                -AccountId "$(TestAccountId)"
+                -AccountAccessToken "$(TestAccountAccessToken)"
+                -TemplatePath "$(Build.SourcesDirectory)/azure-pipelines/scripts/http-cashbox.json"
+                -FiskalyApiKey "$(TestFiskalyApiKey)"
+                -FiskalyApiSecret "$(TestFiskalyApiSecret)"
+                -TssAdminPin "$(setTssVariablesStep.adminPin)"
+                -TssId "$(setTssVariablesStep.tssId)"
+            name: CreateHttpCashBox
+            displayName: "Create cashbox with HTTP SCU"
 
-  - job: Cleanup
-    dependsOn: SmokeTest
-    condition: and(succeededOrFailed(), or(eq(variables['build.sourceBranch'], 'refs/heads/master'), startsWith(variables['build.sourceBranch'], 'refs/tags')))
-    variables:
-      FiskalyAdminPin: $[ dependencies.SmokeTest.outputs['setTssVariablesStep.adminPin'] ]
-      FiskalyTssId: $[ dependencies.SmokeTest.outputs['setTssVariablesStep.tssId'] ]
-    steps:
-    - task: PowerShell@2
-      inputs:
-        targetType: 'filePath'
-        filePath: azure-pipelines/scripts/delete-fiskaly-tse.ps1
-        arguments: > 
-          -FiskalyApiKey "$(TestFiskalyApiKey)"
-          -FiskalyApiSecret "$(TestFiskalyApiSecret)"
-          -TssAdminPin "$(FiskalyAdminPin)"
-          -TssId "$(FiskalyTssId)"
-      displayName: 'Disable fiskaly test TSE'
+          - task: PowerShell@2
+            inputs:
+              targetType: "filePath"
+              filePath: azure-pipelines/scripts/create-cashbox.ps1
+              arguments: >
+                -AccountId "$(TestAccountId)"
+                -AccountAccessToken "$(TestAccountAccessToken)"
+                -TemplatePath "$(Build.SourcesDirectory)/azure-pipelines/scripts/grpc-cashbox.json"
+                -FiskalyApiKey "$(TestFiskalyApiKey)"
+                -FiskalyApiSecret "$(TestFiskalyApiSecret)"
+                -TssAdminPin "$(setTssVariablesStep.adminPin)"
+                -TssId "$(setTssVariablesStep.tssId)"
+            name: CreateGrpcCashBox
+            displayName: "Create cashbox with gRPC SCU"
 
-- stage: ReleaseSandbox
-  displayName: Release packages to sandbox
-  condition: and(succeeded(), or(eq(variables['DeployToSandbox'], 'true'), startsWith(variables['Build.SourceBranch'], 'refs/tags/')))
-  dependsOn: BuildAndTest
+          - task: NuGetToolInstaller@1
 
-  jobs:
-  - deployment: ReleaseSandbox
-    displayName: Release to sandbox
-    pool:
-      vmImage: 'windows-latest'
-    environment: 'ft-Middleware-Storage-Sandbox'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - template: templates/release-to-storage.yaml
-            parameters:
-              subscription: fiskaltrust-develop
-              storage: fta240commonde
-              package: eu.fiskaltrust.androidlauncher.grpc
-          - template: templates/release-to-storage.yaml
-            parameters:
-              subscription: fiskaltrust-develop
-              storage: fta240commonde
-              package: eu.fiskaltrust.androidlauncher.http
+          - task: UseNode@1
+            inputs:
+              version: "10.15.1"
 
+          - task: NuGetCommand@2
+            inputs:
+              command: "restore"
+              restoreSolution: "**/*.sln"
+              feedsToUse: "config"
+              nugetConfigPath: "NuGet.config"
+            displayName: Restore NuGet packages
 
-- stage: ReleaseProduction
-  displayName: Release to production storage
-  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
-  dependsOn: ReleaseSandbox
+          - task: NuGetCommand@2
+            inputs:
+              command: "custom"
+              arguments: 'install xamarin.uitest -Version 3.2.8 -OutputDirectory "test-tools/"'
 
-  jobs:
-  - deployment: ReleaseProductionStorage
+          - task: VSBuild@1
+            inputs:
+              solution: '**\fiskaltrust.AndroidLauncher.SmokeTests.csproj'
+              msbuildArgs: "/p:OutputPath=$(testOutputDirectory)"
+              configuration: "$(buildConfiguration)"
+
+          - task: Npm@1
+            inputs:
+              command: "custom"
+              customCommand: "-g install appcenter-cli@latest"
+
+          - task: AppCenterTest@1
+            inputs:
+              appFile: "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk"
+              artifactsDirectory: "$(Build.ArtifactStagingDirectory)/AppCenterTest"
+              frameworkOption: "uitest"
+              uiTestBuildDirectory: "$(testOutputDirectory)"
+              uiTestToolsDirectory: "test-tools/Xamarin.UITest.3.2.8/tools"
+              credentialsOption: "serviceEndpoint"
+              serverEndpoint: "VS App Center"
+              appSlug: "fiskaltrust/fiskaltrust.Launcher"
+              devices: "fiskaltrust/launcher"
+              localeOption: "en_US"
+              prepareOptions: "--include-category grpc"
+              runOptions: --test-parameter "test_env=CASHBOXID=$(CreateGrpcCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateGrpcCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateGrpcCashBox.url)"
+            displayName: Smoke tests (gRPC)
+
+          - task: AppCenterTest@1
+            inputs:
+              appFile: "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk"
+              artifactsDirectory: "$(Build.ArtifactStagingDirectory)/AppCenterTest"
+              frameworkOption: "uitest"
+              uiTestBuildDirectory: "$(testOutputDirectory)"
+              uiTestToolsDirectory: "test-tools/Xamarin.UITest.3.2.8/tools"
+              credentialsOption: "serviceEndpoint"
+              serverEndpoint: "VS App Center"
+              appSlug: "fiskaltrust/fiskaltrust.Launcher"
+              devices: "fiskaltrust/launcher"
+              localeOption: "en_US"
+              prepareOptions: "--include-category http"
+              runOptions: --test-parameter "test_env=CASHBOXID=$(CreateHttpCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateHttpCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateHttpCashBox.url)"
+            displayName: Smoke tests (HTTP)
+
+      - job: Cleanup
+        dependsOn: SmokeTest
+        condition: and(succeededOrFailed(), or(eq(variables['build.sourceBranch'], 'refs/heads/master'), startsWith(variables['build.sourceBranch'], 'refs/tags')))
+        variables:
+          FiskalyAdminPin: $[ dependencies.SmokeTest.outputs['setTssVariablesStep.adminPin'] ]
+          FiskalyTssId: $[ dependencies.SmokeTest.outputs['setTssVariablesStep.tssId'] ]
+        steps:
+          - task: PowerShell@2
+            inputs:
+              targetType: "filePath"
+              filePath: azure-pipelines/scripts/delete-fiskaly-tse.ps1
+              arguments: >
+                -FiskalyApiKey "$(TestFiskalyApiKey)"
+                -FiskalyApiSecret "$(TestFiskalyApiSecret)"
+                -TssAdminPin "$(FiskalyAdminPin)"
+                -TssId "$(FiskalyTssId)"
+            displayName: "Disable fiskaly test TSE"
+
+  - stage: ReleaseSandbox
+    displayName: Release packages to sandbox
+    condition: and(succeeded(), or(eq(variables['DeployToSandbox'], 'true'), startsWith(variables['Build.SourceBranch'], 'refs/tags/')))
+    dependsOn: BuildAndTest
+
+    jobs:
+      - deployment: ReleaseSandbox
+        displayName: Release to sandbox
+        pool:
+          vmImage: "windows-latest"
+        environment: "ft-Middleware-Storage-Sandbox"
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: templates/release-to-storage.yaml
+                  parameters:
+                    subscription: fiskaltrust-develop
+                    storage: fta240commonde
+                    package: eu.fiskaltrust.androidlauncher.grpc
+                - template: templates/release-to-storage.yaml
+                  parameters:
+                    subscription: fiskaltrust-develop
+                    storage: fta240commonde
+                    package: eu.fiskaltrust.androidlauncher.http
+
+  - stage: ReleaseProduction
     displayName: Release to production storage
-    pool:
-      vmImage: 'windows-latest'
-    environment: 'ft-Middleware-Storage-Production'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - template: templates/release-to-storage.yaml
-            parameters:
-              subscription: ft-acp-csp-germany-production
-              storage: fta110common
-              package: eu.fiskaltrust.androidlauncher.grpc
-          - template: templates/release-to-storage.yaml
-            parameters:
-              subscription: ft-acp-csp-germany-production
-              storage: fta110common
-              package: eu.fiskaltrust.androidlauncher.http
+    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
+    dependsOn: ReleaseSandbox
 
-  - deployment: ReleaseProductionGooglePlay
-    displayName: Release to Google Play
-    pool:
-      vmImage: 'windows-latest'
-    environment: 'ft-Middleware-GooglePlay'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - template: templates/release-to-googleplay.yaml
-            parameters:
-              package: eu.fiskaltrust.androidlauncher.grpc
-              serviceConnection: 'Google Play Store'
-          - template: templates/release-to-googleplay.yaml
-            parameters:
-              package: eu.fiskaltrust.androidlauncher.http
-              serviceConnection: 'Google Play Store'
+    jobs:
+      - deployment: ReleaseProductionStorage
+        displayName: Release to production storage
+        pool:
+          vmImage: "windows-latest"
+        environment: "ft-Middleware-Storage-Production"
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: templates/release-to-storage.yaml
+                  parameters:
+                    subscription: ft-acp-csp-germany-production
+                    storage: fta110common
+                    package: eu.fiskaltrust.androidlauncher.grpc
+                - template: templates/release-to-storage.yaml
+                  parameters:
+                    subscription: ft-acp-csp-germany-production
+                    storage: fta110common
+                    package: eu.fiskaltrust.androidlauncher.http
+
+      - deployment: ReleaseProductionGooglePlay
+        displayName: Release to Google Play
+        pool:
+          vmImage: "windows-latest"
+        environment: "ft-Middleware-GooglePlay"
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: templates/release-to-googleplay.yaml
+                  parameters:
+                    package: eu.fiskaltrust.androidlauncher.grpc
+                    serviceConnection: "Google Play Store"
+                - template: templates/release-to-googleplay.yaml
+                  parameters:
+                    package: eu.fiskaltrust.androidlauncher.http
+                    serviceConnection: "Google Play Store"

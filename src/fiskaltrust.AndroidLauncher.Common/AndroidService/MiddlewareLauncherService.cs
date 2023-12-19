@@ -15,6 +15,7 @@ using fiskaltrust.AndroidLauncher.Common.Services;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using Serilog.Events;
 using Serilog.Formatting.Display;
 using System;
 using System.Collections.Generic;
@@ -70,6 +71,8 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
                 telemetryConfiguration.TelemetryInitializers.Add(middlewareTelemetryInitializer);
 
                 Log.Logger = new LoggerConfiguration()
+                    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                    .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
                     .WriteTo.File(path: Path.Combine(FileLoggerHelper.LogDirectory.FullName, FileLoggerHelper.LogFilename), rollingInterval: RollingInterval.Day, retainedFileCountLimit: 31)
                     .WriteTo.ApplicationInsights(telemetryConfiguration, TelemetryConverter.Traces, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning)
                     .WriteTo.Sink(new LogcatSink(AndroidLogger.TAG, logLevel))
