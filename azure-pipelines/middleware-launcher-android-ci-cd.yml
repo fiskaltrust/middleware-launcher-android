@@ -26,6 +26,7 @@ stages:
             inputs:
               pathToVersionJson: "version.json"
               semverVersion: "v1"
+              failOnTagVersionMismatch : true
 
           - pwsh: |
               $file = "./src/fiskaltrust.AndroidLauncher.Common/Resources/values/appSettings.xml"
