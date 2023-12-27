@@ -198,7 +198,7 @@ stages:
 
           - task: UseNode@1
             inputs:
-              version: "10.15.1"
+              version: "24.x"
 
           - task: NuGetCommand@2
             inputs:
@@ -223,6 +223,13 @@ stages:
             inputs:
               command: "custom"
               customCommand: "-g install appcenter-cli@latest"
+
+          - pwsh: |
+              # lists all files in tools folder
+              Get-ChildItem -Path "$(testOutputDirectory)" -Recurse -File | ForEach-Object {
+                # prints the file name
+                Write-Host $_.Name
+              }
 
           - task: AppCenterTest@1
             inputs:
