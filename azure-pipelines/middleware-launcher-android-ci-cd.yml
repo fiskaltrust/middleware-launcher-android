@@ -235,7 +235,7 @@ stages:
           - pwsh: |             
               Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x64.dll" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x64.dll.bak"
               Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x86.dll" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x86.dll.bak"
-              C:\npm\prefix\appcenter.cmd test prepare uitest --artifacts-dir $(Build.ArtifactStagingDirectory)/AppCenterTest --app-path $(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk --build-dir $(testOutputDirectory) --uitest-tools-dir test-tools/Xamarin.UITest.3.2.8/tools --include-category grpc
+              C:\npm\prefix\appcenter.cmd test prepare uitest --artifacts-dir $(Build.ArtifactStagingDirectory)/AppCenterTest --app-path $(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk --build-dir $(testOutputDirectory) --uitest-tools-dir test-tools/Xamarin.UITest.4.3.3/tools --include-category grpc
               Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x64.dll.bak" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x64.dll"
               Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x86.dll.bak" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x86.dll"
 
@@ -245,7 +245,7 @@ stages:
           - pwsh: |             
               Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x64.dll" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x64.dll.bak"
               Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x86.dll" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x86.dll.bak"
-              C:\npm\prefix\appcenter.cmd test prepare uitest --artifacts-dir $(Build.ArtifactStagingDirectory)/AppCenterTest --app-path $(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk --build-dir $(testOutputDirectory) --uitest-tools-dir test-tools/Xamarin.UITest.3.2.8/tools --include-category http
+              C:\npm\prefix\appcenter.cmd test prepare uitest --artifacts-dir $(Build.ArtifactStagingDirectory)/AppCenterTest --app-path $(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk --build-dir $(testOutputDirectory) --uitest-tools-dir test-tools/Xamarin.UITest.4.3.3/tools --include-category http
               Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x64.dll.bak" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x64.dll"
               Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x86.dll.bak" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x86.dll"
 
