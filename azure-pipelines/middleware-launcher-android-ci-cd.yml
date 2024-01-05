@@ -239,18 +239,19 @@ stages:
 
           - task: AppCenterTest@1
             inputs:
-              appFile: "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk"
-              artifactsDirectory: "$(Build.ArtifactStagingDirectory)/AppCenterTest"
-              frameworkOption: "uitest"
-              uiTestBuildDirectory: "$(testOutputDirectory)"
-              uiTestToolsDirectory: "test-tools/Xamarin.UITest.4.3.3/tools"
-              credentialsOption: "serviceEndpoint"
-              serverEndpoint: "VS App Center"
-              appSlug: "fiskaltrust/fiskaltrust.Launcher"
-              devices: "fiskaltrust/launcher"
-              localeOption: "en_US"
-              prepareOptions: "--include-category grpc"
-              runOptions: --test-parameter "test_env=CASHBOXID=$(CreateGrpcCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateGrpcCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateGrpcCashBox.url)"
+              appFile: '$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk'
+              artifactsDirectory: '$(Build.ArtifactStagingDirectory)/AppCenterTest'
+              frameworkOption: 'uitest'
+              uiTestBuildDirectory: '$(testOutputDirectory)'
+              uiTestToolsDirectory: 'test-tools/Xamarin.UITest.4.3.3/tools'
+              prepareOptions: '--include-category grpc'
+              credentialsOption: 'serviceEndpoint'
+              serverEndpoint: 'VS App Center'
+              appSlug: 'fiskaltrust/fiskaltrust.Launcher'
+              devices: 'fiskaltrust/launcher'
+              localeOption: 'en_US'
+              runOptions: '--test-parameter "test_env=CASHBOXID=$(CreateGrpcCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateGrpcCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateGrpcCashBox.url)"'
+              showDebugOutput: true
             displayName: Smoke tests (gRPC)
 
           - task: AppCenterTest@1
