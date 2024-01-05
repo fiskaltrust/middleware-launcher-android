@@ -200,12 +200,6 @@ stages:
             inputs:
               version: "20.x"
 
-          - task: JavaToolInstaller@0
-            inputs:
-              versionSpec: "11"
-              jdkArchitectureOption: "x64"
-              jdkSourceOption: "PreInstalled"
-
           - task: NuGetCommand@2
             inputs:
               command: "restore"
@@ -251,38 +245,6 @@ stages:
 
               C:\npm\prefix\appcenter.cmd test run manifest --manifest-path $(Build.ArtifactStagingDirectory)/AppCenterTest/manifest.json --app-path $(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk --app fiskaltrust/fiskaltrust.Launcher --devices fiskaltrust/launcher --test-series master --locale en_US --test-parameter "test_env=CASHBOXID=$(CreateHttpCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateHttpCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateHttpCashBox.url)" --token $(AppCenterToken)
             displayName: Prepare and run smoke tests (HTTP)
-
-          # - task: AppCenterTest@1
-          #   inputs:
-          #     appFile: "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk"
-          #     artifactsDirectory: "$(Build.ArtifactStagingDirectory)/AppCenterTest"
-          #     frameworkOption: "uitest"
-          #     uiTestBuildDirectory: "$(testOutputDirectory)"
-          #     uiTestToolsDirectory: "test-tools/Xamarin.UITest.4.3.3/tools"
-          #     credentialsOption: "serviceEndpoint"
-          #     serverEndpoint: "VS App Center"
-          #     appSlug: "fiskaltrust/fiskaltrust.Launcher"
-          #     devices: "fiskaltrust/launcher"
-          #     localeOption: "en_US"
-          #     prepareOptions: "--include-category grpc"
-          #     runOptions: --test-parameter "test_env=CASHBOXID=$(CreateGrpcCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateGrpcCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateGrpcCashBox.url)"
-          #   displayName: Smoke tests (gRPC)
-
-          # - task: AppCenterTest@1
-          #   inputs:
-          #     appFile: "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk"
-          #     artifactsDirectory: "$(Build.ArtifactStagingDirectory)/AppCenterTest"
-          #     frameworkOption: "uitest"
-          #     uiTestBuildDirectory: "$(testOutputDirectory)"
-          #     uiTestToolsDirectory: "test-tools/Xamarin.UITest.4.3.3/tools"
-          #     credentialsOption: "serviceEndpoint"
-          #     serverEndpoint: "VS App Center"
-          #     appSlug: "fiskaltrust/fiskaltrust.Launcher"
-          #     devices: "fiskaltrust/launcher"
-          #     localeOption: "en_US"
-          #     prepareOptions: "--include-category http"
-          #     runOptions: --test-parameter "test_env=CASHBOXID=$(CreateHttpCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateHttpCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateHttpCashBox.url)"
-          #   displayName: Smoke tests (HTTP)
 
       - job: Cleanup
         dependsOn: SmokeTest
