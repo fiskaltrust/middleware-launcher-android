@@ -281,12 +281,12 @@ stages:
               steps:
                 - template: templates/release-to-storage.yaml
                   parameters:
-                    subscription: fiskaltrust-develop
+                    subscription: ft-msft-mca-development-common
                     storage: fta240commonde
                     package: eu.fiskaltrust.androidlauncher.grpc
                 - template: templates/release-to-storage.yaml
                   parameters:
-                    subscription: fiskaltrust-develop
+                    subscription: ft-msft-mca-development-common
                     storage: fta240commonde
                     package: eu.fiskaltrust.androidlauncher.http
 
@@ -307,12 +307,12 @@ stages:
               steps:
                 - template: templates/release-to-storage.yaml
                   parameters:
-                    subscription: ft-acp-csp-germany-production
+                    subscription: ft-acp-csp-market-de-production
                     storage: fta110common
                     package: eu.fiskaltrust.androidlauncher.grpc
                 - template: templates/release-to-storage.yaml
                   parameters:
-                    subscription: ft-acp-csp-germany-production
+                    subscription: ft-acp-csp-market-de-production
                     storage: fta110common
                     package: eu.fiskaltrust.androidlauncher.http
 
