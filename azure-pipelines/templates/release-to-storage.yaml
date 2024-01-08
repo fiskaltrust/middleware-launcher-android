@@ -9,7 +9,7 @@ steps:
     artifactName: 'drop'
     downloadPath: '$(System.ArtifactsDirectory)/drop'
 
-- task: AzureFileCopy@2
+- task: AzureFileCopy@5
   displayName: 'Upload to blob storage'
   inputs:
     SourcePath: '$(System.ArtifactsDirectory)/drop/${{ parameters.package }}.*.apk'
