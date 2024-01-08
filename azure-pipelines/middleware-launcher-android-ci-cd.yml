@@ -198,7 +198,7 @@ stages:
 
           - task: UseNode@1
             inputs:
-              version: "10.15.1"
+              version: "20.x"
 
           - task: NuGetCommand@2
             inputs:
@@ -224,37 +224,27 @@ stages:
               command: "custom"
               customCommand: "-g install appcenter-cli@latest"
 
-          - task: AppCenterTest@1
-            inputs:
-              appFile: "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk"
-              artifactsDirectory: "$(Build.ArtifactStagingDirectory)/AppCenterTest"
-              frameworkOption: "uitest"
-              uiTestBuildDirectory: "$(testOutputDirectory)"
-              uiTestToolsDirectory: "test-tools/Xamarin.UITest.4.3.3/tools"
-              credentialsOption: "serviceEndpoint"
-              serverEndpoint: "VS App Center"
-              appSlug: "fiskaltrust/fiskaltrust.Launcher"
-              devices: "fiskaltrust/launcher"
-              localeOption: "en_US"
-              prepareOptions: "--include-category grpc"
-              runOptions: --test-parameter "test_env=CASHBOXID=$(CreateGrpcCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateGrpcCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateGrpcCashBox.url)"
-            displayName: Smoke tests (gRPC)
+          # We cannot use the AppCenter task, as it executes both test preparation and execution at once - and the preparation fails because it tries to scan the gRPC DLLs for tests, treats them as .NET files, and fails.
+          # Instead, we're executing these 2 steps manually and move the DLLs out of the way
+          - pwsh: |             
+              Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x64.dll" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x64.dll.bak"
+              Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x86.dll" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x86.dll.bak"
+              C:\npm\prefix\appcenter.cmd test prepare uitest --artifacts-dir $(Build.ArtifactStagingDirectory)/AppCenterTest --app-path $(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk --build-dir $(testOutputDirectory) --uitest-tools-dir test-tools/Xamarin.UITest.4.3.3/tools --include-category grpc
+              Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x64.dll.bak" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x64.dll"
+              Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x86.dll.bak" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x86.dll"
 
-          - task: AppCenterTest@1
-            inputs:
-              appFile: "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk"
-              artifactsDirectory: "$(Build.ArtifactStagingDirectory)/AppCenterTest"
-              frameworkOption: "uitest"
-              uiTestBuildDirectory: "$(testOutputDirectory)"
-              uiTestToolsDirectory: "test-tools/Xamarin.UITest.4.3.3/tools"
-              credentialsOption: "serviceEndpoint"
-              serverEndpoint: "VS App Center"
-              appSlug: "fiskaltrust/fiskaltrust.Launcher"
-              devices: "fiskaltrust/launcher"
-              localeOption: "en_US"
-              prepareOptions: "--include-category http"
-              runOptions: --test-parameter "test_env=CASHBOXID=$(CreateHttpCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateHttpCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateHttpCashBox.url)"
-            displayName: Smoke tests (HTTP)
+              C:\npm\prefix\appcenter.cmd test run manifest --manifest-path $(Build.ArtifactStagingDirectory)/AppCenterTest/manifest.json --app-path $(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk --app fiskaltrust/fiskaltrust.Launcher --devices fiskaltrust/launcher --test-series master --locale en_US --test-parameter "test_env=CASHBOXID=$(CreateGrpcCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateGrpcCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateGrpcCashBox.url)" --token $(AppCenterToken)
+            displayName: Prepare and run smoke tests (gRPC)
+
+          - pwsh: |             
+              Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x64.dll" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x64.dll.bak"
+              Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x86.dll" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x86.dll.bak"
+              C:\npm\prefix\appcenter.cmd test prepare uitest --artifacts-dir $(Build.ArtifactStagingDirectory)/AppCenterTest --app-path $(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk --build-dir $(testOutputDirectory) --uitest-tools-dir test-tools/Xamarin.UITest.4.3.3/tools --include-category http
+              Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x64.dll.bak" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x64.dll"
+              Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x86.dll.bak" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x86.dll"
+
+              C:\npm\prefix\appcenter.cmd test run manifest --manifest-path $(Build.ArtifactStagingDirectory)/AppCenterTest/manifest.json --app-path $(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk --app fiskaltrust/fiskaltrust.Launcher --devices fiskaltrust/launcher --test-series master --locale en_US --test-parameter "test_env=CASHBOXID=$(CreateHttpCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateHttpCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateHttpCashBox.url)" --token $(AppCenterToken)
+            displayName: Prepare and run smoke tests (HTTP)
 
       - job: Cleanup
         dependsOn: SmokeTest
