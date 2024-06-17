@@ -46,7 +46,15 @@ namespace fiskaltrust.AndroidLauncher.Grpc.Broadcasting
             var pending = PendingIntent.GetBroadcast(Application.Context, 0, alarmIntent, PendingIntentFlags.UpdateCurrent | PendingIntentFlags.Immutable);
 
             var alarmManager = (AlarmManager)Application.Context.GetSystemService(Context.AlarmService);
-            alarmManager.SetExact(AlarmType.ElapsedRealtime, SystemClock.ElapsedRealtime() + 100, pending);
+
+            if (Build.VERSION.SdkInt <= BuildVersionCodes.SV2)
+            {
+                alarmManager.SetExact(AlarmType.ElapsedRealtime, SystemClock.ElapsedRealtime() + 100, pending);
+            }
+            else
+            {
+                alarmManager.Set(AlarmType.ElapsedRealtime, SystemClock.ElapsedRealtime() + 100, pending);
+            }
         }
     }
 
