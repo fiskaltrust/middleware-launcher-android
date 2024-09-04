@@ -7,8 +7,6 @@ using fiskaltrust.AndroidLauncher.Common.Services.Queue;
 using fiskaltrust.AndroidLauncher.Common.Services.SCU;
 using fiskaltrust.AndroidLauncher.Common.Signing;
 using fiskaltrust.ifPOS.v1;
-using fiskaltrust.ifPOS.v1.de;
-using fiskaltrust.ifPOS.v1.it;
 using fiskaltrust.Middleware.Abstractions;
 using fiskaltrust.storage.serialization.V0;
 using Microsoft.Extensions.Logging;
@@ -39,6 +37,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
         private readonly Dictionary<string, object> _scuParams;
         private readonly LogLevel _logLevel;
         
+        private Android.OS.PowerManager.WakeLock _wakeLock;        
         private List<IHelper> _helpers;
         private List<IPOS> _poss;
         private AbstractScuList _scus;
@@ -87,6 +86,9 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
                 switch (scuConfig.Package)
                 {
                     case PACKAGE_NAME_DE_SWISSBIT:
+                        // On some (payment) devices, the CPU is turned off as soon as the device becomes remotely idle (i.e. right after processing a receipt) - this seems to also stop the internal clock of the Swissbit TSE.
+                        // To prevent this, we acquire a partial wake lock to keep the CPU running. As this is only required with hardware TSEs, we only acquire the wake lock for the Swissbit SCU for now.
+                        AcquireCpuWakeLock();
                         await InitializeDESwissbitScuAsync(scuConfig);
                         break;                  
                     case PACKAGE_NAME_DE_FISKALY_CERTIFIED:
@@ -129,6 +131,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
                 helper.StopBegin();
                 helper.StopEnd();
             }
+
+            _wakeLock?.Release();
 
             IsRunning = false;
         }
@@ -193,6 +197,13 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
         {
             var grpcUrl = scuConfiguration.Url.FirstOrDefault(x => x.StartsWith("grpc://", StringComparison.InvariantCulture));
             return new Uri(grpcUrl ?? scuConfiguration.Url.First()).ToString();
+        }
+
+        private void AcquireCpuWakeLock()
+        {
+            var pm = (Android.OS.PowerManager)Android.App.Application.Context.GetSystemService(Android.Content.Context.PowerService);
+            _wakeLock = pm.NewWakeLock(Android.OS.WakeLockFlags.Partial, "fiskaltrust.AndroidLauncher::KeepAliveWakeLock");
+            _wakeLock.Acquire();
         }
     }
 }
