@@ -8,11 +8,11 @@ using fiskaltrust.AndroidLauncher.Grpc.Broadcasting;
 using fiskaltrust.AndroidLauncher.Grpc.Hosting;
 using fiskaltrust.AndroidLauncher.Helpers;
 using fiskaltrust.AndroidLauncher.Common.Constants;
-using Xamarin.Essentials;
+using Android.Content.PM;
 
 namespace fiskaltrust.AndroidLauncher.Grpc
 {
-    [Service(Name = "eu.fiskaltrust.MiddlewareLauncherGrpcService")]
+    [Service(Name = "eu.fiskaltrust.MiddlewareLauncherGrpcService", ForegroundServiceType = ForegroundService.TypeDataSync)]
     public class MiddlewareLauncherGrpcService : MiddlewareLauncherService
     {
         public override IHostFactory GetHostFactory() => new GrpcHostFactory();

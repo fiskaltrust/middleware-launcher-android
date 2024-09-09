@@ -45,7 +45,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
             var enableCloseButton = intent.GetBooleanExtra("enableCloseButton", false);
             var notification = GetNotification(LauncherState.NotConnected, enableCloseButton);
 
-            StartForeground(NOTIFICATION_ID, notification);
+            StartForeground(NOTIFICATION_ID, notification, Android.Content.PM.ForegroundService.TypeDataSync);
 
             try
             {
