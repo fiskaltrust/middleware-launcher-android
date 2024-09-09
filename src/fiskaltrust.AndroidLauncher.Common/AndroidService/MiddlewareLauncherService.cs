@@ -16,7 +16,6 @@ using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
-using Serilog.Formatting.Display;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -45,7 +44,15 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
             var enableCloseButton = intent.GetBooleanExtra("enableCloseButton", false);
             var notification = GetNotification(LauncherState.NotConnected, enableCloseButton);
 
-            StartForeground(NOTIFICATION_ID, notification, Android.Content.PM.ForegroundService.TypeDataSync);
+            if (Build.VERSION.SdkInt > BuildVersionCodes.Tiramisu)
+            {
+                // Android 14 requires us to specify the service type
+                StartForeground(NOTIFICATION_ID, notification, Android.Content.PM.ForegroundService.TypeDataSync);
+            }
+            else
+            {
+                StartForeground(NOTIFICATION_ID, notification);
+            }
 
             try
             {
