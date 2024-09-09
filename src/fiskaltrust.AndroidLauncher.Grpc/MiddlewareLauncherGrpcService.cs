@@ -8,6 +8,7 @@ using fiskaltrust.AndroidLauncher.Grpc.Broadcasting;
 using fiskaltrust.AndroidLauncher.Grpc.Hosting;
 using fiskaltrust.AndroidLauncher.Helpers;
 using fiskaltrust.AndroidLauncher.Common.Constants;
+using Xamarin.Essentials;
 
 namespace fiskaltrust.AndroidLauncher.Grpc
 {
@@ -21,7 +22,8 @@ namespace fiskaltrust.AndroidLauncher.Grpc
         public override IBinder OnBind(Intent intent)
         {
             var stopBroadcastReceiver = new StopLauncherBroadcastReceiver();
-            RegisterReceiver(stopBroadcastReceiver, new IntentFilter(BroadcastConstants.StopBroadcastName));
+            // Explicit cast of flags because of: https://github.com/xamarin/xamarin-android/issues/7503
+            RegisterReceiver(stopBroadcastReceiver, new IntentFilter(BroadcastConstants.StopBroadcastName), (ActivityFlags)ReceiverFlags.Exported);
             return null;
         }
     }

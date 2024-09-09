@@ -22,7 +22,8 @@ namespace fiskaltrust.AndroidLauncher.Http
         public override IBinder OnBind(Intent intent)
         {
             var stopBroadcastReceiver = new StopLauncherBroadcastReceiver();
-            RegisterReceiver(stopBroadcastReceiver, new IntentFilter(BroadcastConstants.StopBroadcastName));
+            // Explicit cast of flags because of: https://github.com/xamarin/xamarin-android/issues/7503
+            RegisterReceiver(stopBroadcastReceiver, new IntentFilter(BroadcastConstants.StopBroadcastName), (ActivityFlags) ReceiverFlags.Exported);
             return null;
         }
     }
