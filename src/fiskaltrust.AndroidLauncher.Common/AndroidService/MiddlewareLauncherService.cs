@@ -56,7 +56,6 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
 
             try
             {
-                Task.Delay(20000).Wait();
                 var isSandbox = intent.GetBooleanExtra("sandbox", false);
                 var cashboxIdString = intent.GetStringExtra("cashboxid");
                 var accessToken = intent.GetStringExtra("accesstoken");
