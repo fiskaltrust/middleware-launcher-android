@@ -140,7 +140,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
         private async Task InitializeDESwissbitScuAsync(PackageConfiguration packageConfig)
         {
             var scuProvider = new DESwissbitScuProvider();
-            var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
+            var scu = scuProvider.CreateSCU(Environment.GetFolderPath(Environment.SpecialFolder.Personal), packageConfig, _cashboxId, _isSandbox, _logLevel);
             _scus.Add(GetPrimaryUriForSignaturCreationUnit(packageConfig), scu);
             Log.Logger.Debug($"Created German SCU of type 'fiskaltrust.Middleware.SCU.DE.Swissbit'.");
         }
@@ -148,7 +148,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
         private async Task InitializeDEFiskalyCertifiedScuAsync(PackageConfiguration packageConfig)
         {
             var scuProvider = new DEFiskalyCertifiedScuProvider();
-            var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
+            var scu = scuProvider.CreateSCU(Environment.GetFolderPath(Environment.SpecialFolder.Personal), packageConfig, _cashboxId, _isSandbox, _logLevel);
             _scus.Add(GetPrimaryUriForSignaturCreationUnit(packageConfig), scu);
             Log.Logger.Debug($"Created German SCU of type 'fiskaltrust.Middleware.SCU.DE.FiskalyCertified'.");
         }

@@ -15,9 +15,10 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
 {
     class DESwissbitScuProvider : IDESSCDProvider
     {
-        public IDESSCD CreateSCU(PackageConfiguration scuConfiguration, Guid ftCashBoxId, bool isSandbox, LogLevel logLevel)
+        public IDESSCD CreateSCU(string workingDir, PackageConfiguration scuConfiguration, Guid ftCashBoxId, bool isSandbox, LogLevel logLevel)
         {
             var dir = InitializeTseAsync();
+            scuConfiguration.Configuration["servicefolder"] = workingDir;
             scuConfiguration.Configuration["devicePath"] = dir;
 
             var bootstrapper = new ScuBootstrapper
