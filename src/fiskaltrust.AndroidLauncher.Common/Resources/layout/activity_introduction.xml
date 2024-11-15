@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="16dp" />
+    <ImageView
+        android:id="@+id/ftLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ft_notification"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="fiskaltrust" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/introduction_content"
+        android:gravity="center"
+        android:textSize="16dp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+        <Button
+            android:id="@+id/buttonRequestNotification"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:text="@string/request_notification_button"
+            android:textSize="14dp"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="false"
+            android:onClick="buttonRequestNotificationOnCLick"
+            android:enabled="false"/>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+        <Button
+            android:id="@+id/buttonRequestBatteryOptimization"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:text="@string/request_battery_optimization_button"
+            android:textSize="14dp"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="false"
+            android:onClick="buttonRequestBatteryOptimizationOnCLick"
+            android:enabled="false"/>
+
+    </LinearLayout>
+</LinearLayout>
