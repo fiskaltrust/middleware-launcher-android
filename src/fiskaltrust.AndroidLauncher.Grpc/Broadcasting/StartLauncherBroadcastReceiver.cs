@@ -1,6 +1,7 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.OS;
+using Android.Widget;
 using fiskaltrust.AndroidLauncher.Common.Activitites;
 using fiskaltrust.AndroidLauncher.Common.AndroidService;
 using fiskaltrust.AndroidLauncher.Common.Constants;
@@ -64,6 +65,7 @@ namespace fiskaltrust.AndroidLauncher.Grpc.Broadcasting
     {
         public override void OnReceive(Context context, Intent intent)
         {
+
             var cashboxId = intent.GetStringExtra("cashboxid");
             var accessToken = intent.GetStringExtra("accesstoken");
             var isSandbox = intent.GetBooleanExtra("sandbox", false);
@@ -77,11 +79,19 @@ namespace fiskaltrust.AndroidLauncher.Grpc.Broadcasting
                 !NotificationPermissionHelper.IsAllowingNotifications(context)
             )
             {
-                Intent activityIntent = new Intent(context, typeof(IntroductionActivity));
-                activityIntent.SetFlags(ActivityFlags.NewTask);
-                context.StartActivity(activityIntent);
+                Toast.MakeText(context, "Showing fiskaltrust.Middleware Introduction", ToastLength.Short).Show();
+
+                Intent startIntent = context.PackageManager.GetLaunchIntentForPackage(context.PackageName);
+
+                startIntent.SetComponent(new ComponentName(context, Java.Lang.Class.FromType(typeof(IntroductionActivity))));
+                startIntent.SetFlags(ActivityFlags.NewTask);
+                startIntent.AddCategory(Intent.CategoryLauncher);
+                startIntent.PutExtra("StartIntent", intent.Extras);
+                startIntent.PutExtra("StartIntentName", BroadcastConstants.GrpcStartBroadcastName);
+                context.StartActivity(startIntent);
             } else
             {
+                Toast.MakeText(context, "Starging fiskaltrust.Middleware Service", ToastLength.Short).Show();
                 MiddlewareLauncherService.Start<MiddlewareLauncherGrpcService>(cashboxId, accessToken, isSandbox, logLevel, scuParams, enableCloseButton);
             }
         }
