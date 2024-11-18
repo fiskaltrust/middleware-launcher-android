@@ -44,7 +44,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Activitites
         [Export("buttonRequestBatteryOptimizationOnCLick")]
         public void ButtonRequestBatteryOptimizationOnCLick(View v)
         {
-            PowerManagerHelper.AskUserToDisableBatteryOptimization(this, 1);
+            PowerManagerHelper.AskUserToDisableBatteryOptimization(this);
             FindViewById<Button>(Resource.Id.buttonRequestBatteryOptimization).Enabled = !PowerManagerHelper.IsIgnoringBatteryOptimizations(this);
         }
 
@@ -62,11 +62,6 @@ namespace fiskaltrust.AndroidLauncher.Common.Activitites
             base.OnActivityResult(requestCode, resultCode, data);
             if (resultCode == Result.Ok)
             {
-                // this activity normally does not return a result so we'll probably never run into the 1 branch but let's keep if for good measure
-                if (requestCode == 1)
-                {
-                    FindViewById<Button>(Resource.Id.buttonRequestBatteryOptimization).Enabled = !PowerManagerHelper.IsIgnoringBatteryOptimizations(this);
-                }
                 if (requestCode == 2)
                 {
                     FindViewById<Button>(Resource.Id.buttonRequestNotification).Enabled = !NotificationPermissionHelper.IsAllowingNotifications(this);

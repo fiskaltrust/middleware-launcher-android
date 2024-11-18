@@ -11,18 +11,18 @@ namespace fiskaltrust.AndroidLauncher.Common.Helpers
 {
     public static class PowerManagerHelper
     {
-        public static void AskUserToDisableBatteryOptimization(Activity activity, int requestCode)
+        public static void AskUserToDisableBatteryOptimization(Context context)
         {
-            string packageName = activity.ApplicationContext.PackageName;
+            string packageName = context.PackageName;
             var pm = (PowerManager)Android.App.Application.Context.GetSystemService(Context.PowerService);
 
-            if (!IsIgnoringBatteryOptimizations(activity.ApplicationContext))
+            if (!IsIgnoringBatteryOptimizations(context))
             {
                 var powerIntent = new Intent();
                 powerIntent.SetAction(Android.Provider.Settings.ActionRequestIgnoreBatteryOptimizations);
                 powerIntent.SetData(Android.Net.Uri.Parse("package:" + packageName));
                 powerIntent.SetFlags(ActivityFlags.NewTask);
-                activity.StartActivityForResult(powerIntent, requestCode);
+                context.StartActivity(powerIntent);
             }
         }
 
