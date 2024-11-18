@@ -30,8 +30,6 @@ namespace fiskaltrust.AndroidLauncher.Common.Activitites
                 !NotificationPermissionHelper.IsAllowingNotifications(this)
             )
             {
-                Toast.MakeText(this, "Showing fiskaltrust.Middleware Introduction", ToastLength.Short).Show();
-
                 StartActivity(typeof(IntroductionActivity));
             }
 
