@@ -7,7 +7,7 @@
 	<string name="manage_space_content">Clearing the app data will delete all fiscalization data stored on this device.</string>
 	<string name="manage_space_warning">This action cannot be undone. Don\'t proceed, unless you\'re instructed to do so by technical support.</string>
 	<string name="manage_space_button">Clear Data</string>
-	<string name="introduction_content">This is the fiskalturst.Middleware. Its used by your POS System to fulfill compliance regulations. etc. etc.</string>
+	<string name="introduction_content">The fiskalturst.Middleware is used by your POS System to fulfill compliance regulations. Some permissions need to be grantet before it can work properly.</string>
 	<string name="request_notification_button">Request Notification Permission</string>
 	<string name="request_battery_optimization_button">Request Disabling Battery Optimization</string>
 	<string name="no_logs">No log file found.</string>

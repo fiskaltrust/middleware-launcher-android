@@ -7,7 +7,7 @@
 	<string name="manage_space_content">Das Löschen der App-Daten wird alle auf diesem Gerät gespeicherten Fiskalisierungsdaten löschen.</string>
 	<string name="manage_space_warning">Diese Aktion kann nicht rückgängig gemacht werden. Fahren Sie nicht fort, es sei denn, Sie werden vom technischen Support dazu aufgefordert.</string>
 	<string name="manage_space_button">Daten löschen</string>
-	<string name="introduction_content">Das ist die fiskalturst.Middleware. Sie wird von Ihrem POS System verwendet um compliance regulations zu erfüllen. etc. etc.</string>
+	<string name="introduction_content">Die fiskalturst.Middleware wird von Ihrem POS System verwendet um compliance Regulationen zu erfüllen. Es müssen einige berechtigungen eingeholt werden um ihre funktion zu erfüllen.</string>
 	<string name="request_notification_button">Benachrichtigungsberechtigung anfordern</string>
 	<string name="request_battery_optimization_button">Deaktivieren der Batteie Optimierung anfordern</string>
 	<string name="no_logs">Keine Log-Datei gefunden.</string>
