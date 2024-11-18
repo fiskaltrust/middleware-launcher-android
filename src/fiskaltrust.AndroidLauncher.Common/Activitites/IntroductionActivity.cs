@@ -16,8 +16,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Activitites
     [Activity(Label = "IntroductionActivity", Name = "eu.fiskaltrust.androidlauncher.common.IntroductionActivity", Exported = true)]
     public class IntroductionActivity : Activity
     {
-        private Bundle _startIntent;
-        private string _startIntentName;
+        private Bundle? _startIntent;
+        private string? _startIntentName;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -27,10 +27,11 @@ namespace fiskaltrust.AndroidLauncher.Common.Activitites
             FindViewById<Button>(Resource.Id.buttonRequestNotification).Enabled = !NotificationPermissionHelper.IsAllowingNotifications(this);
 
             FindViewById<Button>(Resource.Id.buttonRequestBatteryOptimization).Enabled = !PowerManagerHelper.IsIgnoringBatteryOptimizations(this);
-            _startIntent = Intent.GetBundleExtra("StartIntent");
-            _startIntentName = Intent.GetStringExtra("StartIntentName");
-
-            Toast.MakeText(this, "Starting fiskaltrust.Middleware Introduction", ToastLength.Short).Show();
+            if (Intent.HasExtra("StartIntent"))
+            {
+                _startIntent = Intent.GetBundleExtra("StartIntent");
+                _startIntentName = Intent.GetStringExtra("StartIntentName");
+            }
         }
 
         [Export("buttonRequestNotificationOnCLick")]
@@ -92,11 +93,13 @@ namespace fiskaltrust.AndroidLauncher.Common.Activitites
                 NotificationPermissionHelper.IsAllowingNotifications(this)
             )
             {
-                Toast.MakeText(this, "Resending fiskaltrust.Middleware start intent", ToastLength.Short).Show();
-                var startIntent = new Intent(Intent.ActionSend);
-                startIntent.SetComponent(new ComponentName(PackageName, _startIntentName));
-                startIntent.PutExtras(_startIntent);
-                SendBroadcast(startIntent);
+                if (_startIntent is not null)
+                {
+                    var startIntent = new Intent(Intent.ActionSend);
+                    startIntent.SetComponent(new ComponentName(PackageName, _startIntentName));
+                    startIntent.PutExtras(_startIntent);
+                    SendBroadcast(startIntent);
+                }
 
                 SetResult(0);
                 Finish();
