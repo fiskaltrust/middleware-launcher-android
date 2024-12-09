@@ -180,7 +180,7 @@ namespace fiskaltrust.AndroidLauncher.Common.AndroidService
                 {
                     bundle.PutString(extra.Key, extra.Value.ToString());
                 }
-
+                   
                 Application.Context.StartForegroundServiceCompat<T>(bundle);
             }
         }

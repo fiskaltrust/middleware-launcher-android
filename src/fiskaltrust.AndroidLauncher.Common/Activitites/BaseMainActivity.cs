@@ -7,6 +7,7 @@ using Android.Runtime;
 using Android.Support.V7.App;
 using Android.Views;
 using Android.Widget;
+using fiskaltrust.AndroidLauncher.Common.Helpers;
 using fiskaltrust.AndroidLauncher.Common.Helpers.Logging;
 using Xamarin.Essentials;
 
@@ -22,6 +23,15 @@ namespace fiskaltrust.AndroidLauncher.Common.Activitites
             if (FileLoggerHelper.LogDirectory.Exists == false) FileLoggerHelper.LogDirectory.Create();
 
             SetContentView(Resource.Layout.activity_main);
+
+            if (
+                !PowerManagerHelper.IsIgnoringBatteryOptimizations(this)
+                ||
+                !NotificationPermissionHelper.IsAllowingNotifications(this)
+            )
+            {
+                StartActivity(typeof(IntroductionActivity));
+            }
 
             Init();
         }

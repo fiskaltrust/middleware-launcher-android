@@ -70,8 +70,11 @@ namespace fiskaltrust.AndroidLauncher.Http.Broadcasting
             var logLevel = Enum.TryParse(intent.GetStringExtra("loglevel"), out LogLevel level) ? level : LogLevel.Information;
             var scuParams = intent.GetScuConfigParameters();
 
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu)
+            {
+                PowerManagerHelper.AskUserToDisableBatteryOptimization(context);
+            }
             MiddlewareLauncherService.Start<MiddlewareLauncherHttpService>(cashboxId, accessToken, isSandbox, logLevel, scuParams, enableCloseButton);
-            PowerManagerHelper.AskUserToDisableBatteryOptimization(context);
         }
     }
 }
