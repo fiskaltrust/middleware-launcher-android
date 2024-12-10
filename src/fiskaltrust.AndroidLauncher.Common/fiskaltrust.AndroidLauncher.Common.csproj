@@ -52,7 +52,6 @@
   <ItemGroup>
     <Compile Include="Activitites\BaseLogContentLinkActivity.cs" />
     <Compile Include="Activitites\BaseMainActivity.cs" />
-    <Compile Include="Activitites\IntroductionActivity.cs" />
     <Compile Include="Activitites\LogActivity.cs" />
     <Compile Include="Activitites\ManageSpaceActivity.cs" />
     <Compile Include="AndroidService\MiddlewareLauncherService.cs" />
@@ -73,7 +72,6 @@
     <Compile Include="Helpers\Logging\LogCatSink.cs" />
     <Compile Include="Helpers\Logging\MiddlewareTelemetryInitializer.cs" />
     <Compile Include="Helpers\Logging\NoopDisposable.cs" />
-    <Compile Include="Helpers\NotificationPermissionHelper.cs" />
     <Compile Include="Helpers\PowerManagerHelper.cs" />
     <Compile Include="Hosting\AdminEndpointService.cs" />
     <Compile Include="Hosting\IHost.cs" />
@@ -232,12 +230,6 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\activity_manage_space.xml">
-      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
-      <SubType>Designer</SubType>
-    </AndroidResource>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\layout\activity_introduction.xml">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
       <SubType>Designer</SubType>
     </AndroidResource>

@@ -895,7 +895,6 @@ namespace fiskaltrust.AndroidLauncher.Http
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.fallback_menu_item_open_in_browser = global::fiskaltrust.AndroidLauncher.Http.Resource.String.fallback_menu_item_open_in_browser;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.fallback_menu_item_share_link = global::fiskaltrust.AndroidLauncher.Http.Resource.String.fallback_menu_item_share_link;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.hello = global::fiskaltrust.AndroidLauncher.Http.Resource.String.hello;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.introduction_content = global::fiskaltrust.AndroidLauncher.Http.Resource.String.introduction_content;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.log_title = global::fiskaltrust.AndroidLauncher.Http.Resource.String.log_title;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.main_content = global::fiskaltrust.AndroidLauncher.Http.Resource.String.main_content;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.main_title = global::fiskaltrust.AndroidLauncher.Http.Resource.String.main_title;
@@ -903,8 +902,6 @@ namespace fiskaltrust.AndroidLauncher.Http
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.manage_space_content = global::fiskaltrust.AndroidLauncher.Http.Resource.String.manage_space_content;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.manage_space_warning = global::fiskaltrust.AndroidLauncher.Http.Resource.String.manage_space_warning;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.no_logs = global::fiskaltrust.AndroidLauncher.Http.Resource.String.no_logs;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.request_battery_optimization_button = global::fiskaltrust.AndroidLauncher.Http.Resource.String.request_battery_optimization_button;
-			global::fiskaltrust.AndroidLauncher.Common.Resource.String.request_notification_button = global::fiskaltrust.AndroidLauncher.Http.Resource.String.request_notification_button;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.search_menu_title = global::fiskaltrust.AndroidLauncher.Http.Resource.String.search_menu_title;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.String.status_bar_notification_info_overflow = global::fiskaltrust.AndroidLauncher.Http.Resource.String.status_bar_notification_info_overflow;
 			global::fiskaltrust.AndroidLauncher.Common.Resource.Style.AlertDialog_AppCompat = global::fiskaltrust.AndroidLauncher.Http.Resource.Style.AlertDialog_AppCompat;
@@ -7874,58 +7871,49 @@ namespace fiskaltrust.AndroidLauncher.Http
 			public const int hide_bottom_view_on_scroll_behavior = 2131623978;
 			
 			// aapt resource value: 0x7F0E002B
-			public const int introduction_content = 2131623979;
+			public const int log_title = 2131623979;
 			
 			// aapt resource value: 0x7F0E002C
-			public const int log_title = 2131623980;
+			public const int main_content = 2131623980;
 			
 			// aapt resource value: 0x7F0E002D
-			public const int main_content = 2131623981;
+			public const int main_title = 2131623981;
 			
 			// aapt resource value: 0x7F0E002E
-			public const int main_title = 2131623982;
+			public const int manage_space_button = 2131623982;
 			
 			// aapt resource value: 0x7F0E002F
-			public const int manage_space_button = 2131623983;
+			public const int manage_space_content = 2131623983;
 			
 			// aapt resource value: 0x7F0E0030
-			public const int manage_space_content = 2131623984;
+			public const int manage_space_warning = 2131623984;
 			
 			// aapt resource value: 0x7F0E0031
-			public const int manage_space_warning = 2131623985;
+			public const int mtrl_chip_close_icon_content_description = 2131623985;
 			
 			// aapt resource value: 0x7F0E0032
-			public const int mtrl_chip_close_icon_content_description = 2131623986;
+			public const int no_logs = 2131623986;
 			
 			// aapt resource value: 0x7F0E0033
-			public const int no_logs = 2131623987;
+			public const int password_toggle_content_description = 2131623987;
 			
 			// aapt resource value: 0x7F0E0034
-			public const int password_toggle_content_description = 2131623988;
+			public const int path_password_eye = 2131623988;
 			
 			// aapt resource value: 0x7F0E0035
-			public const int path_password_eye = 2131623989;
+			public const int path_password_eye_mask_strike_through = 2131623989;
 			
 			// aapt resource value: 0x7F0E0036
-			public const int path_password_eye_mask_strike_through = 2131623990;
+			public const int path_password_eye_mask_visible = 2131623990;
 			
 			// aapt resource value: 0x7F0E0037
-			public const int path_password_eye_mask_visible = 2131623991;
+			public const int path_password_strike_through = 2131623991;
 			
 			// aapt resource value: 0x7F0E0038
-			public const int path_password_strike_through = 2131623992;
+			public const int search_menu_title = 2131623992;
 			
 			// aapt resource value: 0x7F0E0039
-			public const int request_battery_optimization_button = 2131623993;
-			
-			// aapt resource value: 0x7F0E003A
-			public const int request_notification_button = 2131623994;
-			
-			// aapt resource value: 0x7F0E003B
-			public const int search_menu_title = 2131623995;
-			
-			// aapt resource value: 0x7F0E003C
-			public const int status_bar_notification_info_overflow = 2131623996;
+			public const int status_bar_notification_info_overflow = 2131623993;
 			
 			static String()
 			{
