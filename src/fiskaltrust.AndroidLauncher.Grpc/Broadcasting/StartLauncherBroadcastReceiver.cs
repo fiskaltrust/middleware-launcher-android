@@ -65,18 +65,19 @@ namespace fiskaltrust.AndroidLauncher.Grpc.Broadcasting
     {
         public override void OnReceive(Context context, Intent intent)
         {
-            var cashboxId = intent.GetStringExtra("cashboxid");
-            var accessToken = intent.GetStringExtra("accesstoken");
-            var isSandbox = intent.GetBooleanExtra("sandbox", false);
-            var enableCloseButton = intent.GetBooleanExtra("enableCloseButton", false);
-            var logLevel = Enum.TryParse(intent.GetStringExtra("loglevel"), out LogLevel level) ? level : LogLevel.Information;
-            var scuParams = intent.GetScuConfigParameters();
+                var cashboxId = intent.GetStringExtra("cashboxid");
+                var accessToken = intent.GetStringExtra("accesstoken");
+                var isSandbox = intent.GetBooleanExtra("sandbox", false);
+                var enableCloseButton = intent.GetBooleanExtra("enableCloseButton", false);
+                var logLevel = Enum.TryParse(intent.GetStringExtra("loglevel"), out LogLevel level) ? level : LogLevel.Information;
+                var scuParams = intent.GetScuConfigParameters();
 
-            if (Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu)
-            {
-                PowerManagerHelper.AskUserToDisableBatteryOptimization(context);
+                if (Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu)
+                {
+                    PowerManagerHelper.AskUserToDisableBatteryOptimization(context);
+                }
+                MiddlewareLauncherService.Start<MiddlewareLauncherGrpcService>(cashboxId, accessToken, isSandbox, logLevel, scuParams, enableCloseButton);
             }
-            MiddlewareLauncherService.Start<MiddlewareLauncherGrpcService>(cashboxId, accessToken, isSandbox, logLevel, scuParams, enableCloseButton);
         }
     }
 }
