@@ -20,6 +20,10 @@ stages:
     jobs:
       - job: Build
         steps:
+          - checkout: self
+            lfs: true
+            submodules: true
+
           - task: NuGetToolInstaller@1
 
           - task: yavt@1
@@ -138,6 +142,10 @@ stages:
         dependsOn: Build
         condition: and(succeeded(), or(eq(variables['RunSmokeTests'], 'true'), or(eq(variables['build.sourceBranch'], 'refs/heads/master'), startsWith(variables['build.sourceBranch'], 'refs/tags'))))
         steps:
+          - checkout: self
+            lfs: true
+            submodules: true
+
           - task: DownloadPipelineArtifact@2
             inputs:
               buildType: "current"
@@ -253,6 +261,10 @@ stages:
           FiskalyAdminPin: $[ dependencies.SmokeTest.outputs['setTssVariablesStep.adminPin'] ]
           FiskalyTssId: $[ dependencies.SmokeTest.outputs['setTssVariablesStep.tssId'] ]
         steps:
+          - checkout: self
+            lfs: true
+            submodules: true
+            
           - task: PowerShell@2
             inputs:
               targetType: "filePath"
