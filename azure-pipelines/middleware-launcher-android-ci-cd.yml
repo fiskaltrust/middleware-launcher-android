@@ -67,6 +67,13 @@ stages:
               nugetConfigPath: "NuGet.config"
             displayName: Restore NuGet packages
 
+          - task: NuGetCommand@2
+            inputs:
+              command: "restore"
+              restoreSolution: "middleware/queue/fiskaltrust.Middleware.sln"
+              nugetConfigPath: "middleware/queue/nuget.config"
+            displayName: Restore Middleware NuGet packages
+
           - task: JavaToolInstaller@0
             inputs:
               versionSpec: "17"
