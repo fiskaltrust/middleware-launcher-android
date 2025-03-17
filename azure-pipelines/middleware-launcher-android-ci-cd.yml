@@ -83,6 +83,12 @@ stages:
           - task: NuGetCommand@2
             inputs:
               command: "restore"
+              restoreSolution: "middleware/scu-de/fiskaltrust.Middleware.SCU.DE.Android.sln"
+            displayName: Restore SCU.DE.Android NuGet packages
+            
+          - task: NuGetCommand@2
+            inputs:
+              command: "restore"
               restoreSolution: "middleware/scu-it/fiskaltrust.Middleware.SCU.IT.sln"
             displayName: Restore SCU.IT NuGet packages
 
