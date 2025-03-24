@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS ftQueueIT
+﻿CREATE TABLE IF NOT EXISTS ftQueueIT
 (
     ftQueueITId                  NVARCHAR(36) PRIMARY KEY  NOT NULL,
     ftSignaturCreationUnitITId   NVARCHAR(36)              NULL,
