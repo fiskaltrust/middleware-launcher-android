@@ -115,6 +115,9 @@
     <AndroidAsset Include="Migrations\009_QueueME.sqlite3" />
     <AndroidAsset Include="Migrations\010_ExtendedMasterData.sqlite3" />
     <AndroidAsset Include="Migrations\011_Italy.sqlite3" />
+    <AndroidAsset Include="Migrations\012_ftJournalFRCopyPayload.sqlite3" />
+    <AndroidAsset Include="Migrations\013_AddProcessingVersion.sqlite3" />
+    <AndroidAsset Include="Migrations\014_FailedFinishTransactionRequest.sqlite3" />
     <None Include="Resources\AboutResources.txt" />
   </ItemGroup>
   <ItemGroup>
