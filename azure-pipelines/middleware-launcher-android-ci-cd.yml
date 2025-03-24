@@ -20,6 +20,10 @@ stages:
     jobs:
       - job: Build
         steps:
+          - checkout: self
+            lfs: true
+            submodules: true
+
           - task: NuGetToolInstaller@1
 
           - task: yavt@1
@@ -62,6 +66,31 @@ stages:
               feedsToUse: "config"
               nugetConfigPath: "NuGet.config"
             displayName: Restore NuGet packages
+
+          - task: NuGetCommand@2
+            inputs:
+              command: "restore"
+              restoreSolution: "middleware/queue/fiskaltrust.Middleware.sln"
+              nugetConfigPath: "middleware/queue/nuget.config"
+            displayName: Restore Middleware NuGet packages
+
+          - task: NuGetCommand@2
+            inputs:
+              command: "restore"
+              restoreSolution: "middleware/scu-de/fiskaltrust.Middleware.SCU.DE.sln"
+            displayName: Restore SCU.DE NuGet packages
+
+          - task: NuGetCommand@2
+            inputs:
+              command: "restore"
+              restoreSolution: "middleware/scu-de/fiskaltrust.Middleware.SCU.DE.Android.sln"
+            displayName: Restore SCU.DE.Android NuGet packages
+            
+          - task: NuGetCommand@2
+            inputs:
+              command: "restore"
+              restoreSolution: "middleware/scu-it/fiskaltrust.Middleware.SCU.IT.sln"
+            displayName: Restore SCU.IT NuGet packages
 
           - task: JavaToolInstaller@0
             inputs:
@@ -138,6 +167,10 @@ stages:
         dependsOn: Build
         condition: and(succeeded(), or(eq(variables['RunSmokeTests'], 'true'), or(eq(variables['build.sourceBranch'], 'refs/heads/master'), startsWith(variables['build.sourceBranch'], 'refs/tags'))))
         steps:
+          - checkout: self
+            lfs: true
+            submodules: true
+
           - task: DownloadPipelineArtifact@2
             inputs:
               buildType: "current"
@@ -253,6 +286,10 @@ stages:
           FiskalyAdminPin: $[ dependencies.SmokeTest.outputs['setTssVariablesStep.adminPin'] ]
           FiskalyTssId: $[ dependencies.SmokeTest.outputs['setTssVariablesStep.tssId'] ]
         steps:
+          - checkout: self
+            lfs: true
+            submodules: true
+            
           - task: PowerShell@2
             inputs:
               targetType: "filePath"
