@@ -103,7 +103,21 @@
     <Compile Include="Signing\ProxyConnectionHandler.cs" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="..\..\middleware\queue\src\fiskaltrust.Middleware.Storage.SQLite\Migrations\*.sqlite3" />
+    <AndroidAsset Include="Migrations\000_ftSchema.sqlite3" />
+    <AndroidAsset Include="Migrations\001_Init.sqlite3" />
+    <AndroidAsset Include="Migrations\002_TransactionPersistence.sqlite3" />
+    <AndroidAsset Include="Migrations\003_TseInfoJsonSignaturCreationUnitDE.sqlite3" />
+    <AndroidAsset Include="Migrations\004_FailedFinishTransactionRequest - Copy.sqlite3" />
+    <AndroidAsset Include="Migrations\005_MasterData.sqlite3" />
+    <AndroidAsset Include="Migrations\006_DailyClosingNumber.sqlite3" />
+    <AndroidAsset Include="Migrations\007_ScuMode.sqlite3" />
+    <AndroidAsset Include="Migrations\008_Indices.sqlite3" />
+    <AndroidAsset Include="Migrations\009_QueueME.sqlite3" />
+    <AndroidAsset Include="Migrations\010_ExtendedMasterData.sqlite3" />
+    <AndroidAsset Include="Migrations\011_Italy.sqlite3" />
+    <AndroidAsset Include="Migrations\012_ftJournalFRCopyPayload.sqlite3" />
+    <AndroidAsset Include="Migrations\013_AddProcessingVersion.sqlite3" />
+    <AndroidAsset Include="Migrations\014_FailedFinishTransactionRequest.sqlite3" />
     <None Include="Resources\AboutResources.txt" />
   </ItemGroup>
   <ItemGroup>
