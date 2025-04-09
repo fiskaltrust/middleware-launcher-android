@@ -1,4 +1,5 @@
 ﻿using fiskaltrust.Middleware.Interface.Client.Grpc;
+using fiskaltrust.Middleware.Interface.Client.Http;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using NUnit.Framework;
@@ -38,7 +39,7 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
                 {"args", new string[] {
                         "broadcast",
                         "-a", "android.intent.action.SEND",
-                        "-n", $"eu.fiskaltrust.androidlauncher.{AppProtocol}/eu.fiskaltrust.androidlauncher.{AppProtocol}.Start",
+                        "-n", $"eu.fiskaltrust.androidlauncher/eu.fiskaltrust.androidlauncher.{AppProtocol}.Start",
                         "--es", "cashboxid", cashboxId,
                         "--es", "accesstoken", accessToken,
                         "--ez", "sandbox", "true"
@@ -51,7 +52,7 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
             var wait = new WebDriverWait(_driver, TimeSpan.FromMinutes(1));
             var elements = _driver.FindElements(MobileBy.XPath("//*"));
             TestContext.Out.WriteLine(_driver.FindElements(MobileBy.XPath("//*")));
-            var element = wait.Until(wait => wait.FindElement(MobileBy.Id("ftLogo")));
+            // var element = wait.Until(wait => wait.FindElement(MobileBy.Id("ftLogo")));
             _driver.GetScreenshot();
 
             StartActivityWithIntent(cashboxId, accessToken);
@@ -66,7 +67,7 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
             {
                 try
                 {
-                    var pos = Task.Run(() => GrpcPosFactory.CreatePosAsync(new GrpcClientOptions { Url = new Uri(url), RetryPolicyOptions = null })).Result;
+                    var pos = Task.Run(() => HttpPosFactory.CreatePosAsync(new HttpPosClientOptions { Url = new Uri(url), RetryPolicyOptions = null })).Result;
                     var result = (await pos.EchoAsync(new ifPOS.v1.EchoRequest { Message = message })).Message;
 
                     if (result == message)

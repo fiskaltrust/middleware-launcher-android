@@ -37,10 +37,10 @@ public static class AppiumSetup
         // Release builds have Fast Deployment disabled
         // https://learn.microsoft.com/xamarin/android/deploy-test/building-apps/build-process#fast-deployment
         androidOptions.AddAdditionalAppiumOption(MobileCapabilityType.NoReset, "true");
-        androidOptions.AddAdditionalAppiumOption(AndroidMobileCapabilityType.AppPackage, $"eu.fiskaltrust.androidlauncher.{protocol}");
+        androidOptions.AddAdditionalAppiumOption(AndroidMobileCapabilityType.AppPackage, "eu.fiskaltrust.androidlauncher");
 
         //Make sure to set [Register("com.companyname.basicappiumsample.MainActivity")] on the MainActivity of your android application
-        androidOptions.AddAdditionalAppiumOption(AndroidMobileCapabilityType.AppActivity, $"eu.fiskaltrust.androidlauncher.{protocol}.MainActivity");
+        androidOptions.AddAdditionalAppiumOption(AndroidMobileCapabilityType.AppActivity, "eu.fiskaltrust.androidlauncher.MainActivity");
         // END DEBUG BUILD SETUP
 
 
