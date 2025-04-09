@@ -1,13 +1,13 @@
 ﻿<?xml version = "1.0" encoding = "UTF-8" ?>
 <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:fiskaltrust.AndroidLauncher.Grpc"
-             x:Class="fiskaltrust.AndroidLauncher.Grpc.App">
+             xmlns:local="clr-namespace:fiskaltrust.AndroidLauncher.Common"
+             x:Class="fiskaltrust.AndroidLauncher.Common.App">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
-                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Colors.xaml"/>
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

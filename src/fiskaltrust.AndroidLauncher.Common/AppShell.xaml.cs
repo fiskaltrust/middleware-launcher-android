@@ -1,4 +1,4 @@
-﻿namespace fiskaltrust.AndroidLauncher.Grpc;
+﻿namespace fiskaltrust.AndroidLauncher.Common;
 
 public partial class AppShell : Shell
 {

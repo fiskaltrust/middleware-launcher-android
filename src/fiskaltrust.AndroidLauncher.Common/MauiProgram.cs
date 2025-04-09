@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace fiskaltrust.AndroidLauncher.Http;
+namespace fiskaltrust.AndroidLauncher.Common;
 
 public static class MauiProgram
 {

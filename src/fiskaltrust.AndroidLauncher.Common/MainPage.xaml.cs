@@ -1,4 +1,4 @@
-﻿namespace fiskaltrust.AndroidLauncher.Http;
+﻿namespace fiskaltrust.AndroidLauncher.Common;
 
 public partial class MainPage : ContentPage
 {
