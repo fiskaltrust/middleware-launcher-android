@@ -1,7 +1,6 @@
 <Solution>
   <Folder Name="/src/">
-    <Project Path="src/fiskaltrust.AndroidLauncher.Common/fiskaltrust.AndroidLauncher.Common.csproj" />
-    <Project Path="src/fiskaltrust.AndroidLauncher.Http/fiskaltrust.AndroidLauncher.Http.csproj" />
+    <Project Path="src/fiskaltrust.AndroidLauncher/fiskaltrust.AndroidLauncher.csproj" />
   </Folder>
   <Folder Name="/test/">
     <Project Path="test/fiskaltrust.AndroidLauncher.SmokeTests/fiskaltrust.AndroidLauncher.SmokeTests.csproj" />
