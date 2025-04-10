@@ -47,7 +47,7 @@ public static class AppiumSetup
         // Specifying the avd option will boot the emulator for you
         // make sure there is an emulator with the name below
         // If not specified, make sure you have an emulator booted
-        //androidOptions.AddAdditionalAppiumOption("avd", "pixel_5_-_api_33");
+        androidOptions.AddAdditionalAppiumOption("avd", "android");
 
         // Note there are many more options that you can use to influence the app under test according to your needs
 

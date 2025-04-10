@@ -12,7 +12,7 @@ using fiskaltrust.AndroidLauncher.Signing;
 using fiskaltrust.ifPOS.v1.de;
 using fiskaltrust.ifPOS.v1.it;
 using fiskaltrust.Middleware.Abstractions;
-// using fiskaltrust.AndroidLauncher.PosApiPrint;
+using fiskaltrust.AndroidLauncher.PosApiPrint;
 
 namespace fiskaltrust.AndroidLauncher.Services.Queue
 {
@@ -38,17 +38,17 @@ namespace fiskaltrust.AndroidLauncher.Services.Queue
             serviceCollection.TryAddSingleton<IClientFactory<IDESSCD>>(new DESSCDClientFactory(scus.OfType<IDESSCD>()));
             serviceCollection.TryAddSingleton<IClientFactory<IITSSCD>>(new ITSSCDClientFactory(scus.OfType<IITSSCD>()));
 
-            // serviceCollection.AddLogProviders(logLevel);
-            // serviceCollection.AddAppInsights(Helpers.Configuration.GetAppInsightsInstrumentationKey(isSandbox), "fiskaltrust.Middleware.Queue.SQLite", ftCashBoxId);
+            serviceCollection.AddLogProviders(logLevel);
+            serviceCollection.AddAppInsights(Helpers.Configuration.GetAppInsightsInstrumentationKey(isSandbox), "fiskaltrust.Middleware.Queue.SQLite", ftCashBoxId);
 
             bootstrapper.ConfigureServices(serviceCollection);
             var services = serviceCollection.BuildServiceProvider();
             var pos = services.GetRequiredService<IPOS>();
-            // if (queueConfiguration.Configuration.ContainsKey("useposapi"))
-            // {
-            //     var posApiHelper = new PosApiHelper(new PosApiProvider(ftCashBoxId, accessToken, isSandbox ? new Uri("https://pos-api-sandbox.fiskaltrust.cloud/") : new Uri("https://pos-api.fiskaltrust.cloud/"), services.GetRequiredService<ILogger<PosApiProvider>>()), pos, services.GetRequiredService<ILogger<PosApiHelper>>());
-            //     return posApiHelper;
-            // }
+            if (queueConfiguration.Configuration.ContainsKey("useposapi"))
+            {
+                var posApiHelper = new PosApiHelper(new PosApiProvider(ftCashBoxId, accessToken, isSandbox ? new Uri("https://pos-api-sandbox.fiskaltrust.cloud/") : new Uri("https://pos-api.fiskaltrust.cloud/"), services.GetRequiredService<ILogger<PosApiProvider>>()), pos, services.GetRequiredService<ILogger<PosApiHelper>>());
+                return posApiHelper;
+            }
             return pos;
         }
 

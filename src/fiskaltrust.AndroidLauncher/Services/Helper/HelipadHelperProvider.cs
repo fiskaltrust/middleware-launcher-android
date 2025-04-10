@@ -33,8 +33,8 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
 
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddSingleton<IClientFactory<IPOS>>(new POSClientFactory(posHosts.First()));
-            // serviceCollection.AddLogProviders(logLevel);
-            // serviceCollection.AddAppInsights(Helpers.Configuration.GetAppInsightsInstrumentationKey(isSandbox), "fiskaltrust.Middleware.Helper.Helipad", cashBoxConfiguration.ftCashBoxId);
+            serviceCollection.AddLogProviders(logLevel);
+            serviceCollection.AddAppInsights(Helpers.Configuration.GetAppInsightsInstrumentationKey(isSandbox), "fiskaltrust.Middleware.Helper.Helipad", cashBoxConfiguration.ftCashBoxId);
 
             bootstrapper.ConfigureServices(serviceCollection);
             return serviceCollection.BuildServiceProvider().GetRequiredService<IHelper>();

@@ -1,4 +1,4 @@
-﻿// using fiskaltrust.AndroidLauncher.Helpers.Logging;
+﻿using fiskaltrust.AndroidLauncher.Helpers.Logging;
 using fiskaltrust.AndroidLauncher.Services;
 using fiskaltrust.AndroidLauncher.Services.Configuration;
 using Microsoft.AspNetCore;
@@ -15,6 +15,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.FileProviders;
+using fiskaltrust.AndroidLauncher.Helpers.Logging;
 
 namespace fiskaltrust.AndroidLauncher.Hosting
 {
@@ -67,16 +68,16 @@ namespace fiskaltrust.AndroidLauncher.Hosting
                                 return;
                             }
 
-                            // var fileToSend = FileLoggerHelper.LogDirectory.GetFiles("*.log").OrderByDescending(f => f.LastWriteTime).FirstOrDefault();
+                            var fileToSend = FileLoggerHelper.LogDirectory.GetFiles("*.log").OrderByDescending(f => f.LastWriteTime).FirstOrDefault();
 
-                            // if (fileToSend != null)
-                            // {
-                            //     await response.SendFileAsync(fileToSend.FullName);
-                            // }
-                            // else
-                            // {
-                            //     response.StatusCode = StatusCodes.Status204NoContent;
-                            // }
+                            if (fileToSend != null)
+                            {
+                                await response.SendFileAsync(fileToSend.FullName);
+                            }
+                            else
+                            {
+                                response.StatusCode = StatusCodes.Status204NoContent;
+                            }
                         });
                     });
                 })

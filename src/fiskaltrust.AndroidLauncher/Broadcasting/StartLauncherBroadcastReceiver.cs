@@ -71,7 +71,7 @@ namespace fiskaltrust.AndroidLauncher.Http.Broadcasting
             var scuParams = intent.GetScuConfigParameters();
 
             MiddlewareLauncherService.Start<MiddlewareLauncherHttpService>(cashboxId, accessToken, isSandbox, logLevel, scuParams, enableCloseButton);
-            // PowerManagerHelper.AskUserToDisableBatteryOptimization(context);
+            PowerManagerHelper.AskUserToDisableBatteryOptimization(context);
         }
     }
 }

@@ -18,8 +18,8 @@ namespace fiskaltrust.AndroidLauncher.Services.SCU
             };
 
             var serviceCollection = new ServiceCollection();
-            // serviceCollection.AddLogProviders(logLevel);
-            // serviceCollection.AddAppInsights(Helpers.Configuration.GetAppInsightsInstrumentationKey(isSandbox), "fiskaltrust.Middleware.SCU.IT.CustomRTServer", ftCashBoxId);
+            serviceCollection.AddLogProviders(logLevel);
+            serviceCollection.AddAppInsights(Helpers.Configuration.GetAppInsightsInstrumentationKey(isSandbox), "fiskaltrust.Middleware.SCU.IT.CustomRTServer", ftCashBoxId);
 
             bootstrapper.ConfigureServices(serviceCollection);
             return serviceCollection.BuildServiceProvider().GetRequiredService<IITSSCD>();

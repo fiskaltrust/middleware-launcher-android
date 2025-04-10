@@ -33,7 +33,7 @@ namespace fiskaltrust.AndroidLauncher.Http.Hosting
                 .UseKestrel()
                 .ConfigureServices(services =>
                 {
-                    // services.AddLogProviders(logLevel);
+                    services.AddLogProviders(logLevel);
                     services.AddMvc(options =>
                     {
                         options.Conventions.Add(new IncludeControllerConvention<TController>());

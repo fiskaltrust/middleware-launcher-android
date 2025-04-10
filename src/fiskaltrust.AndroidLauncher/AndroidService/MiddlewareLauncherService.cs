@@ -1,14 +1,17 @@
 ﻿using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.Nfc;
 using Android.OS;
 using Android.Runtime;
 using AndroidX.Core.App;
+using AndroidX.Core.Graphics.Drawable;
 using fiskaltrust.AndroidLauncher.Constants;
 using fiskaltrust.AndroidLauncher.Enums;
 using fiskaltrust.AndroidLauncher.Exceptions;
 using fiskaltrust.AndroidLauncher.Extensions;
 using fiskaltrust.AndroidLauncher.Helpers;
+using fiskaltrust.AndroidLauncher.Helpers.Logging;
 using fiskaltrust.AndroidLauncher.Hosting;
 using fiskaltrust.AndroidLauncher.Services;
 using Microsoft.ApplicationInsights.Extensibility;
@@ -69,11 +72,17 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                     throw new ArgumentException("The extra 'accesstoken' needs to be set in this intent.", "accesstoken");
                 }
 
+                var middlewareTelemetryInitializer = new MiddlewareTelemetryInitializer("fiskaltrust.AndroidLauncher", VersionTracking.CurrentVersion, cashboxId);
 
+                var telemetryConfiguration = new TelemetryConfiguration(Configuration.GetAppInsightsInstrumentationKey(isSandbox));
+                telemetryConfiguration.TelemetryInitializers.Add(middlewareTelemetryInitializer);
 
                 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                     .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
+                    .WriteTo.File(path: System.IO.Path.Combine(FileLoggerHelper.LogDirectory.FullName, FileLoggerHelper.LogFilename), rollingInterval: RollingInterval.Day, retainedFileCountLimit: 31)
+                    .WriteTo.ApplicationInsights(telemetryConfiguration, TelemetryConverter.Traces, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning)
+                    .WriteTo.Sink(new LogcatSink(AndroidLogger.TAG, logLevel))
                     .CreateLogger();
 
                 Log.Logger.Information("Starting the fiskaltrust.Middleware...");
@@ -197,13 +206,13 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
 
         private static Notification GetNotification(LauncherState state, bool enableCloseButton, string contentText = null)
         {
-            // var icon = state switch
-            // {
-            //     LauncherState.NotConnected => Resource.Drawable.ft_notification_notconnected,
-            //     LauncherState.Connected => Resource.Drawable.ft_notification_connected,
-            //     LauncherState.Error => Resource.Drawable.ft_notification_error,
-            //     _ => throw new NotImplementedException(),
-            // };
+            int icon = state switch
+            {
+                LauncherState.NotConnected => Resource.Drawable.ft_notification_notconnected,
+                LauncherState.Connected => Resource.Drawable.ft_notification_connected,
+                LauncherState.Error => Resource.Drawable.ft_notification_error,
+                _ => throw new NotImplementedException(),
+            };
             var text = state switch
             {
                 LauncherState.NotConnected => "The fiskaltrust Middleware is starting. This will take a few seconds, depending on the TSE.",
@@ -213,12 +222,11 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
             };
             if (contentText != null)
                 text = contentText;
-
             var builder = new NotificationCompat.Builder(Android.App.Application.Context, NOTIFICATION_CHANNEL_ID)
-                // .SetContentTitle(Android.App.Application.Context.Resources.GetString(Resource.String.app_name))
+                .SetContentTitle(Android.App.Application.Context.Resources.GetString(Resource.String.app_name))
                 .SetContentText(text)
                 .SetCategory(Notification.CategoryService)
-                // .SetSmallIcon(icon)
+                .SetSmallIcon(icon)
                 .SetOngoing(true)
                 .SetNotificationSilent();
 

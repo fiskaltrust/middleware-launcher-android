@@ -7,7 +7,6 @@ using fiskaltrust.AndroidLauncher.Exceptions;
 using fiskaltrust.AndroidLauncher.Extensions;
 using fiskaltrust.ifPOS.v1.de;
 using fiskaltrust.Middleware.SCU.DE.Swissbit;
-
 // using fiskaltrust.Middleware.SCU.DE.SwissbitAndroid;
 using fiskaltrust.storage.serialization.V0;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,8 +28,8 @@ namespace fiskaltrust.AndroidLauncher.Services.SCU
             };
 
             var serviceCollection = new ServiceCollection();
-            // serviceCollection.AddLogProviders(logLevel);
-            // serviceCollection.AddAppInsights(Helpers.Configuration.GetAppInsightsInstrumentationKey(isSandbox), "fiskaltrust.Middleware.SCU.DE.Swissbit", ftCashBoxId);
+            serviceCollection.AddLogProviders(logLevel);
+            serviceCollection.AddAppInsights(Helpers.Configuration.GetAppInsightsInstrumentationKey(isSandbox), "fiskaltrust.Middleware.SCU.DE.Swissbit", ftCashBoxId);
 
             bootstrapper.ConfigureServices(serviceCollection);
             return serviceCollection.BuildServiceProvider().GetRequiredService<IDESSCD>();
