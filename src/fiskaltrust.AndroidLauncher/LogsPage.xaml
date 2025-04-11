@@ -6,9 +6,8 @@
              Disappearing="OnDisappearing">
 
     <ScrollView x:Name="Scroll">
-        <Editor x:Name="LogView"
-                IsReadOnly="True"
-                FontFamily="IosevkaRegular"/>
+        <Label x:Name="LogView"
+               FontFamily="IosevkaRegular"/>
     </ScrollView>
 
 </ContentPage>

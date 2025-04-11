@@ -14,29 +14,31 @@ public partial class LogsPage : ContentPage
 		_timer.Interval = TimeSpan.FromSeconds(3);
 		_timer.IsRepeating = true;
 
-		_timer.Tick += OnTick;
+		_timer.Tick += async (_, __) => await OnTick(false);
 	}
 
-	private void OnTick(object? sender, EventArgs e)
+	private async Task OnTick(bool follow = false)
 	{
-		bool follow = false;
 		bool init = string.IsNullOrEmpty(LogView.Text);
-		if (string.IsNullOrEmpty(LogView.Text) || Scroll.ScrollY == Scroll.Content.Height - Scroll.Height)
+		if (init || Scroll.ScrollY == Scroll.Content.Height - Scroll.Height)
 		{
 			follow = true;
 		}
 
-		LogView.Text = FileLoggerHelper.GetLastLinesOfCurrentLogFile(1024);
+		await Dispatcher.DispatchAsync(() => LogView.Text = FileLoggerHelper.GetLastLinesOfCurrentLogFile(1024));
 		if (follow)
 		{
-			Dispatcher.Dispatch(() => Scroll.ScrollToAsync(Scroll.ScrollX, Scroll.Content.Height, !init));
+			await Dispatcher.DispatchAsync(() => Scroll.ScrollToAsync(Scroll.ScrollX, Scroll.Content.Height - Scroll.Height, !init));
 		}
 	}
 
 	private void OnAppearing(object sender, EventArgs e)
 	{
-		OnTick(sender, e);
-		_timer.Start();
+		Dispatcher.Dispatch(async () =>
+		{
+			await OnTick(true);
+			_timer.Start();
+		});
 	}
 
 	private void OnDisappearing(object sender, EventArgs e)

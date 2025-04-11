@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using MauiIcons.Material;
+using Microsoft.Extensions.Logging;
 
 namespace fiskaltrust.AndroidLauncher;
 
@@ -14,7 +15,8 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 				fonts.AddFont("IosevkaTermSS08-Regular.ttf", "IosevkaRegular");
-			});
+			})
+			.UseMaterialMauiIcons();
 
 #if DEBUG
 		builder.Logging.AddDebug();

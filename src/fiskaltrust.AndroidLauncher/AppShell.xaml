@@ -4,13 +4,17 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:fiskaltrust.AndroidLauncher"
+    xmlns:mi="http://www.aathifmahir.com/dotnet/2022/maui/icons"
     Title="fiskaltrust.AndroidLauncher">
     <TabBar>
-        <Tab Title="Home">
+        <Tab mi:MauiIcon.Value="{mi:Material Icon=Home}"
+             Title="Home">
             <ShellContent ContentTemplate="{DataTemplate local:MainPage}"/>
         </Tab>
-        <Tab Title="Logs">
-            <ShellContent ContentTemplate="{DataTemplate local:LogsPage}"/>
+        <Tab mi:MauiIcon.Value="{mi:Material Icon=Terminal}"
+             Title="Logs">
+            <ShellContent
+                ContentTemplate="{DataTemplate local:LogsPage}"/>
         </Tab>
     </TabBar>
 
