@@ -5,9 +5,10 @@
              Appearing="OnAppearing"
              Disappearing="OnDisappearing">
 
-    <ScrollView>
+    <ScrollView x:Name="Scroll">
         <Editor x:Name="LogView"
-                IsReadOnly="True"/>
+                IsReadOnly="True"
+                FontFamily="IosevkaRegular"/>
     </ScrollView>
 
 </ContentPage>

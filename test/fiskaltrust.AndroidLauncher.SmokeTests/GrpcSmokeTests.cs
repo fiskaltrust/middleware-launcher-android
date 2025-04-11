@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using fiskaltrust.ifPOS.v1;
+using fiskaltrust.Middleware.Interface.Client.Grpc;
 using FluentAssertions;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -14,7 +15,6 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
         protected override string AppProtocol => "grpc";
 
         [Test]
-        [Ignore("tmp")]
         public async Task LauncherShouldStart_AndAcceptSignRequests_WhenIntentIsSent()
         {
             StartLauncher(TestConstants.Grpc.CashboxId, TestConstants.Grpc.AccessToken);
@@ -30,6 +30,36 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
             // signResponse.ftState.Should().Be(0x4445000000000000);
             // signResponse.ftSignatures.Should().HaveCountGreaterThan(10);
             // signResponse.ftSignatures.Should().Contain(x => x.Caption == "<transaktions-nummer>");
+        }
+
+
+        protected async Task WaitForStart(string url, TimeSpan timeSpan)
+        {
+            const string message = "Ping";
+            var startTime = DateTime.UtcNow;
+
+            while (DateTime.UtcNow < startTime + timeSpan)
+            {
+                try
+                {
+                    var pos = Task.Run(() => GrpcPosFactory.CreatePosAsync(new GrpcClientOptions { Url = new Uri(url), RetryPolicyOptions = null })).Result;
+                    var result = (await pos.EchoAsync(new ifPOS.v1.EchoRequest { Message = message })).Message;
+
+                    if (result == message)
+                        return;
+
+                    TestContext.Out.WriteLine("Echo result: " + result);
+                }
+                catch (Exception ex)
+                {
+                    TestContext.Error.WriteLine(ex);
+                }
+
+                await Task.Delay(3000);
+            }
+
+            _driver.GetScreenshot();
+            throw new TimeoutException($"endpoint at {url} was not reachable after {timeSpan}.");
         }
     }
 }

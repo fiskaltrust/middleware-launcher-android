@@ -1,4 +1,5 @@
 ﻿using fiskaltrust.AndroidLauncher.Enums;
+using fiskaltrust.AndroidLauncher.Exceptions;
 using fiskaltrust.AndroidLauncher.Helpers;
 using fiskaltrust.AndroidLauncher.Hosting;
 using fiskaltrust.AndroidLauncher.Services.Configuration;
@@ -74,9 +75,16 @@ namespace fiskaltrust.AndroidLauncher.Services
                 configuration = await _configurationProvider.GetCashboxConfigurationAsync(_cashboxId, _accessToken, _isSandbox);
                 await _localConfigurationProvider.PersistAsync(_cashboxId, _accessToken, configuration);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                configuration = await _localConfigurationProvider.GetCashboxConfigurationAsync(_cashboxId, _accessToken, _isSandbox);
+                try
+                {
+                    configuration = await _localConfigurationProvider.GetCashboxConfigurationAsync(_cashboxId, _accessToken, _isSandbox);
+                }
+                catch
+                {
+                    throw new ConfigurationNotFoundException($"The configuration for the cashbox {_cashboxId} could not be downloaded. An internet connection is required at least on the initialization attempt of a cashbox.", e);
+                }
             }
 
             foreach (var scuConfig in configuration.ftSignaturCreationDevices)

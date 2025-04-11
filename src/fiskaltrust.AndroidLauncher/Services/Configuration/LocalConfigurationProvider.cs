@@ -26,8 +26,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Configuration
         {
             var value = await SecureStorage.GetAsync($"{SETTING_CASHBOX_KEY_PREFIX}{cashboxId}");
             if (value == null)
-                throw new ConfigurationNotFoundException($"The configuration for the cashbox {cashboxId} could not be downloaded. An internet connection is required at least on the initialization appempt of a cashbox.");
-
+                throw new ConfigurationNotFoundException("Could not load config from local storage.");
             return JsonConvert.DeserializeObject<ftCashBoxConfiguration>(value);
         }
 

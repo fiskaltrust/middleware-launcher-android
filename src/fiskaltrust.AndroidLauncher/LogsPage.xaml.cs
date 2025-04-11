@@ -1,4 +1,5 @@
-﻿using fiskaltrust.AndroidLauncher.Helpers.Logging;
+﻿using Android.Widget;
+using fiskaltrust.AndroidLauncher.Helpers.Logging;
 
 namespace fiskaltrust.AndroidLauncher;
 
@@ -18,7 +19,18 @@ public partial class LogsPage : ContentPage
 
 	private void OnTick(object? sender, EventArgs e)
 	{
+		bool follow = false;
+		bool init = string.IsNullOrEmpty(LogView.Text);
+		if (string.IsNullOrEmpty(LogView.Text) || Scroll.ScrollY == Scroll.Content.Height - Scroll.Height)
+		{
+			follow = true;
+		}
+
 		LogView.Text = FileLoggerHelper.GetLastLinesOfCurrentLogFile(1024);
+		if (follow)
+		{
+			Dispatcher.Dispatch(() => Scroll.ScrollToAsync(Scroll.ScrollX, Scroll.Content.Height, !init));
+		}
 	}
 
 	private void OnAppearing(object sender, EventArgs e)
