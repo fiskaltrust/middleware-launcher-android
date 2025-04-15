@@ -23,6 +23,8 @@
 		<SupportedOSPlatformVersion>24.0</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
+
+
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
@@ -40,6 +42,8 @@
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 
 		<AndroidResource Include="Platforms\Android\Resources\**" TargetPath="%(RecursiveDir)%(Filename)%(Extension)" />
+
+    <MauiAsset Include="../../middleware/queue/src/fiskaltrust.Middleware.Storage.SQLite/Migrations/**" LogicalName="Migrations/%(Filename)%(Extension)" />
 
 		<AndroidNativeLibrary Include="lib\arm64-v8a\libcom.fiskaly.client-linux-amd64-v1.2.200.so">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
