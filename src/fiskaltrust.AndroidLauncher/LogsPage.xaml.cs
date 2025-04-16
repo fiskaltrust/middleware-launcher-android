@@ -11,7 +11,7 @@ public partial class LogsPage : ContentPage
 	{
 		InitializeComponent();
 		_timer = Dispatcher.CreateTimer();
-		_timer.Interval = TimeSpan.FromSeconds(3);
+		_timer.Interval = TimeSpan.FromSeconds(1);
 		_timer.IsRepeating = true;
 
 		_timer.Tick += async (_, __) => await OnTick(false);
@@ -20,13 +20,14 @@ public partial class LogsPage : ContentPage
 	private async Task OnTick(bool follow = false)
 	{
 		bool init = string.IsNullOrEmpty(LogView.Text);
-		if (init || Scroll.ScrollY == Scroll.Content.Height - Scroll.Height)
+		double oldHeight = Scroll.Content.Height;
+		if (Scroll.ScrollY == oldHeight - Scroll.Height)
 		{
 			follow = true;
 		}
 
 		await Dispatcher.DispatchAsync(() => LogView.Text = FileLoggerHelper.GetLastLinesOfCurrentLogFile(1024));
-		if (follow)
+		if (init || (follow && oldHeight != Scroll.Content.Height))
 		{
 			await Dispatcher.DispatchAsync(() => Scroll.ScrollToAsync(Scroll.ScrollX, Scroll.Content.Height - Scroll.Height, !init));
 		}
