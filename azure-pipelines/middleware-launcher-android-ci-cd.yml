@@ -33,7 +33,7 @@ stages:
               failOnTagVersionMismatch: true
 
           - pwsh: |
-              $file = "./src/fiskaltrust.AndroidLauncher.Common/Resources/values/appSettings.xml"
+              $file = "./src/fiskaltrust.AndroidLauncher/Resources/values/appSettings.xml"
               $content = (Get-Content $file)
 
               $content = $content.Replace("{{AppInsightsInstrumentationKeyProduction}}", $AppInsightsInstrumentationKeyProduction)
@@ -43,7 +43,7 @@ stages:
 
           - task: android-manifest-version@1
             inputs:
-              sourcePath: "src/fiskaltrust.AndroidLauncher.Http/Properties/AndroidManifest.xml"
+              sourcePath: "src/fiskaltrust.AndroidLauncher/Properties/AndroidManifest.xml"
               versionCodeOption: "buildid"
               versionCode: "$(Build.BuildId)"
               versionName: "$(Build.BuildNumber)"
@@ -100,7 +100,7 @@ stages:
 
           - task: XamarinAndroid@1
             inputs:
-              projectFile: "**/fiskaltrust.AndroidLauncher.Http.csproj"
+              projectFile: "**/fiskaltrust.AndroidLauncher.csproj"
               outputDirectory: "$(outputDirectory)"
               configuration: "$(buildConfiguration)"
               msbuildVersionOption: "latest"
@@ -135,14 +135,14 @@ stages:
 
           - powershell:
               Rename-Item -Path "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.apk" -NewName "eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk";
-              Rename-Item -Path "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.apk" -NewName "eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk";
+              Rename-Item -Path "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.apk" -NewName "eu.fiskaltrust.androidlauncher.$(Build.BuildNumber).apk";
             displayName: Rename APK files
 
           - task: AppCenterDistribute@3
             inputs:
               serverEndpoint: "fiskaltrust-appcenter"
               appSlug: "fiskaltrust/fiskaltrust-launcher-http"
-              appFile: "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk"
+              appFile: "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.$(Build.BuildNumber).apk"
               releaseNotesOption: "input"
               releaseNotesInput: "CI Release for $(Build.BuildNumber)"
               destinationType: "groups"
@@ -272,11 +272,11 @@ stages:
           - pwsh: |             
               Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x64.dll" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x64.dll.bak"
               Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x86.dll" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x86.dll.bak"
-              C:\npm\prefix\appcenter.cmd test prepare uitest --artifacts-dir $(Build.ArtifactStagingDirectory)/AppCenterTest --app-path $(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk --build-dir $(testOutputDirectory) --uitest-tools-dir test-tools/Xamarin.UITest.4.3.3/tools --include-category http
+              C:\npm\prefix\appcenter.cmd test prepare uitest --artifacts-dir $(Build.ArtifactStagingDirectory)/AppCenterTest --app-path $(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.$(Build.BuildNumber).apk --build-dir $(testOutputDirectory) --uitest-tools-dir test-tools/Xamarin.UITest.4.3.3/tools --include-category http
               Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x64.dll.bak" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x64.dll"
               Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x86.dll.bak" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x86.dll"
 
-              C:\npm\prefix\appcenter.cmd test run manifest --manifest-path $(Build.ArtifactStagingDirectory)/AppCenterTest/manifest.json --app-path $(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk --app fiskaltrust/fiskaltrust.Launcher --devices fiskaltrust/launcher --test-series master --locale en_US --test-parameter "test_env=CASHBOXID=$(CreateHttpCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateHttpCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateHttpCashBox.url)" --token $(AppCenterToken)
+              C:\npm\prefix\appcenter.cmd test run manifest --manifest-path $(Build.ArtifactStagingDirectory)/AppCenterTest/manifest.json --app-path $(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.$(Build.BuildNumber).apk --app fiskaltrust/fiskaltrust.Launcher --devices fiskaltrust/launcher --test-series master --locale en_US --test-parameter "test_env=CASHBOXID=$(CreateHttpCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateHttpCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateHttpCashBox.url)" --token $(AppCenterToken)
             displayName: Prepare and run smoke tests (HTTP)
 
       - job: Cleanup
@@ -325,7 +325,7 @@ stages:
                   parameters:
                     subscription: ft-msft-mca-development-common
                     storage: fta240commonde
-                    package: eu.fiskaltrust.androidlauncher.http
+                    package: eu.fiskaltrust.androidlauncher
 
   - stage: ReleaseProduction
     displayName: Release to production storage
@@ -351,7 +351,7 @@ stages:
                   parameters:
                     subscription: ft-acp-csp-market-de-production
                     storage: fta110common
-                    package: eu.fiskaltrust.androidlauncher.http
+                    package: eu.fiskaltrust.androidlauncher
 
       - deployment: ReleaseProductionGooglePlay
         displayName: Release to Google Play
@@ -368,5 +368,5 @@ stages:
                     serviceConnection: "Google Play Store"
                 - template: templates/release-to-googleplay.yaml
                   parameters:
-                    package: eu.fiskaltrust.androidlauncher.http
+                    package: eu.fiskaltrust.androidlauncher
                     serviceConnection: "Google Play Store"
