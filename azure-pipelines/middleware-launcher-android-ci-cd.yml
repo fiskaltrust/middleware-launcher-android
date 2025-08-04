@@ -71,28 +71,28 @@ stages:
             inputs:
               command: "restore"
               restoreSolution: "middleware/queue/fiskaltrust.Middleware.sln"
-              nugetConfigPath: "middleware/nuget.config"
+              nugetConfigPath: "NuGet.config"
             displayName: Restore Middleware NuGet packages
 
           - task: NuGetCommand@2
             inputs:
               command: "restore"
               restoreSolution: "middleware/scu-de/fiskaltrust.Middleware.SCU.DE.sln"
-              nugetConfigPath: "middleware/nuget.config"
+              nugetConfigPath: "NuGet.config"
             displayName: Restore SCU.DE NuGet packages
 
           - task: NuGetCommand@2
             inputs:
               command: "restore"
               restoreSolution: "middleware/scu-de/fiskaltrust.Middleware.SCU.DE.Android.sln"
-              nugetConfigPath: "middleware/nuget.config"
+              nugetConfigPath: "NuGet.config"
             displayName: Restore SCU.DE.Android NuGet packages
 
           - task: NuGetCommand@2
             inputs:
               command: "restore"
               restoreSolution: "middleware/scu-it/fiskaltrust.Middleware.SCU.IT.sln"
-              nugetConfigPath: "middleware/nuget.config"
+              nugetConfigPath: "NuGet.config"
             displayName: Restore SCU.IT NuGet packages
 
           - task: JavaToolInstaller@0
