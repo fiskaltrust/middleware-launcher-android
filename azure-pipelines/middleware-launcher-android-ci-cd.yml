@@ -67,31 +67,6 @@ stages:
               nugetConfigPath: "NuGet.config"
             displayName: Restore NuGet packages
 
-          - task: NuGetCommand@2
-            inputs:
-              command: "restore"
-              restoreSolution: "middleware/queue/fiskaltrust.Middleware.sln"
-              nugetConfigPath: "middleware/queue/nuget.config"
-            displayName: Restore Middleware NuGet packages
-
-          - task: NuGetCommand@2
-            inputs:
-              command: "restore"
-              restoreSolution: "middleware/scu-de/fiskaltrust.Middleware.SCU.DE.sln"
-            displayName: Restore SCU.DE NuGet packages
-
-          - task: NuGetCommand@2
-            inputs:
-              command: "restore"
-              restoreSolution: "middleware/scu-de/fiskaltrust.Middleware.SCU.DE.Android.sln"
-            displayName: Restore SCU.DE.Android NuGet packages
-            
-          - task: NuGetCommand@2
-            inputs:
-              command: "restore"
-              restoreSolution: "middleware/scu-it/fiskaltrust.Middleware.SCU.IT.sln"
-            displayName: Restore SCU.IT NuGet packages
-
           - task: JavaToolInstaller@0
             inputs:
               versionSpec: "17"
@@ -259,7 +234,7 @@ stages:
 
           # We cannot use the AppCenter task, as it executes both test preparation and execution at once - and the preparation fails because it tries to scan the gRPC DLLs for tests, treats them as .NET files, and fails.
           # Instead, we're executing these 2 steps manually and move the DLLs out of the way
-          - pwsh: |             
+          - pwsh: |
               Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x64.dll" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x64.dll.bak"
               Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x86.dll" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x86.dll.bak"
               C:\npm\prefix\appcenter.cmd test prepare uitest --artifacts-dir $(Build.ArtifactStagingDirectory)/AppCenterTest --app-path $(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk --build-dir $(testOutputDirectory) --uitest-tools-dir test-tools/Xamarin.UITest.4.3.3/tools --include-category grpc
@@ -269,7 +244,7 @@ stages:
               C:\npm\prefix\appcenter.cmd test run manifest --manifest-path $(Build.ArtifactStagingDirectory)/AppCenterTest/manifest.json --app-path $(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk --app fiskaltrust/fiskaltrust.Launcher --devices fiskaltrust/launcher --test-series master --locale en_US --test-parameter "test_env=CASHBOXID=$(CreateGrpcCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateGrpcCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateGrpcCashBox.url)" --token $(AppCenterToken)
             displayName: Prepare and run smoke tests (gRPC)
 
-          - pwsh: |             
+          - pwsh: |
               Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x64.dll" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x64.dll.bak"
               Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x86.dll" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x86.dll.bak"
               C:\npm\prefix\appcenter.cmd test prepare uitest --artifacts-dir $(Build.ArtifactStagingDirectory)/AppCenterTest --app-path $(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk --build-dir $(testOutputDirectory) --uitest-tools-dir test-tools/Xamarin.UITest.4.3.3/tools --include-category http
@@ -289,7 +264,7 @@ stages:
           - checkout: self
             lfs: true
             submodules: true
-            
+
           - task: PowerShell@2
             inputs:
               targetType: "filePath"
