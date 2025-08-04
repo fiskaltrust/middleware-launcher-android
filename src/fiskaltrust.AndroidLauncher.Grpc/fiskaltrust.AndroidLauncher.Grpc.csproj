@@ -182,6 +182,7 @@
     <Folder Include="Resources\drawable\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="../../middleware/queue/src/fiskaltrust.Middleware.Queue.SQLite/fiskaltrust.Middleware.Queue.SQLite.csproj" />
     <ProjectReference Include="..\fiskaltrust.AndroidLauncher.Common\fiskaltrust.AndroidLauncher.Common.csproj">
       <Project>{010d6d4f-a35c-41a2-a17f-8b20cb9bf56a}</Project>
       <Name>fiskaltrust.AndroidLauncher.Common</Name>
