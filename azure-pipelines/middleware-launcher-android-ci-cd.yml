@@ -325,12 +325,12 @@ stages:
               steps:
                 - template: templates/release-to-storage.yaml
                   parameters:
-                    subscription: ft-msft-mca-development-common
+                    subscription: ft-msft-mca-consulting-development-common
                     storage: fta240commonde
                     package: eu.fiskaltrust.androidlauncher.grpc
                 - template: templates/release-to-storage.yaml
                   parameters:
-                    subscription: ft-msft-mca-development-common
+                    subscription: ft-msft-mca-consulting-development-common
                     storage: fta240commonde
                     package: eu.fiskaltrust.androidlauncher.http
 
