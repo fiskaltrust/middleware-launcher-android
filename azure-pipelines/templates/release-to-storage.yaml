@@ -9,12 +9,12 @@ steps:
     artifactName: 'drop'
     downloadPath: '$(System.ArtifactsDirectory)/drop'
 
-- task: AzureFileCopy@6
-  displayName: 'Upload to blob storage'
-  inputs:
-    SourcePath: '$(System.ArtifactsDirectory)/drop/${{ parameters.package }}.*.apk'
-    azureSubscription: '${{ parameters.subscription }}'
-    Destination: AzureBlob
-    storage: ${{ parameters.storage }}
-    ContainerName: 'android-packages'
+# - task: AzureFileCopy@6
+#   displayName: 'Upload to blob storage'
+#   inputs:
+#     SourcePath: '$(System.ArtifactsDirectory)/drop/${{ parameters.package }}.*.apk'
+#     azureSubscription: '${{ parameters.subscription }}'
+#     Destination: AzureBlob
+#     storage: ${{ parameters.storage }}
+#     ContainerName: 'android-packages'
 
