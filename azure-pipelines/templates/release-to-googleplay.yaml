@@ -11,8 +11,7 @@ steps:
 - task: GooglePlayRelease@4
   displayName: 'Publish to Google Play'
   inputs:
-    apkFile: '$(System.ArtifactsDirectory)/drop/${{ parameters.package }}.*.apk'
-    action: 'SingleApk'
+    apkFile: '$(System.ArtifactsDirectory)/drop/${{ parameters.package }}.*.aab'
     track: 'production'
     serviceConnection: '${{ parameters.serviceConnection }}'
     applicationId: ${{ parameters.package }}

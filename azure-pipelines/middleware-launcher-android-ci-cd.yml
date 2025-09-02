@@ -112,6 +112,7 @@ stages:
               configuration: "$(buildConfiguration)"
               msbuildVersionOption: "latest"
               jdkOption: "JDKVersion"
+              additionalArguments: "/p:AndroidPackageFormat=aab"
             displayName: Build HTTP Launcher
 
           - task: XamarinAndroid@1
@@ -121,6 +122,7 @@ stages:
               configuration: "$(buildConfiguration)"
               msbuildVersionOption: "latest"
               jdkOption: "JDKVersion"
+              additionalArguments: "/p:AndroidPackageFormat=aab"
             displayName: Build gRPC Launcher
 
           - task: AndroidSigning@3
@@ -133,6 +135,16 @@ stages:
               apksignerArguments: "--verbose --v2-signing-enabled true"
             displayName: Sign APKs
 
+          - task: AndroidSigning@3
+            inputs:
+              apkFiles: "**/*.aab"
+              apksignerKeystoreFile: "fiskaltrust_android.keystore"
+              apksignerKeystorePassword: "$(KeystorePassword)"
+              apksignerKeystoreAlias: "fiskaltrust-build"
+              apksignerKeyPassword: "$(KeyPassword)"
+              apksignerArguments: "--verbose"
+            displayName: Sign AABs
+
           - task: CopyFiles@2
             inputs:
               contents: "**/*.apk"
@@ -140,10 +152,19 @@ stages:
               flattenFolders: true
             displayName: Copy APKs to staging directory
 
+          - task: CopyFiles@2
+            inputs:
+              contents: "**/*.aab"
+              targetFolder: "$(build.artifactStagingDirectory)"
+              flattenFolders: true
+            displayName: Copy AABs to staging directory
+
           - powershell:
               Rename-Item -Path "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.apk" -NewName "eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk";
               Rename-Item -Path "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.apk" -NewName "eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk";
-            displayName: Rename APK files
+              Rename-Item -Path "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.aab" -NewName "eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).aab";
+              Rename-Item -Path "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.aab" -NewName "eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).aab";
+            displayName: Rename APK and AAB files
 
           # - task: AppCenterDistribute@3
           #   inputs:
