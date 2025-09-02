@@ -14,3 +14,4 @@ steps:
     apkFile: '$(System.ArtifactsDirectory)/drop/${{ parameters.package }}.*.apk'
     track: 'production'
     serviceConnection: '${{ parameters.serviceConnection }}'
+    applicationId: ${{ parameters.package }}
