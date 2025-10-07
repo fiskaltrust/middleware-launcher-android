@@ -8,9 +8,10 @@ steps:
     artifactName: 'drop'
     downloadPath: '$(System.ArtifactsDirectory)/drop'
 
-- task: GooglePlayRelease@3
+- task: GooglePlayRelease@4
   displayName: 'Publish to Google Play'
   inputs:
-    apkFile: '$(System.ArtifactsDirectory)/drop/${{ parameters.package }}.*.apk'
+    apkFile: '$(System.ArtifactsDirectory)/drop/${{ parameters.package }}.*.aab'
     track: 'production'
     serviceConnection: '${{ parameters.serviceConnection }}'
+    applicationId: ${{ parameters.package }}
