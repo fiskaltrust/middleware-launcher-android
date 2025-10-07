@@ -13,6 +13,7 @@ variables:
   - name: testOutputDirectory
     value: "$(build.binariesDirectory)/test/$(buildConfiguration)"
   - group: middleware-launcher-android
+  - group: "Code Signing Certificates"
 
 stages:
   - stage: BuildAndTest
