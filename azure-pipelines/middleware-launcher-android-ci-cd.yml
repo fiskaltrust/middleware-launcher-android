@@ -150,8 +150,9 @@ stages:
                 Get-ChildItem -Path "$(Build.SourcesDirectory)" -Filter *.apk -Recurse;
                 Get-ChildItem -Path "$(Build.SourcesDirectory)" -Filter *.aab -Recurse;
               } | ForEach-Object {
-              apksigner sign `
-                  -J-add-exports="jdk.crypto.cryptoki/sun.security.pkcs11=ALL-UNNAMED" `
+              apksigner `
+                  -J-add-exports"=jdk.crypto.cryptoki/sun.security.pkcs11=ALL-UNNAMED" `
+                  sign `
                   --provider-class sun.security.pkcs11.SunPKCS11 `
                   --provider-arg "$(SSMClientToolsSetup.PKCS11_CONFIG)" `
                   --ks NONE `
