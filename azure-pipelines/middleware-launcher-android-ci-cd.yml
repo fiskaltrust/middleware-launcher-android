@@ -13,6 +13,7 @@ variables:
   - name: testOutputDirectory
     value: "$(build.binariesDirectory)/test/$(buildConfiguration)"
   - group: middleware-launcher-android
+  - group: "Code Signing Certificates"
 
 stages:
   - stage: BuildAndTest
@@ -123,15 +124,52 @@ stages:
               jdkOption: "JDKVersion"
             displayName: Build gRPC Launcher
 
-          - task: AndroidSigning@3
+          - task: SSMClientToolsSetup@1
+            # condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
+          - task: SSMSigningToolsSetup@1
+            # condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
+
+          - task: DownloadSecureFile@1
+            # condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
+            name: clientCertificate
+            displayName: "Download client certificate"
             inputs:
-              apkFiles: "**/*.apk"
-              apksignerKeystoreFile: "fiskaltrust_android.keystore"
-              apksignerKeystorePassword: "$(KeystorePassword)"
-              apksignerKeystoreAlias: "fiskaltrust-build"
-              apksignerKeyPassword: "$(KeyPassword)"
-              apksignerArguments: "--verbose --v2-signing-enabled true"
-            displayName: Sign APKs
+              secureFile: "codesigning_client_cert.p12"
+
+          - pwsh: smctl certificate download --keypair-alias=$(KEYPAIR_ALIAS) --name=KeyCert.pem --out=$(Agent.TempDirectory)
+            # condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
+            env:
+              SM_HOST: "$(SM_HOST)"
+              SM_API_KEY: "$(SM_API_KEY)"
+              SM_CLIENT_CERT_PASSWORD: "$(SM_CLIENT_CERT_PASSWORD)"
+              SM_CLIENT_CERT_FILE: "$(clientCertificate.secureFilePath)"
+              SM_TLS_SKIP_VERIFY: false
+
+          - pwsh: |
+              & {
+                Get-ChildItem -Path "$(Build.SourcesDirectory)" -Filter *.apk -Recurse;
+                Get-ChildItem -Path "$(Build.SourcesDirectory)" -Filter *.aab -Recurse;
+              } | ForEach-Object {
+              apksigner `
+                  -J"-add-exports jdk.crypto.cryptoki/sun.security.pkcs11=ALL-UNNAMED" `
+                  sign `
+                  --provider-class sun.security.pkcs11.SunPKCS11 `
+                  --provider-arg "$(SSMClientToolsSetup.PKCS11_CONFIG)" `
+                  --ks NONE `
+                  --ks-type PKCS11 `
+                  --ks-pass pass:anything `
+                  --ks-key-alias $(KEYPAIR_ALIAS) `
+                  --v2-signing-enabled true `
+                  --in "$_.FullName"
+              }
+              Write-Host $(Get-Content -Path "~\.signingmanager\logs\smksp.log")
+            # condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
+            env:
+              SM_HOST: "$(SM_HOST)"
+              SM_API_KEY: "$(SM_API_KEY)"
+              SM_CLIENT_CERT_PASSWORD: "$(SM_CLIENT_CERT_PASSWORD)"
+              SM_CLIENT_CERT_FILE: "$(clientCertificate.secureFilePath)"
+              SM_TLS_SKIP_VERIFY: false
 
           - task: CopyFiles@2
             inputs:
@@ -145,168 +183,10 @@ stages:
               Rename-Item -Path "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.apk" -NewName "eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk";
             displayName: Rename APK files
 
-          # - task: AppCenterDistribute@3
-          #   inputs:
-          #     serverEndpoint: "fiskaltrust-appcenter"
-          #     appSlug: "fiskaltrust/fiskaltrust-launcher-http"
-          #     appFile: "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk"
-          #     releaseNotesOption: "input"
-          #     releaseNotesInput: "CI Release for $(Build.BuildNumber)"
-          #     destinationType: "groups"
-          #     isSilent: true
-
-          # - task: AppCenterDistribute@3
-          #   inputs:
-          #     serverEndpoint: "fiskaltrust-appcenter"
-          #     appSlug: "fiskaltrust/fiskaltrust-Launcher-gRPC"
-          #     appFile: "$(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk"
-          #     releaseNotesOption: "input"
-          #     releaseNotesInput: "CI Release for $(Build.BuildNumber)"
-          #     destinationType: "groups"
-          #     isSilent: true
-
           - task: PublishPipelineArtifact@0
             inputs:
               artifactName: "drop"
               targetPath: "$(Build.ArtifactStagingDirectory)"
-
-      # - job: SmokeTest
-      #   dependsOn: Build
-      #   condition: and(succeeded(), or(eq(variables['RunSmokeTests'], 'true'), or(eq(variables['build.sourceBranch'], 'refs/heads/master'), startsWith(variables['build.sourceBranch'], 'refs/tags'))))
-      #   steps:
-      #     - checkout: self
-      #       lfs: true
-      #       submodules: true
-
-      #     - task: DownloadPipelineArtifact@2
-      #       inputs:
-      #         buildType: "current"
-      #         artifactName: "drop"
-      #         targetPath: "$(Build.ArtifactStagingDirectory)"
-
-      #     - powershell: |
-      #         $tssId = "$([guid]::NewGuid())"
-      #         $adminPin = "1234567890"
-
-      #         echo "##vso[task.setvariable variable=tssId;isOutput=true]$tssId"
-      #         echo "##vso[task.setvariable variable=adminPin;isOutput=true]$adminPin"
-      #       name: setTssVariablesStep
-      #       displayName: "Set TSS variables"
-
-      #     - task: PowerShell@2
-      #       inputs:
-      #         targetType: "filePath"
-      #         filePath: azure-pipelines/scripts/create-fiskaly-tse.ps1
-      #         arguments: >
-      #           -FiskalyApiKey "$(TestFiskalyApiKey)"
-      #           -FiskalyApiSecret "$(TestFiskalyApiSecret)"
-      #           -TssAdminPin "$(setTssVariablesStep.adminPin)"
-      #           -TssId "$(setTssVariablesStep.tssId)"
-      #       displayName: "Re-create test TSE"
-
-      #     - task: PowerShell@2
-      #       inputs:
-      #         targetType: "filePath"
-      #         filePath: azure-pipelines/scripts/create-cashbox.ps1
-      #         arguments: >
-      #           -AccountId "$(TestAccountId)"
-      #           -AccountAccessToken "$(TestAccountAccessToken)"
-      #           -TemplatePath "$(Build.SourcesDirectory)/azure-pipelines/scripts/http-cashbox.json"
-      #           -FiskalyApiKey "$(TestFiskalyApiKey)"
-      #           -FiskalyApiSecret "$(TestFiskalyApiSecret)"
-      #           -TssAdminPin "$(setTssVariablesStep.adminPin)"
-      #           -TssId "$(setTssVariablesStep.tssId)"
-      #       name: CreateHttpCashBox
-      #       displayName: "Create cashbox with HTTP SCU"
-
-      #     - task: PowerShell@2
-      #       inputs:
-      #         targetType: "filePath"
-      #         filePath: azure-pipelines/scripts/create-cashbox.ps1
-      #         arguments: >
-      #           -AccountId "$(TestAccountId)"
-      #           -AccountAccessToken "$(TestAccountAccessToken)"
-      #           -TemplatePath "$(Build.SourcesDirectory)/azure-pipelines/scripts/grpc-cashbox.json"
-      #           -FiskalyApiKey "$(TestFiskalyApiKey)"
-      #           -FiskalyApiSecret "$(TestFiskalyApiSecret)"
-      #           -TssAdminPin "$(setTssVariablesStep.adminPin)"
-      #           -TssId "$(setTssVariablesStep.tssId)"
-      #       name: CreateGrpcCashBox
-      #       displayName: "Create cashbox with gRPC SCU"
-
-      #     - task: NuGetToolInstaller@1
-
-      #     - task: UseNode@1
-      #       inputs:
-      #         version: "20.x"
-
-      #     - task: NuGetCommand@2
-      #       inputs:
-      #         command: "restore"
-      #         restoreSolution: "**/*.sln"
-      #         feedsToUse: "config"
-      #         nugetConfigPath: "NuGet.config"
-      #       displayName: Restore NuGet packages
-
-      #     - task: NuGetCommand@2
-      #       inputs:
-      #         command: "custom"
-      #         arguments: 'install xamarin.uitest -Version 4.3.3 -OutputDirectory "test-tools/"'
-
-      #     - task: VSBuild@1
-      #       inputs:
-      #         solution: '**\fiskaltrust.AndroidLauncher.SmokeTests.csproj'
-      #         msbuildArgs: "/p:OutputPath=$(testOutputDirectory)"
-      #         configuration: "$(buildConfiguration)"
-
-      #     - task: Npm@1
-      #       inputs:
-      #         command: "custom"
-      #         customCommand: "-g install appcenter-cli@latest"
-
-      #     # We cannot use the AppCenter task, as it executes both test preparation and execution at once - and the preparation fails because it tries to scan the gRPC DLLs for tests, treats them as .NET files, and fails.
-      #     # Instead, we're executing these 2 steps manually and move the DLLs out of the way
-      #     - pwsh: |
-      #         Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x64.dll" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x64.dll.bak"
-      #         Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x86.dll" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x86.dll.bak"
-      #         C:\npm\prefix\appcenter.cmd test prepare uitest --artifacts-dir $(Build.ArtifactStagingDirectory)/AppCenterTest --app-path $(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk --build-dir $(testOutputDirectory) --uitest-tools-dir test-tools/Xamarin.UITest.4.3.3/tools --include-category grpc
-      #         Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x64.dll.bak" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x64.dll"
-      #         Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x86.dll.bak" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x86.dll"
-
-      #         C:\npm\prefix\appcenter.cmd test run manifest --manifest-path $(Build.ArtifactStagingDirectory)/AppCenterTest/manifest.json --app-path $(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.grpc.$(Build.BuildNumber).apk --app fiskaltrust/fiskaltrust.Launcher --devices fiskaltrust/launcher --test-series master --locale en_US --test-parameter "test_env=CASHBOXID=$(CreateGrpcCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateGrpcCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateGrpcCashBox.url)" --token $(AppCenterToken)
-      #       displayName: Prepare and run smoke tests (gRPC)
-
-      #     - pwsh: |
-      #         Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x64.dll" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x64.dll.bak"
-      #         Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x86.dll" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x86.dll.bak"
-      #         C:\npm\prefix\appcenter.cmd test prepare uitest --artifacts-dir $(Build.ArtifactStagingDirectory)/AppCenterTest --app-path $(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk --build-dir $(testOutputDirectory) --uitest-tools-dir test-tools/Xamarin.UITest.4.3.3/tools --include-category http
-      #         Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x64.dll.bak" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x64.dll"
-      #         Rename-Item -Path "$(testOutputDirectory)/grpc_csharp_ext.x86.dll.bak" -NewName "$(testOutputDirectory)/grpc_csharp_ext.x86.dll"
-
-      #         C:\npm\prefix\appcenter.cmd test run manifest --manifest-path $(Build.ArtifactStagingDirectory)/AppCenterTest/manifest.json --app-path $(build.artifactStagingDirectory)/eu.fiskaltrust.androidlauncher.http.$(Build.BuildNumber).apk --app fiskaltrust/fiskaltrust.Launcher --devices fiskaltrust/launcher --test-series master --locale en_US --test-parameter "test_env=CASHBOXID=$(CreateHttpCashBox.cashboxId)" --test-parameter "test_env=ACCESSTOKEN=$(CreateHttpCashBox.accessToken)" --test-parameter "test_env=URL=$(CreateHttpCashBox.url)" --token $(AppCenterToken)
-      #       displayName: Prepare and run smoke tests (HTTP)
-
-      # - job: Cleanup
-      #   dependsOn: SmokeTest
-      #   condition: and(succeededOrFailed(), or(eq(variables['build.sourceBranch'], 'refs/heads/master'), startsWith(variables['build.sourceBranch'], 'refs/tags')))
-      #   variables:
-      #     FiskalyAdminPin: $[ dependencies.SmokeTest.outputs['setTssVariablesStep.adminPin'] ]
-      #     FiskalyTssId: $[ dependencies.SmokeTest.outputs['setTssVariablesStep.tssId'] ]
-      #   steps:
-      #     - checkout: self
-      #       lfs: true
-      #       submodules: true
-
-      #     - task: PowerShell@2
-      #       inputs:
-      #         targetType: "filePath"
-      #         filePath: azure-pipelines/scripts/delete-fiskaly-tse.ps1
-      #         arguments: >
-      #           -FiskalyApiKey "$(TestFiskalyApiKey)"
-      #           -FiskalyApiSecret "$(TestFiskalyApiSecret)"
-      #           -TssAdminPin "$(FiskalyAdminPin)"
-      #           -TssId "$(FiskalyTssId)"
-      #       displayName: "Disable fiskaly test TSE"
 
   - stage: ReleaseSandbox
     displayName: Release packages to sandbox
@@ -360,20 +240,20 @@ stages:
                     storage: fta110common
                     package: eu.fiskaltrust.androidlauncher.http
 
-      - deployment: ReleaseProductionGooglePlay
-        displayName: Release to Google Play
-        pool:
-          vmImage: "windows-latest"
-        environment: "ft-Middleware-GooglePlay"
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - template: templates/release-to-googleplay.yaml
-                  parameters:
-                    package: eu.fiskaltrust.androidlauncher.grpc
-                    serviceConnection: "Google Play Store"
-                - template: templates/release-to-googleplay.yaml
-                  parameters:
-                    package: eu.fiskaltrust.androidlauncher.http
-                    serviceConnection: "Google Play Store"
+      # - deployment: ReleaseProductionGooglePlay
+      #   displayName: Release to Google Play
+      #   pool:
+      #     vmImage: "windows-latest"
+      #   environment: "ft-Middleware-GooglePlay"
+      #   strategy:
+      #     runOnce:
+      #       deploy:
+      #         steps:
+      #           - template: templates/release-to-googleplay.yaml
+      #             parameters:
+      #               package: eu.fiskaltrust.androidlauncher.grpc
+      #               serviceConnection: "Google Play Store"
+      #           - template: templates/release-to-googleplay.yaml
+      #             parameters:
+      #               package: eu.fiskaltrust.androidlauncher.http
+      #               serviceConnection: "Google Play Store"
