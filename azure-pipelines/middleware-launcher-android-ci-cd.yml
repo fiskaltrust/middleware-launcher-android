@@ -102,7 +102,7 @@ stages:
 
           - task: JavaToolInstaller@0
             inputs:
-              versionSpec: "17"
+              versionSpec: "18"
               jdkArchitectureOption: "x64"
               jdkSourceOption: "PreInstalled"
 
@@ -150,9 +150,7 @@ stages:
                 Get-ChildItem -Path "$(Build.SourcesDirectory)" -Filter *.apk -Recurse;
                 Get-ChildItem -Path "$(Build.SourcesDirectory)" -Filter *.aab -Recurse;
               } | ForEach-Object {
-              apksigner `
-                  -J-add-exports=jdk.crypto.cryptoki/sun.security.pkcs11=ALL-UNNAMED `
-                  sign `
+              apksigner sign `
                   --provider-class sun.security.pkcs11.SunPKCS11 `
                   --provider-arg "$(SSMClientToolsSetup.PKCS11_CONFIG)" `
                   --ks NONE `
