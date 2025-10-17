@@ -10,5 +10,11 @@
 
         public const string StopBroadcastName = "eu.fiskaltrust.androidlauncher.common.Stop";
 
+        // Storage permission constants
+        public const string RequestStoragePermissionName = "eu.fiskaltrust.androidlauncher.common.RequestStoragePermission";
+        public const string GrantStoragePermissionName = "eu.fiskaltrust.androidlauncher.common.GrantStoragePermission";
+
+        // Echo API constants
+        public const string POSSystemAPIApiBroadcastName = "eu.fiskaltrust.androidlauncher.http.POSSystemAPI";
     }
 }

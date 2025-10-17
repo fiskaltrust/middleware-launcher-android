@@ -74,6 +74,7 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\POSSystemAPIActivity.cs" />
     <Compile Include="Broadcasting\StartLauncherBroadcastReceiver.cs" />
     <Compile Include="Broadcasting\StopLauncherBroadcastReceiver.cs" />
     <Compile Include="Content\LogContentProvider.cs" />

@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace fiskaltrust.AndroidLauncher.Common.Services
 {
-    internal class MiddlewareLauncher
+    public class MiddlewareLauncher
     {
         private const string PACKAGE_NAME_DE_SWISSBIT = "fiskaltrust.Middleware.SCU.DE.Swissbit";
         private const string PACKAGE_NAME_DE_FISKALY_CERTIFIED = "fiskaltrust.Middleware.SCU.DE.FiskalyCertified";
@@ -39,11 +39,11 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
         
         private Android.OS.PowerManager.WakeLock _wakeLock;        
         private List<IHelper> _helpers;
-        private List<IPOS> _poss;
+        public List<IPOS> _poss;
         private AbstractScuList _scus;
 
         private string _defaultUrl = null;
-        private List<IHost<IPOS>> _hosts;
+        public List<IHost<IPOS>> _hosts;
 
         public bool IsRunning { get; set; }
 
