@@ -36,7 +36,7 @@ The Android Launcher supports multiple ways to communicate with the Middleware:
 All details about our IPOS interface and how to use it for different business cases can be found in our [middleware documentation](https://docs.fiskaltrust.cloud/docs/poscreators/get-started).
 
 ## Features and Limitations
-The current project offers very similar functionality to the Middleware's Desktop Launcher. It works with different SCUs, pulls the configuration from our Cloud services, and also reccurently uploads the processed receipts to fiskaltrust's revision-safe storage.
+The current project offers very similar functionality to the Middleware's Desktop Launcher. It works with different SCUs, pulls the configuration from our Cloud services, and also recurrently uploads the processed receipts to fiskaltrust's revision-safe storage.
 
 However, there are some limitations due to the used platform:
 - Unlike the Desktop Launcher, the Android launcher **cannot** dynamically download packages at runtime, since this is not allowed due to Google's Play Store guidelines. Hence, the SCU and Queue packages are hardwired to the App, which must be updated to get new versions.
