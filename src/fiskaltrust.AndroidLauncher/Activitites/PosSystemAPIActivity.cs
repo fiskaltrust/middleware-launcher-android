@@ -4,12 +4,14 @@ using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
 using Android.Util;
+using fiskaltrust.AndroidLauncher.Constants;
 using fiskaltrust.AndroidLauncher.Helpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -19,7 +21,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
 {
     /// <summary>
     /// Activity that handles Intent-based POS System API calls.
-    /// Receives API requests via Android Intents and forwards them to the local middleware HTTP service.
+    /// Routes /sign and /echo to local middleware, other endpoints to cloud PosSystemAPI.
     /// </summary>
     [Activity(
         Label = "PosSystemAPI",
@@ -30,8 +32,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
     {
         private const string TAG = "PosSystemAPI";
         
-        // Default localhost URL - this should match the middleware REST endpoint configuration
-        // The middleware typically runs on port 1200 for HTTP/REST endpoints
+        // Local middleware endpoint for sign and echo
         private const string LOCALHOST_BASE_URL = "http://localhost:1200";
 
         // Intent extra keys for input
@@ -45,6 +46,14 @@ namespace fiskaltrust.AndroidLauncher.Activitites
         private const string EXTRA_CONTENT_BASE64URL = "ContentBase64Url";
         private const string EXTRA_CONTENT_TYPE_BASE64URL = "ContentTypeBase64Url";
         private const string EXTRA_RESPONSE_HEADER_JSON_BASE64URL = "HeaderJsonObjectBase64Url";
+
+        // Local endpoints that should be handled by the local middleware
+        private static readonly HashSet<string> LocalEndpoints = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "/sign", "/v0/sign", "/v1/sign", "/json/v1/sign", "/xml/v1/sign",
+            "/echo", "/v0/echo", "/v1/echo", "/json/v1/echo", "/xml/v1/echo",
+            "/journal", "/v0/journal", "/v1/journal", "/json/v1/journal", "/xml/v1/journal"
+        };
 
         protected override void OnCreate(Bundle? savedInstanceState)
         {
@@ -131,8 +140,19 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                     }
                 }
 
-                // Make HTTP request to local middleware
-                await MakeHttpRequestAsync(method, path, headers, body);
+                // Determine if this is a local or cloud endpoint
+                var isLocalEndpoint = IsLocalEndpoint(path);
+                
+                if (isLocalEndpoint)
+                {
+                    Log.Info(TAG, $"Routing to local middleware: {path}");
+                    await MakeLocalRequestAsync(method, path, headers, body);
+                }
+                else
+                {
+                    Log.Info(TAG, $"Routing to cloud PosSystemAPI: {path}");
+                    await MakeCloudRequestAsync(method, path, headers, body);
+                }
             }
             catch (Exception ex)
             {
@@ -141,10 +161,22 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             }
         }
 
-        private async Task MakeHttpRequestAsync(string method, string path, Dictionary<string, string> headers, string? body)
+        private bool IsLocalEndpoint(string path)
+        {
+            // Normalize path
+            if (!path.StartsWith("/"))
+            {
+                path = "/" + path;
+            }
+
+            // Check if path matches any local endpoint
+            return LocalEndpoints.Contains(path);
+        }
+
+        private async Task MakeLocalRequestAsync(string method, string path, Dictionary<string, string> headers, string? body)
         {
             using var httpClient = new HttpClient();
-            httpClient.Timeout = TimeSpan.FromMinutes(5); // Allow longer timeout for operations
+            httpClient.Timeout = TimeSpan.FromMinutes(5);
 
             try
             {
@@ -155,7 +187,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                 }
 
                 var url = LOCALHOST_BASE_URL + path;
-                Log.Info(TAG, $"Making HTTP request to {url}");
+                Log.Info(TAG, $"Making local HTTP request to {url}");
 
                 // Create HTTP request
                 var request = new HttpRequestMessage(new HttpMethod(method), url);
@@ -198,48 +230,137 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                 // Send request
                 var response = await httpClient.SendAsync(request);
                 
-                Log.Info(TAG, $"Received response: {(int)response.StatusCode}");
+                Log.Info(TAG, $"Received local response: {(int)response.StatusCode}");
 
-                // Read response
-                var responseContent = await response.Content.ReadAsStringAsync();
-                var responseContentType = response.Content.Headers.ContentType?.ToString() ?? "application/json";
-
-                // Build response headers dictionary
-                var responseHeaders = new Dictionary<string, string>();
-                foreach (var header in response.Headers)
-                {
-                    responseHeaders[header.Key] = string.Join(", ", header.Value);
-                }
-                foreach (var header in response.Content.Headers)
-                {
-                    responseHeaders[header.Key] = string.Join(", ", header.Value);
-                }
-
-                // Encode response
-                var statusCode = ((int)response.StatusCode).ToString();
-                var contentBase64Url = Base64UrlHelper.Encode(responseContent);
-                var contentTypeBase64Url = Base64UrlHelper.Encode(responseContentType);
-                var responseHeadersJson = JsonConvert.SerializeObject(responseHeaders);
-                var responseHeadersBase64Url = Base64UrlHelper.Encode(responseHeadersJson);
-
-                // Return result
-                FinishWithResult(statusCode, contentBase64Url, contentTypeBase64Url, responseHeadersBase64Url);
+                await ProcessHttpResponseAsync(response);
             }
             catch (HttpRequestException ex)
             {
-                Log.Error(TAG, $"HTTP request failed: {ex.Message}");
-                FinishWithError(502, $"Failed to communicate with middleware: {ex.Message}");
+                Log.Error(TAG, $"Local HTTP request failed: {ex.Message}");
+                FinishWithError(502, $"Failed to communicate with local middleware: {ex.Message}");
             }
             catch (TaskCanceledException ex)
             {
-                Log.Error(TAG, $"Request timeout: {ex.Message}");
+                Log.Error(TAG, $"Local request timeout: {ex.Message}");
                 FinishWithError(504, "Request timeout");
             }
             catch (Exception ex)
             {
-                Log.Error(TAG, $"Request processing failed: {ex}");
+                Log.Error(TAG, $"Local request processing failed: {ex}");
                 FinishWithError(500, $"Request processing failed: {ex.Message}");
             }
+        }
+
+        private async Task MakeCloudRequestAsync(string method, string path, Dictionary<string, string> headers, string? body)
+        {
+            using var httpClient = new HttpClient();
+            httpClient.Timeout = TimeSpan.FromMinutes(5);
+
+            try
+            {
+                // Determine if sandbox or production based on headers or use default
+                var isSandbox = headers.TryGetValue("x-sandbox", out var sandbox) && 
+                                (sandbox == "true" || sandbox == "1");
+                
+                var baseUrl = isSandbox ? Urls.POSSYSTEM_API_SANDBOX : Urls.POSSYSTEM_API_PRODUCTION;
+
+                // Ensure path starts with /
+                if (!path.StartsWith("/"))
+                {
+                    path = "/" + path;
+                }
+
+                var url = baseUrl.TrimEnd('/') + path;
+                Log.Info(TAG, $"Making cloud HTTP request to {url}");
+
+                // Create HTTP request
+                var request = new HttpRequestMessage(new HttpMethod(method), url);
+
+                // Add headers (skip certain headers that HttpClient handles automatically)
+                var skipHeaders = new HashSet<string>(StringComparer.OrdinalIgnoreCase) 
+                { 
+                    "Host", "Content-Length", "Connection", "x-sandbox" // x-sandbox is only for routing
+                };
+
+                foreach (var header in headers)
+                {
+                    if (skipHeaders.Contains(header.Key))
+                    {
+                        continue;
+                    }
+
+                    try
+                    {
+                        if (header.Key.Equals("Content-Type", StringComparison.OrdinalIgnoreCase))
+                        {
+                            // Content-Type will be set with content
+                            continue;
+                        }
+                        request.Headers.TryAddWithoutValidation(header.Key, header.Value);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Warn(TAG, $"Failed to add header {header.Key}: {ex.Message}");
+                    }
+                }
+
+                // Add body if present
+                if (!string.IsNullOrEmpty(body))
+                {
+                    var contentType = headers.TryGetValue("Content-Type", out var ct) ? ct : "application/json";
+                    request.Content = new StringContent(body, Encoding.UTF8, contentType);
+                }
+
+                // Send request
+                var response = await httpClient.SendAsync(request);
+                
+                Log.Info(TAG, $"Received cloud response: {(int)response.StatusCode}");
+
+                await ProcessHttpResponseAsync(response);
+            }
+            catch (HttpRequestException ex)
+            {
+                Log.Error(TAG, $"Cloud HTTP request failed: {ex.Message}");
+                FinishWithError(502, $"Failed to communicate with cloud PosSystemAPI: {ex.Message}");
+            }
+            catch (TaskCanceledException ex)
+            {
+                Log.Error(TAG, $"Cloud request timeout: {ex.Message}");
+                FinishWithError(504, "Request timeout");
+            }
+            catch (Exception ex)
+            {
+                Log.Error(TAG, $"Cloud request processing failed: {ex}");
+                FinishWithError(500, $"Request processing failed: {ex.Message}");
+            }
+        }
+
+        private async Task ProcessHttpResponseAsync(HttpResponseMessage response)
+        {
+            // Read response
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var responseContentType = response.Content.Headers.ContentType?.ToString() ?? "application/json";
+
+            // Build response headers dictionary
+            var responseHeaders = new Dictionary<string, string>();
+            foreach (var header in response.Headers)
+            {
+                responseHeaders[header.Key] = string.Join(", ", header.Value);
+            }
+            foreach (var header in response.Content.Headers)
+            {
+                responseHeaders[header.Key] = string.Join(", ", header.Value);
+            }
+
+            // Encode response
+            var statusCode = ((int)response.StatusCode).ToString();
+            var contentBase64Url = Base64UrlHelper.Encode(responseContent);
+            var contentTypeBase64Url = Base64UrlHelper.Encode(responseContentType);
+            var responseHeadersJson = JsonConvert.SerializeObject(responseHeaders);
+            var responseHeadersBase64Url = Base64UrlHelper.Encode(responseHeadersJson);
+
+            // Return result
+            FinishWithResult(statusCode, contentBase64Url, contentTypeBase64Url, responseHeadersBase64Url);
         }
 
         private void FinishWithResult(string statusCode, string contentBase64Url, string contentTypeBase64Url, string? headerBase64Url = null)

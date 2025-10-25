@@ -4,7 +4,29 @@ This directory contains examples for integrating with the fiskaltrust.Middleware
 
 ## Overview
 
-The PosSystemAPI Activity (`eu.fiskaltrust.androidlauncher.PosSystemAPI`) allows Android applications to communicate with the fiskaltrust.Middleware through Android Intents. This enables offline fiscalization capabilities without requiring direct HTTP communication.
+The PosSystemAPI Activity (`eu.fiskaltrust.androidlauncher.PosSystemAPI`) allows Android applications to communicate with the fiskaltrust.Middleware through Android Intents. This enables both offline and online fiscalization capabilities.
+
+### Request Routing
+
+The Activity intelligently routes requests based on the endpoint:
+
+- **Local Endpoints** (handled by local middleware at `localhost:1200`):
+  - `/sign`, `/v0/sign`, `/v1/sign`, `/json/v1/sign`, `/xml/v1/sign`
+  - `/echo`, `/v0/echo`, `/v1/echo`, `/json/v1/echo`, `/xml/v1/echo`
+  - `/journal`, `/v0/journal`, `/v1/journal`, `/json/v1/journal`, `/xml/v1/journal`
+  
+- **Cloud Endpoints** (forwarded to fiskaltrust PosSystemAPI cloud service):
+  - `/v2/cart/*` - Cart management
+  - `/order` - Order processing
+  - `/pay` - Payment processing
+  - `/v2/issue/*` - Receipt issuance
+  - `/v2/journal` - Cloud journal queries
+  - All other PosSystemAPI v2 endpoints
+
+This architecture enables:
+- ✅ Offline fiscalization for core operations (sign, echo)
+- ✅ Online features for advanced scenarios (cart, payments, digital receipts)
+- ✅ Automatic routing without POS system configuration
 
 ## Basic Integration
 

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace fiskaltrust.AndroidLauncher.Tests
+namespace fiskaltrust.AndroidLauncher.SmokeTests
 {
     /// <summary>
     /// Integration test helper for testing PosSystemAPI Intent calls.

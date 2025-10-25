@@ -6,7 +6,17 @@ This directory contains integration testing infrastructure for the Intent-based 
 
 The PosSystemAPI Intent interface allows Android applications to communicate with the fiskaltrust.Middleware through Android Intents. These integration tests verify that the Intent-based communication works correctly end-to-end.
 
+## Architecture
+
+The PosSystemAPI Activity routes requests based on the endpoint:
+- **Local endpoints** (`/sign`, `/echo`, `/journal`): Routed to local middleware at `localhost:1200`
+- **Cloud endpoints** (all others): Routed to fiskaltrust PosSystemAPI cloud service
+
+This allows offline fiscalization for basic operations while enabling advanced cloud features like cart management, payment processing, and receipt issuance.
+
 ## Test Infrastructure
+
+The test infrastructure is located in `test/fiskaltrust.AndroidLauncher.SmokeTests/PosSystemAPIIntentTestHelper.cs`.
 
 ### PosSystemAPIIntentTestHelper
 
@@ -19,7 +29,7 @@ A reusable helper class that simplifies testing Intent-based API calls. It:
 ### Usage Example
 
 ```csharp
-// Create test helper in your Activity
+// In your test class (inheriting from Activity)
 var testHelper = new PosSystemAPIIntentTestHelper(this);
 
 // Send an Intent call
@@ -29,6 +39,20 @@ var headers = new Dictionary<string, string>
     { "x-cashbox-accesstoken", "your-token" },
     { "x-operation-id", Guid.NewGuid().ToString() }
 };
+
+var body = JsonConvert.SerializeObject(new { Message = "Test" });
+var result = await testHelper.SendIntentAsync("POST", "/echo", headers, body);
+
+// Verify result
+Assert.AreEqual("200", result.StatusCode);
+
+// Don't forget to wire up OnActivityResult
+protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
+{
+    base.OnActivityResult(requestCode, resultCode, data);
+    testHelper.OnActivityResult(requestCode, resultCode, data);
+}
+```;
 
 var body = JsonConvert.SerializeObject(new { Message = "Test" });
 var result = await testHelper.SendIntentAsync("POST", "/echo", headers, body);

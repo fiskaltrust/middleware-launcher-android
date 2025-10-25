@@ -4,5 +4,8 @@
     {
         public const string HELIPAD_SANDBOX = "https://helipad-sandbox.fiskaltrust.cloud/";
         public const string HELIPAD_PRODUCTION = "https://helipad.fiskaltrust.cloud/";
+        
+        public const string POSSYSTEM_API_SANDBOX = "https://pos-system-api-sandbox.fiskaltrust.cloud/";
+        public const string POSSYSTEM_API_PRODUCTION = "https://pos-system-api.fiskaltrust.cloud/";
     }
 }
