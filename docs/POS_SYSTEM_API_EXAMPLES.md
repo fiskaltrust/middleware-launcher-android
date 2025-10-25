@@ -11,9 +11,9 @@ The PosSystemAPI Activity (`eu.fiskaltrust.androidlauncher.PosSystemAPI`) allows
 The Activity intelligently routes requests based on the endpoint:
 
 - **Local Endpoints** (handled by local middleware at `localhost:1200`):
-  - `/sign`, `/v0/sign`, `/v1/sign`, `/json/v1/sign`, `/xml/v1/sign`
-  - `/echo`, `/v0/echo`, `/v1/echo`, `/json/v1/echo`, `/xml/v1/echo`
-  - `/journal`, `/v0/journal`, `/v1/journal`, `/json/v1/journal`, `/xml/v1/journal`
+  - `/sign` - Receipt signing (default version)
+  - `/echo` - Connectivity testing (default version)
+  - `/journal` - Local journal queries (default version)
   
 - **Cloud Endpoints** (forwarded to fiskaltrust PosSystemAPI cloud service):
   - `/v2/cart/*` - Cart management
@@ -23,10 +23,16 @@ The Activity intelligently routes requests based on the endpoint:
   - `/v2/journal` - Cloud journal queries
   - All other PosSystemAPI v2 endpoints
 
+- **Unsupported Endpoints** (will return 400 error):
+  - `/v0/*`, `/v1/*` - Legacy versioned endpoints
+  - `/json/v0/*`, `/json/v1/*`, `/xml/v0/*`, `/xml/v1/*` - Legacy format-specific endpoints
+  - Use default endpoints (e.g., `/sign`, `/echo`) or `/v2/*` endpoints instead
+
 This architecture enables:
-- ✅ Offline fiscalization for core operations (sign, echo)
-- ✅ Online features for advanced scenarios (cart, payments, digital receipts)
+- ✅ Offline fiscalization for core operations (sign, echo) using default endpoints
+- ✅ Online features for advanced scenarios (cart, payments, digital receipts) using /v2 endpoints
 - ✅ Automatic routing without POS system configuration
+- ✅ Clear versioning: defaults (no version) for local, /v2 for cloud
 
 ## Basic Integration
 

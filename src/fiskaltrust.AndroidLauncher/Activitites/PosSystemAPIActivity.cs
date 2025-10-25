@@ -47,12 +47,12 @@ namespace fiskaltrust.AndroidLauncher.Activitites
         private const string EXTRA_CONTENT_TYPE_BASE64URL = "ContentTypeBase64Url";
         private const string EXTRA_RESPONSE_HEADER_JSON_BASE64URL = "HeaderJsonObjectBase64Url";
 
-        // Local endpoints that should be handled by the local middleware
+        // Local endpoints that should be handled by the local middleware (defaults without version)
         private static readonly HashSet<string> LocalEndpoints = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
-            "/sign", "/v0/sign", "/v1/sign", "/json/v1/sign", "/xml/v1/sign",
-            "/echo", "/v0/echo", "/v1/echo", "/json/v1/echo", "/xml/v1/echo",
-            "/journal", "/v0/journal", "/v1/journal", "/json/v1/journal", "/xml/v1/journal"
+            "/sign",
+            "/echo",
+            "/journal"
         };
 
         protected override void OnCreate(Bundle? savedInstanceState)
@@ -140,18 +140,29 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                     }
                 }
 
+                // Normalize path
+                var normalizedPath = path.StartsWith("/") ? path : "/" + path;
+
+                // Validate endpoint version - only support defaults (no version) and /v2
+                if (IsUnsupportedVersion(normalizedPath))
+                {
+                    Log.Error(TAG, $"Unsupported endpoint version: {normalizedPath}");
+                    FinishWithError(400, $"Unsupported endpoint version. Only default endpoints (e.g., /sign, /echo) and /v2/* endpoints are supported. Please do not use /v0/* or /v1/* versions.");
+                    return;
+                }
+
                 // Determine if this is a local or cloud endpoint
-                var isLocalEndpoint = IsLocalEndpoint(path);
+                var isLocalEndpoint = IsLocalEndpoint(normalizedPath);
                 
                 if (isLocalEndpoint)
                 {
-                    Log.Info(TAG, $"Routing to local middleware: {path}");
-                    await MakeLocalRequestAsync(method, path, headers, body);
+                    Log.Info(TAG, $"Routing to local middleware: {normalizedPath}");
+                    await MakeLocalRequestAsync(method, normalizedPath, headers, body);
                 }
                 else
                 {
-                    Log.Info(TAG, $"Routing to cloud PosSystemAPI: {path}");
-                    await MakeCloudRequestAsync(method, path, headers, body);
+                    Log.Info(TAG, $"Routing to cloud PosSystemAPI: {normalizedPath}");
+                    await MakeCloudRequestAsync(method, normalizedPath, headers, body);
                 }
             }
             catch (Exception ex)
@@ -161,15 +172,28 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             }
         }
 
+        private bool IsUnsupportedVersion(string path)
+        {
+            // Check if path starts with unsupported version prefixes
+            // We only support defaults (no version) and /v2
+            // Reject /v0, /v1, /json/v0, /json/v1, /xml/v0, /xml/v1
+            var unsupportedPrefixes = new[] { "/v0/", "/v1/", "/json/v0/", "/json/v1/", "/xml/v0/", "/xml/v1/" };
+            
+            foreach (var prefix in unsupportedPrefixes)
+            {
+                if (path.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+
         private bool IsLocalEndpoint(string path)
         {
-            // Normalize path
-            if (!path.StartsWith("/"))
-            {
-                path = "/" + path;
-            }
-
-            // Check if path matches any local endpoint
+            // Path is already normalized (starts with /)
+            // Check if path matches any local endpoint (defaults without version)
             return LocalEndpoints.Contains(path);
         }
 
