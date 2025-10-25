@@ -43,56 +43,56 @@
 
 		<AndroidResource Include="Platforms\Android\Resources\**" TargetPath="%(RecursiveDir)%(Filename)%(Extension)" />
 
-    <MauiAsset Include="../../middleware/queue/src/fiskaltrust.Middleware.Storage.SQLite/Migrations/**" LogicalName="Migrations/%(Filename)%(Extension)" />
+		<MauiAsset Include="../../middleware/queue/src/fiskaltrust.Middleware.Storage.SQLite/Migrations/**" LogicalName="Migrations/%(Filename)%(Extension)" />
 
 		<AndroidNativeLibrary Include="lib\arm64-v8a\libcom.fiskaly.client-linux-amd64-v1.2.200.so">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </AndroidNativeLibrary>
-    <AndroidNativeLibrary Include="lib\armeabi-v7a\libcom.fiskaly.client-linux-386-v1.2.200.so">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </AndroidNativeLibrary>
-    <AndroidNativeLibrary Include="lib\x86\libcom.fiskaly.client-linux-386-v1.2.200.so">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </AndroidNativeLibrary>
-    <AndroidNativeLibrary Include="lib\x86_64\libcom.fiskaly.client-linux-amd64-v1.2.200.so">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </AndroidNativeLibrary>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</AndroidNativeLibrary>
+		<AndroidNativeLibrary Include="lib\armeabi-v7a\libcom.fiskaly.client-linux-386-v1.2.200.so">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</AndroidNativeLibrary>
+		<AndroidNativeLibrary Include="lib\x86\libcom.fiskaly.client-linux-386-v1.2.200.so">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</AndroidNativeLibrary>
+		<AndroidNativeLibrary Include="lib\x86_64\libcom.fiskaly.client-linux-amd64-v1.2.200.so">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</AndroidNativeLibrary>
 	</ItemGroup>
-	
+
 	<ItemGroup>
-	<PackageReference Include="fiskaltrust.Exports.DSFinVK" Version="1.6.7" />
-    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.1" />
-    <ProjectReference Include="../../middleware/queue/src/fiskaltrust.Middleware.Queue.SQLite/fiskaltrust.Middleware.Queue.SQLite.csproj" />
-    <ProjectReference Include="../../middleware/scu-it/src/fiskaltrust.Middleware.SCU.IT.CustomRTServer/fiskaltrust.Middleware.SCU.IT.CustomRTServer.csproj" />
-    <ProjectReference Include="../../middleware/scu-it/src/fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter/fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter.csproj" />
-    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.21.0" />
-    <PackageReference Include="Microsoft.ApplicationInsights.Web" Version="2.21.0" />
-    <PackageReference Include="Microsoft.ApplicationInsights.DependencyCollector" Version="2.21.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.ApplicationInsights" Version="2.20.0" />
-    <PackageReference Include="fiskaltrust.interface" Version="1.3.55-rc2" />
-    <PackageReference Include="fiskaltrust.Middleware.Helper.Helipad" Version="1.3.49" />
-    <ProjectReference Include="../../middleware/scu-de/src/fiskaltrust.Middleware.SCU.DE.FiskalyCertified/fiskaltrust.Middleware.SCU.DE.FiskalyCertified.csproj" />
-    <ProjectReference Include="../../middleware/scu-de/src/fiskaltrust.Middleware.SCU.DE.Swissbit/fiskaltrust.Middleware.SCU.DE.Swissbit.csproj" />
-    <!-- <ProjectReference Include="../../middleware/scu-de/src/fiskaltrust.Middleware.SCU.DE.SwissbitAndroid/fiskaltrust.Middleware.SCU.DE.SwissbitAndroid.csproj" /> -->
-    <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
-    <PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="3.1.0" />
-    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+		<PackageReference Include="fiskaltrust.Exports.DSFinVK" Version="1.6.11" />
+		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.1" />
+		<ProjectReference Include="../../middleware/queue/src/fiskaltrust.Middleware.Queue.SQLite/fiskaltrust.Middleware.Queue.SQLite.csproj" />
+		<ProjectReference Include="../../middleware/scu-it/src/fiskaltrust.Middleware.SCU.IT.CustomRTServer/fiskaltrust.Middleware.SCU.IT.CustomRTServer.csproj" />
+		<ProjectReference Include="../../middleware/scu-it/src/fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter/fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter.csproj" />
+		<PackageReference Include="Microsoft.ApplicationInsights" Version="2.21.0" />
+		<PackageReference Include="Microsoft.ApplicationInsights.Web" Version="2.21.0" />
+		<PackageReference Include="Microsoft.ApplicationInsights.DependencyCollector" Version="2.21.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.ApplicationInsights" Version="2.20.0" />
+		<PackageReference Include="fiskaltrust.interface" Version="1.3.55-rc2" />
+		<PackageReference Include="fiskaltrust.Middleware.Helper.Helipad" Version="1.3.49" />
+		<ProjectReference Include="../../middleware/scu-de/src/fiskaltrust.Middleware.SCU.DE.FiskalyCertified/fiskaltrust.Middleware.SCU.DE.FiskalyCertified.csproj" />
+		<ProjectReference Include="../../middleware/scu-de/src/fiskaltrust.Middleware.SCU.DE.Swissbit/fiskaltrust.Middleware.SCU.DE.Swissbit.csproj" />
+		<!-- <ProjectReference Include="../../middleware/scu-de/src/fiskaltrust.Middleware.SCU.DE.SwissbitAndroid/fiskaltrust.Middleware.SCU.DE.SwissbitAndroid.csproj" /> -->
+		<PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
+		<PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="3.1.0" />
+		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
 		<PackageReference Include="CsvHelper" Version="28.0.1" />
-    <PackageReference Include="fiskaltrust.Middleware.Abstractions" Version="1.3.3" />
-    <PackageReference Include="fiskaltrust.Middleware.Helper.Helipad" Version="1.3.49" />
-    <PackageReference Include="fiskaltrust.Middleware.Interface.Client.Grpc" Version="1.3.55-rc2" />
-    <PackageReference Include="fiskaltrust.Middleware.Interface.Client.Http" Version="1.3.55-rc2" />
-    <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.4" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.4" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="System.Security.Cryptography.Xml" Version="4.7.0" />
-    <PackageReference Include="System.ServiceModel.Syndication" Version="4.7.0" />
-    <PackageReference Include="System.Threading.Channels" Version="7.0.0" />
+		<PackageReference Include="fiskaltrust.Middleware.Abstractions" Version="1.3.3" />
+		<PackageReference Include="fiskaltrust.Middleware.Helper.Helipad" Version="1.3.49" />
+		<PackageReference Include="fiskaltrust.Middleware.Interface.Client.Grpc" Version="1.3.55-rc2" />
+		<PackageReference Include="fiskaltrust.Middleware.Interface.Client.Http" Version="1.3.55-rc2" />
+		<PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+		<PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.4" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.4" />
+		<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+		<PackageReference Include="System.Security.Cryptography.Xml" Version="4.7.0" />
+		<PackageReference Include="System.ServiceModel.Syndication" Version="4.7.0" />
+		<PackageReference Include="System.Threading.Channels" Version="7.0.0" />
 		<PackageReference Include="Grpc.Core" Version="2.46.6" />
 		<PackageReference Include="protobuf-net.Grpc.Native" Version="1.2.2" />
-    <PackageReference Include="Microsoft.Maui.Essentials" Version="$(MauiVersion)" />
+		<PackageReference Include="Microsoft.Maui.Essentials" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
 		<PackageReference Include="AathifMahir.Maui.MauiIcons.Material" Version="4.0.0" />

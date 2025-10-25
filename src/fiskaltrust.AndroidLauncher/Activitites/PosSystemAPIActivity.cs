@@ -6,8 +6,11 @@ using Android.Runtime;
 using Android.Util;
 using fiskaltrust.AndroidLauncher.Constants;
 using fiskaltrust.AndroidLauncher.Helpers;
+using fiskaltrust.ifPOS.v1.it;
+using Microsoft.AspNetCore.Http.Headers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Org.Apache.Http.Protocol;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -27,7 +30,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
     [Activity(
         Label = "PosSystemAPI",
         Name = "eu.fiskaltrust.androidlauncher.PosSystemAPI",
-        LaunchMode = LaunchMode.SingleTop,
+        Enabled = true,
         Exported = true)]
     public class PosSystemAPIActivity : Activity
     {
@@ -52,8 +55,11 @@ namespace fiskaltrust.AndroidLauncher.Activitites
         private static readonly HashSet<string> LocalEndpoints = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             "/sign",
+            "/v2/sign",
             "/echo",
-            "/journal"
+            "/v2/echo",
+            "/journal",
+            "/v2/journal",
         };
 
         // In-memory cache for operation results (idempotency for local requests)
@@ -125,6 +131,12 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                 {
                     Log.Error(TAG, $"Failed to decode headers: {ex.Message}");
                     FinishWithError(400, $"Invalid headers format: {ex.Message}");
+                    return;
+                }
+
+                if (!headers.ContainsKey("x-operation-id"))
+                {
+                    FinishWithError(400, $"The required header x-operation-id was not sent.");
                     return;
                 }
 
@@ -231,59 +243,15 @@ namespace fiskaltrust.AndroidLauncher.Activitites
 
             try
             {
-                // Ensure path starts with /
-                if (!path.StartsWith("/"))
-                {
-                    path = "/" + path;
-                }
+                // In here we will perform the calls necessary for doing an echo
+                var statusCode = 500.ToString();
+                var contentBase64Url = Base64UrlHelper.Encode("Not supported.");
+                var contentTypeBase64Url = Base64UrlHelper.Encode("application/json");
+                var responseHeadersJson = JsonConvert.SerializeObject(new Dictionary<string, string> { });
+                var responseHeadersBase64Url = Base64UrlHelper.Encode(responseHeadersJson);
 
-                var url = LOCALHOST_BASE_URL + path;
-                Log.Info(TAG, $"Making local HTTP request to {url}");
-
-                // Create HTTP request
-                var request = new HttpRequestMessage(new HttpMethod(method), url);
-
-                // Add headers (skip certain headers that HttpClient handles automatically)
-                var skipHeaders = new HashSet<string>(StringComparer.OrdinalIgnoreCase) 
-                { 
-                    "Host", "Content-Length", "Connection" 
-                };
-
-                foreach (var header in headers)
-                {
-                    if (skipHeaders.Contains(header.Key))
-                    {
-                        continue;
-                    }
-
-                    try
-                    {
-                        if (header.Key.Equals("Content-Type", StringComparison.OrdinalIgnoreCase))
-                        {
-                            // Content-Type will be set with content
-                            continue;
-                        }
-                        request.Headers.TryAddWithoutValidation(header.Key, header.Value);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Warn(TAG, $"Failed to add header {header.Key}: {ex.Message}");
-                    }
-                }
-
-                // Add body if present
-                if (!string.IsNullOrEmpty(body))
-                {
-                    var contentType = headers.TryGetValue("Content-Type", out var ct) ? ct : "application/json";
-                    request.Content = new StringContent(body, Encoding.UTF8, contentType);
-                }
-
-                // Send request
-                var response = await httpClient.SendAsync(request);
-                
-                Log.Info(TAG, $"Received local response: {(int)response.StatusCode}");
-
-                await ProcessHttpResponseAsync(response, operationId);
+                // Return result
+                FinishWithResult(statusCode, contentBase64Url, contentTypeBase64Url, responseHeadersBase64Url);
             }
             catch (HttpRequestException ex)
             {
