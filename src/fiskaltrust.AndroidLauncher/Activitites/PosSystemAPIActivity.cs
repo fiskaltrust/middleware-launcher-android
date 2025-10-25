@@ -9,6 +9,7 @@ using fiskaltrust.AndroidLauncher.Helpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -54,6 +55,10 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             "/echo",
             "/journal"
         };
+
+        // In-memory cache for operation results (idempotency for local requests)
+        // Key: x-operation-id, Value: cached response data
+        private static readonly ConcurrentDictionary<string, CachedOperationResult> OperationCache = new ConcurrentDictionary<string, CachedOperationResult>();
 
         protected override void OnCreate(Bundle? savedInstanceState)
         {
@@ -199,6 +204,28 @@ namespace fiskaltrust.AndroidLauncher.Activitites
 
         private async Task MakeLocalRequestAsync(string method, string path, Dictionary<string, string> headers, string? body)
         {
+            // Check for x-operation-id header for idempotency
+            string? operationId = null;
+            if (headers.TryGetValue("x-operation-id", out var opId))
+            {
+                operationId = opId;
+                
+                // Check if we have a cached result for this operation
+                if (OperationCache.TryGetValue(operationId, out var cachedResult))
+                {
+                    Log.Info(TAG, $"Returning cached result for operation ID: {operationId}");
+                    
+                    // Return cached result
+                    var cachedContentBase64 = Base64UrlHelper.Encode(cachedResult.Content);
+                    var cachedContentTypeBase64 = Base64UrlHelper.Encode(cachedResult.ContentType);
+                    var cachedHeadersJson = JsonConvert.SerializeObject(cachedResult.Headers);
+                    var cachedHeadersBase64 = Base64UrlHelper.Encode(cachedHeadersJson);
+                    
+                    FinishWithResult(cachedResult.StatusCode, cachedContentBase64, cachedContentTypeBase64, cachedHeadersBase64);
+                    return;
+                }
+            }
+
             using var httpClient = new HttpClient();
             httpClient.Timeout = TimeSpan.FromMinutes(5);
 
@@ -256,7 +283,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                 
                 Log.Info(TAG, $"Received local response: {(int)response.StatusCode}");
 
-                await ProcessHttpResponseAsync(response);
+                await ProcessHttpResponseAsync(response, operationId);
             }
             catch (HttpRequestException ex)
             {
@@ -340,7 +367,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                 
                 Log.Info(TAG, $"Received cloud response: {(int)response.StatusCode}");
 
-                await ProcessHttpResponseAsync(response);
+                await ProcessHttpResponseAsync(response, null); // No caching for cloud requests
             }
             catch (HttpRequestException ex)
             {
@@ -359,7 +386,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             }
         }
 
-        private async Task ProcessHttpResponseAsync(HttpResponseMessage response)
+        private async Task ProcessHttpResponseAsync(HttpResponseMessage response, string? operationId)
         {
             // Read response
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -374,6 +401,20 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             foreach (var header in response.Content.Headers)
             {
                 responseHeaders[header.Key] = string.Join(", ", header.Value);
+            }
+
+            // Cache the result if we have an operation ID (local requests only)
+            if (!string.IsNullOrEmpty(operationId))
+            {
+                var cachedResult = new CachedOperationResult(
+                    ((int)response.StatusCode).ToString(),
+                    responseContent,
+                    responseContentType,
+                    responseHeaders
+                );
+                
+                OperationCache.TryAdd(operationId, cachedResult);
+                Log.Info(TAG, $"Cached result for operation ID: {operationId}");
             }
 
             // Encode response
@@ -452,6 +493,27 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                     Finish();
                 }
             });
+        }
+    }
+
+    /// <summary>
+    /// Represents a cached operation result for idempotency
+    /// </summary>
+    internal class CachedOperationResult
+    {
+        public string StatusCode { get; set; }
+        public string Content { get; set; }
+        public string ContentType { get; set; }
+        public Dictionary<string, string> Headers { get; set; }
+        public DateTime CachedAt { get; set; }
+
+        public CachedOperationResult(string statusCode, string content, string contentType, Dictionary<string, string> headers)
+        {
+            StatusCode = statusCode;
+            Content = content;
+            ContentType = contentType;
+            Headers = headers;
+            CachedAt = DateTime.UtcNow;
         }
     }
 }
