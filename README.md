@@ -31,7 +31,7 @@ The Android Launcher supports multiple ways to communicate with the Middleware:
 
 1. **Direct HTTP/REST**: Connect via standard HTTP requests to the local REST endpoint
 2. **gRPC**: Use gRPC protocol for high-performance communication
-3. **Intent-based PosSystemAPI** (NEW): Use Android Intents to call the PosSystemAPI directly from your Android app, enabling offline fiscalization without network configuration. See [POS System API Examples](docs/POS_SYSTEM_API_EXAMPLES.md) for implementation details.
+3. **Intent-based PosSystemAPI** (NEW): Use Android Intents to call the PosSystemAPI directly from your Android app, enabling offline fiscalization without network configuration. 
 
 All details about our IPOS interface and how to use it for different business cases can be found in our [middleware documentation](https://docs.fiskaltrust.cloud/docs/poscreators/get-started).
 
