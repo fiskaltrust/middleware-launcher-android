@@ -25,6 +25,14 @@ Download and install the _.APK_ on the Portal's Cashbox page or via the Play Sto
 
 A working internet connection is required at least during the first start of the Middleware, as it automatically downloads the configuration from our background services. Later, an internet connection is not required anymore (except when using a cloud TSE, of course). When using one of our archiving add-ons, we still recommend keeping the device connected to make use of our automatic cloud storage.
 
+### Communication Protocols
+
+The Android Launcher supports multiple ways to communicate with the Middleware:
+
+1. **Direct HTTP/REST**: Connect via standard HTTP requests to the local REST endpoint
+2. **gRPC**: Use gRPC protocol for high-performance communication
+3. **Intent-based PosSystemAPI** (NEW): Use Android Intents to call the PosSystemAPI directly from your Android app, enabling offline fiscalization without network configuration. See [POS System API Examples](docs/POS_SYSTEM_API_EXAMPLES.md) for implementation details.
+
 All details about our IPOS interface and how to use it for different business cases can be found in our [middleware documentation](https://docs.fiskaltrust.cloud/docs/poscreators/get-started).
 
 ## Features and Limitations
