@@ -135,7 +135,11 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
             Task.Run(async () =>
             {
                 await AdminEndpointService.Instance.StopAsync();
-                await PosSystemAPIActivity.LocalMiddlewareServiceInstance.StopAsync();
+                if (PosSystemAPIActivity.LocalMiddlewareServiceInstance != null)
+                {
+                    await PosSystemAPIActivity.LocalMiddlewareServiceInstance.StopAsync();
+                    PosSystemAPIActivity.LocalMiddlewareServiceInstance = null;
+                }
             }).Wait();
 
             if (Build.VERSION.SdkInt >= BuildVersionCodes.N)

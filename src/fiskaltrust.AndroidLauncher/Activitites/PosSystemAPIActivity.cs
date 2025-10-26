@@ -11,6 +11,7 @@ using fiskaltrust.AndroidLauncher.Grpc;
 using fiskaltrust.AndroidLauncher.Helpers;
 using fiskaltrust.AndroidLauncher.Http.Broadcasting;
 using fiskaltrust.AndroidLauncher.Services;
+using fiskaltrust.ifPOS.v1;
 using fiskaltrust.ifPOS.v1.it;
 using Microsoft.AspNetCore.Http.Headers;
 using Microsoft.Extensions.Logging;
@@ -259,31 +260,53 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             {
                 try
                 {
-                    var echoRequest = JsonConvert.DeserializeObject<JObject>(body);
-                    if (echoRequest != null && echoRequest.TryGetValue("Message", out var messageToken))
+                    var echoRequest = JsonConvert.DeserializeObject<EchoRequest>(body);
+                    if (echoRequest != null && echoRequest.Message == null)
                     {
-                        if (messageToken.Type == JTokenType.Null)
-                        {
-                            Log.Info(TAG, "Detected /v2/echo request with null Message - triggering service restart");
-                            await RestartMiddlewareLauncherServiceAsync(cashBoxId, accessToken);
-
-                            // Return a successful response indicating restart was triggered
-                            var restartResponse = new
-                            {
-                                Message = "Service restart triggered due to null Message in echo request",
-                                Timestamp = DateTime.UtcNow.ToString("O")
-                            };
-                            var restartJson = JsonConvert.SerializeObject(restartResponse);
-                            var contentBase64 = Base64UrlHelper.Encode(restartJson);
-                            var contentTypeBase64 = Base64UrlHelper.Encode("application/json");
-                            var responseHeaders = new Dictionary<string, string>();
-                            var headersJson = JsonConvert.SerializeObject(responseHeaders);
-                            var headersBase64 = Base64UrlHelper.Encode(headersJson);
-
-                            FinishWithResult("200", contentBase64, contentTypeBase64, headersBase64);
-                            return;
-                        }
+                        Log.Info(TAG, "Detected /v2/echo request with null Message - triggering service restart");
+                        await RestartMiddlewareLauncherServiceAsync(cashBoxId, accessToken);
                     }
+                    else if (LocalMiddlewareServiceInstance == null || !LocalMiddlewareServiceInstance.IsRunning)
+                    {
+                        Log.Info(TAG, "Detected /v2/echo request with null Message - triggering service restart");
+                        await RestartMiddlewareLauncherServiceAsync(cashBoxId, accessToken);
+                    }
+
+                    var restartResponse = await LocalMiddlewareServiceInstance.POS.EchoAsync(echoRequest);
+                    var restartJson = JsonConvert.SerializeObject(restartResponse);
+                    var contentBase64 = Base64UrlHelper.Encode(restartJson);
+                    var contentTypeBase64 = Base64UrlHelper.Encode("application/json");
+                    var responseHeaders = new Dictionary<string, string>();
+                    var headersJson = JsonConvert.SerializeObject(responseHeaders);
+                    var headersBase64 = Base64UrlHelper.Encode(headersJson);
+                    FinishWithResult("201", contentBase64, contentTypeBase64, headersBase64);
+                }
+                catch (Exception ex)
+                {
+                    Log.Warn(TAG, $"Failed to parse echo request body for service restart check: {ex.Message}");
+                    // Continue with normal processing if parsing fails
+                }
+            }
+
+            if (string.Equals(path, "/v2/sign", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrEmpty(body))
+            {
+                try
+                {
+                    var receiptRequest = JsonConvert.DeserializeObject<ReceiptRequest>(body);
+                    if (LocalMiddlewareServiceInstance == null || !LocalMiddlewareServiceInstance.IsRunning)
+                    {
+                        Log.Info(TAG, "Detected /v2/echo request with null Message - triggering service restart");
+                        await RestartMiddlewareLauncherServiceAsync(cashBoxId, accessToken);
+                    }
+
+                    var restartResponse = await LocalMiddlewareServiceInstance.POS.SignAsync(receiptRequest);
+                    var restartJson = JsonConvert.SerializeObject(restartResponse);
+                    var contentBase64 = Base64UrlHelper.Encode(restartJson);
+                    var contentTypeBase64 = Base64UrlHelper.Encode("application/json");
+                    var responseHeaders = new Dictionary<string, string>();
+                    var headersJson = JsonConvert.SerializeObject(responseHeaders);
+                    var headersBase64 = Base64UrlHelper.Encode(headersJson);
+                    FinishWithResult("201", contentBase64, contentTypeBase64, headersBase64);
                 }
                 catch (Exception ex)
                 {

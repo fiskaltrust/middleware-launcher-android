@@ -1,6 +1,20 @@
 <Solution>
+  <Folder Name="/middleware/" />
+  <Folder Name="/middleware/queue/">
+    <Project Path="middleware/queue/src/fiskaltrust.Middleware.Queue.SQLite/fiskaltrust.Middleware.Queue.SQLite.csproj" />
+  </Folder>
+  <Folder Name="/middleware/scu-de/">
+    <Project Path="middleware/scu-de/src/fiskaltrust.Middleware.SCU.DE.FiskalyCertified/fiskaltrust.Middleware.SCU.DE.FiskalyCertified.csproj" />
+    <Project Path="middleware/scu-de/src/fiskaltrust.Middleware.SCU.DE.Swissbit/fiskaltrust.Middleware.SCU.DE.Swissbit.csproj" />
+  </Folder>
+  <Folder Name="/middleware/scu-it/">
+    <Project Path="middleware/scu-it/src/fiskaltrust.Middleware.SCU.IT.CustomRTServer/fiskaltrust.Middleware.SCU.IT.CustomRTServer.csproj" />
+    <Project Path="middleware/scu-it/src/fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter/fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter.csproj" />
+  </Folder>
   <Folder Name="/src/">
-    <Project Path="src/fiskaltrust.AndroidLauncher/fiskaltrust.AndroidLauncher.csproj" />
+    <Project Path="src/fiskaltrust.AndroidLauncher/fiskaltrust.AndroidLauncher.csproj">
+      <Deploy Solution="Debug|*" />
+    </Project>
   </Folder>
   <Folder Name="/test/">
     <Project Path="test/fiskaltrust.AndroidLauncher.SmokeTests/fiskaltrust.AndroidLauncher.SmokeTests.csproj" />
