@@ -4,10 +4,16 @@ using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
 using Android.Util;
+using fiskaltrust.AndroidLauncher.AndroidService;
 using fiskaltrust.AndroidLauncher.Constants;
+using fiskaltrust.AndroidLauncher.Extensions;
+using fiskaltrust.AndroidLauncher.Grpc;
 using fiskaltrust.AndroidLauncher.Helpers;
+using fiskaltrust.AndroidLauncher.Http.Broadcasting;
+using fiskaltrust.AndroidLauncher.Services;
 using fiskaltrust.ifPOS.v1.it;
 using Microsoft.AspNetCore.Http.Headers;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Org.Apache.Http.Protocol;
@@ -34,6 +40,12 @@ namespace fiskaltrust.AndroidLauncher.Activitites
         Exported = true)]
     public class PosSystemAPIActivity : Activity
     {
+
+        public static LocalMiddlewareLauncher? LocalMiddlewareServiceInstance { get; set; }
+        
+        // TaskCompletionSource to signal when the service is ready
+        private static TaskCompletionSource<bool>? _serviceInitializationTcs;
+
         private const string TAG = "PosSystemAPI";
         
         // Local middleware endpoint for sign and echo
@@ -171,10 +183,13 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                 // Determine if this is a local or cloud endpoint
                 var isLocalEndpoint = IsLocalEndpoint(normalizedPath);
                 
+                var cashBoxId = Guid.Parse(headers.GetValueOrDefault("x-cashbox-id", Guid.Empty.ToString())!);
+                var accessToken = headers.GetValueOrDefault("x-cashbox-accesstoken", string.Empty)!;
+
                 if (isLocalEndpoint)
                 {
                     Log.Info(TAG, $"Routing to local middleware: {normalizedPath}");
-                    await MakeLocalRequestAsync(method, normalizedPath, headers, body);
+                    await MakeLocalRequestAsync(cashBoxId, accessToken, method, normalizedPath, headers, body);
                 }
                 else
                 {
@@ -214,7 +229,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             return LocalEndpoints.Contains(path);
         }
 
-        private async Task MakeLocalRequestAsync(string method, string path, Dictionary<string, string> headers, string? body)
+        private async Task MakeLocalRequestAsync(Guid cashBoxId, string accessToken, string method, string path, Dictionary<string, string> headers, string? body)
         {
             // Check for x-operation-id header for idempotency
             string? operationId = null;
@@ -238,20 +253,102 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                 }
             }
 
+            // Check if this is a /v2/echo request with null Message to trigger service restart
+            if (string.Equals(path, "/v2/echo", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrEmpty(body))
+            {
+                try
+                {
+                    var echoRequest = JsonConvert.DeserializeObject<JObject>(body);
+                    if (echoRequest != null && echoRequest.TryGetValue("Message", out var messageToken))
+                    {
+                        if (messageToken.Type == JTokenType.Null)
+                        {
+                            Log.Info(TAG, "Detected /v2/echo request with null Message - triggering service restart");
+                            await RestartMiddlewareLauncherServiceAsync(cashBoxId, accessToken);
+                            
+                            // Return a successful response indicating restart was triggered
+                            var restartResponse = new
+                            {
+                                Message = "Service restart triggered due to null Message in echo request",
+                                Timestamp = DateTime.UtcNow.ToString("O")
+                            };
+                            var restartJson = JsonConvert.SerializeObject(restartResponse);
+                            var contentBase64 = Base64UrlHelper.Encode(restartJson);
+                            var contentTypeBase64 = Base64UrlHelper.Encode("application/json");
+                            var responseHeaders = new Dictionary<string, string>();
+                            var headersJson = JsonConvert.SerializeObject(responseHeaders);
+                            var headersBase64 = Base64UrlHelper.Encode(headersJson);
+                            
+                            FinishWithResult("200", contentBase64, contentTypeBase64, headersBase64);
+                            return;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Warn(TAG, $"Failed to parse echo request body for service restart check: {ex.Message}");
+                    // Continue with normal processing if parsing fails
+                }
+            }
+
             using var httpClient = new HttpClient();
             httpClient.Timeout = TimeSpan.FromMinutes(5);
 
             try
             {
-                // In here we will perform the calls necessary for doing an echo
-                var statusCode = 500.ToString();
-                var contentBase64Url = Base64UrlHelper.Encode("Not supported.");
-                var contentTypeBase64Url = Base64UrlHelper.Encode("application/json");
-                var responseHeadersJson = JsonConvert.SerializeObject(new Dictionary<string, string> { });
-                var responseHeadersBase64Url = Base64UrlHelper.Encode(responseHeadersJson);
+                // Ensure path starts with /
+                if (!path.StartsWith("/"))
+                {
+                    path = "/" + path;
+                }
 
-                // Return result
-                FinishWithResult(statusCode, contentBase64Url, contentTypeBase64Url, responseHeadersBase64Url);
+                var url = LOCALHOST_BASE_URL.TrimEnd('/') + path;
+                Log.Info(TAG, $"Making local HTTP request to {url}");
+
+                // Create HTTP request
+                var request = new HttpRequestMessage(new HttpMethod(method), url);
+
+                // Add headers (skip certain headers that HttpClient handles automatically)
+                var skipHeaders = new HashSet<string>(StringComparer.OrdinalIgnoreCase) 
+                { 
+                    "Host", "Content-Length", "Connection", "x-operation-id" // x-operation-id is handled separately
+                };
+
+                foreach (var header in headers)
+                {
+                    if (skipHeaders.Contains(header.Key))
+                    {
+                        continue;
+                    }
+
+                    try
+                    {
+                        if (header.Key.Equals("Content-Type", StringComparison.OrdinalIgnoreCase))
+                        {
+                            // Content-Type will be set with content
+                            continue;
+                        }
+                        request.Headers.TryAddWithoutValidation(header.Key, header.Value);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Warn(TAG, $"Failed to add header {header.Key}: {ex.Message}");
+                    }
+                }
+
+                // Add body if present
+                if (!string.IsNullOrEmpty(body))
+                {
+                    var contentType = headers.TryGetValue("Content-Type", out var ct) ? ct : "application/json";
+                    request.Content = new StringContent(body, Encoding.UTF8, contentType);
+                }
+
+                // Send request
+                var response = await httpClient.SendAsync(request);
+                
+                Log.Info(TAG, $"Received local response: {(int)response.StatusCode}");
+
+                await ProcessHttpResponseAsync(response, operationId);
             }
             catch (HttpRequestException ex)
             {
@@ -267,6 +364,100 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             {
                 Log.Error(TAG, $"Local request processing failed: {ex}");
                 FinishWithError(500, $"Request processing failed: {ex.Message}");
+            }
+        }
+
+        private async Task RestartMiddlewareLauncherServiceAsync(Guid cashBoxId, string accessToken)
+        {
+            try
+            {
+                Log.Info(TAG, "Starting MiddlewareLauncherService restart process");
+                await StartMiddlewareLauncherServiceAsync(cashBoxId, accessToken);
+
+                Log.Info(TAG, "MiddlewareLauncherService restart process completed");
+            }
+            catch (Exception ex)
+            {
+                Log.Error(TAG, $"Failed to restart MiddlewareLauncherService: {ex.Message}");
+            }
+        }
+
+        public async Task StartMiddlewareLauncherServiceAsync(Guid cashBoxId, string accessToken)
+        { 
+            LocalMiddlewareServiceInstance = null;
+            var isSandbox = true;
+            var enableCloseButton = false;
+            var logLevel = LogLevel.Debug;
+            if (StateProvider.Instance.CurrentValue.CurrentState == State.Error)
+            {
+                DefaultMiddlewareLauncherService.Stop<DefaultMiddlewareLauncherService>();
+            }
+
+            using var bundle = new Bundle();
+            bundle.PutString("cashboxid", cashBoxId.ToString());
+            bundle.PutString("accesstoken", accessToken);
+            bundle.PutBoolean("sandbox", isSandbox);
+            bundle.PutString("loglevel", logLevel.ToString());
+            bundle.PutBoolean("enableCloseButton", enableCloseButton);
+
+            using var alarmIntent = new Intent(Android.App.Application.Context, typeof(HttpAlarmReceiver));
+            alarmIntent.PutExtras(bundle);
+
+            var pending = PendingIntent.GetBroadcast(Android.App.Application.Context, 0, alarmIntent, PendingIntentFlags.UpdateCurrent | PendingIntentFlags.Immutable);
+
+            var alarmManager = (AlarmManager)Android.App.Application.Context.GetSystemService(Context.AlarmService);
+
+            if (Build.VERSION.SdkInt <= BuildVersionCodes.SV2)
+            {
+                alarmManager.SetExact(AlarmType.ElapsedRealtime, SystemClock.ElapsedRealtime() + 100, pending);
+            }
+            else
+            {
+                alarmManager.Set(AlarmType.ElapsedRealtime, SystemClock.ElapsedRealtime() + 100, pending);
+            }
+
+            // Wait for the LocalMiddlewareServiceInstance to be initialized
+            await WaitForLocalMiddlewareServiceInitializationAsync();
+        }
+
+        private async Task WaitForLocalMiddlewareServiceInitializationAsync()
+        {
+            const int maxWaitTimeMs = 30000; // 30 seconds timeout
+            const int pollIntervalMs = 500;   // Check every 500ms
+            
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+            
+            Log.Info(TAG, "Waiting for LocalMiddlewareServiceInstance to be initialized...");
+            
+            while (stopwatch.ElapsedMilliseconds < maxWaitTimeMs)
+            {
+                if (LocalMiddlewareServiceInstance != null && LocalMiddlewareServiceInstance.IsRunning)
+                {
+                    Log.Info(TAG, $"LocalMiddlewareServiceInstance initialized after {stopwatch.ElapsedMilliseconds}ms");
+                    return;
+                }
+                
+                await Task.Delay(pollIntervalMs);
+            }
+            
+            Log.Warn(TAG, $"Timeout waiting for LocalMiddlewareServiceInstance initialization after {stopwatch.ElapsedMilliseconds}ms");
+            throw new TimeoutException("LocalMiddlewareServiceInstance failed to initialize within the expected time");
+        }
+
+        [BroadcastReceiver]
+        public class AlarmReceiver : BroadcastReceiver
+        {
+            public override void OnReceive(Context context, Intent intent)
+            {
+                var cashboxId = intent.GetStringExtra("cashboxid");
+                var accessToken = intent.GetStringExtra("accesstoken");
+                var isSandbox = intent.GetBooleanExtra("sandbox", false);
+                var enableCloseButton = intent.GetBooleanExtra("enableCloseButton", false);
+                var logLevel = Enum.TryParse(intent.GetStringExtra("loglevel"), out LogLevel level) ? level : LogLevel.Information;
+                var scuParams = intent.GetScuConfigParameters();
+
+                IntentLauncherService.Start(cashboxId, accessToken, isSandbox, logLevel, scuParams, enableCloseButton);
+                PowerManagerHelper.AskUserToDisableBatteryOptimization(context);
             }
         }
 

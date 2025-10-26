@@ -1,7 +1,4 @@
-﻿using fiskaltrust.AndroidLauncher.Enums;
-using fiskaltrust.AndroidLauncher.Exceptions;
-using fiskaltrust.AndroidLauncher.Helpers;
-using fiskaltrust.AndroidLauncher.Hosting;
+﻿using fiskaltrust.AndroidLauncher.Exceptions;
 using fiskaltrust.AndroidLauncher.Services.Configuration;
 using fiskaltrust.AndroidLauncher.Services.Helper;
 using fiskaltrust.AndroidLauncher.Services.Queue;
@@ -12,23 +9,16 @@ using fiskaltrust.Middleware.Abstractions;
 using fiskaltrust.storage.serialization.V0;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace fiskaltrust.AndroidLauncher.Services
 {
-    internal class MiddlewareLauncher 
+    public class LocalMiddlewareLauncher : IMiddlewareLauncher
     {
         private const string PACKAGE_NAME_DE_SWISSBIT = "fiskaltrust.Middleware.SCU.DE.Swissbit";
         private const string PACKAGE_NAME_DE_FISKALY_CERTIFIED = "fiskaltrust.Middleware.SCU.DE.FiskalyCertified";
         private const string PACKAGE_NAME_IT_EPSON_RT_PRINTER = "fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter";
         private const string PACKAGE_NAME_IT_CUSTOM_RT_SERVER = "fiskaltrust.Middleware.SCU.IT.CustomRTServer";
 
-        private readonly IHostFactory _hostFactory;
-        private readonly IUrlResolver _urlResolver;
         private readonly IConfigurationProvider _configurationProvider;
         private readonly ILocalConfigurationProvider _localConfigurationProvider;
 
@@ -40,19 +30,15 @@ namespace fiskaltrust.AndroidLauncher.Services
 
         private Android.OS.PowerManager.WakeLock _wakeLock;
         private List<IHelper> _helpers;
-        private List<IPOS> _poss;
+        private IPOS _poss;
         private AbstractScuList _scus;
-
-        private string _defaultUrl = null;
-        private List<IHost<IPOS>> _hosts;
 
         public bool IsRunning { get; set; }
 
-        public MiddlewareLauncher(IHostFactory hostFactory, IUrlResolver urlResolver, Guid cashboxId, string accessToken, bool isSandbox, LogLevel logLevel, Dictionary<string, object> scuParams)
-        {
-            _hostFactory = hostFactory;
-            _urlResolver = urlResolver;
+        public IPOS POS => _poss;
 
+        public LocalMiddlewareLauncher(Guid cashboxId, string accessToken, bool isSandbox, LogLevel logLevel, Dictionary<string, object> scuParams)
+        {
             _cashboxId = cashboxId;
             _accessToken = accessToken;
             _isSandbox = isSandbox;
@@ -62,8 +48,6 @@ namespace fiskaltrust.AndroidLauncher.Services
             _configurationProvider = new HelipadConfigurationProvider();
             _localConfigurationProvider = new LocalConfigurationProvider();
             _helpers = new List<IHelper>();
-            _poss = new List<IPOS>();
-            _hosts = new List<IHost<IPOS>>();
             _scus = new AbstractScuList();
         }
 
@@ -113,12 +97,14 @@ namespace fiskaltrust.AndroidLauncher.Services
                 }
             }
 
+            if(configuration.ftQueues.Count() != 1)
+            {
+                throw new ArgumentException("The Android launcher currently only supports exactly one queue package.");
+            }
+
             foreach (var queueConfig in configuration.ftQueues)
             {
                 queueConfig.Configuration["sandbox"] = _isSandbox;
-
-                if (_defaultUrl == null)
-                    _defaultUrl = _urlResolver.GetProtocolSpecificUrl(queueConfig);
                 await InitializeQueueAsync(queueConfig);
             }
 
@@ -129,11 +115,7 @@ namespace fiskaltrust.AndroidLauncher.Services
 
         public async Task StopAsync()
         {
-            if (_poss != null)
-            {
-                await Task.WhenAll(_hosts.Select(h => h.StopAsync()));
-            }
-
+            // LocalMiddlewareLauncher doesn't manage hosts directly, just helpers and wake locks
             foreach (var helper in _helpers)
             {
                 helper.StopBegin();
@@ -179,25 +161,18 @@ namespace fiskaltrust.AndroidLauncher.Services
 
         private async Task InitializeQueueAsync(PackageConfiguration packageConfig)
         {
-            string url = _urlResolver.GetProtocolSpecificUrl(packageConfig);
-
             var queueProvider = new SQLiteQueueProvider();
             var pos = await Task.Run(() => queueProvider.CreatePOS(Environment.GetFolderPath(Environment.SpecialFolder.Personal), packageConfig, _cashboxId, _accessToken, _isSandbox, _logLevel, _scus));
-            var host = _hostFactory.CreatePosHost();
-            _poss.Add(pos);
-            _hosts.Add(host);
-            await host.StartAsync(url, pos, _logLevel);
-
-            Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.Queue.SQLite' is listening on '{url}'.");
+            _poss = pos;
+            Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.Queue.SQLite' is listening on 'Intnet Interface'.");
         }
 
         private async Task InitializeHelipadHelperAsync(ftCashBoxConfiguration configuration)
         {
             var helipadHelperProvider = new HelipadHelperProvider();
-            var helper = await Task.Run(() => helipadHelperProvider.CreateHelper(configuration, _accessToken, _isSandbox, _logLevel, _poss));
+            var helper = await Task.Run(() => helipadHelperProvider.CreateHelper(configuration, _accessToken, _isSandbox, _logLevel, new List<IPOS> { _poss }));
             helper.StartBegin();
             helper.StartEnd();
-
             _helpers.Add(helper);
         }
 
