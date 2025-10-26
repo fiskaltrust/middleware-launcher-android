@@ -42,12 +42,12 @@ namespace fiskaltrust.AndroidLauncher.Activitites
     {
 
         public static LocalMiddlewareLauncher? LocalMiddlewareServiceInstance { get; set; }
-        
+
         // TaskCompletionSource to signal when the service is ready
         private static TaskCompletionSource<bool>? _serviceInitializationTcs;
 
         private const string TAG = "PosSystemAPI";
-        
+
         // Local middleware endpoint for sign and echo
         private const string LOCALHOST_BASE_URL = "http://localhost:1200";
 
@@ -81,9 +81,9 @@ namespace fiskaltrust.AndroidLauncher.Activitites
         protected override void OnCreate(Bundle? savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            
+
             Log.Info(TAG, "PosSystemAPI Activity started");
-            
+
             // Process the intent asynchronously
             Task.Run(async () => await ProcessIntentAsync());
         }
@@ -135,7 +135,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                 try
                 {
                     var headersJson = Base64UrlHelper.Decode(headerBase64Url);
-                    headers = JsonConvert.DeserializeObject<Dictionary<string, string>>(headersJson) 
+                    headers = JsonConvert.DeserializeObject<Dictionary<string, string>>(headersJson)
                         ?? new Dictionary<string, string>();
                     Log.Debug(TAG, $"Decoded {headers.Count} headers");
                 }
@@ -182,7 +182,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
 
                 // Determine if this is a local or cloud endpoint
                 var isLocalEndpoint = IsLocalEndpoint(normalizedPath);
-                
+
                 var cashBoxId = Guid.Parse(headers.GetValueOrDefault("x-cashbox-id", Guid.Empty.ToString())!);
                 var accessToken = headers.GetValueOrDefault("x-cashbox-accesstoken", string.Empty)!;
 
@@ -210,7 +210,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             // We only support defaults (no version) and /v2
             // Reject /v0, /v1, /json/v0, /json/v1, /xml/v0, /xml/v1
             var unsupportedPrefixes = new[] { "/v0/", "/v1/", "/json/v0/", "/json/v1/", "/xml/v0/", "/xml/v1/" };
-            
+
             foreach (var prefix in unsupportedPrefixes)
             {
                 if (path.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
@@ -218,7 +218,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                     return true;
                 }
             }
-            
+
             return false;
         }
 
@@ -236,18 +236,18 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             if (headers.TryGetValue("x-operation-id", out var opId))
             {
                 operationId = opId;
-                
+
                 // Check if we have a cached result for this operation
                 if (OperationCache.TryGetValue(operationId, out var cachedResult))
                 {
                     Log.Info(TAG, $"Returning cached result for operation ID: {operationId}");
-                    
+
                     // Return cached result
                     var cachedContentBase64 = Base64UrlHelper.Encode(cachedResult.Content);
                     var cachedContentTypeBase64 = Base64UrlHelper.Encode(cachedResult.ContentType);
                     var cachedHeadersJson = JsonConvert.SerializeObject(cachedResult.Headers);
                     var cachedHeadersBase64 = Base64UrlHelper.Encode(cachedHeadersJson);
-                    
+
                     FinishWithResult(cachedResult.StatusCode, cachedContentBase64, cachedContentTypeBase64, cachedHeadersBase64);
                     return;
                 }
@@ -265,7 +265,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                         {
                             Log.Info(TAG, "Detected /v2/echo request with null Message - triggering service restart");
                             await RestartMiddlewareLauncherServiceAsync(cashBoxId, accessToken);
-                            
+
                             // Return a successful response indicating restart was triggered
                             var restartResponse = new
                             {
@@ -278,7 +278,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                             var responseHeaders = new Dictionary<string, string>();
                             var headersJson = JsonConvert.SerializeObject(responseHeaders);
                             var headersBase64 = Base64UrlHelper.Encode(headersJson);
-                            
+
                             FinishWithResult("200", contentBase64, contentTypeBase64, headersBase64);
                             return;
                         }
@@ -309,8 +309,8 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                 var request = new HttpRequestMessage(new HttpMethod(method), url);
 
                 // Add headers (skip certain headers that HttpClient handles automatically)
-                var skipHeaders = new HashSet<string>(StringComparer.OrdinalIgnoreCase) 
-                { 
+                var skipHeaders = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+                {
                     "Host", "Content-Length", "Connection", "x-operation-id" // x-operation-id is handled separately
                 };
 
@@ -345,7 +345,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
 
                 // Send request
                 var response = await httpClient.SendAsync(request);
-                
+
                 Log.Info(TAG, $"Received local response: {(int)response.StatusCode}");
 
                 await ProcessHttpResponseAsync(response, operationId);
@@ -383,15 +383,16 @@ namespace fiskaltrust.AndroidLauncher.Activitites
         }
 
         public async Task StartMiddlewareLauncherServiceAsync(Guid cashBoxId, string accessToken)
-        { 
+        {
             LocalMiddlewareServiceInstance = null;
             var isSandbox = true;
             var enableCloseButton = false;
             var logLevel = LogLevel.Debug;
-            if (StateProvider.Instance.CurrentValue.CurrentState == State.Error)
+            try
             {
-                DefaultMiddlewareLauncherService.Stop<DefaultMiddlewareLauncherService>();
+                IntentLauncherService.Stop();
             }
+            catch { }
 
             using var bundle = new Bundle();
             bundle.PutString("cashboxid", cashBoxId.ToString());
@@ -424,11 +425,11 @@ namespace fiskaltrust.AndroidLauncher.Activitites
         {
             const int maxWaitTimeMs = 30000; // 30 seconds timeout
             const int pollIntervalMs = 500;   // Check every 500ms
-            
+
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-            
+
             Log.Info(TAG, "Waiting for LocalMiddlewareServiceInstance to be initialized...");
-            
+
             while (stopwatch.ElapsedMilliseconds < maxWaitTimeMs)
             {
                 if (LocalMiddlewareServiceInstance != null && LocalMiddlewareServiceInstance.IsRunning)
@@ -436,10 +437,10 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                     Log.Info(TAG, $"LocalMiddlewareServiceInstance initialized after {stopwatch.ElapsedMilliseconds}ms");
                     return;
                 }
-                
+
                 await Task.Delay(pollIntervalMs);
             }
-            
+
             Log.Warn(TAG, $"Timeout waiting for LocalMiddlewareServiceInstance initialization after {stopwatch.ElapsedMilliseconds}ms");
             throw new TimeoutException("LocalMiddlewareServiceInstance failed to initialize within the expected time");
         }
@@ -469,9 +470,9 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             try
             {
                 // Determine if sandbox or production based on headers or use default
-                var isSandbox = headers.TryGetValue("x-sandbox", out var sandbox) && 
+                var isSandbox = headers.TryGetValue("x-sandbox", out var sandbox) &&
                                 (sandbox == "true" || sandbox == "1");
-                
+
                 var baseUrl = isSandbox ? Urls.POSSYSTEM_API_SANDBOX : Urls.POSSYSTEM_API_PRODUCTION;
 
                 // Ensure path starts with /
@@ -487,8 +488,8 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                 var request = new HttpRequestMessage(new HttpMethod(method), url);
 
                 // Add headers (skip certain headers that HttpClient handles automatically)
-                var skipHeaders = new HashSet<string>(StringComparer.OrdinalIgnoreCase) 
-                { 
+                var skipHeaders = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+                {
                     "Host", "Content-Length", "Connection", "x-sandbox" // x-sandbox is only for routing
                 };
 
@@ -523,7 +524,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
 
                 // Send request
                 var response = await httpClient.SendAsync(request);
-                
+
                 Log.Info(TAG, $"Received cloud response: {(int)response.StatusCode}");
 
                 await ProcessHttpResponseAsync(response, null); // No caching for cloud requests
@@ -571,7 +572,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                     responseContentType,
                     responseHeaders
                 );
-                
+
                 OperationCache.TryAdd(operationId, cachedResult);
                 Log.Info(TAG, $"Cached result for operation ID: {operationId}");
             }
@@ -597,7 +598,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                     resultIntent.PutExtra(EXTRA_STATUS_CODE, statusCode);
                     resultIntent.PutExtra(EXTRA_CONTENT_BASE64URL, contentBase64Url);
                     resultIntent.PutExtra(EXTRA_CONTENT_TYPE_BASE64URL, contentTypeBase64Url);
-                    
+
                     if (!string.IsNullOrEmpty(headerBase64Url))
                     {
                         resultIntent.PutExtra(EXTRA_RESPONSE_HEADER_JSON_BASE64URL, headerBase64Url);

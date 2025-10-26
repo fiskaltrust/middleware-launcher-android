@@ -26,8 +26,6 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
         private const int NOTIFICATION_ID = 0x66746d77;
         private const string NOTIFICATION_CHANNEL_ID = "eu.fiskaltrust.launcher.android";
 
-        private IMiddlewareLauncher _launcher;
-
         [return: GeneratedEnum]
         public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
         {
@@ -94,7 +92,7 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                         Log.Logger.Error(ex, "AdminEndpointService starting failed.");
                     }
 
-                    await _launcher.StartAsync();
+                    await PosSystemAPIActivity.LocalMiddlewareServiceInstance.StartAsync();
 
                     SetState(LauncherState.Connected, enableCloseButton);
                     StateProvider.Instance.SetState(State.Running);
@@ -137,7 +135,7 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
             Task.Run(async () =>
             {
                 await AdminEndpointService.Instance.StopAsync();
-                await _launcher.StopAsync();
+                await PosSystemAPIActivity.LocalMiddlewareServiceInstance.StopAsync();
             }).Wait();
 
             if (Build.VERSION.SdkInt >= BuildVersionCodes.N)
