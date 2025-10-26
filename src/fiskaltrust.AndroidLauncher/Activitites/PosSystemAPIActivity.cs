@@ -26,6 +26,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
 
 namespace fiskaltrust.AndroidLauncher.Activitites
 {
@@ -401,21 +402,24 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             bundle.PutString("loglevel", logLevel.ToString());
             bundle.PutBoolean("enableCloseButton", enableCloseButton);
 
-            using var alarmIntent = new Intent(Android.App.Application.Context, typeof(HttpAlarmReceiver));
-            alarmIntent.PutExtras(bundle);
+            IntentLauncherService.Start(cashBoxId.ToString(), accessToken, isSandbox, logLevel, new Dictionary<string, object> { }, enableCloseButton);
+            PowerManagerHelper.AskUserToDisableBatteryOptimization(Android.App.Application.Context);
 
-            var pending = PendingIntent.GetBroadcast(Android.App.Application.Context, 0, alarmIntent, PendingIntentFlags.UpdateCurrent | PendingIntentFlags.Immutable);
+            //using var alarmIntent = new Intent(Android.App.Application.Context, typeof(HttpAlarmReceiver));
+            //alarmIntent.PutExtras(bundle);
 
-            var alarmManager = (AlarmManager)Android.App.Application.Context.GetSystemService(Context.AlarmService);
+            //var pending = PendingIntent.GetBroadcast(Android.App.Application.Context, 0, alarmIntent, PendingIntentFlags.UpdateCurrent | PendingIntentFlags.Immutable);
 
-            if (Build.VERSION.SdkInt <= BuildVersionCodes.SV2)
-            {
-                alarmManager.SetExact(AlarmType.ElapsedRealtime, SystemClock.ElapsedRealtime() + 100, pending);
-            }
-            else
-            {
-                alarmManager.Set(AlarmType.ElapsedRealtime, SystemClock.ElapsedRealtime() + 100, pending);
-            }
+            //var alarmManager = (AlarmManager)Android.App.Application.Context.GetSystemService(Context.AlarmService);
+
+            //if (Build.VERSION.SdkInt <= BuildVersionCodes.SV2)
+            //{
+            //    alarmManager.SetExact(AlarmType.ElapsedRealtime, SystemClock.ElapsedRealtime() + 100, pending);
+            //}
+            //else
+            //{
+            //    alarmManager.Set(AlarmType.ElapsedRealtime, SystemClock.ElapsedRealtime() + 100, pending);
+            //}
 
             // Wait for the LocalMiddlewareServiceInstance to be initialized
             await WaitForLocalMiddlewareServiceInitializationAsync();
@@ -443,23 +447,6 @@ namespace fiskaltrust.AndroidLauncher.Activitites
 
             Log.Warn(TAG, $"Timeout waiting for LocalMiddlewareServiceInstance initialization after {stopwatch.ElapsedMilliseconds}ms");
             throw new TimeoutException("LocalMiddlewareServiceInstance failed to initialize within the expected time");
-        }
-
-        [BroadcastReceiver]
-        public class AlarmReceiver : BroadcastReceiver
-        {
-            public override void OnReceive(Context context, Intent intent)
-            {
-                var cashboxId = intent.GetStringExtra("cashboxid");
-                var accessToken = intent.GetStringExtra("accesstoken");
-                var isSandbox = intent.GetBooleanExtra("sandbox", false);
-                var enableCloseButton = intent.GetBooleanExtra("enableCloseButton", false);
-                var logLevel = Enum.TryParse(intent.GetStringExtra("loglevel"), out LogLevel level) ? level : LogLevel.Information;
-                var scuParams = intent.GetScuConfigParameters();
-
-                IntentLauncherService.Start(cashboxId, accessToken, isSandbox, logLevel, scuParams, enableCloseButton);
-                PowerManagerHelper.AskUserToDisableBatteryOptimization(context);
-            }
         }
 
         private async Task MakeCloudRequestAsync(string method, string path, Dictionary<string, string> headers, string? body)
