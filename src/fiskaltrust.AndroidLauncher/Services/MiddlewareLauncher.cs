@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 
 namespace fiskaltrust.AndroidLauncher.Services
 {
-    internal class MiddlewareLauncher 
+    internal class MiddlewareLauncher
     {
         private const string PACKAGE_NAME_DE_SWISSBIT = "fiskaltrust.Middleware.SCU.DE.Swissbit";
         private const string PACKAGE_NAME_DE_FISKALY_CERTIFIED = "fiskaltrust.Middleware.SCU.DE.FiskalyCertified";
