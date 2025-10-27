@@ -1,7 +1,9 @@
 <Solution>
   <Folder Name="/middleware/" />
   <Folder Name="/middleware/queue/">
+    <Project Path="middleware/queue/src/fiskaltrust.Middleware.Contracts/fiskaltrust.Middleware.Contracts.csproj" />
     <Project Path="middleware/queue/src/fiskaltrust.Middleware.Queue.SQLite/fiskaltrust.Middleware.Queue.SQLite.csproj" />
+    <Project Path="middleware/queue/src/fiskaltrust.Middleware.Queue/fiskaltrust.Middleware.Queue.csproj" />
   </Folder>
   <Folder Name="/middleware/scu-de/">
     <Project Path="middleware/scu-de/src/fiskaltrust.Middleware.SCU.DE.FiskalyCertified/fiskaltrust.Middleware.SCU.DE.FiskalyCertified.csproj" />
