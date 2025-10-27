@@ -3,10 +3,10 @@ name: Android Build and Upload
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
-
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 env:
     BUILD_CONFIGURATION: Release
@@ -24,7 +24,7 @@ jobs:
             lfs: true
             submodules: true
   
-        - uses: actions/setup-dotnet@v3
+        - uses: actions/setup-dotnet@v4
           with:
             dotnet-version: '9.x.x'
 
@@ -65,7 +65,7 @@ jobs:
         - name : Install android workload
           shell: bash
           run: |
-            dotnet workload install maui-windows maui-android
+            dotnet workload install maui-android
 
         - name : Build Android App
           shell: bash

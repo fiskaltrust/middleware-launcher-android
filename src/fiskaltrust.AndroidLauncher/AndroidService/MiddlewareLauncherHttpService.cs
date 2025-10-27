@@ -108,7 +108,7 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                 {
                     try
                     {
-                        await AdminEndpointService.Instance.StartAsync();
+                        // await AdminEndpointService.Instance.StartAsync();
                     }
                     catch (Exception ex)
                     {
@@ -158,7 +158,7 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
 
             Task.Run(async () =>
             {
-                await AdminEndpointService.Instance.StopAsync();
+                // await AdminEndpointService.Instance.StopAsync();
                 await _launcher.StopAsync();
             }).Wait();
 
