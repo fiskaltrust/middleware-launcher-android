@@ -46,10 +46,6 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             "/v2/journal",
         };
 
-        // In-memory cache for operation results (idempotency for local requests)
-        // Key: x-operation-id, Value: cached response data
-        private static readonly ConcurrentDictionary<string, CachedOperationResult> OperationCache = new ConcurrentDictionary<string, CachedOperationResult>();
-
         protected override void OnCreate(Bundle? savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
