@@ -26,7 +26,7 @@ namespace fiskaltrust.AndroidLauncher.Http.Broadcasting
 
             if (StateProvider.Instance.CurrentValue.CurrentState == State.Error)
             {
-                MiddlewareLauncherService.Stop<MiddlewareLauncherHttpService>();
+                MiddlewareLauncherHttpService.Stop();
             }
 
             using var bundle = new Bundle();
@@ -70,7 +70,7 @@ namespace fiskaltrust.AndroidLauncher.Http.Broadcasting
             var logLevel = Enum.TryParse(intent.GetStringExtra("loglevel"), out LogLevel level) ? level : LogLevel.Information;
             var scuParams = intent.GetScuConfigParameters();
 
-            MiddlewareLauncherService.Start<MiddlewareLauncherHttpService>(cashboxId, accessToken, isSandbox, logLevel, scuParams, enableCloseButton);
+            MiddlewareLauncherHttpService.Start(cashboxId, accessToken, isSandbox, logLevel, scuParams, enableCloseButton);
             PowerManagerHelper.AskUserToDisableBatteryOptimization(context);
         }
     }

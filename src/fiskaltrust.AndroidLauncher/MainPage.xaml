@@ -1,18 +1,61 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="fiskaltrust.AndroidLauncher.MainPage">
+             xmlns:resources="clr-namespace:fiskaltrust.AndroidLauncher.Resources"
+             x:Class="fiskaltrust.AndroidLauncher.MainPage"
+             Title="{x:Static resources:AppResources.AppName}">
 
-    <ScrollView>
-        <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25">
-            <Label
-                Text="Hello, World!"
-                Style="{StaticResource Headline}"
-                SemanticProperties.HeadingLevel="Level1"/>
-
-        </VerticalStackLayout>
-    </ScrollView>
+    <Grid Padding="20,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="62" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <!-- Top spacer equivalent to android:layout_height="62dp" -->
+        <!-- Row 0 is just empty space -->
+        
+        <!-- Logo -->
+        <Image Grid.Row="1" 
+               x:Name="ftLogo"
+               Aspect="AspectFit"
+               HeightRequest="80"
+               WidthRequest="80"
+               HorizontalOptions="Center"
+               Margin="0,0,0,30"
+               VerticalOptions="Center"
+               BackgroundColor="Transparent" />
+        
+        <!-- Main Title -->
+        <Label Grid.Row="2"
+               Text="{x:Static resources:AppResources.MainTitle}"
+               FontSize="32"
+               FontAttributes="Bold"
+               HorizontalOptions="Fill"
+               HorizontalTextAlignment="Center"
+               Margin="0,10,0,10" />
+        
+        <!-- Main Content -->
+        <Label Grid.Row="3"
+               Text="{x:Static resources:AppResources.MainContent}"
+               FontSize="14"
+               HorizontalOptions="Fill"
+               HorizontalTextAlignment="Center"
+               Margin="0,0,0,0"
+               LineBreakMode="WordWrap" />
+        
+        <!-- Bottom section with version -->
+        <StackLayout Grid.Row="4" 
+                     VerticalOptions="End"
+                     Margin="0,0,0,10">
+            <Label x:Name="textViewVersion"
+                   Text="{Binding VersionText}"
+                   FontSize="14"
+                   HorizontalOptions="Fill"
+                   HorizontalTextAlignment="Center" />
+        </StackLayout>
+    </Grid>
 
 </ContentPage>

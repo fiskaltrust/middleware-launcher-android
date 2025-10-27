@@ -12,7 +12,7 @@ namespace fiskaltrust.AndroidLauncher.Http.Broadcasting
     {
         public override void OnReceive(Context context, Intent intent)
         {
-            MiddlewareLauncherService.Stop<MiddlewareLauncherHttpService>();
+            MiddlewareLauncherHttpService.Stop();
             StateProvider.Instance.SetState(State.Uninitialized);
         }
     }

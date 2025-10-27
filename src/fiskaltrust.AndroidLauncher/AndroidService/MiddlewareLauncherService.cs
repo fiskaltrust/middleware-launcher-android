@@ -1,11 +1,10 @@
 ﻿using Android.App;
 using Android.Content;
-using Android.Graphics;
-using Android.Nfc;
+using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
 using AndroidX.Core.App;
-using AndroidX.Core.Graphics.Drawable;
+using fiskaltrust.AndroidLauncher.Activitites;
 using fiskaltrust.AndroidLauncher.Constants;
 using fiskaltrust.AndroidLauncher.Enums;
 using fiskaltrust.AndroidLauncher.Exceptions;
@@ -14,27 +13,21 @@ using fiskaltrust.AndroidLauncher.Helpers;
 using fiskaltrust.AndroidLauncher.Helpers.Logging;
 using fiskaltrust.AndroidLauncher.Hosting;
 using fiskaltrust.AndroidLauncher.Services;
+using fiskaltrust.Api.PosSystemLocal.OperationHandling;
+using fiskaltrust.Api.PosSystemLocal.v2;
+using fiskaltrust.storage.serialization.V0;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace fiskaltrust.AndroidLauncher.AndroidService
 {
-    public abstract class MiddlewareLauncherService : Service
+    [Service(Name = "eu.fiskaltrust.MiddlewareLauncherService", ForegroundServiceType = ForegroundService.TypeDataSync)]
+    public class MiddlewareLauncherService : Service
     {
         private const int NOTIFICATION_ID = 0x66746d77;
         private const string NOTIFICATION_CHANNEL_ID = "eu.fiskaltrust.launcher.android";
-
-        private MiddlewareLauncher _launcher;
-
-        public abstract IHostFactory GetHostFactory();
-        public abstract IUrlResolver GetUrlResolver();
 
         [return: GeneratedEnum]
         public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
@@ -81,7 +74,7 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                     .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                     .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
                     .WriteTo.File(path: System.IO.Path.Combine(FileLoggerHelper.LogDirectory.FullName, FileLoggerHelper.LogFilename), rollingInterval: RollingInterval.Day, retainedFileCountLimit: 31)
-                    .WriteTo.ApplicationInsights(telemetryConfiguration, TelemetryConverter.Traces, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning)
+                    .WriteTo.ApplicationInsights(telemetryConfiguration, TelemetryConverter.Traces, restrictedToMinimumLevel: LogEventLevel.Warning)
                     .WriteTo.Sink(new LogcatSink(AndroidLogger.TAG, logLevel))
                     .CreateLogger();
 
@@ -89,24 +82,14 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
 
 
                 Log.Logger.Debug($"CashBox ID: {cashboxIdString}, IsSandbox: {isSandbox}");
-                _launcher = new MiddlewareLauncher(GetHostFactory(), GetUrlResolver(), cashboxId, accessToken, isSandbox, logLevel, scuParams);
+                PosSystemAPIActivity.LocalMiddlewareServiceInstance = new LocalMiddlewareLauncher(cashboxId, accessToken, isSandbox, logLevel, scuParams);
                 Task.Run(async () =>
                 {
-                    try
-                    {
-                        await AdminEndpointService.Instance.StartAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Logger.Error(ex, "AdminEndpointService starting failed.");
-                    }
-
-                    await _launcher.StartAsync();
-
+                    await PosSystemAPIActivity.LocalMiddlewareServiceInstance.StartAsync();
+                    PosSystemAPIActivity.OperationStateMachine = await new OperationStateMachineFactory(new LoggerFactory()).CreateAsync(PosSystemAPIActivity.LocalMiddlewareServiceInstance.QueueConfiguration, new MiddlewareClient(PosSystemAPIActivity.LocalMiddlewareServiceInstance.POS));
                     SetState(LauncherState.Connected, enableCloseButton);
                     StateProvider.Instance.SetState(State.Running);
                 }).Wait();
-
                 Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
 
                 return StartCommandResult.RedeliverIntent;
@@ -137,6 +120,13 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
             }
         }
 
+        public async Task<OperationStateMachine> InitializeOperationStateMachine(Guid queueId, PackageConfiguration packageConfiguration, IMiddlewareClient middlewareClient, ILoggerFactory loggerFactory)
+        {
+            var operationStateMachineFactory = new OperationStateMachineFactory(loggerFactory);
+            var operationStateMachine = await operationStateMachineFactory.CreateAsync(packageConfiguration, middlewareClient);
+            return operationStateMachine;
+        }
+
         public override void OnDestroy()
         {
             Log.Logger.Information("Destroying the fiskaltrust.Middleware service");
@@ -145,7 +135,11 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
             Task.Run(async () =>
             {
                 await AdminEndpointService.Instance.StopAsync();
-                await _launcher.StopAsync();
+                if (PosSystemAPIActivity.LocalMiddlewareServiceInstance != null)
+                {
+                    await PosSystemAPIActivity.LocalMiddlewareServiceInstance.StopAsync();
+                    PosSystemAPIActivity.LocalMiddlewareServiceInstance = null;
+                }
             }).Wait();
 
             if (Build.VERSION.SdkInt >= BuildVersionCodes.N)
@@ -166,9 +160,9 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
             Log.Logger.Warning($"Connectivity state has changed to {e.NetworkAccess}. Current connection profiles: {string.Join(", ", e.ConnectionProfiles.Select(x => x.ToString()))}");
         }
 
-        public static void Start<T>(string cashboxId, string accessToken, bool isSandbox, LogLevel logLevel, Dictionary<string, object> additionalScuParams, bool enableCloseButton) where T : MiddlewareLauncherService
+        public static void Start(string cashboxId, string accessToken, bool isSandbox, LogLevel logLevel, Dictionary<string, object> additionalScuParams, bool enableCloseButton)
         {
-            if (!IsRunning(typeof(T)))
+            if (!IsRunning(typeof(MiddlewareLauncherService)))
             {
                 var bundle = new Bundle();
                 bundle.PutString("cashboxid", cashboxId);
@@ -181,18 +175,18 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                     bundle.PutString(extra.Key, extra.Value.ToString());
                 }
 
-                Android.App.Application.Context.StartForegroundServiceCompat<T>(bundle);
+                Android.App.Application.Context.StartForegroundServiceCompat<MiddlewareLauncherService>(bundle);
             }
         }
 
-        public static void Stop<T>() where T : MiddlewareLauncherService
+        public static void Stop()
         {
             // TODO: helipad-upload
             Log.Logger.Information("Stopping the fiskaltrust.Middleware service");
 
-            if (IsRunning(typeof(T)))
+            if (IsRunning(typeof(MiddlewareLauncherService)))
             {
-                var intent = new Intent(Android.App.Application.Context, typeof(T));
+                var intent = new Intent(Android.App.Application.Context, typeof(MiddlewareLauncherService));
                 Android.App.Application.Context.StopService(intent);
             }
         }
@@ -232,7 +226,7 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
 
             if (enableCloseButton)
             {
-                Intent intent = new Intent(BroadcastConstants.StopBroadcastName);
+                Intent intent = new Intent(BroadcastConstants.HttpStopBroadcastName);
                 intent.SetPackage(Android.App.Application.Context.PackageName);
 
                 PendingIntent pendingIntent = PendingIntent.GetBroadcast(Android.App.Application.Context, 0, intent, PendingIntentFlags.Immutable);
@@ -268,6 +262,11 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                 }
             }
             return false;
+        }
+
+        public override IBinder? OnBind(Intent? intent)
+        {
+            return null!; // We don't provide binding
         }
     }
 }

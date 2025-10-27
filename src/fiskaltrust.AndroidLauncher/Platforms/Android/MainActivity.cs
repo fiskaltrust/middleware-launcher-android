@@ -9,4 +9,16 @@ namespace fiskaltrust.AndroidLauncher;
 [Register("eu.fiskaltrust.androidlauncher.MainActivity")]
 public class MainActivity : MauiAppCompatActivity
 {
+    protected override void OnCreate(Bundle? savedInstanceState)
+    {
+        try
+        {
+            SQLitePCL.Batteries_V2.Init();
+        }
+        catch(Exception ex)
+        {
+            
+        }
+        base.OnCreate(savedInstanceState);
+    }
 }
