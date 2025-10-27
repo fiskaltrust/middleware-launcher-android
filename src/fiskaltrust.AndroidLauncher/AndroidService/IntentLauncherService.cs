@@ -83,15 +83,6 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                 PosSystemAPIActivity.LocalMiddlewareServiceInstance = new LocalMiddlewareLauncher(cashboxId, accessToken, isSandbox, logLevel, scuParams);
                 Task.Run(async () =>
                 {
-                    try
-                    {
-                        await AdminEndpointService.Instance.StartAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Logger.Error(ex, "AdminEndpointService starting failed.");
-                    }
-
                     await PosSystemAPIActivity.LocalMiddlewareServiceInstance.StartAsync();
 
                     SetState(LauncherState.Connected, enableCloseButton);

@@ -1,33 +1,16 @@
 using Android.App;
 using Android.Content;
-using Android.Content.PM;
 using Android.OS;
-using Android.Runtime;
 using Android.Util;
 using fiskaltrust.AndroidLauncher.AndroidService;
 using fiskaltrust.AndroidLauncher.Constants;
-using fiskaltrust.AndroidLauncher.Extensions;
-using fiskaltrust.AndroidLauncher.Grpc;
 using fiskaltrust.AndroidLauncher.Helpers;
-using fiskaltrust.AndroidLauncher.Http.Broadcasting;
 using fiskaltrust.AndroidLauncher.Services;
 using fiskaltrust.ifPOS.v1;
-using fiskaltrust.ifPOS.v1.it;
-using Microsoft.AspNetCore.Http.Headers;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Org.Apache.Http.Protocol;
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
 
 namespace fiskaltrust.AndroidLauncher.Activitites
 {
@@ -250,7 +233,14 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                     var cachedHeadersJson = JsonConvert.SerializeObject(cachedResult.Headers);
                     var cachedHeadersBase64 = Base64UrlHelper.Encode(cachedHeadersJson);
 
-                    FinishWithResult(cachedResult.StatusCode, cachedContentBase64, cachedContentTypeBase64, cachedHeadersBase64);
+                    if (cachedResult.StatusCode.StartsWith("2"))
+                    {
+                        FinishWithResult("200", cachedContentBase64, cachedContentTypeBase64, cachedHeadersBase64);
+                    }
+                    else
+                    {
+                        FinishWithResult(cachedResult.StatusCode, cachedContentBase64, cachedContentTypeBase64, cachedHeadersBase64);
+                    }
                     return;
                 }
             }
