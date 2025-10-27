@@ -1,4 +1,5 @@
 ﻿using fiskaltrust.AndroidLauncher.Exceptions;
+using fiskaltrust.AndroidLauncher.PosApiPrint.Helpers;
 using fiskaltrust.AndroidLauncher.Services.Configuration;
 using fiskaltrust.AndroidLauncher.Services.Helper;
 using fiskaltrust.AndroidLauncher.Services.Queue;
@@ -12,7 +13,7 @@ using Serilog;
 
 namespace fiskaltrust.AndroidLauncher.Services
 {
-    public class LocalMiddlewareLauncher 
+    public class LocalMiddlewareLauncher
     {
         private const string PACKAGE_NAME_DE_SWISSBIT = "fiskaltrust.Middleware.SCU.DE.Swissbit";
         private const string PACKAGE_NAME_DE_FISKALY_CERTIFIED = "fiskaltrust.Middleware.SCU.DE.FiskalyCertified";
@@ -36,6 +37,8 @@ namespace fiskaltrust.AndroidLauncher.Services
         public bool IsRunning { get; set; }
 
         public IPOS POS => _poss;
+
+        public PackageConfiguration QueueConfiguration { get; private set; }
 
         public LocalMiddlewareLauncher(Guid cashboxId, string accessToken, bool isSandbox, LogLevel logLevel, Dictionary<string, object> scuParams)
         {
@@ -97,7 +100,7 @@ namespace fiskaltrust.AndroidLauncher.Services
                 }
             }
 
-            if(configuration.ftQueues.Count() != 1)
+            if (configuration.ftQueues.Count() != 1)
             {
                 throw new ArgumentException("The Android launcher currently only supports exactly one queue package.");
             }
@@ -164,6 +167,7 @@ namespace fiskaltrust.AndroidLauncher.Services
             var queueProvider = new SQLiteQueueProvider();
             var pos = await Task.Run(() => queueProvider.CreatePOS(Environment.GetFolderPath(Environment.SpecialFolder.Personal), packageConfig, _cashboxId, _accessToken, _isSandbox, _logLevel, _scus));
             _poss = pos;
+            QueueConfiguration = packageConfig;
             Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.Queue.SQLite' is listening on 'Intnet Interface'.");
         }
 

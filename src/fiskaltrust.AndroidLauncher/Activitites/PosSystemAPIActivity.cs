@@ -4,13 +4,17 @@ using Android.OS;
 using Android.Util;
 using fiskaltrust.AndroidLauncher.AndroidService;
 using fiskaltrust.AndroidLauncher.Constants;
+using fiskaltrust.AndroidLauncher.Extensions;
 using fiskaltrust.AndroidLauncher.Helpers;
 using fiskaltrust.AndroidLauncher.Services;
-using fiskaltrust.ifPOS.v1;
+using fiskaltrust.Api.PosSystemLocal.Models;
+using fiskaltrust.Api.PosSystemLocal.OperationHandling;
+using fiskaltrust.ifPOS.v2;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System.Collections.Concurrent;
 using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 
 namespace fiskaltrust.AndroidLauncher.Activitites
 {
@@ -25,28 +29,11 @@ namespace fiskaltrust.AndroidLauncher.Activitites
         Exported = true)]
     public class PosSystemAPIActivity : Activity
     {
-
         public static LocalMiddlewareLauncher? LocalMiddlewareServiceInstance { get; set; }
 
-        // TaskCompletionSource to signal when the service is ready
-        private static TaskCompletionSource<bool>? _serviceInitializationTcs;
+        public static OperationStateMachine? OperationStateMachine { get; set; }
 
         private const string TAG = "PosSystemAPI";
-
-        // Local middleware endpoint for sign and echo
-        private const string LOCALHOST_BASE_URL = "http://localhost:1200";
-
-        // Intent extra keys for input
-        private const string EXTRA_METHOD = "Method";
-        private const string EXTRA_PATH = "Path";
-        private const string EXTRA_HEADER_JSON_BASE64URL = "HeaderJsonObjectBase64Url";
-        private const string EXTRA_BODY_BASE64URL = "BodyBase64Url";
-
-        // Intent extra keys for output
-        private const string EXTRA_STATUS_CODE = "StatusCode";
-        private const string EXTRA_CONTENT_BASE64URL = "ContentBase64Url";
-        private const string EXTRA_CONTENT_TYPE_BASE64URL = "ContentTypeBase64Url";
-        private const string EXTRA_RESPONSE_HEADER_JSON_BASE64URL = "HeaderJsonObjectBase64Url";
 
         // Local endpoints that should be handled by the local middleware (defaults without version)
         private static readonly HashSet<string> LocalEndpoints = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
@@ -85,101 +72,40 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                     return;
                 }
 
-                // Extract intent extras
-                var method = intent.GetStringExtra(EXTRA_METHOD);
-                var path = intent.GetStringExtra(EXTRA_PATH);
-                var headerBase64Url = intent.GetStringExtra(EXTRA_HEADER_JSON_BASE64URL);
-                var bodyBase64Url = intent.GetStringExtra(EXTRA_BODY_BASE64URL);
-
-                Log.Info(TAG, $"Processing request: {method} {path}");
-
-                // Validate required fields
-                if (string.IsNullOrEmpty(method))
-                {
-                    Log.Error(TAG, "Method is missing");
-                    FinishWithError(400, "Method is required");
-                    return;
-                }
-
-                if (string.IsNullOrEmpty(path))
-                {
-                    Log.Error(TAG, "Path is missing");
-                    FinishWithError(400, "Path is required");
-                    return;
-                }
-
-                if (string.IsNullOrEmpty(headerBase64Url))
-                {
-                    Log.Error(TAG, "HeaderJsonObjectBase64Url is missing");
-                    FinishWithError(400, "HeaderJsonObjectBase64Url is required");
-                    return;
-                }
-
-                // Decode headers
-                Dictionary<string, string> headers;
+                // Parse the intent into a DTO
+                PosSystemApiRequest request;
                 try
                 {
-                    var headersJson = Base64UrlHelper.Decode(headerBase64Url);
-                    headers = JsonConvert.DeserializeObject<Dictionary<string, string>>(headersJson)
-                        ?? new Dictionary<string, string>();
-                    Log.Debug(TAG, $"Decoded {headers.Count} headers");
+                    request = PosSystemApiRequestExtensions.FromIntent(intent);
+                    Log.Info(TAG, $"Processing request: {request.Method} {request.Path}");
                 }
-                catch (Exception ex)
+                catch (ArgumentException ex)
                 {
-                    Log.Error(TAG, $"Failed to decode headers: {ex.Message}");
-                    FinishWithError(400, $"Invalid headers format: {ex.Message}");
+                    Log.Error(TAG, $"Invalid request: {ex.Message}");
+                    FinishWithError(400, ex.Message);
                     return;
                 }
-
-                if (!headers.ContainsKey("x-operation-id"))
-                {
-                    FinishWithError(400, $"The required header x-operation-id was not sent.");
-                    return;
-                }
-
-                // Decode body if present
-                string? body = null;
-                if (!string.IsNullOrEmpty(bodyBase64Url))
-                {
-                    try
-                    {
-                        body = Base64UrlHelper.Decode(bodyBase64Url);
-                        Log.Debug(TAG, $"Decoded body: {body.Length} characters");
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(TAG, $"Failed to decode body: {ex.Message}");
-                        FinishWithError(400, $"Invalid body format: {ex.Message}");
-                        return;
-                    }
-                }
-
-                // Normalize path
-                var normalizedPath = path.StartsWith("/") ? path : "/" + path;
 
                 // Validate endpoint version - only support defaults (no version) and /v2
-                if (IsUnsupportedVersion(normalizedPath))
+                if (!request.IsValidVersion())
                 {
-                    Log.Error(TAG, $"Unsupported endpoint version: {normalizedPath}");
+                    Log.Error(TAG, $"Unsupported endpoint version: {request.NormalizedPath}");
                     FinishWithError(400, $"Unsupported endpoint version. Only default endpoints (e.g., /sign, /echo) and /v2/* endpoints are supported. Please do not use /v0/* or /v1/* versions.");
                     return;
                 }
 
                 // Determine if this is a local or cloud endpoint
-                var isLocalEndpoint = IsLocalEndpoint(normalizedPath);
-
-                var cashBoxId = Guid.Parse(headers.GetValueOrDefault("x-cashbox-id", Guid.Empty.ToString())!);
-                var accessToken = headers.GetValueOrDefault("x-cashbox-accesstoken", string.Empty)!;
+                var isLocalEndpoint = request.IsLocalEndpoint(LocalEndpoints);
 
                 if (isLocalEndpoint)
                 {
-                    Log.Info(TAG, $"Routing to local middleware: {normalizedPath}");
-                    await MakeLocalRequestAsync(cashBoxId, accessToken, method, normalizedPath, headers, body);
+                    Log.Info(TAG, $"Routing to local middleware: {request.NormalizedPath}");
+                    await MakeLocalRequestAsync(request);
                 }
                 else
                 {
-                    Log.Info(TAG, $"Routing to cloud PosSystemAPI: {normalizedPath}");
-                    await MakeCloudRequestAsync(method, normalizedPath, headers, body);
+                    Log.Info(TAG, $"Routing to cloud PosSystemAPI: {request.NormalizedPath}");
+                    await MakeCloudRequestAsync(request);
                 }
             }
             catch (Exception ex)
@@ -189,196 +115,94 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             }
         }
 
-        private bool IsUnsupportedVersion(string path)
+        private async Task MakeLocalRequestAsync(PosSystemApiRequest request)
         {
-            // Check if path starts with unsupported version prefixes
-            // We only support defaults (no version) and /v2
-            // Reject /v0, /v1, /json/v0, /json/v1, /xml/v0, /xml/v1
-            var unsupportedPrefixes = new[] { "/v0/", "/v1/", "/json/v0/", "/json/v1/", "/xml/v0/", "/xml/v1/" };
-
-            foreach (var prefix in unsupportedPrefixes)
+            // Check if this is a /v2/echo request with null Message to trigger service restart
+            if (string.Equals(request.NormalizedPath, "/v2/echo", StringComparison.OrdinalIgnoreCase))
             {
-                if (path.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                try
                 {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private bool IsLocalEndpoint(string path)
-        {
-            // Path is already normalized (starts with /)
-            // Check if path matches any local endpoint (defaults without version)
-            return LocalEndpoints.Contains(path);
-        }
-
-        private async Task MakeLocalRequestAsync(Guid cashBoxId, string accessToken, string method, string path, Dictionary<string, string> headers, string? body)
-        {
-            // Check for x-operation-id header for idempotency
-            string? operationId = null;
-            if (headers.TryGetValue("x-operation-id", out var opId))
-            {
-                operationId = opId;
-
-                // Check if we have a cached result for this operation
-                if (OperationCache.TryGetValue(operationId, out var cachedResult))
-                {
-                    Log.Info(TAG, $"Returning cached result for operation ID: {operationId}");
-
-                    // Return cached result
-                    var cachedContentBase64 = Base64UrlHelper.Encode(cachedResult.Content);
-                    var cachedContentTypeBase64 = Base64UrlHelper.Encode(cachedResult.ContentType);
-                    var cachedHeadersJson = JsonConvert.SerializeObject(cachedResult.Headers);
-                    var cachedHeadersBase64 = Base64UrlHelper.Encode(cachedHeadersJson);
-
-                    if (cachedResult.StatusCode.StartsWith("2"))
+                    var echoRequest = JsonSerializer.Deserialize<EchoRequest>(request.Body);
+                    if (echoRequest != null && echoRequest.Message == null)
                     {
-                        FinishWithResult("200", cachedContentBase64, cachedContentTypeBase64, cachedHeadersBase64);
+                        Log.Info(TAG, "Detected /v2/echo request with null Message - triggering service restart");
+                        await RestartMiddlewareLauncherServiceAsync(request.CashBoxId, request.AccessToken);
+                    }
+                    else if (LocalMiddlewareServiceInstance == null || !LocalMiddlewareServiceInstance.IsRunning)
+                    {
+                        Log.Info(TAG, "Local middleware not running - triggering service restart");
+                        await RestartMiddlewareLauncherServiceAsync(request.CashBoxId, request.AccessToken);
+                    }
+                    var echoResponse = await OperationStateMachine.PerformEchoAsync(request);
+                    if (echoResponse.IsOk)
+                    {
+                        var responseJson = JsonSerializer.Serialize(echoResponse.OkValue.Value, new JsonSerializerOptions
+                        {
+                            // Approach B: the broad “unsafe relaxed” encoder that reduces escaping significantly:
+                            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                            WriteIndented = true
+                        });
+                        var response = PosSystemApiResponse.Success(responseJson, "application/json", "200");
+                        FinishWithResponse(response);
                     }
                     else
                     {
-                        FinishWithResult(cachedResult.StatusCode, cachedContentBase64, cachedContentTypeBase64, cachedHeadersBase64);
+                        var problemDetails = echoResponse.ErrValue;
+                        var errorResponse = PosSystemApiResponse.Error(problemDetails.Status ?? 500, problemDetails.Detail ?? "Unknown error", problemDetails.Title ?? "Error");
+                        FinishWithResponse(errorResponse);
                     }
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(TAG, $"Failed to process echo request: {ex.Message}");
+                    var errorResponse = PosSystemApiResponse.Error(500, $"Failed to process echo request: {ex.Message}");
+                    FinishWithResponse(errorResponse);
                     return;
                 }
             }
 
-            // Check if this is a /v2/echo request with null Message to trigger service restart
-            if (string.Equals(path, "/v2/echo", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrEmpty(body))
+            if (string.Equals(request.NormalizedPath, "/v2/sign", StringComparison.OrdinalIgnoreCase))
             {
                 try
                 {
-                    var echoRequest = JsonConvert.DeserializeObject<EchoRequest>(body);
-                    if (echoRequest != null && echoRequest.Message == null)
-                    {
-                        Log.Info(TAG, "Detected /v2/echo request with null Message - triggering service restart");
-                        await RestartMiddlewareLauncherServiceAsync(cashBoxId, accessToken);
-                    }
-                    else if (LocalMiddlewareServiceInstance == null || !LocalMiddlewareServiceInstance.IsRunning)
-                    {
-                        Log.Info(TAG, "Detected /v2/echo request with null Message - triggering service restart");
-                        await RestartMiddlewareLauncherServiceAsync(cashBoxId, accessToken);
-                    }
-
-                    var restartResponse = await LocalMiddlewareServiceInstance.POS.EchoAsync(echoRequest);
-                    var restartJson = JsonConvert.SerializeObject(restartResponse);
-                    var contentBase64 = Base64UrlHelper.Encode(restartJson);
-                    var contentTypeBase64 = Base64UrlHelper.Encode("application/json");
-                    var responseHeaders = new Dictionary<string, string>();
-                    var headersJson = JsonConvert.SerializeObject(responseHeaders);
-                    var headersBase64 = Base64UrlHelper.Encode(headersJson);
-                    FinishWithResult("201", contentBase64, contentTypeBase64, headersBase64);
-                }
-                catch (Exception ex)
-                {
-                    Log.Warn(TAG, $"Failed to parse echo request body for service restart check: {ex.Message}");
-                    // Continue with normal processing if parsing fails
-                }
-            }
-
-            if (string.Equals(path, "/v2/sign", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrEmpty(body))
-            {
-                try
-                {
-                    var receiptRequest = JsonConvert.DeserializeObject<ReceiptRequest>(body);
+                    var receiptRequest = JsonSerializer.Deserialize<ReceiptRequest>(request.Body);
                     if (LocalMiddlewareServiceInstance == null || !LocalMiddlewareServiceInstance.IsRunning)
                     {
-                        Log.Info(TAG, "Detected /v2/echo request with null Message - triggering service restart");
-                        await RestartMiddlewareLauncherServiceAsync(cashBoxId, accessToken);
+                        Log.Info(TAG, "Local middleware not running - triggering service restart");
+                        await RestartMiddlewareLauncherServiceAsync(request.CashBoxId, request.AccessToken);
                     }
-
-                    var restartResponse = await LocalMiddlewareServiceInstance.POS.SignAsync(receiptRequest);
-                    var restartJson = JsonConvert.SerializeObject(restartResponse);
-                    var contentBase64 = Base64UrlHelper.Encode(restartJson);
-                    var contentTypeBase64 = Base64UrlHelper.Encode("application/json");
-                    var responseHeaders = new Dictionary<string, string>();
-                    var headersJson = JsonConvert.SerializeObject(responseHeaders);
-                    var headersBase64 = Base64UrlHelper.Encode(headersJson);
-                    FinishWithResult("201", contentBase64, contentTypeBase64, headersBase64);
+                    var signResponse = await OperationStateMachine.PerformSignAsync(request);
+                    if (signResponse.IsOk)
+                    {
+                        var responseJson = JsonSerializer.Serialize(signResponse.OkValue.Value, new JsonSerializerOptions
+                        {
+                            // Approach B: the broad “unsafe relaxed” encoder that reduces escaping significantly:
+                            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                            WriteIndented = true
+                        });
+                        var response = PosSystemApiResponse.Success(responseJson, "application/json", "200");
+                        FinishWithResponse(response);
+                    }
+                    else
+                    {
+                        var problemDetails = signResponse.ErrValue;
+                        var errorResponse = PosSystemApiResponse.Error(problemDetails.Status ?? 500, problemDetails.Detail ?? "Unknown error", problemDetails.Title ?? "Error");
+                        FinishWithResponse(errorResponse);
+                    }
+                    return;
                 }
                 catch (Exception ex)
                 {
-                    Log.Warn(TAG, $"Failed to parse echo request body for service restart check: {ex.Message}");
-                    // Continue with normal processing if parsing fails
+                    Log.Error(TAG, $"Failed to process sign request: {ex.Message}");
+                    var errorResponse = PosSystemApiResponse.Error(500, $"Failed to process sign request: {ex.Message}");
+                    FinishWithResponse(errorResponse);
+                    return;
                 }
             }
-
-            using var httpClient = new HttpClient();
-            httpClient.Timeout = TimeSpan.FromMinutes(5);
-
-            try
-            {
-                // Ensure path starts with /
-                if (!path.StartsWith("/"))
-                {
-                    path = "/" + path;
-                }
-
-                var url = LOCALHOST_BASE_URL.TrimEnd('/') + path;
-                Log.Info(TAG, $"Making local HTTP request to {url}");
-
-                // Create HTTP request
-                var request = new HttpRequestMessage(new HttpMethod(method), url);
-
-                // Add headers (skip certain headers that HttpClient handles automatically)
-                var skipHeaders = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-                {
-                    "Host", "Content-Length", "Connection", "x-operation-id" // x-operation-id is handled separately
-                };
-
-                foreach (var header in headers)
-                {
-                    if (skipHeaders.Contains(header.Key))
-                    {
-                        continue;
-                    }
-
-                    try
-                    {
-                        if (header.Key.Equals("Content-Type", StringComparison.OrdinalIgnoreCase))
-                        {
-                            // Content-Type will be set with content
-                            continue;
-                        }
-                        request.Headers.TryAddWithoutValidation(header.Key, header.Value);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Warn(TAG, $"Failed to add header {header.Key}: {ex.Message}");
-                    }
-                }
-
-                // Add body if present
-                if (!string.IsNullOrEmpty(body))
-                {
-                    var contentType = headers.TryGetValue("Content-Type", out var ct) ? ct : "application/json";
-                    request.Content = new StringContent(body, Encoding.UTF8, contentType);
-                }
-
-                // Send request
-                var response = await httpClient.SendAsync(request);
-
-                Log.Info(TAG, $"Received local response: {(int)response.StatusCode}");
-
-                await ProcessHttpResponseAsync(response, operationId);
-            }
-            catch (HttpRequestException ex)
-            {
-                Log.Error(TAG, $"Local HTTP request failed: {ex.Message}");
-                FinishWithError(502, $"Failed to communicate with local middleware: {ex.Message}");
-            }
-            catch (TaskCanceledException ex)
-            {
-                Log.Error(TAG, $"Local request timeout: {ex.Message}");
-                FinishWithError(504, "Request timeout");
-            }
-            catch (Exception ex)
-            {
-                Log.Error(TAG, $"Local request processing failed: {ex}");
-                FinishWithError(500, $"Request processing failed: {ex.Message}");
-            }
+            
+            var notSupportedResponse = PosSystemApiResponse.Error(400, $"The selected path '{request.NormalizedPath}' and method '{request.Method}' is not supported.");
+            FinishWithResponse(notSupportedResponse);
         }
 
         private async Task RestartMiddlewareLauncherServiceAsync(Guid cashBoxId, string accessToken)
@@ -404,7 +228,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             var logLevel = LogLevel.Debug;
             try
             {
-                IntentLauncherService.Stop();
+                MiddlewareLauncherService.Stop();
             }
             catch { }
 
@@ -415,26 +239,8 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             bundle.PutString("loglevel", logLevel.ToString());
             bundle.PutBoolean("enableCloseButton", enableCloseButton);
 
-            IntentLauncherService.Start(cashBoxId.ToString(), accessToken, isSandbox, logLevel, new Dictionary<string, object> { }, enableCloseButton);
             PowerManagerHelper.AskUserToDisableBatteryOptimization(Android.App.Application.Context);
-
-            //using var alarmIntent = new Intent(Android.App.Application.Context, typeof(HttpAlarmReceiver));
-            //alarmIntent.PutExtras(bundle);
-
-            //var pending = PendingIntent.GetBroadcast(Android.App.Application.Context, 0, alarmIntent, PendingIntentFlags.UpdateCurrent | PendingIntentFlags.Immutable);
-
-            //var alarmManager = (AlarmManager)Android.App.Application.Context.GetSystemService(Context.AlarmService);
-
-            //if (Build.VERSION.SdkInt <= BuildVersionCodes.SV2)
-            //{
-            //    alarmManager.SetExact(AlarmType.ElapsedRealtime, SystemClock.ElapsedRealtime() + 100, pending);
-            //}
-            //else
-            //{
-            //    alarmManager.Set(AlarmType.ElapsedRealtime, SystemClock.ElapsedRealtime() + 100, pending);
-            //}
-
-            // Wait for the LocalMiddlewareServiceInstance to be initialized
+            MiddlewareLauncherService.Start(cashBoxId.ToString(), accessToken, isSandbox, logLevel, new Dictionary<string, object> { }, enableCloseButton);
             await WaitForLocalMiddlewareServiceInitializationAsync();
         }
 
@@ -462,30 +268,20 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             throw new TimeoutException("LocalMiddlewareServiceInstance failed to initialize within the expected time");
         }
 
-        private async Task MakeCloudRequestAsync(string method, string path, Dictionary<string, string> headers, string? body)
+        private async Task MakeCloudRequestAsync(PosSystemApiRequest request)
         {
             using var httpClient = new HttpClient();
             httpClient.Timeout = TimeSpan.FromMinutes(5);
 
             try
             {
-                // Determine if sandbox or production based on headers or use default
-                var isSandbox = headers.TryGetValue("x-sandbox", out var sandbox) &&
-                                (sandbox == "true" || sandbox == "1");
+                var baseUrl = request.IsSandbox ? Urls.POSSYSTEM_API_SANDBOX : Urls.POSSYSTEM_API_PRODUCTION;
 
-                var baseUrl = isSandbox ? Urls.POSSYSTEM_API_SANDBOX : Urls.POSSYSTEM_API_PRODUCTION;
-
-                // Ensure path starts with /
-                if (!path.StartsWith("/"))
-                {
-                    path = "/" + path;
-                }
-
-                var url = baseUrl.TrimEnd('/') + path;
+                var url = baseUrl.TrimEnd('/') + request.NormalizedPath;
                 Log.Info(TAG, $"Making cloud HTTP request to {url}");
 
                 // Create HTTP request
-                var request = new HttpRequestMessage(new HttpMethod(method), url);
+                var httpRequest = new HttpRequestMessage(new HttpMethod(request.Method), url);
 
                 // Add headers (skip certain headers that HttpClient handles automatically)
                 var skipHeaders = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
@@ -493,7 +289,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                     "Host", "Content-Length", "Connection", "x-sandbox" // x-sandbox is only for routing
                 };
 
-                foreach (var header in headers)
+                foreach (var header in request.Headers)
                 {
                     if (skipHeaders.Contains(header.Key))
                     {
@@ -507,7 +303,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                             // Content-Type will be set with content
                             continue;
                         }
-                        request.Headers.TryAddWithoutValidation(header.Key, header.Value);
+                        httpRequest.Headers.TryAddWithoutValidation(header.Key, header.Value);
                     }
                     catch (Exception ex)
                     {
@@ -516,100 +312,69 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                 }
 
                 // Add body if present
-                if (!string.IsNullOrEmpty(body))
+                if (!string.IsNullOrEmpty(request.Body))
                 {
-                    var contentType = headers.TryGetValue("Content-Type", out var ct) ? ct : "application/json";
-                    request.Content = new StringContent(body, Encoding.UTF8, contentType);
+                    var contentType = request.Headers.TryGetValue("Content-Type", out var ct) ? ct : "application/json";
+                    httpRequest.Content = new StringContent(request.Body, Encoding.UTF8, contentType);
                 }
 
                 // Send request
-                var response = await httpClient.SendAsync(request);
+                var httpResponse = await httpClient.SendAsync(httpRequest);
 
-                Log.Info(TAG, $"Received cloud response: {(int)response.StatusCode}");
+                Log.Info(TAG, $"Received cloud response: {(int)httpResponse.StatusCode}");
 
-                await ProcessHttpResponseAsync(response, null); // No caching for cloud requests
+                // Convert HTTP response to our DTO
+                var response = await PosSystemApiResponse.FromHttpResponseAsync(httpResponse);
+                FinishWithResponse(response);
             }
             catch (HttpRequestException ex)
             {
                 Log.Error(TAG, $"Cloud HTTP request failed: {ex.Message}");
-                FinishWithError(502, $"Failed to communicate with cloud PosSystemAPI: {ex.Message}");
+                var errorResponse = PosSystemApiResponse.Error(502, $"Failed to communicate with cloud PosSystemAPI: {ex.Message}");
+                FinishWithResponse(errorResponse);
             }
             catch (TaskCanceledException ex)
             {
                 Log.Error(TAG, $"Cloud request timeout: {ex.Message}");
-                FinishWithError(504, "Request timeout");
+                var errorResponse = PosSystemApiResponse.Error(504, "Request timeout");
+                FinishWithResponse(errorResponse);
             }
             catch (Exception ex)
             {
                 Log.Error(TAG, $"Cloud request processing failed: {ex}");
-                FinishWithError(500, $"Request processing failed: {ex.Message}");
+                var errorResponse = PosSystemApiResponse.Error(500, $"Request processing failed: {ex.Message}");
+                FinishWithResponse(errorResponse);
             }
         }
 
-        private async Task ProcessHttpResponseAsync(HttpResponseMessage response, string? operationId)
-        {
-            // Read response
-            var responseContent = await response.Content.ReadAsStringAsync();
-            var responseContentType = response.Content.Headers.ContentType?.ToString() ?? "application/json";
-
-            // Build response headers dictionary
-            var responseHeaders = new Dictionary<string, string>();
-            foreach (var header in response.Headers)
-            {
-                responseHeaders[header.Key] = string.Join(", ", header.Value);
-            }
-            foreach (var header in response.Content.Headers)
-            {
-                responseHeaders[header.Key] = string.Join(", ", header.Value);
-            }
-
-            // Cache the result if we have an operation ID (local requests only)
-            if (!string.IsNullOrEmpty(operationId))
-            {
-                var cachedResult = new CachedOperationResult(
-                    ((int)response.StatusCode).ToString(),
-                    responseContent,
-                    responseContentType,
-                    responseHeaders
-                );
-
-                OperationCache.TryAdd(operationId, cachedResult);
-                Log.Info(TAG, $"Cached result for operation ID: {operationId}");
-            }
-
-            // Encode response
-            var statusCode = ((int)response.StatusCode).ToString();
-            var contentBase64Url = Base64UrlHelper.Encode(responseContent);
-            var contentTypeBase64Url = Base64UrlHelper.Encode(responseContentType);
-            var responseHeadersJson = JsonConvert.SerializeObject(responseHeaders);
-            var responseHeadersBase64Url = Base64UrlHelper.Encode(responseHeadersJson);
-
-            // Return result
-            FinishWithResult(statusCode, contentBase64Url, contentTypeBase64Url, responseHeadersBase64Url);
-        }
-
-        private void FinishWithResult(string statusCode, string contentBase64Url, string contentTypeBase64Url, string? headerBase64Url = null)
+        /// <summary>
+        /// Finishes the activity with a structured response using the DTO
+        /// </summary>
+        /// <param name="response">The PosSystemApiResponse to return</param>
+        private void FinishWithResponse(PosSystemApiResponse response)
         {
             RunOnUiThread(() =>
             {
                 try
                 {
+                    var intentData = response.ToIntentData();
                     var resultIntent = new Intent();
-                    resultIntent.PutExtra(EXTRA_STATUS_CODE, statusCode);
-                    resultIntent.PutExtra(EXTRA_CONTENT_BASE64URL, contentBase64Url);
-                    resultIntent.PutExtra(EXTRA_CONTENT_TYPE_BASE64URL, contentTypeBase64Url);
+                    
+                    resultIntent.PutExtra(PosSystemAPIActivityIntentStatics.EXTRA_STATUS_CODE, intentData.StatusCode);
+                    resultIntent.PutExtra(PosSystemAPIActivityIntentStatics.EXTRA_CONTENT_BASE64URL, intentData.ContentBase64Url);
+                    resultIntent.PutExtra(PosSystemAPIActivityIntentStatics.EXTRA_CONTENT_TYPE_BASE64URL, intentData.ContentTypeBase64Url);
 
-                    if (!string.IsNullOrEmpty(headerBase64Url))
+                    if (!string.IsNullOrEmpty(intentData.HeadersBase64Url))
                     {
-                        resultIntent.PutExtra(EXTRA_RESPONSE_HEADER_JSON_BASE64URL, headerBase64Url);
+                        resultIntent.PutExtra(PosSystemAPIActivityIntentStatics.EXTRA_RESPONSE_HEADER_JSON_BASE64URL, intentData.HeadersBase64Url);
                     }
 
                     SetResult(Result.Ok, resultIntent);
-                    Log.Info(TAG, $"Finishing with success: {statusCode}");
+                    Log.Info(TAG, $"Finishing with response: {response.StatusCode} - {(response.IsSuccess ? "Success" : "Error")}");
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(TAG, $"Failed to set result: {ex}");
+                    Log.Error(TAG, $"Failed to set response result: {ex}");
                 }
                 finally
                 {
@@ -620,60 +385,8 @@ namespace fiskaltrust.AndroidLauncher.Activitites
 
         private void FinishWithError(int statusCode, string errorMessage)
         {
-            RunOnUiThread(() =>
-            {
-                try
-                {
-                    var errorResponse = new
-                    {
-                        type = "https://tools.ietf.org/html/rfc9110",
-                        title = "Error",
-                        status = statusCode,
-                        detail = errorMessage
-                    };
-
-                    var errorJson = JsonConvert.SerializeObject(errorResponse);
-                    var contentBase64Url = Base64UrlHelper.Encode(errorJson);
-                    var contentTypeBase64Url = Base64UrlHelper.Encode("application/json");
-
-                    var resultIntent = new Intent();
-                    resultIntent.PutExtra(EXTRA_STATUS_CODE, statusCode.ToString());
-                    resultIntent.PutExtra(EXTRA_CONTENT_BASE64URL, contentBase64Url);
-                    resultIntent.PutExtra(EXTRA_CONTENT_TYPE_BASE64URL, contentTypeBase64Url);
-
-                    SetResult(Result.Ok, resultIntent);
-                    Log.Info(TAG, $"Finishing with error: {statusCode} - {errorMessage}");
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(TAG, $"Failed to set error result: {ex}");
-                }
-                finally
-                {
-                    Finish();
-                }
-            });
-        }
-    }
-
-    /// <summary>
-    /// Represents a cached operation result for idempotency
-    /// </summary>
-    internal class CachedOperationResult
-    {
-        public string StatusCode { get; set; }
-        public string Content { get; set; }
-        public string ContentType { get; set; }
-        public Dictionary<string, string> Headers { get; set; }
-        public DateTime CachedAt { get; set; }
-
-        public CachedOperationResult(string statusCode, string content, string contentType, Dictionary<string, string> headers)
-        {
-            StatusCode = statusCode;
-            Content = content;
-            ContentType = contentType;
-            Headers = headers;
-            CachedAt = DateTime.UtcNow;
+            var errorResponse = PosSystemApiResponse.Error(statusCode, errorMessage);
+            FinishWithResponse(errorResponse);
         }
     }
 }

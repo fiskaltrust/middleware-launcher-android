@@ -15,6 +15,7 @@
     <Project Path="src/fiskaltrust.AndroidLauncher/fiskaltrust.AndroidLauncher.csproj">
       <Deploy Solution="Debug|*" />
     </Project>
+    <Project Path="src/fiskaltrust.Api.PosSystemLocal/fiskaltrust.Api.PosSystemLocal.csproj" Id="7a4245eb-7bfc-411e-9b7e-dfc428f6ecc5" />
   </Folder>
   <Folder Name="/test/">
     <Project Path="test/fiskaltrust.AndroidLauncher.SmokeTests/fiskaltrust.AndroidLauncher.SmokeTests.csproj" />
