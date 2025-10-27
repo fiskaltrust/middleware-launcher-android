@@ -16,7 +16,7 @@ env:
     APP_NAME: eu.fiskaltrust.androidlauncher
     MAUI_SDK: net9.0-android
     BASE_FOLDER: src/fiskaltrust.AndroidLauncher
-    APPLICATION_DISPLAY_VERSION: ${{format('{0}{1}', '1.3.69.', github.run_id)}}
+    APPLICATION_DISPLAY_VERSION: ${{format('{0}{1}', '2.0.1-beta1.', github.run_id)}}
 jobs:
   buildAndroid:
       runs-on: windows-latest
