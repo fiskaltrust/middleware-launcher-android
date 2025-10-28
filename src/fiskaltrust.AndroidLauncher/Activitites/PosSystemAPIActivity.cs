@@ -196,7 +196,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                     return;
                 }
             }
-            
+
             var notSupportedResponse = PosSystemApiResponse.Error(400, $"The selected path '{request.NormalizedPath}' and method '{request.Method}' is not supported.");
             FinishWithResponse(notSupportedResponse);
         }
@@ -271,9 +271,13 @@ namespace fiskaltrust.AndroidLauncher.Activitites
 
             try
             {
-                var baseUrl = request.IsSandbox ? Urls.POSSYSTEM_API_SANDBOX : Urls.POSSYSTEM_API_PRODUCTION;
-
-                var url = baseUrl.TrimEnd('/') + request.NormalizedPath;
+                var baseUrl = Urls.POSSYSTEM_API_SANDBOX;
+                var path = request.NormalizedPath;
+                if(!path.StartsWith("/v2", StringComparison.OrdinalIgnoreCase))
+                {
+                    path = "/v2" + path;
+                }
+                var url = baseUrl.TrimEnd('/') + path;
                 Log.Info(TAG, $"Making cloud HTTP request to {url}");
 
                 // Create HTTP request
@@ -282,7 +286,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                 // Add headers (skip certain headers that HttpClient handles automatically)
                 var skipHeaders = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
                 {
-                    "Host", "Content-Length", "Connection", "x-sandbox" // x-sandbox is only for routing
+                    "Host", "Content-Length", "Connection"
                 };
 
                 foreach (var header in request.Headers)
@@ -355,7 +359,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                 {
                     var intentData = response.ToIntentData();
                     var resultIntent = new Intent();
-                    
+
                     resultIntent.PutExtra(PosSystemAPIActivityIntentStatics.EXTRA_STATUS_CODE, intentData.StatusCode);
                     resultIntent.PutExtra(PosSystemAPIActivityIntentStatics.EXTRA_CONTENT_BASE64URL, intentData.ContentBase64Url);
                     resultIntent.PutExtra(PosSystemAPIActivityIntentStatics.EXTRA_CONTENT_TYPE_BASE64URL, intentData.ContentTypeBase64Url);
