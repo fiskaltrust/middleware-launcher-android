@@ -25,10 +25,18 @@ Download and install the _.APK_ on the Portal's Cashbox page or via the Play Sto
 
 A working internet connection is required at least during the first start of the Middleware, as it automatically downloads the configuration from our background services. Later, an internet connection is not required anymore (except when using a cloud TSE, of course). When using one of our archiving add-ons, we still recommend keeping the device connected to make use of our automatic cloud storage.
 
+### Communication Protocols
+
+The Android Launcher supports multiple ways to communicate with the Middleware:
+
+1. **Direct HTTP/REST**: Connect via standard HTTP requests to the local REST endpoint
+2. **gRPC**: Use gRPC protocol for high-performance communication
+3. **Intent-based PosSystemAPI** (NEW): Use Android Intents to call the PosSystemAPI directly from your Android app, enabling offline fiscalization without network configuration. 
+
 All details about our IPOS interface and how to use it for different business cases can be found in our [middleware documentation](https://docs.fiskaltrust.cloud/docs/poscreators/get-started).
 
 ## Features and Limitations
-The current project offers very similar functionality to the Middleware's Desktop Launcher. It works with different SCUs, pulls the configuration from our Cloud services, and also reccurently uploads the processed receipts to fiskaltrust's revision-safe storage.
+The current project offers very similar functionality to the Middleware's Desktop Launcher. It works with different SCUs, pulls the configuration from our Cloud services, and also recurrently uploads the processed receipts to fiskaltrust's revision-safe storage.
 
 However, there are some limitations due to the used platform:
 - Unlike the Desktop Launcher, the Android launcher **cannot** dynamically download packages at runtime, since this is not allowed due to Google's Play Store guidelines. Hence, the SCU and Queue packages are hardwired to the App, which must be updated to get new versions.
