@@ -2,6 +2,7 @@ using fiskaltrust.Api.POS.Extensions;
 using fiskaltrust.Api.POS.Helpers;
 using fiskaltrust.Api.POS.Models.ifPOS.v2;
 using fiskaltrust.Api.POS.v2.Echo;
+using fiskaltrust.Api.POS.v2.Journal;
 using fiskaltrust.Api.POS.v2.Sign;
 using fiskaltrust.Api.PosSystemLocal.Models;
 using fiskaltrust.Api.PosSystemLocal.OperationHandling.Interface;
@@ -40,6 +41,8 @@ public class OperationStateMachine
     {
         return await PerformOperationAsync(request, _queueId, _loggerFactory, new EchoProcessor(_loggerFactory.CreateLogger<EchoProcessor>(), _middlewareClient), new EchoRequestValidator(_loggerFactory.CreateLogger<EchoRequestValidator>()));
     }
+
+    public async ValueTask<OperationItem?> State(Guid operationId) => await _operationItemRepository.GetAsync(operationId);
 
     public async Task<Result<TypedResults<TResponse>, ProblemDetails>> PerformOperationAsync<TRequest, TResponse>(PosSystemApiRequest request, Guid queueId, ILoggerFactory loggerFactory, IOperationProcessor<TRequest, TResponse> operationProcessor, IRequestValidator<TRequest> requestValidator)
     {

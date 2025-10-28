@@ -53,6 +53,15 @@ public class SignProcessor(
             return TypedResults<ReceiptResponse>.Problem(statusCode: 400, detail: "TerminalID in request does not match the TerminalID in the request header.");
         }
 
+        try
+        {
+            MappingFactory.AddCountryCodeIfNeeded(request, middlewareClient.CountryCode);
+        }
+        catch (Exception ex)
+        {
+
+        }
+
         var result = await middlewareClient.SignV2Async(request);
         if (result.error != null)
         {

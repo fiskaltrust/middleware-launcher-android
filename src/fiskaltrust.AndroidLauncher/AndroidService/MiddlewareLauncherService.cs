@@ -86,7 +86,7 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                 Task.Run(async () =>
                 {
                     await PosSystemAPIActivity.LocalMiddlewareServiceInstance.StartAsync();
-                    PosSystemAPIActivity.OperationStateMachine = await new OperationStateMachineFactory(new LoggerFactory()).CreateAsync(PosSystemAPIActivity.LocalMiddlewareServiceInstance.QueueConfiguration, new MiddlewareClient(PosSystemAPIActivity.LocalMiddlewareServiceInstance.POS));
+                    PosSystemAPIActivity.OperationStateMachine = await new OperationStateMachineFactory(new LoggerFactory()).CreateAsync(PosSystemAPIActivity.LocalMiddlewareServiceInstance.QueueConfiguration, PosSystemAPIActivity.LocalMiddlewareServiceInstance.MiddlewareClient);
                     SetState(LauncherState.Connected, enableCloseButton);
                     StateProvider.Instance.SetState(State.Running);
                 }).Wait();

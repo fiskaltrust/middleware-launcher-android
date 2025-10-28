@@ -7,8 +7,10 @@ using fiskaltrust.AndroidLauncher.Constants;
 using fiskaltrust.AndroidLauncher.Extensions;
 using fiskaltrust.AndroidLauncher.Helpers;
 using fiskaltrust.AndroidLauncher.Services;
+using fiskaltrust.Api.POS.v2.Journal;
 using fiskaltrust.Api.PosSystemLocal.Models;
 using fiskaltrust.Api.PosSystemLocal.OperationHandling;
+using fiskaltrust.Api.PosSystemLocal.v2;
 using fiskaltrust.ifPOS.v2;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
@@ -197,6 +199,31 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                 }
             }
 
+            if (string.Equals(request.NormalizedPath, "/v2/journal", StringComparison.OrdinalIgnoreCase))
+            {
+                try
+                {
+                    var receiptRequest = JsonSerializer.Deserialize<JournalRequest>(request.Body);
+                    if (LocalMiddlewareServiceInstance == null || !LocalMiddlewareServiceInstance.IsRunning)
+                    {
+                        Log.Info(TAG, "Local middleware not running - triggering service restart");
+                        await RestartMiddlewareLauncherServiceAsync(request.CashBoxId, request.AccessToken);
+                    }
+                    
+                    var result = await JournalV2.Journal(LocalMiddlewareServiceInstance.MiddlewareClient, JsonSerializer.Deserialize<JournalRequest>(request.Body));
+                    var response = PosSystemApiResponse.Success(Encoding.UTF8.GetString(result.Item1) ?? "", result.contentType, "200");
+                    FinishWithResponse(response);
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(TAG, $"Failed to process sign request: {ex.Message}");
+                    var errorResponse = PosSystemApiResponse.Error(500, $"Failed to process sign request: {ex.Message}");
+                    FinishWithResponse(errorResponse);
+                    return;
+                }
+            }
+
             var notSupportedResponse = PosSystemApiResponse.Error(400, $"The selected path '{request.NormalizedPath}' and method '{request.Method}' is not supported.");
             FinishWithResponse(notSupportedResponse);
         }
@@ -273,7 +300,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             {
                 var baseUrl = Urls.POSSYSTEM_API_SANDBOX;
                 var path = request.NormalizedPath;
-                if(!path.StartsWith("/v2", StringComparison.OrdinalIgnoreCase))
+                if (!path.StartsWith("/v2", StringComparison.OrdinalIgnoreCase))
                 {
                     path = "/v2" + path;
                 }
