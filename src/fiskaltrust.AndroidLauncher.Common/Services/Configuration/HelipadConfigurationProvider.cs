@@ -19,7 +19,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.Configuration
 
                 var result = await httpClient.GetAsync("api/Configuration");
                 var content = await result.Content.ReadAsStringAsync();
-                if (!result.IsSuccessStatusCode())
+                if (!result.IsSuccessStatusCode)
                 {
                     throw new Exception($"Failed to get {(isSandbox ? "sandbox" : "production")} configuration for cashbox {cashboxId} from helipad. Status code: {result.StatusCode}, Content: {content}");
                 }
