@@ -12,15 +12,18 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.Configuration
         public async Task<ftCashBoxConfiguration> GetCashboxConfigurationAsync(Guid cashboxId, string accessToken, bool isSandbox)
         {
             var helipadUrl = isSandbox ? Urls.HELIPAD_SANDBOX : Urls.HELIPAD_PRODUCTION;
-            using(var httpClient = new HttpClient { BaseAddress = new Uri(helipadUrl) })
+            using (var httpClient = new HttpClient { BaseAddress = new Uri(helipadUrl) })
             {
                 httpClient.DefaultRequestHeaders.Add("cashboxid", cashboxId.ToString());
                 httpClient.DefaultRequestHeaders.Add("accesstoken", accessToken);
-                
-                var result = await httpClient.GetAsync("api/Configuration");
-                result.EnsureSuccessStatusCode();
 
+                var result = await httpClient.GetAsync("api/Configuration");
                 var content = await result.Content.ReadAsStringAsync();
+                if (!result.IsSuccessStatusCode())
+                {
+                    throw new Exception($"Failed to get {(isSandbox ? "sandbox" : "production")} configuration for cashbox {cashboxId} from helipad. Status code: {result.StatusCode}, Content: {content}");
+                }
+
                 return JsonConvert.DeserializeObject<ftCashBoxConfiguration>(content);
             }
         }
