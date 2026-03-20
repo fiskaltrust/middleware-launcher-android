@@ -41,6 +41,9 @@
 		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.11" />
 		<ProjectReference Include="../fiskaltrust.Api.PosSystemLocal/fiskaltrust.Api.PosSystemLocal.csproj" />
 		<ProjectReference Include="../../middleware/queue/src/fiskaltrust.Middleware.Queue.SQLite/fiskaltrust.Middleware.Queue.SQLite.csproj" />
+		<ProjectReference Include="../../middleware/scu-at/src/fiskaltrust.Middleware.SCU.AT.ATrustSmartcard/fiskaltrust.Middleware.SCU.AT.ATrustSmartcard.csproj" />
+		<ProjectReference Include="../../middleware/scu-at/src/fiskaltrust.Middleware.SCU.AT.InMemory/fiskaltrust.Middleware.SCU.AT.InMemory.csproj" />
+		<ProjectReference Include="../../middleware/scu-at/src/fiskaltrust.Middleware.SCU.AT.PrimeSignHSM/fiskaltrust.Middleware.SCU.AT.PrimeSignHSM.csproj" />
 		<ProjectReference Include="../../middleware/scu-it/src/fiskaltrust.Middleware.SCU.IT.CustomRTServer/fiskaltrust.Middleware.SCU.IT.CustomRTServer.csproj" />
 		<ProjectReference Include="../../middleware/scu-it/src/fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter/fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter.csproj" />
 		<PackageReference Include="Microsoft.ApplicationInsights" Version="2.21.0" />

@@ -18,6 +18,9 @@ namespace fiskaltrust.AndroidLauncher.Services
 {
     public class LocalMiddlewareLauncher
     {
+        private const string PACKAGE_NAME_AT_ATRUST_SMARTCARD = "fiskaltrust.Middleware.SCU.AT.ATrustSmartcard";
+        private const string PACKAGE_NAME_AT_PRIMESIGN_HSM = "fiskaltrust.Middleware.SCU.AT.PrimeSignHSM";
+        private const string PACKAGE_NAME_AT_INMEMORY = "fiskaltrust.Middleware.SCU.AT.InMemory";
         private const string PACKAGE_NAME_DE_SWISSBIT = "fiskaltrust.Middleware.SCU.DE.Swissbit";
         private const string PACKAGE_NAME_DE_FISKALY_CERTIFIED = "fiskaltrust.Middleware.SCU.DE.FiskalyCertified";
         private const string PACKAGE_NAME_IT_EPSON_RT_PRINTER = "fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter";
@@ -87,6 +90,15 @@ namespace fiskaltrust.AndroidLauncher.Services
 
                 switch (scuConfig.Package)
                 {
+                    case PACKAGE_NAME_AT_ATRUST_SMARTCARD:
+                        await InitializeATATrustSmartcardScuAsync(scuConfig);
+                        break;
+                    case PACKAGE_NAME_AT_PRIMESIGN_HSM:
+                        await InitializeATPrimeSignHSMScuAsync(scuConfig);
+                        break;
+                    case PACKAGE_NAME_AT_INMEMORY:
+                        await InitializeATInMemoryScuAsync(scuConfig);
+                        break;
                     case PACKAGE_NAME_DE_SWISSBIT:
                         // On some (payment) devices, the CPU is turned off as soon as the device becomes remotely idle (i.e. right after processing a receipt) - this seems to also stop the internal clock of the Swissbit TSE.
                         // To prevent this, we acquire a partial wake lock to keep the CPU running. As this is only required with hardware TSEs, we only acquire the wake lock for the Swissbit SCU for now.
@@ -103,7 +115,7 @@ namespace fiskaltrust.AndroidLauncher.Services
                         await InitializeITCustomRTServerScuAsync(scuConfig);
                         break;
                     default:
-                        throw new ArgumentException($"The Android launcher currently only supports the following SCU packages: {PACKAGE_NAME_DE_SWISSBIT}, {PACKAGE_NAME_DE_FISKALY_CERTIFIED}, {PACKAGE_NAME_IT_EPSON_RT_PRINTER}.");
+                        throw new ArgumentException($"The Android launcher currently only supports the following SCU packages: {PACKAGE_NAME_AT_ATRUST_SMARTCARD}, {PACKAGE_NAME_AT_PRIMESIGN_HSM}, {PACKAGE_NAME_AT_INMEMORY}, {PACKAGE_NAME_DE_SWISSBIT}, {PACKAGE_NAME_DE_FISKALY_CERTIFIED}, {PACKAGE_NAME_IT_EPSON_RT_PRINTER}, {PACKAGE_NAME_IT_CUSTOM_RT_SERVER}.");
                 }
             }
 
@@ -135,6 +147,30 @@ namespace fiskaltrust.AndroidLauncher.Services
             _wakeLock?.Release();
 
             IsRunning = false;
+        }
+
+        private async Task InitializeATATrustSmartcardScuAsync(PackageConfiguration packageConfig)
+        {
+            var scuProvider = new ATATrustSmartcardScuProvider();
+            var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
+            _scus.Add(GetPrimaryUriForSignaturCreationUnit(packageConfig), scu);
+            Log.Logger.Debug($"Created Austrian SCU of type 'fiskaltrust.Middleware.SCU.AT.ATrustSmartcard'.");
+        }
+
+        private async Task InitializeATPrimeSignHSMScuAsync(PackageConfiguration packageConfig)
+        {
+            var scuProvider = new ATPrimeSignHSMScuProvider();
+            var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
+            _scus.Add(GetPrimaryUriForSignaturCreationUnit(packageConfig), scu);
+            Log.Logger.Debug($"Created Austrian SCU of type 'fiskaltrust.Middleware.SCU.AT.PrimeSignHSM'.");
+        }
+
+        private async Task InitializeATInMemoryScuAsync(PackageConfiguration packageConfig)
+        {
+            var scuProvider = new ATInMemoryScuProvider();
+            var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
+            _scus.Add(GetPrimaryUriForSignaturCreationUnit(packageConfig), scu);
+            Log.Logger.Debug($"Created Austrian SCU of type 'fiskaltrust.Middleware.SCU.AT.InMemory'.");
         }
 
         private async Task InitializeDESwissbitScuAsync(PackageConfiguration packageConfig)
