@@ -50,6 +50,8 @@ namespace fiskaltrust.AndroidLauncher.Services
 
         public PackageConfiguration QueueConfiguration { get; private set; }
 
+        public Guid CashBoxId => _cashboxId;
+
         public LocalMiddlewareLauncher(Guid cashboxId, string accessToken, bool isSandbox, LogLevel logLevel, Dictionary<string, object> scuParams)
         {
             _cashboxId = cashboxId;

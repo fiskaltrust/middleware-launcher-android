@@ -29,6 +29,11 @@ namespace fiskaltrust.AndroidLauncher.Activitites
         Name = "eu.fiskaltrust.androidlauncher.PosSystemAPI",
         Enabled = true,
         Exported = true)]
+    [IntentFilter(
+        new[] { Intent.ActionView },
+        Categories = new[] { Intent.CategoryDefault, Intent.CategoryBrowsable },
+        DataScheme = "fiskaltrust",
+        DataHost = "possystemapi")]
     public class PosSystemAPIActivity : Activity
     {
         public static LocalMiddlewareLauncher? LocalMiddlewareServiceInstance { get; set; }
@@ -131,12 +136,18 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                         Log.Info(TAG, "Local middleware not running - triggering service restart");
                         await RestartMiddlewareLauncherServiceAsync(request.CashBoxId, request.AccessToken);
                     }
+                    else if(LocalMiddlewareServiceInstance.CashBoxId != request.CashBoxId)
+                    {
+                        Log.Info(TAG, "Local middleware running, but differing cashboxid");
+                        await RestartMiddlewareLauncherServiceAsync(request.CashBoxId, request.AccessToken);
+                    }
+
                     var echoResponse = await OperationStateMachine.PerformEchoAsync(request);
                     if (echoResponse.IsOk)
                     {
                         var responseJson = JsonSerializer.Serialize(echoResponse.OkValue.Value, new JsonSerializerOptions
                         {
-                            // Approach B: the broad “unsafe relaxed” encoder that reduces escaping significantly:
+                            // Approach B: the broad ï¿½unsafe relaxedï¿½ encoder that reduces escaping significantly:
                             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
                             WriteIndented = true
                         });
@@ -175,7 +186,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                     {
                         var responseJson = JsonSerializer.Serialize(signResponse.OkValue.Value, new JsonSerializerOptions
                         {
-                            // Approach B: the broad “unsafe relaxed” encoder that reduces escaping significantly:
+                            // Approach B: the broad ï¿½unsafe relaxedï¿½ encoder that reduces escaping significantly:
                             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
                             WriteIndented = true
                         });
@@ -375,7 +386,10 @@ namespace fiskaltrust.AndroidLauncher.Activitites
         }
 
         /// <summary>
-        /// Finishes the activity with a structured response using the DTO
+        /// Finishes the activity with a structured response using the DTO.
+        /// If a CallbackUrl was provided (browser-based caller), redirects to
+        /// that URL with response data as query parameters. Otherwise returns
+        /// the result via the standard ActivityResult mechanism.
         /// </summary>
         /// <param name="response">The PosSystemApiResponse to return</param>
         private void FinishWithResponse(PosSystemApiResponse response)
@@ -384,6 +398,14 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             {
                 try
                 {
+                    var callbackUrl = Intent?.GetStringExtra(PosSystemAPIActivityIntentStatics.EXTRA_CALLBACK_URL);
+
+                    if (!string.IsNullOrEmpty(callbackUrl))
+                    {
+                        FinishWithCallbackUrl(callbackUrl, response);
+                        return;
+                    }
+
                     var intentData = response.ToIntentData();
                     var resultIntent = new Intent();
 
@@ -408,6 +430,51 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                     Finish();
                 }
             });
+        }
+
+        /// <summary>
+        /// Redirects to the caller's callback URL with response data as query parameters.
+        /// Works like an OAuth redirect: the browser navigates back to the webapp with the response.
+        /// </summary>
+        private void FinishWithCallbackUrl(string callbackUrl, PosSystemApiResponse response)
+        {
+            try
+            {
+                var intentData = response.ToIntentData();
+
+                // Separate URL from hash fragment so query params are inserted before the hash.
+                // e.g. https://app.com/?foo=1#/route â†’ insert &StatusCode=... before #/route
+                var hashIndex = callbackUrl.IndexOf('#', StringComparison.Ordinal);
+                var urlPart = hashIndex >= 0 ? callbackUrl[..hashIndex] : callbackUrl;
+                var hashPart = hashIndex >= 0 ? callbackUrl[hashIndex..] : "";
+
+                var separator = urlPart.Contains('?', StringComparison.Ordinal) ? "&" : "?";
+                var redirectUrl = $"{urlPart}{separator}" +
+                    $"StatusCode={Uri.EscapeDataString(intentData.StatusCode)}" +
+                    $"&ContentBase64Url={Uri.EscapeDataString(intentData.ContentBase64Url)}" +
+                    $"&ContentTypeBase64Url={Uri.EscapeDataString(intentData.ContentTypeBase64Url)}";
+
+                if (!string.IsNullOrEmpty(intentData.HeadersBase64Url))
+                {
+                    redirectUrl += $"&HeaderJsonObjectBase64Url={Uri.EscapeDataString(intentData.HeadersBase64Url)}";
+                }
+
+                redirectUrl += hashPart;
+
+                Log.Info(TAG, $"Redirecting to callback URL with status {response.StatusCode}");
+
+                var browserIntent = new Intent(Intent.ActionView, Android.Net.Uri.Parse(redirectUrl));
+                browserIntent.AddFlags(ActivityFlags.NewTask);
+                StartActivity(browserIntent);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(TAG, $"Failed to redirect to callback URL: {ex}");
+            }
+            finally
+            {
+                Finish();
+            }
         }
 
         private void FinishWithError(int statusCode, string errorMessage)
