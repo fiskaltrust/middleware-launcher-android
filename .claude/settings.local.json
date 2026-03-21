@@ -2,7 +2,19 @@
   "permissions": {
     "allow": [
       "Bash(dotnet --version)",
-      "Bash(dotnet workload:*)"
+      "Bash(dotnet workload:*)",
+      "Bash(dotnet restore:*)",
+      "Bash(dotnet publish:*)",
+      "Bash(adb devices:*)",
+      "Bash(/c/Users/stefa/AppData/Local/Android/Sdk/platform-tools/adb.exe devices:*)",
+      "Read(//c/Program Files/**)",
+      "Bash(\"/c/Users/stefa/AppData/Local/Android/Sdk/platform-tools/adb.exe\" -s emulator-5554 logcat -d -s AndroidRuntime:E FATAL:* eu.fiskaltrust.androidlauncher:*)",
+      "Bash(\"/c/Users/stefa/AppData/Local/Android/Sdk/platform-tools/adb.exe\" -s emulator-5554 logcat -d)",
+      "Bash(\"/c/Users/stefa/AppData/Local/Android/Sdk/platform-tools/adb.exe\" -s emulator-5554 logcat -c)",
+      "Bash(\"/c/Users/stefa/AppData/Local/Android/Sdk/platform-tools/adb.exe\" -s emulator-5554 shell monkey -p eu.fiskaltrust.androidlauncher -c android.intent.category.LAUNCHER 1)",
+      "Bash(\"/c/Users/stefa/AppData/Local/Android/Sdk/platform-tools/adb.exe\" -s emulator-5554 shell am start -a android.intent.action.VIEW -d \"http://localhost:5173/#/pos-system/AT\")",
+      "Bash(\"/c/Users/stefa/AppData/Local/Android/Sdk/platform-tools/adb.exe\" -s emulator-5554 reverse tcp:5173 tcp:5173)",
+      "Bash(netstat -ano)"
     ]
   }
 }

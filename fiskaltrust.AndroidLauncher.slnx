@@ -2,14 +2,29 @@
   <Folder Name="/middleware/" />
   <Folder Name="/middleware/queue/">
     <Project Path="middleware/queue/src/fiskaltrust.Middleware.Contracts/fiskaltrust.Middleware.Contracts.csproj" />
-    <Project Path="middleware/queue/src/fiskaltrust.Middleware.Queue.SQLite/fiskaltrust.Middleware.Queue.SQLite.csproj" />
+    <Project Path="middleware/queue/src/fiskaltrust.Middleware.Localization.QueueAT/fiskaltrust.Middleware.Localization.QueueAT.csproj" />
+    <Project Path="middleware/queue/src/fiskaltrust.Middleware.Localization.QueueDE/fiskaltrust.Middleware.Localization.QueueDE.csproj" />
+    <Project Path="middleware/queue/src/fiskaltrust.Middleware.Localization.QueueFR/fiskaltrust.Middleware.Localization.QueueFR.csproj" />
+    <Project Path="middleware/queue/src/fiskaltrust.Middleware.Localization.QueueIT/fiskaltrust.Middleware.Localization.QueueIT.csproj" />
+    <Project Path="middleware/queue/src/fiskaltrust.Middleware.Localization.QueueME/fiskaltrust.Middleware.Localization.QueueME.csproj" />
     <Project Path="middleware/queue/src/fiskaltrust.Middleware.Queue/fiskaltrust.Middleware.Queue.csproj" />
+    <Project Path="middleware/queue/src/fiskaltrust.Middleware.Queue.SQLite/fiskaltrust.Middleware.Queue.SQLite.csproj" />
+    <Project Path="middleware/queue/src/fiskaltrust.Middleware.QueueSynchronizer/fiskaltrust.Middleware.QueueSynchronizer.csproj" />
+    <Project Path="middleware/queue/src/fiskaltrust.Middleware.Storage.Base/fiskaltrust.Middleware.Storage.Base.csproj" />
+    <Project Path="middleware/queue/src/fiskaltrust.Middleware.Storage.SQLite/fiskaltrust.Middleware.Storage.SQLite.csproj" />
+  </Folder>
+  <Folder Name="/middleware/scu-at/">
+    <Project Path="middleware/scu-at/src/fiskaltrust.Middleware.SCU.AT.ATrustSmartcard/fiskaltrust.Middleware.SCU.AT.ATrustSmartcard.csproj" />
+    <Project Path="middleware/scu-at/src/fiskaltrust.Middleware.SCU.AT.InMemory/fiskaltrust.Middleware.SCU.AT.InMemory.csproj" />
+    <Project Path="middleware/scu-at/src/fiskaltrust.Middleware.SCU.AT.PrimeSignHSM/fiskaltrust.Middleware.SCU.AT.PrimeSignHSM.csproj" />
   </Folder>
   <Folder Name="/middleware/scu-de/">
     <Project Path="middleware/scu-de/src/fiskaltrust.Middleware.SCU.DE.FiskalyCertified/fiskaltrust.Middleware.SCU.DE.FiskalyCertified.csproj" />
+    <Project Path="middleware/scu-de/src/fiskaltrust.Middleware.SCU.DE.Helpers.TLVLogParser/fiskaltrust.Middleware.SCU.DE.Helpers.TLVLogParser.csproj" />
     <Project Path="middleware/scu-de/src/fiskaltrust.Middleware.SCU.DE.Swissbit/fiskaltrust.Middleware.SCU.DE.Swissbit.csproj" />
   </Folder>
   <Folder Name="/middleware/scu-it/">
+    <Project Path="middleware/scu-it/src/fiskaltrust.Middleware.SCU.IT.Abstraction/fiskaltrust.Middleware.SCU.IT.Abstraction.csproj" />
     <Project Path="middleware/scu-it/src/fiskaltrust.Middleware.SCU.IT.CustomRTServer/fiskaltrust.Middleware.SCU.IT.CustomRTServer.csproj" />
     <Project Path="middleware/scu-it/src/fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter/fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter.csproj" />
   </Folder>

@@ -58,7 +58,7 @@ namespace fiskaltrust.AndroidLauncher.Services
         {
             try
             {
-                if (_market == "DE")
+                if (_market == "DE" || _market == "AT")
                 {
                     var receiptRequestV1 = MappingFactory.ConvertV2ToV1Request(request, _market?.ToUpper());
                     var response = await _pos.SignAsync(receiptRequestV1);
