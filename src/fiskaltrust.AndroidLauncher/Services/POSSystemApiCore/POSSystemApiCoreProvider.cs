@@ -39,7 +39,7 @@ namespace fiskaltrust.AndroidLauncher.Services.POSSystemApiCore
             await bootstrapper.ConfigureServices(services);
 
             services.AddSingleton<IMiddlewareClient>(_ =>PosSystemAPIActivity.LocalMiddlewareServiceInstance.MiddlewareClientAndroid);           
-            services.AddSingleton<IOperationItemRepository, InMemoryOperationItemRepository>();
+            services.AddSingleton<IOperationItemRepository, MemoryOperationItemRepository>();
             services.AddSingleton<IStorageFactory, StorageFactory>();
 
             var provider = services.BuildServiceProvider();
