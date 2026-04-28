@@ -4,6 +4,7 @@ using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
 using AndroidX.Core.App;
+using Azure.Core;
 using fiskaltrust.AndroidLauncher.Activitites;
 using fiskaltrust.AndroidLauncher.Constants;
 using fiskaltrust.AndroidLauncher.Enums;
@@ -13,6 +14,8 @@ using fiskaltrust.AndroidLauncher.Helpers;
 using fiskaltrust.AndroidLauncher.Helpers.Logging;
 using fiskaltrust.AndroidLauncher.Hosting;
 using fiskaltrust.AndroidLauncher.Services;
+using fiskaltrust.AndroidLauncher.Services.POSSystemApiCore;
+using fiskaltrust.Api.PosSystem.Core.Models;
 using fiskaltrust.Api.PosSystemLocal.OperationHandling;
 using fiskaltrust.Api.PosSystemLocal.v2;
 using fiskaltrust.storage.serialization.V0;
@@ -83,6 +86,9 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
 
                 Log.Logger.Debug($"CashBox ID: {cashboxIdString}, IsSandbox: {isSandbox}");
                 PosSystemAPIActivity.LocalMiddlewareServiceInstance = new LocalMiddlewareLauncher(cashboxId, accessToken, isSandbox, logLevel, scuParams);
+                //Create Core
+                var coreProvider = new POSSystemApiCoreProvider();
+                var core = coreProvider.CreateAsync(cashboxId, accessToken, isSandbox);                
                 Task.Run(async () =>
                 {
                     await PosSystemAPIActivity.LocalMiddlewareServiceInstance.StartAsync();

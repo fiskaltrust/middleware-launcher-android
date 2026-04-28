@@ -5,7 +5,7 @@ using fiskaltrust.ifPOS.v2.Cases;
 using Newtonsoft.Json;
 using fiskaltrust.ifPOS.v1.it;
 
-public class MappingFactory
+public class MappingFactoryclass
 {
     public static void AddCountryCodeIfNeeded(ReceiptRequest request, string queueCountryCode)
     {

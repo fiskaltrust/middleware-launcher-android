@@ -44,6 +44,7 @@ namespace fiskaltrust.AndroidLauncher.Services
         public string CountryCode { get; set; }
 
         public IMiddlewareClient MiddlewareClient => new MiddlewareClient(_poss, CountryCode);
+        public Api.PosSystem.Core.Interfaces.IMiddlewareClient MiddlewareClientAndroid => new MiddlewareClientAndroid(_poss, CountryCode);
 
         public PackageConfiguration QueueConfiguration { get; private set; }
 

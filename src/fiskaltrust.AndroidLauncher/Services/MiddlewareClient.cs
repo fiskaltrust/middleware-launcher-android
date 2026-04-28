@@ -60,9 +60,9 @@ namespace fiskaltrust.AndroidLauncher.Services
             {
                 if (_market == "DE")
                 {
-                    var receiptRequestV1 = MappingFactory.ConvertV2ToV1Request(request, _market?.ToUpper());
+                    var receiptRequestV1 = MappingFactoryclass.ConvertV2ToV1Request(request, _market?.ToUpper());
                     var response = await _pos.SignAsync(receiptRequestV1);
-                    return (MappingFactory.ConvertV1ToV2Response(response, _market), null);
+                    return (MappingFactoryclass.ConvertV1ToV2Response(response, _market), null);
                 }
                 else 
                 {
