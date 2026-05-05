@@ -8,6 +8,7 @@ using fiskaltrust.AndroidLauncher.Extensions;
 using fiskaltrust.AndroidLauncher.Helpers;
 using fiskaltrust.AndroidLauncher.Services;
 using fiskaltrust.Api.POS.v2.Journal;
+using fiskaltrust.Api.PosSystem.Core;
 using fiskaltrust.Api.PosSystemLocal.Models;
 using fiskaltrust.Api.PosSystemLocal.OperationHandling;
 using fiskaltrust.Api.PosSystemLocal.v2;
@@ -33,7 +34,9 @@ namespace fiskaltrust.AndroidLauncher.Activitites
     {
         public static LocalMiddlewareLauncher? LocalMiddlewareServiceInstance { get; set; }
 
-        public static OperationStateMachine? OperationStateMachine { get; set; }
+        public static Api.PosSystemLocal.OperationHandling.OperationStateMachine? OperationStateMachine { get; set; }
+
+        public static PosSystemApiCore? posSystemApiCore { get; set; }
 
         private const string TAG = "PosSystemAPI";
 
@@ -72,8 +75,11 @@ namespace fiskaltrust.AndroidLauncher.Activitites
 
                 // Parse the intent into a DTO
                 PosSystemApiRequest request;
+                Api.PosSystem.Core.Models.PosSystemApiRequest coreRequest;
+
                 try
                 {
+                    coreRequest= PosSystemApiRequestCore.FromIntent(intent);
                     request = PosSystemApiRequestExtensions.FromIntent(intent);
                     Log.Info(TAG, $"Processing request: {request.Method} {request.Path}");
                 }
@@ -98,7 +104,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                 if (isLocalEndpoint)
                 {
                     Log.Info(TAG, $"Routing to local middleware: {request.NormalizedPath}");
-                    await MakeLocalRequestAsync(request);
+                    await MakeLocalRequestAsync(request, coreRequest);
                 }
                 else
                 {
@@ -113,14 +119,15 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             }
         }
 
-        private async Task MakeLocalRequestAsync(PosSystemApiRequest request)
+        private async Task MakeLocalRequestAsync(PosSystemApiRequest request, Api.PosSystem.Core.Models.PosSystemApiRequest coreRequest)
         {
             // Check if this is a /v2/echo request with null Message to trigger service restart
             if (string.Equals(request.NormalizedPath, "/v2/echo", StringComparison.OrdinalIgnoreCase))
             {
                 try
                 {
-                    var echoRequest = JsonSerializer.Deserialize<EchoRequest>(request.Body);
+                    //var echoRequest = JsonSerializer.Deserialize<EchoRequest>(request.Body);
+                    var echoRequest = JsonSerializer.Deserialize<EchoRequest>(coreRequest.Body);
                     if (echoRequest != null && echoRequest.Message == null)
                     {
                         Log.Info(TAG, "Detected /v2/echo request with null Message - triggering service restart");
@@ -131,31 +138,30 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                         Log.Info(TAG, "Local middleware not running - triggering service restart");
                         await RestartMiddlewareLauncherServiceAsync(request.CashBoxId, request.AccessToken);
                     }
-                    var echoResponse = await OperationStateMachine.PerformEchoAsync(request);
-                    if (echoResponse.IsOk)
+                     //var echoResponse = await OperationStateMachine.PerformEchoAsync(request);
+                    var echoResponse = await posSystemApiCore.HandleAsync(coreRequest); ;
+                    if (echoResponse.IsSuccess)
                     {
-                        var responseJson = JsonSerializer.Serialize(echoResponse.OkValue.Value, new JsonSerializerOptions
+                        var responseJson = JsonSerializer.Serialize(echoResponse.Content, new JsonSerializerOptions
                         {
                             // Approach B: the broad “unsafe relaxed” encoder that reduces escaping significantly:
                             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
                             WriteIndented = true
                         });
-                        var response = PosSystemApiResponse.Success(responseJson, "application/json", "200");
-                        FinishWithResponse(response);
+                        var response = Api.PosSystem.Core.Models.PosSystemApiResponse.Success(responseJson);
+                        FinishWithCoreResponse(response);
                     }
                     else
                     {
-                        var problemDetails = echoResponse.ErrValue;
-                        var errorResponse = PosSystemApiResponse.Error(problemDetails.Status ?? 500, problemDetails.Detail ?? "Unknown error", problemDetails.Title ?? "Error");
-                        FinishWithResponse(errorResponse);
+                        FinishWithCoreResponse(echoResponse);
                     }
                     return;
                 }
                 catch (Exception ex)
                 {
                     Log.Error(TAG, $"Failed to process echo request: {ex.Message}");
-                    var errorResponse = PosSystemApiResponse.Error(500, $"Failed to process echo request: {ex.Message}");
-                    FinishWithResponse(errorResponse);
+                    var errorResponse = Api.PosSystem.Core.Models.PosSystemApiResponse.Error(500, $"Failed to process echo request: {ex.Message}");
+                    FinishWithCoreResponse(errorResponse);
                     return;
                 }
             }
@@ -409,11 +415,43 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                 }
             });
         }
+        private void FinishWithCoreResponse(Api.PosSystem.Core.Models.PosSystemApiResponse response)
+        {
+            RunOnUiThread(() =>
+            {
+                try
+                {
+                    var intentData = response.ToIntentData();
+                    var resultIntent = new Intent();
+
+                    resultIntent.PutExtra(PosSystemAPIActivityIntentStatics.EXTRA_STATUS_CODE, intentData.StatusCode);
+                    resultIntent.PutExtra(PosSystemAPIActivityIntentStatics.EXTRA_CONTENT_BASE64URL, intentData.ContentBase64Url);
+                    resultIntent.PutExtra(PosSystemAPIActivityIntentStatics.EXTRA_CONTENT_TYPE_BASE64URL, intentData.ContentTypeBase64Url);
+
+                    if (!string.IsNullOrEmpty(intentData.HeadersBase64Url))
+                    {
+                        resultIntent.PutExtra(PosSystemAPIActivityIntentStatics.EXTRA_RESPONSE_HEADER_JSON_BASE64URL, intentData.HeadersBase64Url);
+                    }
+
+                    SetResult(Result.Ok, resultIntent);
+                    Log.Info(TAG, $"Finishing with response: {response.StatusCode} - {(response.IsSuccess ? "Success" : "Error")}");
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(TAG, $"Failed to set response result: {ex}");
+                }
+                finally
+                {
+                    Finish();
+                }
+            });
+        }
 
         private void FinishWithError(int statusCode, string errorMessage)
         {
             var errorResponse = PosSystemApiResponse.Error(statusCode, errorMessage);
             FinishWithResponse(errorResponse);
         }
+        
     }
 }

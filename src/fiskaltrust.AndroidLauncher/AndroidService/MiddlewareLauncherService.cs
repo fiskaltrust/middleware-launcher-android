@@ -87,10 +87,11 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                 Log.Logger.Debug($"CashBox ID: {cashboxIdString}, IsSandbox: {isSandbox}");
                 PosSystemAPIActivity.LocalMiddlewareServiceInstance = new LocalMiddlewareLauncher(cashboxId, accessToken, isSandbox, logLevel, scuParams);
                 //Create Core
-                var coreProvider = new POSSystemApiCoreProvider();
-                var core = coreProvider.CreateAsync(cashboxId, accessToken, isSandbox);                
+                var coreProvider = new POSSystemApiCoreProvider();             
                 Task.Run(async () =>
                 {
+
+                    PosSystemAPIActivity.posSystemApiCore = await coreProvider.CreateAsync(cashboxId, accessToken, isSandbox);
                     await PosSystemAPIActivity.LocalMiddlewareServiceInstance.StartAsync();
                     PosSystemAPIActivity.OperationStateMachine = await new OperationStateMachineFactory(new LoggerFactory()).CreateAsync(PosSystemAPIActivity.LocalMiddlewareServiceInstance.QueueConfiguration, PosSystemAPIActivity.LocalMiddlewareServiceInstance.MiddlewareClient);
                     SetState(LauncherState.Connected, enableCloseButton);
