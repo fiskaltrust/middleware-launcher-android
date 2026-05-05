@@ -142,7 +142,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                     var echoResponse = await posSystemApiCore.HandleAsync(coreRequest); ;
                     if (echoResponse.IsSuccess)
                     {
-                        var responseJson = JsonSerializer.Serialize(echoResponse.Content, new JsonSerializerOptions
+                        var responseJson = JsonSerializer.Serialize((echoResponse.Content as Api.PosSystem.Core.Models.ResponseBody.Text).Value, new JsonSerializerOptions
                         {
                             // Approach B: the broad “unsafe relaxed” encoder that reduces escaping significantly:
                             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
