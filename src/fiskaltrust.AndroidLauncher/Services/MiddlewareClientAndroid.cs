@@ -19,9 +19,17 @@ namespace fiskaltrust.AndroidLauncher.Services
 
         public string CountryCode => _market;
 
-        public Task<(EchoResponse?, string? error)> EchoAsync(MiddlewareRequestOptions requestOptions, EchoRequest request)
+        public async Task<(EchoResponse?, string? error)> EchoAsync(MiddlewareRequestOptions requestOptions, EchoRequest request)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var response = await _pos.EchoAsync(request);
+                return (response, null);
+            }
+            catch (Exception ex)
+            {
+                return (null, ex.Message);
+            }
         }
         public async Task<(ifPOS.v2.EchoResponse?, string? error)> EchoV2Async(MiddlewareRequestOptions requestOptions, ifPOS.v2.EchoRequest request)
         {
