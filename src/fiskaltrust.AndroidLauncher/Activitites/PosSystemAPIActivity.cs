@@ -138,18 +138,19 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                         Log.Info(TAG, "Local middleware not running - triggering service restart");
                         await RestartMiddlewareLauncherServiceAsync(request.CashBoxId, request.AccessToken);
                     }
-                     //var echoResponse = await OperationStateMachine.PerformEchoAsync(request);
+                    // var echoResponse = await OperationStateMachine.PerformEchoAsync(request);
                     var echoResponse = await posSystemApiCore.HandleAsync(coreRequest); ;
                     if (echoResponse.IsSuccess)
                     {
-                        var responseJson = JsonSerializer.Serialize((echoResponse.Content as Api.PosSystem.Core.Models.ResponseBody.Text).Value, new JsonSerializerOptions
+                        var echoResponse2 = JsonSerializer.Deserialize<fiskaltrust.ifPOS.v2.EchoResponse>((echoResponse.Content as Api.PosSystem.Core.Models.ResponseBody.Text).Value);
+                        var responseJson = JsonSerializer.Serialize(echoResponse2, new JsonSerializerOptions
                         {
                             // Approach B: the broad “unsafe relaxed” encoder that reduces escaping significantly:
                             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
                             WriteIndented = true
                         });
                         var response = Api.PosSystem.Core.Models.PosSystemApiResponse.Success(responseJson);
-                        FinishWithCoreResponse(response);
+                        FinishWithCoreResponse(echoResponse);
                     }
                     else
                     {

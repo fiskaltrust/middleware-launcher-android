@@ -82,7 +82,7 @@ namespace fiskaltrust.AndroidLauncher.Extensions
         /// <returns>An object containing Base64URL-encoded response data</returns>
         public static IntentResponseData ToIntentData(this Api.PosSystem.Core.Models.PosSystemApiResponse response)
         {
-            var contentBase64Url = Base64UrlHelper.Encode(response.Content.ToString());
+            var contentBase64Url = Base64UrlHelper.Encode((response.Content as Api.PosSystem.Core.Models.ResponseBody.Text).Value);
             var contentTypeBase64Url = Base64UrlHelper.Encode(response.ContentType);
             var headersJson = JsonConvert.SerializeObject(response.Headers);
             var headersBase64Url = Base64UrlHelper.Encode(headersJson);
