@@ -143,22 +143,15 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                         await Task.Delay(100);
                     }
                     var echoResponse = await posSystemApiCore.HandleAsync(coreRequest); ;
-                    if (echoResponse.IsSuccess)
+                    var echoResponse2 = JsonSerializer.Deserialize<fiskaltrust.ifPOS.v2.EchoResponse>((echoResponse.Content as Api.PosSystem.Core.Models.ResponseBody.Text).Value);
+                    var responseJson = JsonSerializer.Serialize(echoResponse2, new JsonSerializerOptions
                     {
-                        var echoResponse2 = JsonSerializer.Deserialize<fiskaltrust.ifPOS.v2.EchoResponse>((echoResponse.Content as Api.PosSystem.Core.Models.ResponseBody.Text).Value);
-                        var responseJson = JsonSerializer.Serialize(echoResponse2, new JsonSerializerOptions
-                        {
-                            // Approach B: the broad “unsafe relaxed” encoder that reduces escaping significantly:
-                            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-                            WriteIndented = true
-                        });
-                        var response = Api.PosSystem.Core.Models.PosSystemApiResponse.Success(responseJson);
-                        FinishWithCoreResponse(echoResponse);
-                    }
-                    else
-                    {
-                        FinishWithCoreResponse(echoResponse);
-                    }
+                        // Approach B: the broad “unsafe relaxed” encoder that reduces escaping significantly:
+                        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                        WriteIndented = true
+                    });
+                    var response = Api.PosSystem.Core.Models.PosSystemApiResponse.Success(responseJson);
+                    FinishWithCoreResponse(echoResponse);
                     return;
                 }
                 catch (Exception ex)
