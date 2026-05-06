@@ -138,7 +138,10 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                         Log.Info(TAG, "Local middleware not running - triggering service restart");
                         await RestartMiddlewareLauncherServiceAsync(request.CashBoxId, request.AccessToken);
                     }
-                    // var echoResponse = await OperationStateMachine.PerformEchoAsync(request);
+                    while (posSystemApiCore == null)
+                    {
+                        await Task.Delay(100);
+                    }
                     var echoResponse = await posSystemApiCore.HandleAsync(coreRequest); ;
                     if (echoResponse.IsSuccess)
                     {
