@@ -95,10 +95,19 @@ namespace fiskaltrust.AndroidLauncher.Services
                 return (Bytes, contentType: "application/xml", null);
             return (Bytes, contentType: "application/json", null);
         }
-
-        public Task<(ReceiptResponse?, string? error)> SignAsync(MiddlewareRequestOptions requestOptions, ReceiptRequest request)
+        
+        public async Task<(ifPOS.v1.ReceiptResponse?, string? error)> SignAsync(MiddlewareRequestOptions requestOptions, ifPOS.v1.ReceiptRequest request)
         {
-            throw new NotImplementedException();
+            try
+            {
+               var response = await _pos.SignAsync(request);
+               return (response, null);
+               
+            }
+            catch (Exception ex)
+            {
+                return (null, ex.Message);
+            }
         }
 
         public async Task<(ifPOS.v2.ReceiptResponse?, string? error)> SignV2Async(MiddlewareRequestOptions requestOptions, ifPOS.v2.ReceiptRequest request)

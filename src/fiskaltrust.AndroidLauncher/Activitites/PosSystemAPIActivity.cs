@@ -79,7 +79,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
 
                 try
                 {
-                    coreRequest= PosSystemApiRequestCore.FromIntent(intent);
+                    coreRequest = PosSystemApiRequestCore.FromIntent(intent);
                     request = PosSystemApiRequestExtensions.FromIntent(intent);
                     Log.Info(TAG, $"Processing request: {request.Method} {request.Path}");
                 }
@@ -133,25 +133,13 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                         Log.Info(TAG, "Detected /v2/echo request with null Message - triggering service restart");
                         await RestartMiddlewareLauncherServiceAsync(request.CashBoxId, request.AccessToken);
                     }
-                    else if (LocalMiddlewareServiceInstance == null || !LocalMiddlewareServiceInstance.IsRunning)
+                    else
                     {
-                        Log.Info(TAG, "Local middleware not running - triggering service restart");
-                        await RestartMiddlewareLauncherServiceAsync(request.CashBoxId, request.AccessToken);
+                        await EnsureSystemReadyAsync(request.CashBoxId, request.AccessToken);
                     }
-                    while (posSystemApiCore == null)
-                    {
-                        await Task.Delay(100);
-                    }
-                    var echoResponse = await posSystemApiCore.HandleAsync(coreRequest); ;
-                    var echoResponse2 = JsonSerializer.Deserialize<fiskaltrust.ifPOS.v2.EchoResponse>((echoResponse.Content as Api.PosSystem.Core.Models.ResponseBody.Text).Value);
-                    var responseJson = JsonSerializer.Serialize(echoResponse2, new JsonSerializerOptions
-                    {
-                        // Approach B: the broad “unsafe relaxed” encoder that reduces escaping significantly:
-                        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-                        WriteIndented = true
-                    });
-                    var response = Api.PosSystem.Core.Models.PosSystemApiResponse.Success(responseJson);
-                    FinishWithCoreResponse(echoResponse);
+
+                    var response = await posSystemApiCore.HandleAsync(coreRequest);                   
+                    FinishWithCoreResponse(response);
                     return;
                 }
                 catch (Exception ex)
@@ -167,30 +155,10 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             {
                 try
                 {
-                    var receiptRequest = JsonSerializer.Deserialize<ReceiptRequest>(request.Body);
-                    if (LocalMiddlewareServiceInstance == null || !LocalMiddlewareServiceInstance.IsRunning)
-                    {
-                        Log.Info(TAG, "Local middleware not running - triggering service restart");
-                        await RestartMiddlewareLauncherServiceAsync(request.CashBoxId, request.AccessToken);
-                    }
-                    var signResponse = await OperationStateMachine.PerformSignAsync(request);
-                    if (signResponse.IsOk)
-                    {
-                        var responseJson = JsonSerializer.Serialize(signResponse.OkValue.Value, new JsonSerializerOptions
-                        {
-                            // Approach B: the broad “unsafe relaxed” encoder that reduces escaping significantly:
-                            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-                            WriteIndented = true
-                        });
-                        var response = PosSystemApiResponse.Success(responseJson, "application/json", "200");
-                        FinishWithResponse(response);
-                    }
-                    else
-                    {
-                        var problemDetails = signResponse.ErrValue;
-                        var errorResponse = PosSystemApiResponse.Error(problemDetails.Status ?? 500, problemDetails.Detail ?? "Unknown error", problemDetails.Title ?? "Error");
-                        FinishWithResponse(errorResponse);
-                    }
+                    await EnsureSystemReadyAsync(request.CashBoxId, request.AccessToken);
+                    var response = await posSystemApiCore.HandleAsync(coreRequest);
+                    FinishWithCoreResponse(response);
+
                     return;
                 }
                 catch (Exception ex)
@@ -212,7 +180,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                         Log.Info(TAG, "Local middleware not running - triggering service restart");
                         await RestartMiddlewareLauncherServiceAsync(request.CashBoxId, request.AccessToken);
                     }
-                    
+
                     var result = await JournalV2.Journal(LocalMiddlewareServiceInstance.MiddlewareClient, JsonSerializer.Deserialize<JournalRequest>(request.Body));
                     var response = PosSystemApiResponse.Success(Encoding.UTF8.GetString(result.Item1) ?? "", result.contentType, "200");
                     FinishWithResponse(response);
@@ -449,6 +417,30 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             var errorResponse = PosSystemApiResponse.Error(statusCode, errorMessage);
             FinishWithResponse(errorResponse);
         }
-        
+        private async Task EnsureSystemReadyAsync(Guid cashBoxId, string accessToken, CancellationToken cancellationToken = default)
+        {
+            const int maxWaitTimeMs = 10_000;
+            const int pollIntervalMs = 100;
+
+            if (LocalMiddlewareServiceInstance == null || !LocalMiddlewareServiceInstance.IsRunning)
+            {
+                Log.Info(TAG, "Local middleware not running - triggering service restart");
+                await RestartMiddlewareLauncherServiceAsync(cashBoxId, accessToken);
+            }
+
+            var waitedMs = 0;
+
+            while (posSystemApiCore == null && waitedMs < maxWaitTimeMs)
+            {
+                await Task.Delay(pollIntervalMs, cancellationToken);
+                waitedMs += pollIntervalMs;
+            }
+
+            if (posSystemApiCore == null)
+            {
+                throw new TimeoutException("POS system API core did not become ready in time.");
+            }
+        }
+
     }
 }
