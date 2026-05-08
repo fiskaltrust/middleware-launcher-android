@@ -50,29 +50,23 @@ namespace fiskaltrust.AndroidLauncher.Services
             }
         }
 
-        public Task<(byte[]?, string? contentType, string? error)> JournalAsync(MiddlewareRequestOptions requestOptions, JournalRequest request)
+        public async Task<(byte[]?, string? contentType, string? error)> JournalAsync(MiddlewareRequestOptions requestOptions, JournalRequest request)
         {
-            throw new NotImplementedException();
-        }
-
-        public async Task<(byte[]?, string? error)> JournalV2Async(ifPOS.v2.JournalRequest request)
-        {
+            List<JournalResponse> response;
             try
             {
-                var response = await _pos.JournalAsync(new JournalRequest
-                {
-                    From = request.From,
-                    To = request.To,
-                    ftJournalType = (long)request.ftJournalType
-                }).ToListAsync();
-                return (response.SelectMany(x => x.Chunk).ToArray(), null);
+                response = await _pos.JournalAsync(request).ToListAsync();
             }
             catch (Exception ex)
             {
-                return (null, ex.Message);
+                throw new Exception(ex.Message);
             }
+            var Bytes = response.SelectMany(x => x.Chunk).ToArray();
+            var content = Encoding.UTF8.GetString(Bytes);
+            if (content.StartsWith("<?xml"))
+                return (Bytes, contentType: "application/xml", null);
+            return (Bytes, contentType: "application/json", null);
         }
-
         public async Task<(byte[]?, string? contentType, string? error)> JournalV2Async(MiddlewareRequestOptions requestOptions, ifPOS.v2.JournalRequest request)
         {
             List<JournalResponse> response;

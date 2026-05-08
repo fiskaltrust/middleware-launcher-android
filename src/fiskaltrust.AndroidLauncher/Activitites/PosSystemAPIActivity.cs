@@ -164,8 +164,8 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                 catch (Exception ex)
                 {
                     Log.Error(TAG, $"Failed to process sign request: {ex.Message}");
-                    var errorResponse = PosSystemApiResponse.Error(500, $"Failed to process sign request: {ex.Message}");
-                    FinishWithResponse(errorResponse);
+                    var errorResponse = Api.PosSystem.Core.Models.PosSystemApiResponse.Error(500, $"Failed to process sign request: {ex.Message}");
+                    FinishWithCoreResponse(errorResponse);
                     return;
                 }
             }
@@ -174,23 +174,16 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             {
                 try
                 {
-                    var receiptRequest = JsonSerializer.Deserialize<JournalRequest>(request.Body);
-                    if (LocalMiddlewareServiceInstance == null || !LocalMiddlewareServiceInstance.IsRunning)
-                    {
-                        Log.Info(TAG, "Local middleware not running - triggering service restart");
-                        await RestartMiddlewareLauncherServiceAsync(request.CashBoxId, request.AccessToken);
-                    }
-
-                    var result = await JournalV2.Journal(LocalMiddlewareServiceInstance.MiddlewareClient, JsonSerializer.Deserialize<JournalRequest>(request.Body));
-                    var response = PosSystemApiResponse.Success(Encoding.UTF8.GetString(result.Item1) ?? "", result.contentType, "200");
-                    FinishWithResponse(response);
+                    await EnsureSystemReadyAsync(request.CashBoxId, request.AccessToken);
+                    var response = await posSystemApiCore.HandleAsync(coreRequest);
+                    FinishWithCoreResponse(response);
                     return;
                 }
                 catch (Exception ex)
                 {
                     Log.Error(TAG, $"Failed to process sign request: {ex.Message}");
-                    var errorResponse = PosSystemApiResponse.Error(500, $"Failed to process sign request: {ex.Message}");
-                    FinishWithResponse(errorResponse);
+                    var errorResponse = Api.PosSystem.Core.Models.PosSystemApiResponse.Error(500, $"Failed to process sign request: {ex.Message}");
+                    FinishWithCoreResponse(errorResponse);
                     return;
                 }
             }
