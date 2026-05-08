@@ -1,6 +1,6 @@
-﻿using fiskaltrust.Api.POS.Signing;
-using fiskaltrust.Api.PosSystem.Core.Interfaces;
+﻿using fiskaltrust.Api.PosSystem.Core.Interfaces;
 using fiskaltrust.Api.PosSystem.Core.Models;
+using fiskaltrust.Api.PosSystem.Signing;
 using fiskaltrust.ifPOS.v1;
 using System.Text;
 
@@ -117,7 +117,7 @@ namespace fiskaltrust.AndroidLauncher.Services
                 else
                 {
                     var response = await _pos.SignAsync(ReceiptRequestHelper.ConvertToV1(request));
-                    return (fiskaltrust.Api.POS.Signing.ReceiptRequestHelper.ConvertToV2(response), null);
+                    return (ReceiptRequestHelper.ConvertToV2(response), null);
                 }
             }
             catch (Exception ex)

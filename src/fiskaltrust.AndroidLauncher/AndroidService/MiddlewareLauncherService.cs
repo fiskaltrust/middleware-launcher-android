@@ -12,13 +12,8 @@ using fiskaltrust.AndroidLauncher.Exceptions;
 using fiskaltrust.AndroidLauncher.Extensions;
 using fiskaltrust.AndroidLauncher.Helpers;
 using fiskaltrust.AndroidLauncher.Helpers.Logging;
-using fiskaltrust.AndroidLauncher.Hosting;
 using fiskaltrust.AndroidLauncher.Services;
 using fiskaltrust.AndroidLauncher.Services.POSSystemApiCore;
-using fiskaltrust.Api.PosSystem.Core.Models;
-using fiskaltrust.Api.PosSystemLocal.OperationHandling;
-using fiskaltrust.Api.PosSystemLocal.v2;
-using fiskaltrust.storage.serialization.V0;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -92,7 +87,6 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                 {
                     await PosSystemAPIActivity.LocalMiddlewareServiceInstance.StartAsync();
                     PosSystemAPIActivity.posSystemApiCore = await coreProvider.CreateAsync(cashboxId, accessToken, isSandbox);
-                    PosSystemAPIActivity.OperationStateMachine = await new OperationStateMachineFactory(new LoggerFactory()).CreateAsync(PosSystemAPIActivity.LocalMiddlewareServiceInstance.QueueConfiguration, PosSystemAPIActivity.LocalMiddlewareServiceInstance.MiddlewareClient);
                     SetState(LauncherState.Connected, enableCloseButton);
                     StateProvider.Instance.SetState(State.Running);
                 }).Wait();
@@ -124,13 +118,6 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
 
                 return StartCommandResult.NotSticky;
             }
-        }
-
-        public async Task<OperationStateMachine> InitializeOperationStateMachine(Guid queueId, PackageConfiguration packageConfiguration, IMiddlewareClient middlewareClient, ILoggerFactory loggerFactory)
-        {
-            var operationStateMachineFactory = new OperationStateMachineFactory(loggerFactory);
-            var operationStateMachine = await operationStateMachineFactory.CreateAsync(packageConfiguration, middlewareClient);
-            return operationStateMachine;
         }
 
         public override void OnDestroy()

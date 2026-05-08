@@ -7,16 +7,11 @@ using fiskaltrust.AndroidLauncher.Constants;
 using fiskaltrust.AndroidLauncher.Extensions;
 using fiskaltrust.AndroidLauncher.Helpers;
 using fiskaltrust.AndroidLauncher.Services;
-using fiskaltrust.Api.POS.v2.Journal;
 using fiskaltrust.Api.PosSystem.Core;
-using fiskaltrust.Api.PosSystemLocal.Models;
-using fiskaltrust.Api.PosSystemLocal.OperationHandling;
-using fiskaltrust.Api.PosSystemLocal.v2;
+using fiskaltrust.Api.PosSystem.Core.Models;
 using fiskaltrust.ifPOS.v2;
 using Microsoft.Extensions.Logging;
-using System.Collections.Concurrent;
 using System.Text;
-using System.Text.Encodings.Web;
 using System.Text.Json;
 
 namespace fiskaltrust.AndroidLauncher.Activitites
@@ -33,8 +28,6 @@ namespace fiskaltrust.AndroidLauncher.Activitites
     public class PosSystemAPIActivity : Activity
     {
         public static LocalMiddlewareLauncher? LocalMiddlewareServiceInstance { get; set; }
-
-        public static Api.PosSystemLocal.OperationHandling.OperationStateMachine? OperationStateMachine { get; set; }
 
         public static PosSystemApiCore? posSystemApiCore { get; set; }
 
@@ -75,11 +68,10 @@ namespace fiskaltrust.AndroidLauncher.Activitites
 
                 // Parse the intent into a DTO
                 PosSystemApiRequest request;
-                Api.PosSystem.Core.Models.PosSystemApiRequest coreRequest;
+                
 
                 try
                 {
-                    coreRequest = PosSystemApiRequestCore.FromIntent(intent);
                     request = PosSystemApiRequestExtensions.FromIntent(intent);
                     Log.Info(TAG, $"Processing request: {request.Method} {request.Path}");
                 }
@@ -93,7 +85,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                 // Validate endpoint version - only support defaults (no version) and /v2
                 if (!request.IsValidVersion())
                 {
-                    Log.Error(TAG, $"Unsupported endpoint version: {request.NormalizedPath}");
+                    Log.Error(TAG, $"Unsupported endpoint version: {request.Path}");
                     FinishWithError(400, $"Unsupported endpoint version. Only default endpoints (e.g., /sign, /echo) and /v2/* endpoints are supported. Please do not use /v0/* or /v1/* versions.");
                     return;
                 }
@@ -103,12 +95,12 @@ namespace fiskaltrust.AndroidLauncher.Activitites
 
                 if (isLocalEndpoint)
                 {
-                    Log.Info(TAG, $"Routing to local middleware: {request.NormalizedPath}");
-                    await MakeLocalRequestAsync(request, coreRequest);
+                    Log.Info(TAG, $"Routing to local middleware: {request.Path}");
+                    await MakeLocalRequestAsync(request);
                 }
                 else
                 {
-                    Log.Info(TAG, $"Routing to cloud PosSystemAPI: {request.NormalizedPath}");
+                    Log.Info(TAG, $"Routing to cloud PosSystemAPI: {request.Path}");
                     await MakeCloudRequestAsync(request);
                 }
             }
@@ -119,7 +111,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             }
         }
 
-        private async Task MakeLocalRequestAsync(Api.PosSystem.Core.Models.PosSystemApiRequest request)
+        private async Task MakeLocalRequestAsync(PosSystemApiRequest request)
         {
             await EnsureSystemReadyAsync((Guid)request.CashBoxId!, request.AccessToken).ConfigureAwait(false);
             var SupportedPaths = new[] { "/v2/echo", "/v2/sign", "/v2/journal" };
@@ -127,7 +119,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             {
                 var notSupportedResponse = Api.PosSystem.Core.Models.PosSystemApiResponse.Error( 400, $"The selected path '{request.Path}' and method '{request.Method}' is not supported.");
 
-                FinishWithCoreResponse(notSupportedResponse);
+                FinishWithResponse(notSupportedResponse);
                 return;
             }
 
@@ -145,14 +137,14 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             try
             {
                 var response = await posSystemApiCore.HandleAsync(request).ConfigureAwait(false);
-                FinishWithCoreResponse(response);
+                FinishWithResponse(response);
                 return;
             }
             catch (Exception ex)
             {
                 Log.Error(TAG, $"Failed to process {request.Path.Split('/').Last()} request: {ex.Message}");
                 var errorResponse = Api.PosSystem.Core.Models.PosSystemApiResponse.Error(500, $"Failed to process {request.Path.Split('/').Last()} request: {ex.Message}");
-                FinishWithCoreResponse(errorResponse);
+                FinishWithResponse(errorResponse);
                 return;
             }
         }
@@ -228,7 +220,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             try
             {
                 var baseUrl = Urls.POSSYSTEM_API_SANDBOX;
-                var path = request.NormalizedPath;
+                var path = request.Path;
                 if (!path.StartsWith("/v2", StringComparison.OrdinalIgnoreCase))
                 {
                     path = "/v2" + path;
@@ -280,7 +272,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                 Log.Info(TAG, $"Received cloud response: {(int)httpResponse.StatusCode}");
 
                 // Convert HTTP response to our DTO
-                var response = await PosSystemApiResponse.FromHttpResponseAsync(httpResponse);
+                var response = await PosSystemApiResponseExtensions.FromHttpResponseAsync(httpResponse).ConfigureAwait(false);
                 FinishWithResponse(response);
             }
             catch (HttpRequestException ex)
@@ -308,37 +300,6 @@ namespace fiskaltrust.AndroidLauncher.Activitites
         /// </summary>
         /// <param name="response">The PosSystemApiResponse to return</param>
         private void FinishWithResponse(PosSystemApiResponse response)
-        {
-            RunOnUiThread(() =>
-            {
-                try
-                {
-                    var intentData = response.ToIntentData();
-                    var resultIntent = new Intent();
-
-                    resultIntent.PutExtra(PosSystemAPIActivityIntentStatics.EXTRA_STATUS_CODE, intentData.StatusCode);
-                    resultIntent.PutExtra(PosSystemAPIActivityIntentStatics.EXTRA_CONTENT_BASE64URL, intentData.ContentBase64Url);
-                    resultIntent.PutExtra(PosSystemAPIActivityIntentStatics.EXTRA_CONTENT_TYPE_BASE64URL, intentData.ContentTypeBase64Url);
-
-                    if (!string.IsNullOrEmpty(intentData.HeadersBase64Url))
-                    {
-                        resultIntent.PutExtra(PosSystemAPIActivityIntentStatics.EXTRA_RESPONSE_HEADER_JSON_BASE64URL, intentData.HeadersBase64Url);
-                    }
-
-                    SetResult(Result.Ok, resultIntent);
-                    Log.Info(TAG, $"Finishing with response: {response.StatusCode} - {(response.IsSuccess ? "Success" : "Error")}");
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(TAG, $"Failed to set response result: {ex}");
-                }
-                finally
-                {
-                    Finish();
-                }
-            });
-        }
-        private void FinishWithCoreResponse(Api.PosSystem.Core.Models.PosSystemApiResponse response)
         {
             RunOnUiThread(() =>
             {
