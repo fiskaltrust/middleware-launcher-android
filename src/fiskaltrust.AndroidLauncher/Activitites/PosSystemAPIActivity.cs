@@ -119,77 +119,42 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             }
         }
 
-        private async Task MakeLocalRequestAsync(PosSystemApiRequest request, Api.PosSystem.Core.Models.PosSystemApiRequest coreRequest)
+        private async Task MakeLocalRequestAsync(Api.PosSystem.Core.Models.PosSystemApiRequest request)
         {
-            // Check if this is a /v2/echo request with null Message to trigger service restart
-            if (string.Equals(request.NormalizedPath, "/v2/echo", StringComparison.OrdinalIgnoreCase))
+            await EnsureSystemReadyAsync((Guid)request.CashBoxId!, request.AccessToken).ConfigureAwait(false);
+            var SupportedPaths = new[] { "/v2/echo", "/v2/sign", "/v2/journal" };
+            if (!SupportedPaths.Contains(request.Path, StringComparer.OrdinalIgnoreCase))
             {
-                try
-                {
-                    //var echoRequest = JsonSerializer.Deserialize<EchoRequest>(request.Body);
-                    var echoRequest = JsonSerializer.Deserialize<EchoRequest>(coreRequest.Body);
-                    if (echoRequest != null && echoRequest.Message == null)
+                var notSupportedResponse = Api.PosSystem.Core.Models.PosSystemApiResponse.Error( 400, $"The selected path '{request.Path}' and method '{request.Method}' is not supported.");
+
+                FinishWithCoreResponse(notSupportedResponse);
+                return;
+            }
+
+            // Check if this is a /v2/echo request with null Message to trigger service restart
+            if (string.Equals(request.Path, "/v2/echo", StringComparison.OrdinalIgnoreCase))
+            {
+                    var echoRequest = JsonSerializer.Deserialize<EchoRequest>(request.Body ?? "");
+                    if (echoRequest?.Message == null)
                     {
                         Log.Info(TAG, "Detected /v2/echo request with null Message - triggering service restart");
-                        await RestartMiddlewareLauncherServiceAsync(request.CashBoxId, request.AccessToken);
+                        await RestartMiddlewareLauncherServiceAsync((Guid)request.CashBoxId, request.AccessToken);
                     }
-                    else
-                    {
-                        await EnsureSystemReadyAsync(request.CashBoxId, request.AccessToken);
-                    }
-
-                    var response = await posSystemApiCore.HandleAsync(coreRequest);                   
-                    FinishWithCoreResponse(response);
-                    return;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(TAG, $"Failed to process echo request: {ex.Message}");
-                    var errorResponse = Api.PosSystem.Core.Models.PosSystemApiResponse.Error(500, $"Failed to process echo request: {ex.Message}");
-                    FinishWithCoreResponse(errorResponse);
-                    return;
-                }
             }
 
-            if (string.Equals(request.NormalizedPath, "/v2/sign", StringComparison.OrdinalIgnoreCase))
+            try
             {
-                try
-                {
-                    await EnsureSystemReadyAsync(request.CashBoxId, request.AccessToken);
-                    var response = await posSystemApiCore.HandleAsync(coreRequest);
-                    FinishWithCoreResponse(response);
-
-                    return;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(TAG, $"Failed to process sign request: {ex.Message}");
-                    var errorResponse = Api.PosSystem.Core.Models.PosSystemApiResponse.Error(500, $"Failed to process sign request: {ex.Message}");
-                    FinishWithCoreResponse(errorResponse);
-                    return;
-                }
+                var response = await posSystemApiCore.HandleAsync(request).ConfigureAwait(false);
+                FinishWithCoreResponse(response);
+                return;
             }
-
-            if (string.Equals(request.NormalizedPath, "/v2/journal", StringComparison.OrdinalIgnoreCase))
+            catch (Exception ex)
             {
-                try
-                {
-                    await EnsureSystemReadyAsync(request.CashBoxId, request.AccessToken);
-                    var response = await posSystemApiCore.HandleAsync(coreRequest);
-                    FinishWithCoreResponse(response);
-                    return;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(TAG, $"Failed to process sign request: {ex.Message}");
-                    var errorResponse = Api.PosSystem.Core.Models.PosSystemApiResponse.Error(500, $"Failed to process sign request: {ex.Message}");
-                    FinishWithCoreResponse(errorResponse);
-                    return;
-                }
+                Log.Error(TAG, $"Failed to process {request.Path.Split('/').Last()} request: {ex.Message}");
+                var errorResponse = Api.PosSystem.Core.Models.PosSystemApiResponse.Error(500, $"Failed to process {request.Path.Split('/').Last()} request: {ex.Message}");
+                FinishWithCoreResponse(errorResponse);
+                return;
             }
-
-            var notSupportedResponse = PosSystemApiResponse.Error(400, $"The selected path '{request.NormalizedPath}' and method '{request.Method}' is not supported.");
-            FinishWithResponse(notSupportedResponse);
         }
 
         private async Task RestartMiddlewareLauncherServiceAsync(Guid cashBoxId, string accessToken)
