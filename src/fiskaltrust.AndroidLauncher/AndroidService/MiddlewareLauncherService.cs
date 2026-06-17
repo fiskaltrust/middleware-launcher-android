@@ -82,14 +82,39 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                 Log.Logger.Debug($"CashBox ID: {cashboxIdString}, IsSandbox: {isSandbox}");
                 PosSystemAPIActivity.LocalMiddlewareServiceInstance = new LocalMiddlewareLauncher(cashboxId, accessToken, isSandbox, logLevel, scuParams);
                 //Create Core
-                var coreProvider = new POSSystemApiCoreProvider();             
-                Task.Run(async () =>
+                var coreProvider = new POSSystemApiCoreProvider();
+                _ = Task.Run(async () =>
                 {
-                    await PosSystemAPIActivity.LocalMiddlewareServiceInstance.StartAsync();
-                    PosSystemAPIActivity.posSystemApiCore = await coreProvider.CreateAsync(cashboxId, accessToken, isSandbox);
-                    SetState(LauncherState.Connected, enableCloseButton);
-                    StateProvider.Instance.SetState(State.Running);
-                }).Wait();
+                    try
+                    {
+                        await PosSystemAPIActivity.LocalMiddlewareServiceInstance.StartAsync();
+                        PosSystemAPIActivity.posSystemApiCore = await coreProvider.CreateAsync(cashboxId, accessToken, isSandbox);
+                        SetState(LauncherState.Connected, enableCloseButton);
+                        StateProvider.Instance.SetState(State.Running);
+                    }
+                    catch (Exception ex)
+                    {
+                        if (ex.InnerException != null)
+                            ex = ex.InnerException;
+
+                        Log.Logger.Error(ex, "An error occured while trying to start the fiskaltrust Android Launcher.");
+                        if (ex is RemountRequiredException remountRequiredEx)
+                        {
+                            StateProvider.Instance.SetState(State.Error, StateReasons.RemountRequired);
+                            SetState(LauncherState.Error, enableCloseButton, remountRequiredEx.Message);
+                        }
+                        else if (ex is ConfigurationNotFoundException confNotFoundEx)
+                        {
+                            StateProvider.Instance.SetState(State.Error, StateReasons.ConfigurationNotFound);
+                            SetState(LauncherState.Error, enableCloseButton, confNotFoundEx.Message);
+                        }
+                        else
+                        {
+                            StateProvider.Instance.SetState(State.Error, ex.Message);
+                            SetState(LauncherState.Error, enableCloseButton);
+                        }
+                    }
+                });
                 Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
 
                 return StartCommandResult.RedeliverIntent;
