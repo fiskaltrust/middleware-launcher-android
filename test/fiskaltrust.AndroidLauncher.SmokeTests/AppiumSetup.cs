@@ -13,7 +13,7 @@ public static class AppiumSetup
         // Requires Appium installed globally: npm install -g appium && appium driver install uiautomator2
         AppiumServerHelper.StartAppiumLocalServer();
 
-        var avdName = Environment.GetEnvironmentVariable("AVD_NAME") ?? "pixel_7_pro_-_api_34";
+        var avdName = Environment.GetEnvironmentVariable("AVD_NAME") ?? throw new InvalidOperationException("AVD_NAME environment variable is not set.");
         var appiumUrl = Environment.GetEnvironmentVariable("APPIUM_URL") ?? "http://127.0.0.1:4723";
 
         var androidOptions = new AppiumOptions
