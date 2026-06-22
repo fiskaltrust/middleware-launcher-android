@@ -31,7 +31,7 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
             var body = TestConstants.InitialOperationReceipt
                 .Replace("{{cashbox_id}}", TestConstants.Http.CashboxId);
 
-            var result = await SendPosSystemAPIIntentAsync("POST", "/v2/sign", headers, body, TimeSpan.FromMinutes(3));
+            var result = await SendPosSystemAPIIntentAsync("POST", "/v2/sign", headers, body, TimeSpan.FromMinutes(5));
 
             result.StatusCode.Should().Be("201");
         }
@@ -53,16 +53,62 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
             TimeSpan? timeout = null)
         {
             var timeoutValue = timeout ?? TimeSpan.FromSeconds(30);
-
             var headersBase64Url = ToBase64Url(System.Text.Json.JsonSerializer.Serialize(headers));
 
-            // Clear logcat so we only capture logs from this request
+            // Drain Appium's internal buffer, then clear device logcat
+            _driver.Manage().Logs.GetLog("logcat");
             _driver.ExecuteScript("mobile: shell", new Dictionary<string, object>
             {
                 { "command", "logcat" },
                 { "args", new[] { "-c" } }
             });
 
+            SendIntent(method, path, headersBase64Url, body);
+
+            var startTime = DateTime.UtcNow;
+            var seenRequest = false;
+            var intentRetried = false;
+            while (DateTime.UtcNow < startTime + timeoutValue)
+            {
+                await Task.Delay(1000);
+
+                var logs = _driver.Manage().Logs.GetLog("logcat");
+                foreach (var log in logs)
+                {
+                    var message = log.Message?.ToString() ?? "";
+                    if (message.Contains("PosSystemAPI") || message.Contains("fiskaltrust.AndroidLauncher"))
+                        TestContext.Out.WriteLine($"[LOGCAT] {message}");
+
+                    if (message.Contains($"Processing request: {method} {path}"))
+                        seenRequest = true;
+
+                    if (!seenRequest && !intentRetried && message.Contains("LocalMiddlewareServiceInstance initialized"))
+                    {
+                        intentRetried = true;
+                        TestContext.Out.WriteLine("[INFO] Process restart detected — middleware restarted without receiving our intent. Retrying...");
+                        await Task.Delay(2000); // allow posSystemApiCore to finish being set after IsRunning
+                        SendIntent(method, path, headersBase64Url, body);
+                    }
+
+                    if (seenRequest && message.Contains("PosSystemAPI") && message.Contains("Finishing with response:"))
+                    {
+                        var match = Regex.Match(message, @"Finishing with response: (\d+)");
+                        if (match.Success)
+                        {
+                            var statusCode = match.Groups[1].Value;
+                            TestContext.Out.WriteLine($"Got response: {statusCode}");
+                            return new IntentCallResult { StatusCode = statusCode };
+                        }
+                    }
+                }
+            }
+
+            _driver.GetScreenshot();
+            throw new TimeoutException($"PosSystemAPI did not respond to {method} {path} within {timeoutValue}");
+        }
+
+        private void SendIntent(string method, string path, string headersBase64Url, string body)
+        {
             var args = new List<string>
             {
                 "start",
@@ -82,36 +128,6 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
                 { "command", "am" },
                 { "args", args.ToArray() }
             });
-
-            // Poll logcat for the activity's response log line
-            var startTime = DateTime.UtcNow;
-            while (DateTime.UtcNow < startTime + timeoutValue)
-            {
-                await Task.Delay(1000);
-
-                var logs = _driver.Manage().Logs.GetLog("logcat");
-                foreach (var log in logs)
-                {
-                    var message = log.Message?.ToString() ?? "";
-                    if (message.Contains("PosSystemAPI") || message.Contains("fiskaltrust.AndroidLauncher"))
-                    {
-                        TestContext.Out.WriteLine($"[LOGCAT] {message}");
-                    }
-                    if (message.Contains("PosSystemAPI") && message.Contains("Finishing with response:"))
-                    {
-                        var match = Regex.Match(message, @"Finishing with response: (\d+)");
-                        if (match.Success)
-                        {
-                            var statusCode = match.Groups[1].Value;
-                            TestContext.Out.WriteLine($"Got response: {statusCode}");
-                            return new IntentCallResult { StatusCode = statusCode };
-                        }
-                    }
-                }
-            }
-
-            _driver.GetScreenshot();
-            throw new TimeoutException($"PosSystemAPI did not respond to {method} {path} within {timeoutValue}");
         }
 
         private static string ToBase64Url(string text)

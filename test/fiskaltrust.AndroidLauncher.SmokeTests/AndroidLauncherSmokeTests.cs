@@ -8,14 +8,15 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
     {
         protected AndroidDriver _driver;
 
-        [SetUp]
-        public void Init()
+        [OneTimeSetUp]
+        public void InitFixture()
         {
+            AppiumSetup.Setup();
             _driver = AppiumSetup.RunBeforeAnyTests();
         }
 
-        [TearDown]
-        public void Cleanup()
+        [OneTimeTearDown]
+        public void CleanupFixture()
         {
             AppiumSetup.RunAfterAnyTests(_driver);
         }

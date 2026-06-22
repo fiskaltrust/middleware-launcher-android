@@ -318,7 +318,8 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                     }
 
                     SetResult(Result.Ok, resultIntent);
-                    Log.Info(TAG, $"Finishing with response: {response.StatusCode} - {(response.IsSuccess ? "Success" : "Error")}");
+                    var contentForLog = response.Content is ResponseBody.Text t ? t.Value : "(binary)";
+                    Log.Info(TAG, $"Finishing with response: {response.StatusCode} - {(response.IsSuccess ? "Success" : "Error")} - {contentForLog}");
                 }
                 catch (Exception ex)
                 {
