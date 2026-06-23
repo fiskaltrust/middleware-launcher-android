@@ -108,17 +108,8 @@ namespace fiskaltrust.AndroidLauncher.Services
         {
             try
             {
-                if (_market == "DE")
-                {
-                    var receiptRequestV1 = MappingFactory.ConvertV2ToV1Request(request, _market?.ToUpper());
-                    var response = await _pos.SignAsync(receiptRequestV1);
-                    return (MappingFactory.ConvertV1ToV2Response(response, _market), null);
-                }
-                else
-                {
-                    var response = await _pos.SignAsync(ReceiptRequestHelper.ConvertToV1(request));
-                    return (ReceiptRequestHelper.ConvertToV2(response), null);
-                }
+                var response = await _pos.SignAsync(ReceiptRequestHelper.ConvertToV1(request));
+                return (ReceiptRequestHelper.ConvertToV2(response), null);
             }
             catch (Exception ex)
             {

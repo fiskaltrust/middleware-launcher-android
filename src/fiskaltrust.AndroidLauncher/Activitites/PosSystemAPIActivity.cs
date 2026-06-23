@@ -67,8 +67,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                 }
 
                 // Parse the intent into a DTO
-                PosSystemApiRequest request;
-                
+                PosSystemApiRequest request;              
 
                 try
                 {
