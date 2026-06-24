@@ -76,7 +76,7 @@ The APK is built and installed automatically on first run (or when source files 
 
 Start Appium in a separate terminal and leave it running:
 ```sh
-appium
+appium --allow-insecure=adb_shell
 ```
 
 ### Running
@@ -89,12 +89,12 @@ dotnet test test/fiskaltrust.AndroidLauncher.SmokeTests
 
 Default sandbox credentials are defined in [`test/fiskaltrust.AndroidLauncher.SmokeTests/TestConstants.cs`](test/fiskaltrust.AndroidLauncher.SmokeTests/TestConstants.cs). Override them via environment variables if needed:
 
-| Variable | Description |
-|---|---|
-| `CASHBOXID` | Cashbox GUID |
-| `ACCESSTOKEN` | Access token |
-| `APPIUM_URL` | Appium server URL (default: `http://127.0.0.1:4723`) |
-| `DEVICE_UDID` | Target device (auto-detected if only one is connected) |
+| Variable      | Description                                                                               |
+|---------------|-------------------------------------------------------------------------------------------|
+| `CASHBOXID`   | Cashbox GUID                                                                              |
+| `ACCESSTOKEN` | Access token                                                                              |
+| `APPIUM_URL`  | Appium server URL (default: `http://127.0.0.1:4723`)                                      |
+| `DEVICE_UDID` | Target device (auto-detected if only one is connected)                                    |
 | `ANDROID_RID` | Runtime identifier (default: `android-x64`; use `android-arm64` for physical ARM devices) |
 
 ## Contributing

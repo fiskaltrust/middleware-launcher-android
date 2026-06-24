@@ -11,7 +11,6 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
         [OneTimeSetUp]
         public void InitFixture()
         {
-            AppiumSetup.Setup();
             _driver = AppiumSetup.RunBeforeAnyTests();
         }
 
