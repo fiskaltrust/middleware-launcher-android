@@ -54,6 +54,49 @@ Swissbit supports additional .DAT files, and they are automatically created by p
 The creation of .DAT files is exclusively handled by the TSE during the startup process. To ensure the proper generation of these files, the TSE needs to be remounted or the device must be restarted. Failure to do so may result in a remount error, preventing the successful creation of .DAT files.
 
 
+## Smoke Tests
+
+End-to-end tests covering the Intent-based PosSystemAPI flow (echo + sign receipt) via Appium.
+
+### Requirements
+
+- [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
+- JDK 21 (`JAVA_HOME` must be set, or discoverable by the .NET Android build)
+- `adb` on `PATH` (part of Android SDK / Android Studio)
+- [Node.js](https://nodejs.org/) + Appium 2 with UIAutomator2 driver:
+  ```sh
+  npm install -g appium
+  appium driver install uiautomator2
+  ```
+- Android emulator (API 24+, x86\_64) or a connected physical device
+
+The APK is built and installed automatically on first run (or when source files change).
+
+### Before running
+
+Start Appium in a separate terminal and leave it running:
+```sh
+appium --allow-insecure=adb_shell
+```
+
+### Running
+
+```sh
+dotnet test test/fiskaltrust.AndroidLauncher.SmokeTests
+```
+
+### Credentials
+
+Default sandbox credentials are defined in [`test/fiskaltrust.AndroidLauncher.SmokeTests/TestConstants.cs`](test/fiskaltrust.AndroidLauncher.SmokeTests/TestConstants.cs). Override them via environment variables if needed:
+
+| Variable      | Description                                                                               |
+|---------------|-------------------------------------------------------------------------------------------|
+| `CASHBOXID`   | Cashbox GUID                                                                              |
+| `ACCESSTOKEN` | Access token                                                                              |
+| `APPIUM_URL`  | Appium server URL (default: `http://127.0.0.1:4723`)                                      |
+| `DEVICE_UDID` | Target device (auto-detected if only one is connected)                                    |
+| `ANDROID_RID` | Runtime identifier (default: `android-x64`; use `android-arm64` for physical ARM devices) |
+
 ## Contributing
 We welcome all kinds of contributions and feedback, e.g. via issues or pull requests, and want to thank every future contributors in advance!
 
