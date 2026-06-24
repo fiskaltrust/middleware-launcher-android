@@ -1,21 +1,12 @@
-using Android.Content;
+﻿using Android.Content;
 using fiskaltrust.AndroidLauncher.Helpers;
-using fiskaltrust.Api.PosSystemLocal.Models;
+using fiskaltrust.Api.PosSystem.Core.Models;
 using Newtonsoft.Json;
 
 namespace fiskaltrust.AndroidLauncher.Extensions
 {
-    /// <summary>
-    /// Android-specific extensions for PosSystemApiRequest
-    /// </summary>
     public static class PosSystemApiRequestExtensions
     {
-        /// <summary>
-        /// Creates a PosSystemApiRequest from an Android Intent
-        /// </summary>
-        /// <param name="intent">The intent containing the request data</param>
-        /// <returns>A parsed PosSystemApiRequest</returns>
-        /// <exception cref="ArgumentException">Thrown when required intent extras are missing or invalid</exception>
         public static PosSystemApiRequest FromIntent(Intent intent)
         {
             if (intent == null)
@@ -50,6 +41,9 @@ namespace fiskaltrust.AndroidLauncher.Extensions
                 throw new ArgumentException($"Invalid headers format: {ex.Message}", nameof(intent), ex);
             }
 
+            if (!headers.ContainsKey("x-operation-id"))
+                throw new ArgumentException("The required header x-operation-id was not sent.");
+
             // Decode body if present
             string? body = null;
             if (!string.IsNullOrEmpty(bodyBase64Url))
@@ -64,13 +58,34 @@ namespace fiskaltrust.AndroidLauncher.Extensions
                 }
             }
 
-            return PosSystemApiRequest.Create(method, path, headers, body);
+            return new PosSystemApiRequest
+            {
+                Method = method,
+                Path = path,
+                Headers = headers,
+                Body = body
+            };
+        }
+        public static bool IsValidVersion(this PosSystemApiRequest request)
+        {
+            var unsupportedPrefixes = new[] { "/v0/", "/v1/", "/json/v0/", "/json/v1/", "/xml/v0/", "/xml/v1/" };
+
+            foreach (var prefix in unsupportedPrefixes)
+            {
+                if (request.Path.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public static bool IsLocalEndpoint(this PosSystemApiRequest request, HashSet<string> localEndpoints)
+        {
+            return localEndpoints.Contains(request.Path);
         }
     }
-
-    /// <summary>
-    /// Android-specific extensions for PosSystemApiResponse
-    /// </summary>
     public static class PosSystemApiResponseExtensions
     {
         /// <summary>
@@ -80,57 +95,64 @@ namespace fiskaltrust.AndroidLauncher.Extensions
         /// <returns>An object containing Base64URL-encoded response data</returns>
         public static IntentResponseData ToIntentData(this PosSystemApiResponse response)
         {
-            var contentBase64Url = Base64UrlHelper.Encode(response.Content);
+            string contentBase64Url=string.Empty;
+            switch (response.Content)
+            {
+                case ResponseBody.Text text:
+                    contentBase64Url = Base64UrlHelper.Encode(text.Value);
+                    break;
+
+                case ResponseBody.File file:
+                    contentBase64Url = Base64UrlHelper.EncodeBytes(file.Content);
+                    break;
+
+                default:
+                    throw new InvalidOperationException(
+                        $"Unsupported response body type: {response.Content.GetType().Name}");
+            }
             var contentTypeBase64Url = Base64UrlHelper.Encode(response.ContentType);
             var headersJson = JsonConvert.SerializeObject(response.Headers);
             var headersBase64Url = Base64UrlHelper.Encode(headersJson);
 
             return new IntentResponseData
             {
-                StatusCode = response.StatusCode,
+                StatusCode = response.StatusCode.ToString(),
                 ContentBase64Url = contentBase64Url,
                 ContentTypeBase64Url = contentTypeBase64Url,
                 HeadersBase64Url = headersBase64Url
             };
         }
-
         /// <summary>
-        /// Creates a PosSystemApiResponse from Base64URL-encoded intent data
+        /// Creates a PosSystemApiResponse from an HTTP response
         /// </summary>
-        /// <param name="statusCode">HTTP status code</param>
-        /// <param name="contentBase64Url">Base64URL-encoded content</param>
-        /// <param name="contentTypeBase64Url">Base64URL-encoded content type</param>
-        /// <param name="headersBase64Url">Base64URL-encoded headers JSON (optional)</param>
-        /// <returns>A decoded PosSystemApiResponse</returns>
-        public static PosSystemApiResponse FromIntentData(
-            string statusCode,
-            string contentBase64Url,
-            string contentTypeBase64Url,
-            string? headersBase64Url = null)
+        /// <param name="response">The HTTP response message</param>
+        /// <returns>A PosSystemApiResponse representing the HTTP response</returns>
+        public static async Task<PosSystemApiResponse> FromHttpResponseAsync(HttpResponseMessage response)
         {
-            var content = Base64UrlHelper.Decode(contentBase64Url);
-            var contentType = Base64UrlHelper.Decode(contentTypeBase64Url);
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var responseContentType = response.Content.Headers.ContentType?.ToString() ?? "application/json";
 
-            string? headersJson = null;
-            if (!string.IsNullOrEmpty(headersBase64Url))
+            // Build response headers dictionary
+            var responseHeaders = new Dictionary<string, string>();
+            foreach (var header in response.Headers)
             {
-                try
-                {
-                    headersJson = Base64UrlHelper.Decode(headersBase64Url);
-                }
-                catch (Exception)
-                {
-                    // If headers can't be decoded, continue with null
-                }
+                responseHeaders[header.Key] = string.Join(", ", header.Value);
+            }
+            foreach (var header in response.Content.Headers)
+            {
+                responseHeaders[header.Key] = string.Join(", ", header.Value);
             }
 
-            return PosSystemApiResponse.FromData(statusCode, content, contentType, headersJson);
+            return new PosSystemApiResponse
+            {
+                StatusCode = (int)response.StatusCode,
+                Content = new ResponseBody.Text(responseContent),
+                ContentType = responseContentType,
+                Headers = responseHeaders
+            };
         }
-    }
 
-    /// <summary>
-    /// Represents Base64URL-encoded response data for Android Intent extras
-    /// </summary>
+    }
     public class IntentResponseData
     {
         /// <summary>

@@ -27,6 +27,7 @@ jobs:
           lfs: true
           fetch-depth: 0
           submodules: recursive
+          token: ${{secrets.SUBMODULES_READ}}
 
       - uses: actions/setup-dotnet@v4
         with:
@@ -94,6 +95,7 @@ jobs:
             ${{env.BASE_FOLDER}}/bin/${{env.BUILD_CONFIGURATION}}/${{env.MAUI_SDK}}/publish/**
 
       - name: Upload artifacts to Azure Storage
+        if: "github.ref_name == 'maui'"
         shell: bash
         run: |
           az storage blob upload --account-name ${{vars.storageaccountname}} --account-key ${{secrets.storageaccountkey}} --container-name downloads --file ${{env.BASE_FOLDER}}/bin/${{env.BUILD_CONFIGURATION}}/${{env.MAUI_SDK}}/publish/eu.fiskaltrust.androidlauncher-Signed.apk --name android/fiskaltrust-middleware-launcher-android/preview/${{env.APPLICATION_DISPLAY_VERSION}}/eu.fiskaltrust.androidlauncher-Signed-${{env.APPLICATION_DISPLAY_VERSION}}.apk

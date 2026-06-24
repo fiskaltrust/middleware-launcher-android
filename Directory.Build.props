@@ -1,0 +1,5 @@
+<Project>
+	<PropertyGroup>
+		<BuildingForAndroid Condition="'$(BuildingForAndroid)' == ''">true</BuildingForAndroid>
+	</PropertyGroup>
+</Project>

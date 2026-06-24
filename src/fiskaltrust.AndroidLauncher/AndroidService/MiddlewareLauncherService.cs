@@ -4,6 +4,7 @@ using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
 using AndroidX.Core.App;
+using Azure.Core;
 using fiskaltrust.AndroidLauncher.Activitites;
 using fiskaltrust.AndroidLauncher.Constants;
 using fiskaltrust.AndroidLauncher.Enums;
@@ -11,11 +12,8 @@ using fiskaltrust.AndroidLauncher.Exceptions;
 using fiskaltrust.AndroidLauncher.Extensions;
 using fiskaltrust.AndroidLauncher.Helpers;
 using fiskaltrust.AndroidLauncher.Helpers.Logging;
-using fiskaltrust.AndroidLauncher.Hosting;
 using fiskaltrust.AndroidLauncher.Services;
-using fiskaltrust.Api.PosSystemLocal.OperationHandling;
-using fiskaltrust.Api.PosSystemLocal.v2;
-using fiskaltrust.storage.serialization.V0;
+using fiskaltrust.AndroidLauncher.Services.POSSystemApiCore;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -83,10 +81,12 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
 
                 Log.Logger.Debug($"CashBox ID: {cashboxIdString}, IsSandbox: {isSandbox}");
                 PosSystemAPIActivity.LocalMiddlewareServiceInstance = new LocalMiddlewareLauncher(cashboxId, accessToken, isSandbox, logLevel, scuParams);
+                //Create Core
+                var coreProvider = new POSSystemApiCoreProvider();             
                 Task.Run(async () =>
                 {
                     await PosSystemAPIActivity.LocalMiddlewareServiceInstance.StartAsync();
-                    PosSystemAPIActivity.OperationStateMachine = await new OperationStateMachineFactory(new LoggerFactory()).CreateAsync(PosSystemAPIActivity.LocalMiddlewareServiceInstance.QueueConfiguration, PosSystemAPIActivity.LocalMiddlewareServiceInstance.MiddlewareClient);
+                    PosSystemAPIActivity.posSystemApiCore = await coreProvider.CreateAsync(cashboxId, accessToken, isSandbox);
                     SetState(LauncherState.Connected, enableCloseButton);
                     StateProvider.Instance.SetState(State.Running);
                 }).Wait();
@@ -118,13 +118,6 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
 
                 return StartCommandResult.NotSticky;
             }
-        }
-
-        public async Task<OperationStateMachine> InitializeOperationStateMachine(Guid queueId, PackageConfiguration packageConfiguration, IMiddlewareClient middlewareClient, ILoggerFactory loggerFactory)
-        {
-            var operationStateMachineFactory = new OperationStateMachineFactory(loggerFactory);
-            var operationStateMachine = await operationStateMachineFactory.CreateAsync(packageConfiguration, middlewareClient);
-            return operationStateMachine;
         }
 
         public override void OnDestroy()

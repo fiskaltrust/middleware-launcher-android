@@ -1,11 +1,9 @@
 ﻿using fiskaltrust.AndroidLauncher.Exceptions;
-using fiskaltrust.AndroidLauncher.PosApiPrint.Helpers;
 using fiskaltrust.AndroidLauncher.Services.Configuration;
 using fiskaltrust.AndroidLauncher.Services.Helper;
 using fiskaltrust.AndroidLauncher.Services.Queue;
 using fiskaltrust.AndroidLauncher.Services.SCU;
 using fiskaltrust.AndroidLauncher.Signing;
-using fiskaltrust.Api.PosSystemLocal.v2;
 using fiskaltrust.ifPOS.v1;
 using fiskaltrust.Middleware.Abstractions;
 using fiskaltrust.storage.serialization.V0;
@@ -43,7 +41,7 @@ namespace fiskaltrust.AndroidLauncher.Services
 
         public string CountryCode { get; set; }
 
-        public IMiddlewareClient MiddlewareClient => new MiddlewareClient(_poss, CountryCode);
+        public Api.PosSystem.Core.Interfaces.IMiddlewareClient MiddlewareClientAndroid => new MiddlewareClientAndroid(_poss, CountryCode);
 
         public PackageConfiguration QueueConfiguration { get; private set; }
 

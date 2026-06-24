@@ -7,15 +7,11 @@ using fiskaltrust.AndroidLauncher.Constants;
 using fiskaltrust.AndroidLauncher.Extensions;
 using fiskaltrust.AndroidLauncher.Helpers;
 using fiskaltrust.AndroidLauncher.Services;
-using fiskaltrust.Api.POS.v2.Journal;
-using fiskaltrust.Api.PosSystemLocal.Models;
-using fiskaltrust.Api.PosSystemLocal.OperationHandling;
-using fiskaltrust.Api.PosSystemLocal.v2;
+using fiskaltrust.Api.PosSystem.Core;
+using fiskaltrust.Api.PosSystem.Core.Models;
 using fiskaltrust.ifPOS.v2;
 using Microsoft.Extensions.Logging;
-using System.Collections.Concurrent;
 using System.Text;
-using System.Text.Encodings.Web;
 using System.Text.Json;
 
 namespace fiskaltrust.AndroidLauncher.Activitites
@@ -33,7 +29,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
     {
         public static LocalMiddlewareLauncher? LocalMiddlewareServiceInstance { get; set; }
 
-        public static OperationStateMachine? OperationStateMachine { get; set; }
+        public static PosSystemApiCore? posSystemApiCore { get; set; }
 
         private const string TAG = "PosSystemAPI";
 
@@ -71,7 +67,8 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                 }
 
                 // Parse the intent into a DTO
-                PosSystemApiRequest request;
+                PosSystemApiRequest request;              
+
                 try
                 {
                     request = PosSystemApiRequestExtensions.FromIntent(intent);
@@ -87,7 +84,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                 // Validate endpoint version - only support defaults (no version) and /v2
                 if (!request.IsValidVersion())
                 {
-                    Log.Error(TAG, $"Unsupported endpoint version: {request.NormalizedPath}");
+                    Log.Error(TAG, $"Unsupported endpoint version: {request.Path}");
                     FinishWithError(400, $"Unsupported endpoint version. Only default endpoints (e.g., /sign, /echo) and /v2/* endpoints are supported. Please do not use /v0/* or /v1/* versions.");
                     return;
                 }
@@ -97,12 +94,12 @@ namespace fiskaltrust.AndroidLauncher.Activitites
 
                 if (isLocalEndpoint)
                 {
-                    Log.Info(TAG, $"Routing to local middleware: {request.NormalizedPath}");
+                    Log.Info(TAG, $"Routing to local middleware: {request.Path}");
                     await MakeLocalRequestAsync(request);
                 }
                 else
                 {
-                    Log.Info(TAG, $"Routing to cloud PosSystemAPI: {request.NormalizedPath}");
+                    Log.Info(TAG, $"Routing to cloud PosSystemAPI: {request.Path}");
                     await MakeCloudRequestAsync(request);
                 }
             }
@@ -115,117 +112,40 @@ namespace fiskaltrust.AndroidLauncher.Activitites
 
         private async Task MakeLocalRequestAsync(PosSystemApiRequest request)
         {
-            // Check if this is a /v2/echo request with null Message to trigger service restart
-            if (string.Equals(request.NormalizedPath, "/v2/echo", StringComparison.OrdinalIgnoreCase))
+            await EnsureSystemReadyAsync((Guid)request.CashBoxId!, request.AccessToken).ConfigureAwait(false);
+            var SupportedPaths = new[] { "/v2/echo", "/v2/sign", "/v2/journal" };
+            if (!SupportedPaths.Contains(request.Path, StringComparer.OrdinalIgnoreCase))
             {
-                try
-                {
-                    var echoRequest = JsonSerializer.Deserialize<EchoRequest>(request.Body);
-                    if (echoRequest != null && echoRequest.Message == null)
+                var notSupportedResponse = Api.PosSystem.Core.Models.PosSystemApiResponse.Error( 400, $"The selected path '{request.Path}' and method '{request.Method}' is not supported.");
+
+                FinishWithResponse(notSupportedResponse);
+                return;
+            }
+
+            // Check if this is a /v2/echo request with null Message to trigger service restart
+            if (string.Equals(request.Path, "/v2/echo", StringComparison.OrdinalIgnoreCase))
+            {
+                    var echoRequest = JsonSerializer.Deserialize<EchoRequest>(request.Body ?? "");
+                    if (echoRequest?.Message == null)
                     {
                         Log.Info(TAG, "Detected /v2/echo request with null Message - triggering service restart");
-                        await RestartMiddlewareLauncherServiceAsync(request.CashBoxId, request.AccessToken);
+                        await RestartMiddlewareLauncherServiceAsync((Guid)request.CashBoxId, request.AccessToken);
                     }
-                    else if (LocalMiddlewareServiceInstance == null || !LocalMiddlewareServiceInstance.IsRunning)
-                    {
-                        Log.Info(TAG, "Local middleware not running - triggering service restart");
-                        await RestartMiddlewareLauncherServiceAsync(request.CashBoxId, request.AccessToken);
-                    }
-                    var echoResponse = await OperationStateMachine.PerformEchoAsync(request);
-                    if (echoResponse.IsOk)
-                    {
-                        var responseJson = JsonSerializer.Serialize(echoResponse.OkValue.Value, new JsonSerializerOptions
-                        {
-                            // Approach B: the broad “unsafe relaxed” encoder that reduces escaping significantly:
-                            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-                            WriteIndented = true
-                        });
-                        var response = PosSystemApiResponse.Success(responseJson, "application/json", "200");
-                        FinishWithResponse(response);
-                    }
-                    else
-                    {
-                        var problemDetails = echoResponse.ErrValue;
-                        var errorResponse = PosSystemApiResponse.Error(problemDetails.Status ?? 500, problemDetails.Detail ?? "Unknown error", problemDetails.Title ?? "Error");
-                        FinishWithResponse(errorResponse);
-                    }
-                    return;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(TAG, $"Failed to process echo request: {ex.Message}");
-                    var errorResponse = PosSystemApiResponse.Error(500, $"Failed to process echo request: {ex.Message}");
-                    FinishWithResponse(errorResponse);
-                    return;
-                }
             }
 
-            if (string.Equals(request.NormalizedPath, "/v2/sign", StringComparison.OrdinalIgnoreCase))
+            try
             {
-                try
-                {
-                    var receiptRequest = JsonSerializer.Deserialize<ReceiptRequest>(request.Body);
-                    if (LocalMiddlewareServiceInstance == null || !LocalMiddlewareServiceInstance.IsRunning)
-                    {
-                        Log.Info(TAG, "Local middleware not running - triggering service restart");
-                        await RestartMiddlewareLauncherServiceAsync(request.CashBoxId, request.AccessToken);
-                    }
-                    var signResponse = await OperationStateMachine.PerformSignAsync(request);
-                    if (signResponse.IsOk)
-                    {
-                        var responseJson = JsonSerializer.Serialize(signResponse.OkValue.Value, new JsonSerializerOptions
-                        {
-                            // Approach B: the broad “unsafe relaxed” encoder that reduces escaping significantly:
-                            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-                            WriteIndented = true
-                        });
-                        var response = PosSystemApiResponse.Success(responseJson, "application/json", "200");
-                        FinishWithResponse(response);
-                    }
-                    else
-                    {
-                        var problemDetails = signResponse.ErrValue;
-                        var errorResponse = PosSystemApiResponse.Error(problemDetails.Status ?? 500, problemDetails.Detail ?? "Unknown error", problemDetails.Title ?? "Error");
-                        FinishWithResponse(errorResponse);
-                    }
-                    return;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(TAG, $"Failed to process sign request: {ex.Message}");
-                    var errorResponse = PosSystemApiResponse.Error(500, $"Failed to process sign request: {ex.Message}");
-                    FinishWithResponse(errorResponse);
-                    return;
-                }
+                var response = await posSystemApiCore.HandleAsync(request).ConfigureAwait(false);
+                FinishWithResponse(response);
+                return;
             }
-
-            if (string.Equals(request.NormalizedPath, "/v2/journal", StringComparison.OrdinalIgnoreCase))
+            catch (Exception ex)
             {
-                try
-                {
-                    var receiptRequest = JsonSerializer.Deserialize<JournalRequest>(request.Body);
-                    if (LocalMiddlewareServiceInstance == null || !LocalMiddlewareServiceInstance.IsRunning)
-                    {
-                        Log.Info(TAG, "Local middleware not running - triggering service restart");
-                        await RestartMiddlewareLauncherServiceAsync(request.CashBoxId, request.AccessToken);
-                    }
-                    
-                    var result = await JournalV2.Journal(LocalMiddlewareServiceInstance.MiddlewareClient, JsonSerializer.Deserialize<JournalRequest>(request.Body));
-                    var response = PosSystemApiResponse.Success(Encoding.UTF8.GetString(result.Item1) ?? "", result.contentType, "200");
-                    FinishWithResponse(response);
-                    return;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(TAG, $"Failed to process sign request: {ex.Message}");
-                    var errorResponse = PosSystemApiResponse.Error(500, $"Failed to process sign request: {ex.Message}");
-                    FinishWithResponse(errorResponse);
-                    return;
-                }
+                Log.Error(TAG, $"Failed to process {request.Path.Split('/').Last()} request: {ex.Message}");
+                var errorResponse = Api.PosSystem.Core.Models.PosSystemApiResponse.Error(500, $"Failed to process {request.Path.Split('/').Last()} request: {ex.Message}");
+                FinishWithResponse(errorResponse);
+                return;
             }
-
-            var notSupportedResponse = PosSystemApiResponse.Error(400, $"The selected path '{request.NormalizedPath}' and method '{request.Method}' is not supported.");
-            FinishWithResponse(notSupportedResponse);
         }
 
         private async Task RestartMiddlewareLauncherServiceAsync(Guid cashBoxId, string accessToken)
@@ -299,7 +219,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             try
             {
                 var baseUrl = Urls.POSSYSTEM_API_SANDBOX;
-                var path = request.NormalizedPath;
+                var path = request.Path;
                 if (!path.StartsWith("/v2", StringComparison.OrdinalIgnoreCase))
                 {
                     path = "/v2" + path;
@@ -351,7 +271,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                 Log.Info(TAG, $"Received cloud response: {(int)httpResponse.StatusCode}");
 
                 // Convert HTTP response to our DTO
-                var response = await PosSystemApiResponse.FromHttpResponseAsync(httpResponse);
+                var response = await PosSystemApiResponseExtensions.FromHttpResponseAsync(httpResponse).ConfigureAwait(false);
                 FinishWithResponse(response);
             }
             catch (HttpRequestException ex)
@@ -415,5 +335,30 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             var errorResponse = PosSystemApiResponse.Error(statusCode, errorMessage);
             FinishWithResponse(errorResponse);
         }
+        private async Task EnsureSystemReadyAsync(Guid cashBoxId, string accessToken, CancellationToken cancellationToken = default)
+        {
+            const int maxWaitTimeMs = 10_000;
+            const int pollIntervalMs = 100;
+
+            if (LocalMiddlewareServiceInstance == null || !LocalMiddlewareServiceInstance.IsRunning)
+            {
+                Log.Info(TAG, "Local middleware not running - triggering service restart");
+                await RestartMiddlewareLauncherServiceAsync(cashBoxId, accessToken);
+            }
+
+            var waitedMs = 0;
+
+            while (posSystemApiCore == null && waitedMs < maxWaitTimeMs)
+            {
+                await Task.Delay(pollIntervalMs, cancellationToken);
+                waitedMs += pollIntervalMs;
+            }
+
+            if (posSystemApiCore == null)
+            {
+                throw new TimeoutException("POS system API core did not become ready in time.");
+            }
+        }
+
     }
 }
