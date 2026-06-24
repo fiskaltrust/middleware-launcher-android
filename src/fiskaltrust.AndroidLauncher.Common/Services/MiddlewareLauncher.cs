@@ -25,7 +25,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
         private const string PACKAGE_NAME_DE_FISKALY_CERTIFIED = "fiskaltrust.Middleware.SCU.DE.FiskalyCertified";
         private const string PACKAGE_NAME_IT_EPSON_RT_PRINTER = "fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter";
         private const string PACKAGE_NAME_IT_CUSTOM_RT_SERVER = "fiskaltrust.Middleware.SCU.IT.CustomRTServer";
-        
+
         private readonly IHostFactory _hostFactory;
         private readonly IUrlResolver _urlResolver;
         private readonly IConfigurationProvider _configurationProvider;
@@ -36,8 +36,8 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
         private readonly bool _isSandbox;
         private readonly Dictionary<string, object> _scuParams;
         private readonly LogLevel _logLevel;
-        
-        private Android.OS.PowerManager.WakeLock _wakeLock;        
+
+        private Android.OS.PowerManager.WakeLock _wakeLock;
         private List<IHelper> _helpers;
         private List<IPOS> _poss;
         private AbstractScuList _scus;
@@ -74,15 +74,22 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
                 configuration = await _configurationProvider.GetCashboxConfigurationAsync(_cashboxId, _accessToken, _isSandbox);
                 await _localConfigurationProvider.PersistAsync(_cashboxId, _accessToken, configuration);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                configuration = await _localConfigurationProvider.GetCashboxConfigurationAsync(_cashboxId, _accessToken, _isSandbox);
-            }            
+                try
+                {
+                    configuration = await _localConfigurationProvider.GetCashboxConfigurationAsync(_cashboxId, _accessToken, _isSandbox);
+                }
+                catch (Exception inner)
+                {
+                    throw new AggregateException(ex, inner);
+                }
+            }
 
             foreach (var scuConfig in configuration.ftSignaturCreationDevices)
             {
                 scuConfig.Configuration["sandbox"] = _isSandbox;
-                
+
                 switch (scuConfig.Package)
                 {
                     case PACKAGE_NAME_DE_SWISSBIT:
@@ -90,7 +97,7 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
                         // To prevent this, we acquire a partial wake lock to keep the CPU running. As this is only required with hardware TSEs, we only acquire the wake lock for the Swissbit SCU for now.
                         AcquireCpuWakeLock();
                         await InitializeDESwissbitScuAsync(scuConfig);
-                        break;                  
+                        break;
                     case PACKAGE_NAME_DE_FISKALY_CERTIFIED:
                         await InitializeDEFiskalyCertifiedScuAsync(scuConfig);
                         break;
