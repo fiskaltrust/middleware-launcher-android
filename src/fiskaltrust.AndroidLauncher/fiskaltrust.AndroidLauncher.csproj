@@ -41,6 +41,7 @@
 		<ProjectReference Include="../../possystem-api/src/fiskaltrust.Api.PosSystem.Core/fiskaltrust.Api.PosSystem.Core.csproj" />
 		<ProjectReference Include="../../middleware/queue/src/fiskaltrust.Middleware.Queue.SQLite/fiskaltrust.Middleware.Queue.SQLite.csproj" />
 		<ProjectReference Include="../../middleware/scu-it/src/fiskaltrust.Middleware.SCU.IT.CustomRTServer/fiskaltrust.Middleware.SCU.IT.CustomRTServer.csproj" />
+		<ProjectReference Include="../../middleware/scu-it/src/fiskaltrust.Middleware.SCU.IT.CustomRTPrinter/fiskaltrust.Middleware.SCU.IT.CustomRTPrinter.csproj" />
 		<ProjectReference Include="../../middleware/scu-it/src/fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter/fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter.csproj" />
 		<PackageReference Include="Microsoft.ApplicationInsights" Version="2.21.0" />
 		<PackageReference Include="Microsoft.ApplicationInsights.DependencyCollector" Version="2.21.0" />
@@ -49,6 +50,7 @@
 		<PackageReference Include="fiskaltrust.Middleware.Helper.Helipad" Version="1.3.49" />
 		<ProjectReference Include="../../middleware/scu-de/src/fiskaltrust.Middleware.SCU.DE.FiskalyCertified/fiskaltrust.Middleware.SCU.DE.FiskalyCertified.csproj" />
 		<ProjectReference Include="../../middleware/scu-de/src/fiskaltrust.Middleware.SCU.DE.Swissbit/fiskaltrust.Middleware.SCU.DE.Swissbit.csproj" />
+		<ProjectReference Include="../../middleware/scu-de/src/fiskaltrust.Middleware.SCU.DE.SwissbitCloudV2/fiskaltrust.Middleware.SCU.DE.SwissbitCloudV2.csproj" />
 		<PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
 		<PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="3.1.0" />
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
