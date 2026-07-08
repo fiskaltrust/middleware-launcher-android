@@ -1,6 +1,10 @@
 ﻿using fiskaltrust.ifPOS.v1.at;
 using fiskaltrust.Middleware.Abstractions;
 using fiskaltrust.Middleware.Interface.Client;
+using fiskaltrust.Middleware.Interface.Client.Grpc;
+using fiskaltrust.Middleware.Interface.Client.Http;
+using fiskaltrust.Middleware.Interface.Client.Http.ATSSCD;
+using fiskaltrust.Middleware.Interface.Client.Soap;
 using System.Collections.Generic;
 
 namespace fiskaltrust.AndroidLauncher.Signing
@@ -39,16 +43,6 @@ namespace fiskaltrust.AndroidLauncher.Signing
 
                 return configuration.UrlType switch
                 {
-                    "grpc" => GrpcATSSCDFactory.CreateSSCDAsync(new GrpcClientOptions
-                    {
-                        Url = new Uri(configuration.Url.Replace("grpc://", isHttps ? "https://" : "http://")),
-                        RetryPolicyOptions = retryPolicyoptions,
-                        ChannelOptions = new GrpcChannelOptions
-                        {
-                            Credentials = isHttps ? ChannelCredentials.SecureSsl : ChannelCredentials.Insecure,
-                            HttpHandler = isHttps && sslValidationDisabled ? new HttpClientHandler { ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => true } : null
-                        }
-                    }).Result,
                     "rest" => HttpATSSCDFactory.CreateSSCDAsync(new HttpATSSCDClientOptions
                     {
                         Url = new Uri(configuration.Url.Replace("rest://", isHttps ? "https://" : "http://")),
