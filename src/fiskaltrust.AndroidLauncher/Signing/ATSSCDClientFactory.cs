@@ -1,11 +1,9 @@
 ﻿using fiskaltrust.ifPOS.v1.at;
 using fiskaltrust.Middleware.Abstractions;
 using fiskaltrust.Middleware.Interface.Client;
-using fiskaltrust.Middleware.Interface.Client.Grpc;
 using fiskaltrust.Middleware.Interface.Client.Http;
 using fiskaltrust.Middleware.Interface.Client.Http.ATSSCD;
 using fiskaltrust.Middleware.Interface.Client.Soap;
-using System.Collections.Generic;
 
 namespace fiskaltrust.AndroidLauncher.Signing
 {
@@ -20,11 +18,11 @@ namespace fiskaltrust.AndroidLauncher.Signing
 
         public IATSSCD CreateClient(ClientConfiguration configuration)
         {
-            try
+            if (_scus.TryGetValue(configuration.Url, out var scu))
             {
-                return _scus[configuration.Url];
+                return scu;
             }
-            catch
+            else
             {
                 if (configuration is null)
                 {
