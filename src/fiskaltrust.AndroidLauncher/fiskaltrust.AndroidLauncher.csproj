@@ -22,6 +22,7 @@
 
 		<SupportedOSPlatformVersion>24.0</SupportedOSPlatformVersion>
 
+		<!-- Default Android HTTP handler doesn't send the Basic Auth header, breaking cloud AT SCU signing (401). Do not remove without re-testing AT signing. https://github.com/dotnet/runtime/issues/81839 -->
 		<AndroidHttpClientHandlerType>System.Net.Http.SocketsHttpHandler, System.Net.Http</AndroidHttpClientHandlerType>
 	</PropertyGroup>
 
