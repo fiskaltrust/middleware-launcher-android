@@ -6,7 +6,9 @@
              Disappearing="OnDisappearing">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="&#8942;" Clicked="OnMenuClicked" />
+        <ToolbarItem Text="Copy Logs" Order="Secondary" Clicked="OnCopyLogsClicked" />
+        <ToolbarItem Text="Save Logs" Order="Secondary" Clicked="OnSaveLogsClicked" />
+        <ToolbarItem x:Name="ClearLogsMenuItem" Text="Clear Logs" Order="Secondary" Clicked="OnClearLogsClicked" />
     </ContentPage.ToolbarItems>
 
     <ScrollView x:Name="Scroll">

@@ -33,7 +33,11 @@ public partial class LogsPage : ContentPage
 
 		var text = FileLoggerHelper.GetLastLinesOfCurrentLogFile(1024);
 
-		await Dispatcher.DispatchAsync(() => LogView.Text = text);
+		await Dispatcher.DispatchAsync(() =>
+		{
+			LogView.Text = text;
+			ClearLogsMenuItem.IsEnabled = !string.IsNullOrEmpty(text);
+		});
 		if (init || (follow && oldHeight != Scroll.Content.Height))
 		{
 			await Dispatcher.DispatchAsync(() => Scroll.ScrollToAsync(Scroll.ScrollX, Scroll.Content.Height - Scroll.Height, !init));
@@ -54,23 +58,11 @@ public partial class LogsPage : ContentPage
 		_timer.Stop();
 	}
 
-	private async void OnMenuClicked(object sender, EventArgs e)
-	{
-		var hasLogsOnScreen = !string.IsNullOrEmpty(LogView.Text);
-		var action = await DisplayActionSheet(null, "Cancel", hasLogsOnScreen ? "Clear Logs" : null, "Save Logs", "Save Logs As...");
-		if (action == "Save Logs")
-		{
-			await SaveLogsAsync();
-		}
-		else if (action == "Save Logs As...")
-		{
-			await SaveLogsAsAsync();
-		}
-		else if (action == "Clear Logs")
-		{
-			await ClearLogsAsync();
-		}
-	}
+	private async void OnCopyLogsClicked(object sender, EventArgs e) => await CopyLogsAsync();
+
+	private async void OnSaveLogsClicked(object sender, EventArgs e) => await SaveLogsAsync();
+
+	private async void OnClearLogsClicked(object sender, EventArgs e) => await ClearLogsAsync();
 
 	private async Task ClearLogsAsync()
 	{
@@ -81,7 +73,7 @@ public partial class LogsPage : ContentPage
 		LogView.Text = string.Empty;
 	}
 
-	private async Task SaveLogsAsAsync()
+	private async Task SaveLogsAsync()
 	{
 		var activity = Platform.CurrentActivity;
 		if (activity == null) return;
@@ -117,7 +109,7 @@ public partial class LogsPage : ContentPage
 		await DisplayAlert("Success", "The log files were saved to the selected folder.", "OK");
 	}
 
-	private async Task SaveLogsAsync()
+	private async Task CopyLogsAsync()
 	{
 		var hasPermission = await Permissions.CheckStatusAsync<Permissions.StorageWrite>();
 		if (hasPermission != PermissionStatus.Granted)
