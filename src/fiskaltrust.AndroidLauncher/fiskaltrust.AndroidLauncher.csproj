@@ -21,6 +21,9 @@
 		<ApplicationVersion>1</ApplicationVersion>
 
 		<SupportedOSPlatformVersion>24.0</SupportedOSPlatformVersion>
+
+		<!-- Default Android HTTP handler doesn't send the Basic Auth header, breaking cloud AT SCU signing (401). Do not remove without re-testing AT signing. https://github.com/dotnet/runtime/issues/81839 -->
+		<AndroidHttpClientHandlerType>System.Net.Http.SocketsHttpHandler, System.Net.Http</AndroidHttpClientHandlerType>
 	</PropertyGroup>
 
 
@@ -41,14 +44,17 @@
 		<ProjectReference Include="../../possystem-api/src/fiskaltrust.Api.PosSystem.Core/fiskaltrust.Api.PosSystem.Core.csproj" />
 		<ProjectReference Include="../../middleware/queue/src/fiskaltrust.Middleware.Queue.SQLite/fiskaltrust.Middleware.Queue.SQLite.csproj" />
 		<ProjectReference Include="../../middleware/scu-it/src/fiskaltrust.Middleware.SCU.IT.CustomRTServer/fiskaltrust.Middleware.SCU.IT.CustomRTServer.csproj" />
+		<ProjectReference Include="../../middleware/scu-it/src/fiskaltrust.Middleware.SCU.IT.CustomRTPrinter/fiskaltrust.Middleware.SCU.IT.CustomRTPrinter.csproj" />
 		<ProjectReference Include="../../middleware/scu-it/src/fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter/fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter.csproj" />
 		<PackageReference Include="Microsoft.ApplicationInsights" Version="2.21.0" />
 		<PackageReference Include="Microsoft.ApplicationInsights.DependencyCollector" Version="2.21.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.ApplicationInsights" Version="2.20.0" />
 		<PackageReference Include="fiskaltrust.interface" Version="1.3.77-rc1" />
+    <PackageReference Include="fiskaltrust.Middleware.Interface.Client.Soap" Version="1.3.70" />
 		<PackageReference Include="fiskaltrust.Middleware.Helper.Helipad" Version="1.3.49" />
 		<ProjectReference Include="../../middleware/scu-de/src/fiskaltrust.Middleware.SCU.DE.FiskalyCertified/fiskaltrust.Middleware.SCU.DE.FiskalyCertified.csproj" />
 		<ProjectReference Include="../../middleware/scu-de/src/fiskaltrust.Middleware.SCU.DE.Swissbit/fiskaltrust.Middleware.SCU.DE.Swissbit.csproj" />
+		<ProjectReference Include="../../middleware/scu-de/src/fiskaltrust.Middleware.SCU.DE.SwissbitCloudV2/fiskaltrust.Middleware.SCU.DE.SwissbitCloudV2.csproj" />
 		<PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
 		<PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="3.1.0" />
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
@@ -58,7 +64,7 @@
 		<PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.4" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.4" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-		<PackageReference Include="System.Security.Cryptography.Xml" Version="4.7.0" />
+		<PackageReference Include="System.Security.Cryptography.Xml" Version="5.0.0" />
 		<PackageReference Include="System.ServiceModel.Syndication" Version="4.7.0" />
 		<PackageReference Include="System.Threading.Channels" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Maui.Essentials" Version="9.0.0" />
