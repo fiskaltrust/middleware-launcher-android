@@ -5,7 +5,6 @@ using Android.OS;
 using Android.Runtime;
 using AndroidX.Core.App;
 using Azure.Core;
-using fiskaltrust.AndroidLauncher.Activitites;
 using fiskaltrust.AndroidLauncher.Constants;
 using fiskaltrust.AndroidLauncher.Enums;
 using fiskaltrust.AndroidLauncher.Exceptions;
@@ -80,15 +79,15 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
 
 
                 Log.Logger.Debug($"CashBox ID: {cashboxIdString}, IsSandbox: {isSandbox}");
-                PosSystemAPIActivity.LocalMiddlewareServiceInstance = new LocalMiddlewareLauncher(cashboxId, accessToken, isSandbox, logLevel, scuParams);
+                LauncherRuntimeState.LocalMiddlewareServiceInstance = new LocalMiddlewareLauncher(cashboxId, accessToken, isSandbox, logLevel, scuParams);
                 //Create Core
                 var coreProvider = new POSSystemApiCoreProvider();
                 _ = Task.Run(async () =>
                 {
                     try
                     {
-                        await PosSystemAPIActivity.LocalMiddlewareServiceInstance.StartAsync();
-                        PosSystemAPIActivity.posSystemApiCore = await coreProvider.CreateAsync(cashboxId, accessToken, isSandbox);
+                        await LauncherRuntimeState.LocalMiddlewareServiceInstance.StartAsync();
+                        LauncherRuntimeState.PosSystemApiCore = await coreProvider.CreateAsync(cashboxId, accessToken, isSandbox);
                         SetState(LauncherState.Connected, enableCloseButton);
                         StateProvider.Instance.SetState(State.Running);
                     }
@@ -153,10 +152,10 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
             Task.Run(async () =>
             {
                 // await AdminEndpointService.Instance.StopAsync();
-                if (PosSystemAPIActivity.LocalMiddlewareServiceInstance != null)
+                if (LauncherRuntimeState.LocalMiddlewareServiceInstance != null)
                 {
-                    await PosSystemAPIActivity.LocalMiddlewareServiceInstance.StopAsync();
-                    PosSystemAPIActivity.LocalMiddlewareServiceInstance = null;
+                    await LauncherRuntimeState.LocalMiddlewareServiceInstance.StopAsync();
+                    LauncherRuntimeState.LocalMiddlewareServiceInstance = null;
                 }
             }).Wait();
 
