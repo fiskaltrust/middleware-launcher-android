@@ -9,10 +9,15 @@ namespace fiskaltrust.AndroidLauncher.Helpers.Logging
         public static readonly string LogFilename = "fiskaltrust.log";
         public static readonly DirectoryInfo LogDirectory = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "logs"));
 
+        public static FileInfo[] GetLogFiles()
+        {
+            return LogDirectory.Exists ? LogDirectory.GetFiles("*.log") : Array.Empty<FileInfo>();
+        }
+
         public static string GetLastLinesOfCurrentLogFile(int lineCount)
         {
             if (!LogDirectory.Exists) { return ""; }
-            var currentLogFile = LogDirectory.GetFiles("*.log").OrderByDescending(f => f.LastWriteTime).FirstOrDefault();
+            var currentLogFile = GetLogFiles().OrderByDescending(f => f.LastWriteTime).FirstOrDefault();
             if (currentLogFile == null) return "";
 
             int count = 0;
@@ -44,6 +49,14 @@ namespace fiskaltrust.AndroidLauncher.Helpers.Logging
             using var sr = new StreamReader(fs);
             var lines = sr.ReadToEnd();
             return lines;
+        }
+
+        public static void ClearCurrentLogFile()
+        {
+            var currentLogFile = GetLogFiles().OrderByDescending(f => f.LastWriteTime).FirstOrDefault();
+            if (currentLogFile == null) return;
+
+            using var fs = new FileStream(currentLogFile.FullName, FileMode.Truncate, FileAccess.Write, FileShare.ReadWrite);
         }
     }
 }

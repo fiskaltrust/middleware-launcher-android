@@ -5,6 +5,10 @@
              Appearing="OnAppearing"
              Disappearing="OnDisappearing">
 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="&#8942;" Clicked="OnMenuClicked" />
+    </ContentPage.ToolbarItems>
+
     <ScrollView x:Name="Scroll">
         <Label x:Name="LogView"
                FontFamily="IosevkaRegular"/>
