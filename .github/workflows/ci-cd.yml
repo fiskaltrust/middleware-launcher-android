@@ -14,7 +14,7 @@ permissions:
 env:
   BUILD_CONFIGURATION: Release
   APP_NAME: eu.fiskaltrust.androidlauncher
-  MAUI_SDK: net9.0-android
+  MAUI_SDK: net10.0-android
   BASE_FOLDER: src/fiskaltrust.AndroidLauncher
   APPLICATION_DISPLAY_VERSION: ${{format('{0}{1}', '2.0.0-beta1.', github.run_id)}}
 jobs:
@@ -31,7 +31,7 @@ jobs:
 
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "9.x.x"
+          dotnet-version: "10.x.x"
 
       - name: Calculate dynamic version code
         shell: bash
