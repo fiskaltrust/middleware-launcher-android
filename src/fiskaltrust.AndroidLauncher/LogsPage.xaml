@@ -5,9 +5,13 @@
              Appearing="OnAppearing"
              Disappearing="OnDisappearing">
 
+    <Shell.TitleView>
+        <Picker x:Name="DateLogPicker" SelectedIndexChanged="OnDateLogPickerSelectedIndexChanged" />
+    </Shell.TitleView>
+
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Save Logs" Order="Secondary" Clicked="OnSaveLogsClicked" />
-        <ToolbarItem x:Name="ClearLogsMenuItem" Text="Clear Logs" Order="Secondary" Clicked="OnClearLogsClicked" />
+        <ToolbarItem Text="Export Current" Order="Secondary" Clicked="OnExportCurrentClicked" />
+        <ToolbarItem Text="Export All" Order="Secondary" Clicked="OnExportAllClicked" />
     </ContentPage.ToolbarItems>
 
     <ScrollView x:Name="Scroll">

@@ -14,16 +14,17 @@ namespace fiskaltrust.AndroidLauncher.Helpers.Logging
             return LogDirectory.Exists ? LogDirectory.GetFiles("*.log") : Array.Empty<FileInfo>();
         }
 
-        public static string GetLastLinesOfCurrentLogFile(int lineCount)
+        public static List<FileInfo> GetLogFilesOrderedByDateDescending()
         {
-            if (!LogDirectory.Exists) { return ""; }
-            var currentLogFile = GetLogFiles().OrderByDescending(f => f.LastWriteTime).FirstOrDefault();
-            if (currentLogFile == null) return "";
+            return GetLogFiles().OrderByDescending(f => f.LastWriteTime).ToList();
+        }
 
+        public static string GetLastLines(FileInfo logFile, int lineCount)
+        {
             int count = 0;
             byte[] buffer = new byte[1];
 
-            using FileStream fs = currentLogFile.OpenRead();
+            using FileStream fs = logFile.OpenRead();
             fs.Seek(0, SeekOrigin.End);
 
             while (count < lineCount)
@@ -49,14 +50,6 @@ namespace fiskaltrust.AndroidLauncher.Helpers.Logging
             using var sr = new StreamReader(fs);
             var lines = sr.ReadToEnd();
             return lines;
-        }
-
-        public static void ClearCurrentLogFile()
-        {
-            var currentLogFile = GetLogFiles().OrderByDescending(f => f.LastWriteTime).FirstOrDefault();
-            if (currentLogFile == null) return;
-
-            using var fs = new FileStream(currentLogFile.FullName, FileMode.Truncate, FileAccess.Write, FileShare.ReadWrite);
         }
     }
 }

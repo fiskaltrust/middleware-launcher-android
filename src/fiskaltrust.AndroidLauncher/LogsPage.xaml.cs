@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using Android.Content;
 using Android.Widget;
 using AndroidX.DocumentFile.Provider;
@@ -10,6 +10,7 @@ namespace fiskaltrust.AndroidLauncher;
 public partial class LogsPage : ContentPage
 {
 	IDispatcherTimer _timer;
+	List<FileInfo> _logFiles = new();
 
 	public LogsPage()
 	{
@@ -21,8 +22,26 @@ public partial class LogsPage : ContentPage
 		_timer.Tick += async (_, __) => await OnTick(false);
 	}
 
+	private FileInfo? SelectedLogFile =>
+		DateLogPicker.SelectedIndex >= 0 && DateLogPicker.SelectedIndex < _logFiles.Count
+			? _logFiles[DateLogPicker.SelectedIndex]
+			: null;
+
+	private void RefreshLogFileList()
+	{
+		_logFiles = FileLoggerHelper.GetLogFilesOrderedByDateDescending();
+		DateLogPicker.ItemsSource = _logFiles.Select(f => f.LastWriteTime.ToString("yyyy-MM-dd")).ToList();
+		if (_logFiles.Count > 0)
+		{
+			DateLogPicker.SelectedIndex = 0;
+		}
+	}
+
 	private async Task OnTick(bool follow = false)
 	{
+		var selectedFile = SelectedLogFile;
+		if (selectedFile == null) return;
+
 		bool init = string.IsNullOrEmpty(LogView.Text);
 		double oldHeight = Scroll.Content.Height;
 		if (Scroll.ScrollY == oldHeight - Scroll.Height)
@@ -30,21 +49,18 @@ public partial class LogsPage : ContentPage
 			follow = true;
 		}
 
-		var text = FileLoggerHelper.GetLastLinesOfCurrentLogFile(1024);
+		var text = FileLoggerHelper.GetLastLines(selectedFile, 1024);
 
-		await Dispatcher.DispatchAsync(() =>
-		{
-			LogView.Text = text;
-			ClearLogsMenuItem.IsEnabled = !string.IsNullOrEmpty(text);
-		});
+		await Dispatcher.DispatchAsync(() => LogView.Text = text);
 		if (init || (follow && oldHeight != Scroll.Content.Height))
-		{
-			await Dispatcher.DispatchAsync(() => Scroll.ScrollToAsync(Scroll.ScrollX, Scroll.Content.Height - Scroll.Height, !init));
+		{			
+			await Dispatcher.DispatchAsync(() => Scroll.ScrollToAsync(Scroll.ScrollX, double.MaxValue, !init));
 		}
 	}
 
 	private void OnAppearing(object sender, EventArgs e)
 	{
+		RefreshLogFileList();
 		Dispatcher.Dispatch(async () =>
 		{
 			await OnTick(true);
@@ -57,20 +73,19 @@ public partial class LogsPage : ContentPage
 		_timer.Stop();
 	}
 
-	private async void OnSaveLogsClicked(object sender, EventArgs e) => await SaveLogsAsync();
+	private async void OnDateLogPickerSelectedIndexChanged(object sender, EventArgs e) => await OnTick(true);
 
-	private async void OnClearLogsClicked(object sender, EventArgs e) => await ClearLogsAsync();
-
-	private async Task ClearLogsAsync()
+	private async void OnExportCurrentClicked(object sender, EventArgs e)
 	{
-		var confirmed = await DisplayAlert("Clear Logs", "This permanently deletes the log history on this device. It can't be undone.\nMake sure you've saved any logs you want to keep before continuing.", "Clear", "Cancel");
-		if (!confirmed) return;
+		var selectedFile = SelectedLogFile;
+		if (selectedFile == null) return;
 
-		FileLoggerHelper.ClearCurrentLogFile();
-		LogView.Text = string.Empty;
+		await ExportFilesAsync(new[] { selectedFile });
 	}
 
-	private async Task SaveLogsAsync()
+	private async void OnExportAllClicked(object sender, EventArgs e) => await ExportFilesAsync(FileLoggerHelper.GetLogFiles());
+
+	private async Task ExportFilesAsync(IEnumerable<FileInfo> files)
 	{
 		var activity = Platform.CurrentActivity;
 		if (activity == null) return;
@@ -91,7 +106,7 @@ public partial class LogsPage : ContentPage
 		var pickedDir = DocumentFile.FromTreeUri(activity, treeUri);
 		if (pickedDir == null) return;
 
-		foreach (var file in FileLoggerHelper.GetLogFiles())
+		foreach (var file in files)
 		{
 			var newDoc = pickedDir.CreateFile("text/plain", GetUniqueLogFileName(file.Name));
 			if (newDoc?.Uri == null) continue;
@@ -111,4 +126,3 @@ public partial class LogsPage : ContentPage
 		return $"{Path.GetFileNameWithoutExtension(originalName)}_{DateTime.Now:yyyyMMdd_HHmmssfff}{Path.GetExtension(originalName)}";
 	}
 }
-
