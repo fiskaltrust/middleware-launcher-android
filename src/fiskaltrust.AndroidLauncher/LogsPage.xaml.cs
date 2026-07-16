@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using Android.Content;
 using Android.Widget;
-using AndroidX.Core.Content;
 using AndroidX.DocumentFile.Provider;
 using fiskaltrust.AndroidLauncher.Helpers;
 using fiskaltrust.AndroidLauncher.Helpers.Logging;
@@ -58,8 +57,6 @@ public partial class LogsPage : ContentPage
 		_timer.Stop();
 	}
 
-	private async void OnCopyLogsClicked(object sender, EventArgs e) => await CopyLogsAsync();
-
 	private async void OnSaveLogsClicked(object sender, EventArgs e) => await SaveLogsAsync();
 
 	private async void OnClearLogsClicked(object sender, EventArgs e) => await ClearLogsAsync();
@@ -109,41 +106,9 @@ public partial class LogsPage : ContentPage
 		await DisplayAlert("Success", "The log files were saved to the selected folder.", "OK");
 	}
 
-	private async Task CopyLogsAsync()
-	{
-		var hasPermission = await Permissions.CheckStatusAsync<Permissions.StorageWrite>();
-		if (hasPermission != PermissionStatus.Granted)
-		{
-			hasPermission = await Permissions.RequestAsync<Permissions.StorageWrite>();
-		}
-
-		if (hasPermission != PermissionStatus.Granted) return;
-
-		var targetPath = ContextCompat.GetExternalFilesDirs(Android.App.Application.Context, null).FirstOrDefault()?.AbsolutePath;
-		if (targetPath == null) return;
-
-		var targetDir = new DirectoryInfo(Path.Combine(targetPath, "logs"));
-		if (!targetDir.Exists) targetDir.Create();
-
-		foreach (var file in FileLoggerHelper.GetLogFiles())
-		{
-			var destFile = new FileInfo(Path.Combine(targetDir.FullName, GetUniqueLogFileName(file.Name)));
-			await CopyFileAsync(file.FullName, destFile.FullName);
-		}
-
-		await DisplayAlert("Success", $"The log files were copied to '{targetDir}'.", "OK");
-	}
-
 	private static string GetUniqueLogFileName(string originalName)
 	{
 		return $"{Path.GetFileNameWithoutExtension(originalName)}_{DateTime.Now:yyyyMMdd_HHmmssfff}{Path.GetExtension(originalName)}";
-	}
-
-	private async Task CopyFileAsync(string sourcePath, string destinationPath)
-	{
-		await using Stream source = File.Open(sourcePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-		await using Stream destination = File.Create(destinationPath);
-		await source.CopyToAsync(destination);
 	}
 }
 
