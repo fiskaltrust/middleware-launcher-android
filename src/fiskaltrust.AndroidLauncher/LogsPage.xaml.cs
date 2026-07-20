@@ -19,6 +19,7 @@ public partial class LogsPage : ContentPage
 	List<FileInfo> _logFiles = new();
 	List<LogDayItem> _dayItems = new();
 	int _currentIndex = -1;
+	bool _drawerExpanded;
 
 	public LogsPage()
 	{
@@ -88,24 +89,37 @@ public partial class LogsPage : ContentPage
 		_timer.Stop();
 	}
 
-	private void OnDateLabelTapped(object sender, EventArgs e)
+	private void OnBarTapped(object sender, EventArgs e) => SetDrawer(!_drawerExpanded);
+
+	private void OnBarSwiped(object sender, SwipedEventArgs e)
 	{
-		DatePopupOverlay.IsVisible = true;
+		if (e.Direction == SwipeDirection.Down) SetDrawer(true);
+		else if (e.Direction == SwipeDirection.Up) SetDrawer(false);
 	}
 
-	private void OnPopupBackgroundTapped(object sender, EventArgs e)
+	private void SetDrawer(bool expand)
 	{
-		DatePopupOverlay.IsVisible = false;
-	}
+		if (expand == _drawerExpanded) return;
+		_drawerExpanded = expand;
 
-	private void OnPopupPanelTapped(object sender, EventArgs e)
-	{
-		
-	}
+		var currentHeight = DrawerBodyRow.Height.Value;
+		var targetHeight = expand ? 320 : 0;
 
-	private void OnPopupCancelClicked(object sender, EventArgs e)
-	{
-		DatePopupOverlay.IsVisible = false;
+		if (expand)
+		{
+			DrawerBody.IsVisible = true;
+		}
+
+		new Animation(v => DrawerBodyRow.Height = new GridLength(v), currentHeight, targetHeight)
+			.Commit(this, "DrawerAnimation", 16, 250, Easing.CubicInOut, (v, cancelled) =>
+			{
+				if (!expand)
+				{
+					DrawerBody.IsVisible = false;
+				}
+			});
+
+		ChevronIcon.RotateTo(expand ? 180 : 0, 200, Easing.CubicInOut);
 	}
 
 	private async void OnDateRowTapped(object sender, EventArgs e)
@@ -163,7 +177,7 @@ public partial class LogsPage : ContentPage
 			await input.CopyToAsync(output);
 		}
 
-		DatePopupOverlay.IsVisible = false;
+		SetDrawer(false);
 		await DisplayAlert("Success", "The log files were saved to the selected folder.", "OK");
 	}
 
