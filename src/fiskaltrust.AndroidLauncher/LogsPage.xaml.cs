@@ -7,10 +7,18 @@ using fiskaltrust.AndroidLauncher.Helpers.Logging;
 
 namespace fiskaltrust.AndroidLauncher;
 
+public class LogDayItem
+{
+	public string Label { get; set; } = "";
+	public bool IsCurrent { get; set; }
+}
+
 public partial class LogsPage : ContentPage
 {
 	IDispatcherTimer _timer;
 	List<FileInfo> _logFiles = new();
+	List<LogDayItem> _dayItems = new();
+	int _currentIndex = -1;
 
 	public LogsPage()
 	{
@@ -23,18 +31,25 @@ public partial class LogsPage : ContentPage
 	}
 
 	private FileInfo? SelectedLogFile =>
-		DateLogPicker.SelectedIndex >= 0 && DateLogPicker.SelectedIndex < _logFiles.Count
-			? _logFiles[DateLogPicker.SelectedIndex]
-			: null;
+		_currentIndex >= 0 && _currentIndex < _logFiles.Count ? _logFiles[_currentIndex] : null;
 
 	private void RefreshLogFileList()
 	{
 		_logFiles = FileLoggerHelper.GetLogFilesOrderedByDateDescending();
-		DateLogPicker.ItemsSource = _logFiles.Select(f => f.LastWriteTime.ToString("yyyy-MM-dd")).ToList();
-		if (_logFiles.Count > 0)
+		_currentIndex = _logFiles.Count > 0 ? 0 : -1;
+		RebuildDayItems();
+	}
+
+	private void RebuildDayItems()
+	{
+		_dayItems = _logFiles.Select((f, i) => new LogDayItem
 		{
-			DateLogPicker.SelectedIndex = 0;
-		}
+			Label = f.LastWriteTime.ToString("yyyy-MM-dd"),
+			IsCurrent = i == _currentIndex
+		}).ToList();
+
+		DateList.ItemsSource = _dayItems;
+		DateLabel.Text = _currentIndex >= 0 ? _dayItems[_currentIndex].Label : "";
 	}
 
 	private async Task OnTick(bool follow = false)
@@ -53,7 +68,7 @@ public partial class LogsPage : ContentPage
 
 		await Dispatcher.DispatchAsync(() => LogView.Text = text);
 		if (init || (follow && oldHeight != Scroll.Content.Height))
-		{			
+		{
 			await Dispatcher.DispatchAsync(() => Scroll.ScrollToAsync(Scroll.ScrollX, double.MaxValue, !init));
 		}
 	}
@@ -73,7 +88,37 @@ public partial class LogsPage : ContentPage
 		_timer.Stop();
 	}
 
-	private async void OnDateLogPickerSelectedIndexChanged(object sender, EventArgs e) => await OnTick(true);
+	private void OnDateLabelTapped(object sender, EventArgs e)
+	{
+		DatePopupOverlay.IsVisible = true;
+	}
+
+	private void OnPopupBackgroundTapped(object sender, EventArgs e)
+	{
+		DatePopupOverlay.IsVisible = false;
+	}
+
+	private void OnPopupPanelTapped(object sender, EventArgs e)
+	{
+		
+	}
+
+	private void OnPopupCancelClicked(object sender, EventArgs e)
+	{
+		DatePopupOverlay.IsVisible = false;
+	}
+
+	private async void OnDateRowTapped(object sender, EventArgs e)
+	{
+		if (sender is not Element element || element.BindingContext is not LogDayItem tapped) return;
+
+		var index = _dayItems.IndexOf(tapped);
+		if (index < 0 || index == _currentIndex) return;
+
+		_currentIndex = index;
+		RebuildDayItems();
+		await OnTick(true);
+	}
 
 	private async void OnExportCurrentClicked(object sender, EventArgs e)
 	{
@@ -118,6 +163,7 @@ public partial class LogsPage : ContentPage
 			await input.CopyToAsync(output);
 		}
 
+		DatePopupOverlay.IsVisible = false;
 		await DisplayAlert("Success", "The log files were saved to the selected folder.", "OK");
 	}
 
