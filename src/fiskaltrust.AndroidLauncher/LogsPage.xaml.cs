@@ -20,6 +20,7 @@ public partial class LogsPage : ContentPage
 	List<LogDayItem> _dayItems = new();
 	int _currentIndex = -1;
 	bool _drawerExpanded;
+	bool _isFollowing = true;
 
 	public LogsPage()
 	{
@@ -53,25 +54,27 @@ public partial class LogsPage : ContentPage
 		DateLabel.Text = _currentIndex >= 0 ? _dayItems[_currentIndex].Label : "";
 	}
 
-	private async Task OnTick(bool follow = false)
+	private async Task OnTick(bool forceFollow = false)
 	{
 		var selectedFile = SelectedLogFile;
 		if (selectedFile == null) return;
 
 		bool init = string.IsNullOrEmpty(LogView.Text);
-		double oldHeight = Scroll.Content.Height;
-		if (Scroll.ScrollY == oldHeight - Scroll.Height)
-		{
-			follow = true;
-		}
+		bool follow = forceFollow || _isFollowing;
 
 		var text = FileLoggerHelper.GetLastLines(selectedFile, 1024);
 
 		await Dispatcher.DispatchAsync(() => LogView.Text = text);
-		if (init || (follow && oldHeight != Scroll.Content.Height))
+		if (init || follow)
 		{
-			await Dispatcher.DispatchAsync(() => Scroll.ScrollToAsync(Scroll.ScrollX, double.MaxValue, !init));
+			await Dispatcher.DispatchAsync(() => Scroll.ScrollToAsync(Scroll.ScrollX, Math.Max(0, Scroll.Content.Height - Scroll.Height), false));
 		}
+	}
+
+	private void OnScrollScrolled(object sender, ScrolledEventArgs e)
+	{
+		const double bottomTolerance = 24;
+		_isFollowing = e.ScrollY >= Scroll.Content.Height - Scroll.Height - bottomTolerance;
 	}
 
 	private void OnAppearing(object sender, EventArgs e)
@@ -130,6 +133,7 @@ public partial class LogsPage : ContentPage
 		if (index < 0 || index == _currentIndex) return;
 
 		_currentIndex = index;
+		_isFollowing = true;
 		RebuildDayItems();
 		await OnTick(true);
 	}

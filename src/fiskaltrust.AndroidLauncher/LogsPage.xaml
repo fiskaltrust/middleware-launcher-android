@@ -98,7 +98,7 @@
             </Grid>
         </Grid>
 
-        <ScrollView Grid.Row="1" x:Name="Scroll">
+        <ScrollView Grid.Row="1" x:Name="Scroll" Scrolled="OnScrollScrolled">
             <Label x:Name="LogView"
                    FontFamily="IosevkaRegular"/>
         </ScrollView>
