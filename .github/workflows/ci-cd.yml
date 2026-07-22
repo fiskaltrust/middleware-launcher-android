@@ -65,28 +65,10 @@ jobs:
             echo "RELEASE_VERSION=${NBGV_SEMVER2}" >> $GITHUB_ENV
           fi
 
-      - name: Calculate dynamic version code
-        shell: bash
-        run: |
-          CURRENT_YEAR=$(date +%y)
-          DAY_OF_YEAR=$(date +%j)
-
-          RUN_NUMBER_MOD=$((${GITHUB_RUN_NUMBER} % 1000))
-          RUN_NUMBER_PADDED=$(printf "%03d" $RUN_NUMBER_MOD)
-
-          VERSION_CODE="${CURRENT_YEAR}${DAY_OF_YEAR}${RUN_NUMBER_PADDED}"
-
-          echo "APPLICATION_VERSION_CODE=${VERSION_CODE}" >> $GITHUB_ENV
-          echo "Calculated version code: ${VERSION_CODE}"
-          echo "  Year (YY): ${CURRENT_YEAR}"
-          echo "  Day of year (DDD): ${DAY_OF_YEAR}"
-          echo "  Run number (XXX): ${RUN_NUMBER_PADDED} (from run #${GITHUB_RUN_NUMBER})"
-
       - name: Print version
         shell: bash
         run: |
-          echo "Release Version: ${{env.RELEASE_VERSION}}"
-          echo "Versioncode: ${{env.APPLICATION_VERSION_CODE}}"
+          echo "Release Version: $RELEASE_VERSION"
 
       - name: Extract Android signing key from env
         shell: bash
@@ -113,8 +95,7 @@ jobs:
             -p:AndroidSigningStorePass="${{secrets.SIGNING_STORE_PASSWORD}}" \
             -p:AndroidSigningKeyStore="${{github.workspace}}/android/release.decrypted.jks" \
             -p:AndroidSigningKeyAlias="fiskaltrust-build" \
-            -p:AndroidKeyStore=true \
-            -p:ApplicationVersion=${{env.APPLICATION_VERSION_CODE}}
+            -p:AndroidKeyStore=true
 
       - uses: actions/upload-artifact@v4
         with:
