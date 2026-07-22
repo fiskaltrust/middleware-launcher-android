@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -11,7 +12,7 @@ namespace fiskaltrust.AndroidLauncher.Helpers.Logging
 
         public static FileInfo[] GetLogFiles()
         {
-            return LogDirectory.Exists ? LogDirectory.GetFiles("*.log") : Array.Empty<FileInfo>();
+            return Directory.Exists(LogDirectory.FullName) ? LogDirectory.GetFiles("*.log") : Array.Empty<FileInfo>();
         }
 
         public static List<FileInfo> GetLogFilesOrderedByDateDescending()
@@ -50,6 +51,33 @@ namespace fiskaltrust.AndroidLauncher.Helpers.Logging
             using var sr = new StreamReader(fs);
             var lines = sr.ReadToEnd();
             return lines;
+        }
+
+        public static List<string> SplitIntoLines(string content)
+        {
+            if (string.IsNullOrEmpty(content)) return new List<string>();
+
+            var rawLines = content.Split('\n');
+            var result = new List<string>(rawLines.Length);
+            for (int i = 0; i < rawLines.Length; i++)
+            {
+                if (i == rawLines.Length - 1 && rawLines[i].Length == 0) continue;
+                result.Add(rawLines[i].TrimEnd('\r'));
+            }
+            return result;
+        }
+
+        public static List<string> ReadNewLines(FileInfo logFile, ref long offset)
+        {
+            using var fs = logFile.OpenRead();
+            if (offset > fs.Length) offset = 0;
+            fs.Seek(offset, SeekOrigin.Begin);
+
+            using var sr = new StreamReader(fs);
+            var content = sr.ReadToEnd();
+            offset = fs.Length;
+
+            return SplitIntoLines(content);
         }
     }
 }

@@ -38,46 +38,46 @@
 
             <Grid Grid.Row="1"
                   x:Name="DrawerBody"
-                  BackgroundColor="{StaticResource White}"
+                  BackgroundColor="#EDEDED"
                   RowDefinitions="*,Auto"
-                  HeightRequest="320"
                   VerticalOptions="Start"
                   IsVisible="False">
-                <CollectionView Grid.Row="0"
-                                x:Name="DateList"
-                                SelectionMode="None">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="local:LogDayItem">
-                            <Grid Padding="16,10">
-                                <Grid.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="OnDateRowTapped" />
-                                </Grid.GestureRecognizers>
-                                <Grid.Triggers>
-                                    <DataTrigger TargetType="Grid" Binding="{Binding IsCurrent}" Value="True">
-                                        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
-                                    </DataTrigger>
-                                </Grid.Triggers>
-                                <HorizontalStackLayout Spacing="10">
-                                    <Label Text="{Binding Label}" FontSize="15">
-                                        <Label.Triggers>
-                                            <DataTrigger TargetType="Label" Binding="{Binding IsCurrent}" Value="True">
-                                                <Setter Property="TextColor" Value="{StaticResource White}" />
-                                            </DataTrigger>
-                                        </Label.Triggers>
-                                    </Label>
-                                    <Label Text="Viewing"
-                                           FontSize="11"
-                                           FontAttributes="Bold"
-                                           TextColor="{StaticResource White}"
-                                           VerticalOptions="Center"
-                                           IsVisible="{Binding IsCurrent}" />
-                                </HorizontalStackLayout>
-                            </Grid>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
+                <ScrollView Grid.Row="0" x:Name="DateListScroll">
+                    <VerticalStackLayout x:Name="DateList">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="local:LogDayItem">
+                                <Grid Padding="16,10">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnDateRowTapped" />
+                                    </Grid.GestureRecognizers>
+                                    <Grid.Triggers>
+                                        <DataTrigger TargetType="Grid" Binding="{Binding IsCurrent}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                                        </DataTrigger>
+                                    </Grid.Triggers>
+                                    <HorizontalStackLayout Spacing="10">
+                                        <Label Text="{Binding Label}" FontSize="15">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding IsCurrent}" Value="True">
+                                                    <Setter Property="TextColor" Value="{StaticResource White}" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                        <Label Text="Viewing"
+                                               FontSize="11"
+                                               FontAttributes="Bold"
+                                               TextColor="{StaticResource White}"
+                                               VerticalOptions="Center"
+                                               IsVisible="{Binding IsCurrent}" />
+                                    </HorizontalStackLayout>
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </ScrollView>
 
                 <Grid Grid.Row="1"
+                      x:Name="ExportButtonRow"
                       ColumnDefinitions="*,*"
                       Padding="16,10"
                       ColumnSpacing="12">
@@ -85,23 +85,43 @@
                         <SwipeGestureRecognizer Direction="Up" Swiped="OnBarSwiped" />
                     </Grid.GestureRecognizers>
                     <Button Grid.Column="0"
+                            x:Name="ExportCurrentButton"
                             Text="Export current"
                             Clicked="OnExportCurrentClicked"
                             BackgroundColor="Transparent"
                             TextColor="{StaticResource Primary}" />
                     <Button Grid.Column="1"
+                            x:Name="ExportAllButton"
                             Text="Export all"
                             Clicked="OnExportAllClicked"
                             BackgroundColor="Transparent"
                             TextColor="{StaticResource Primary}" />
                 </Grid>
+
+                <Label x:Name="NoLogsPlaceholder"
+                       Grid.RowSpan="2"
+                       Text="No logs available"
+                       FontSize="14"
+                       TextColor="{StaticResource Gray500}"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Padding="16,24"
+                       IsVisible="False" />
             </Grid>
         </Grid>
 
-        <ScrollView Grid.Row="1" x:Name="Scroll" Scrolled="OnScrollScrolled">
-            <Label x:Name="LogView"
-                   FontFamily="IosevkaRegular"/>
-        </ScrollView>
+        <CollectionView Grid.Row="1"
+                        x:Name="LogView"
+                        VerticalScrollBarVisibility="Always"
+                        Scrolled="OnLogViewScrolled">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Label Text="{Binding}"
+                           FontFamily="IosevkaRegular"
+                           LineBreakMode="NoWrap" />
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
     </Grid>
 
