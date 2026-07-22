@@ -1,6 +1,15 @@
 {
-  "version": "1.3.77",
-  "releaseBranches": [
-    "^refs/tags/v\\d+(?:\\.\\d+)*(?:-.*)?$"
-  ]
+  "$schema": "https://raw.githubusercontent.com/dotnet/Nerdbank.GitVersioning/main/src/NerdBank.GitVersioning/version.schema.json",
+  "version": "2.0.0-beta.{height}",
+  "assemblyVersion": {
+    "precision": "build"
+  },
+  "publicReleaseRefSpec": [
+    "^refs/tags/v.+"
+  ],
+  "release": {
+    "tagName": "v{version}",
+    "versionIncrement": "build",
+    "firstUnstableTag": "ci"
+  }
 }
