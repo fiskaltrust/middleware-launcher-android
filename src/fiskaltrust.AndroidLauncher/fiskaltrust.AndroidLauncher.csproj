@@ -71,6 +71,10 @@
 		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
 		<PackageReference Include="AathifMahir.Maui.MauiIcons.Material" Version="4.0.0" />
+		<PackageReference Include="Nerdbank.GitVersioning"
+									Version="3.10.91"
+									PrivateAssets="all"
+									Condition="!Exists('packages.config')" />
 	</ItemGroup>
 
 	<ItemGroup>
