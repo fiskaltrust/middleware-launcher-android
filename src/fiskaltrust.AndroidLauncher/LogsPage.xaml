@@ -114,6 +114,26 @@
                         x:Name="LogView"
                         VerticalScrollBarVisibility="Always"
                         Scrolled="OnLogViewScrolled">
+            <CollectionView.Header>
+                <Grid x:Name="TruncatedLogBanner" RowDefinitions="Auto,Auto">
+                    <VerticalStackLayout Grid.Row="0" Padding="24,20" Spacing="8" HorizontalOptions="Center">
+                        <Image Source="{mi:Material Icon=InfoOutline, IconColor='#6E6E6E'}"
+                               HeightRequest="28"
+                               WidthRequest="28"
+                               HorizontalOptions="Center" />
+                        <Label x:Name="TruncatedLogText"
+                               FontSize="13"
+                               TextColor="{StaticResource Gray500}"
+                               HorizontalTextAlignment="Center" />
+                        <Button Text="Export full log"
+                                Clicked="OnExportCurrentClicked"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource Primary}"
+                                HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                    <BoxView Grid.Row="1" HeightRequest="1" BackgroundColor="#DDDDDD" />
+                </Grid>
+            </CollectionView.Header>
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Label Text="{Binding}"

@@ -134,13 +134,28 @@ public partial class LogsPage : ContentPage
 	}
 
 
+	private const int MaxInitialLines = 1024;
+
 	private void LoadInitialContent(FileInfo file)
 	{
 		_logLines.Clear();
-		foreach (var line in FileLoggerHelper.SplitIntoLines(FileLoggerHelper.GetLastLines(file, 1024)))
+		foreach (var line in FileLoggerHelper.SplitIntoLines(FileLoggerHelper.GetLastLines(file, MaxInitialLines)))
 		{
 			_logLines.Add(line);
 		}
+
+		var totalLines = FileLoggerHelper.CountLines(file);
+		var truncated = totalLines > MaxInitialLines;
+		if (truncated)
+		{
+			TruncatedLogText.Text = $"Showing the last {MaxInitialLines} of {totalLines} lines in this file.";
+			LogView.Header = TruncatedLogBanner;
+		}
+		else
+		{
+			LogView.Header = null;
+		}
+
 		_readOffset = file.Length;
 		_loadedFilePath = file.FullName;
 	}

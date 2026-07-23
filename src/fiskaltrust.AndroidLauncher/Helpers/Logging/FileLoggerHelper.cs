@@ -53,6 +53,28 @@ namespace fiskaltrust.AndroidLauncher.Helpers.Logging
             return lines;
         }
 
+        public static int CountLines(FileInfo logFile)
+        {
+            using var fs = logFile.OpenRead();
+            if (fs.Length == 0) return 0;
+
+            var buffer = new byte[8192];
+            var count = 0;
+            byte lastByte = 0;
+            int bytesRead;
+            while ((bytesRead = fs.Read(buffer, 0, buffer.Length)) > 0)
+            {
+                for (var i = 0; i < bytesRead; i++)
+                {
+                    if (buffer[i] == (byte)'\n') count++;
+                }
+                lastByte = buffer[bytesRead - 1];
+            }
+
+            if (lastByte != (byte)'\n') count++;
+            return count;
+        }
+
         public static List<string> SplitIntoLines(string content)
         {
             if (string.IsNullOrEmpty(content)) return new List<string>();
