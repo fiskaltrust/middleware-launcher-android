@@ -17,9 +17,11 @@ namespace fiskaltrust.AndroidLauncher.Services
     public class LocalMiddlewareLauncher
     {
         private const string PACKAGE_NAME_DE_SWISSBIT = "fiskaltrust.Middleware.SCU.DE.Swissbit";
+        private const string PACKAGE_NAME_DE_SWISSBIT_CLOUD_V2 = "fiskaltrust.Middleware.SCU.DE.SwissbitCloudV2";
         private const string PACKAGE_NAME_DE_FISKALY_CERTIFIED = "fiskaltrust.Middleware.SCU.DE.FiskalyCertified";
         private const string PACKAGE_NAME_IT_EPSON_RT_PRINTER = "fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter";
         private const string PACKAGE_NAME_IT_CUSTOM_RT_SERVER = "fiskaltrust.Middleware.SCU.IT.CustomRTServer";
+        private const string PACKAGE_NAME_IT_CUSTOM_RT_PRINTER = "fiskaltrust.Middleware.SCU.IT.CustomRTPrinter";
 
         private readonly IConfigurationProvider _configurationProvider;
         private readonly ILocalConfigurationProvider _localConfigurationProvider;
@@ -97,11 +99,17 @@ namespace fiskaltrust.AndroidLauncher.Services
                     case PACKAGE_NAME_IT_EPSON_RT_PRINTER:
                         await InitializeITEpsonRTPrinterSCUAsync(scuConfig);
                         break;
+                    case PACKAGE_NAME_DE_SWISSBIT_CLOUD_V2:
+                        await InitializeDESwissbitCloudV2ScuAsync(scuConfig);
+                        break;
                     case PACKAGE_NAME_IT_CUSTOM_RT_SERVER:
                         await InitializeITCustomRTServerScuAsync(scuConfig);
                         break;
+                    case PACKAGE_NAME_IT_CUSTOM_RT_PRINTER:
+                        await InitializeITCustomRTPrinterScuAsync(scuConfig);
+                        break;
                     default:
-                        throw new ArgumentException($"The Android launcher currently only supports the following SCU packages: {PACKAGE_NAME_DE_SWISSBIT}, {PACKAGE_NAME_DE_FISKALY_CERTIFIED}, {PACKAGE_NAME_IT_EPSON_RT_PRINTER}.");
+                        throw new ArgumentException($"The Android launcher currently only supports the following SCU packages: {PACKAGE_NAME_DE_SWISSBIT}, {PACKAGE_NAME_DE_SWISSBIT_CLOUD_V2}, {PACKAGE_NAME_DE_FISKALY_CERTIFIED}, {PACKAGE_NAME_IT_EPSON_RT_PRINTER}, {PACKAGE_NAME_IT_CUSTOM_RT_SERVER}, {PACKAGE_NAME_IT_CUSTOM_RT_PRINTER}.");
                 }
             }
 
@@ -156,7 +164,15 @@ namespace fiskaltrust.AndroidLauncher.Services
             var scuProvider = new ITEpsonRTPrinterSCUProvider();
             var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
             _scus.Add(GetPrimaryUriForSignaturCreationUnit(packageConfig), scu);
-            Log.Logger.Debug($"Created German SCU of type 'fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter'.");
+            Log.Logger.Debug($"Created Italian SCU of type 'fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter'.");
+        }
+
+        private async Task InitializeDESwissbitCloudV2ScuAsync(PackageConfiguration packageConfig)
+        {
+            var scuProvider = new DESwissbitCloudV2ScuProvider();
+            var scu = scuProvider.CreateSCU(Environment.GetFolderPath(Environment.SpecialFolder.Personal), packageConfig, _cashboxId, _isSandbox, _logLevel);
+            _scus.Add(GetPrimaryUriForSignaturCreationUnit(packageConfig), scu);
+            Log.Logger.Debug($"Created German SCU of type 'fiskaltrust.Middleware.SCU.DE.SwissbitCloudV2'.");
         }
 
         private async Task InitializeITCustomRTServerScuAsync(PackageConfiguration packageConfig)
@@ -164,7 +180,15 @@ namespace fiskaltrust.AndroidLauncher.Services
             var scuProvider = new ITCustomRTServerScuProvider();
             var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
             _scus.Add(GetPrimaryUriForSignaturCreationUnit(packageConfig), scu);
-            Log.Logger.Debug($"Created German SCU of type 'fiskaltrust.Middleware.SCU.IT.CustomRTServer'.");
+            Log.Logger.Debug($"Created Italian SCU of type 'fiskaltrust.Middleware.SCU.IT.CustomRTServer'.");
+        }
+
+        private async Task InitializeITCustomRTPrinterScuAsync(PackageConfiguration packageConfig)
+        {
+            var scuProvider = new ITCustomRTPrinterScuProvider();
+            var scu = scuProvider.CreateSCU(packageConfig, _cashboxId, _isSandbox, _logLevel);
+            _scus.Add(GetPrimaryUriForSignaturCreationUnit(packageConfig), scu);
+            Log.Logger.Debug($"Created Italian SCU of type 'fiskaltrust.Middleware.SCU.IT.CustomRTPrinter'.");
         }
 
         private async Task InitializeQueueAsync(PackageConfiguration packageConfig)

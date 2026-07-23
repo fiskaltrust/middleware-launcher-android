@@ -9,6 +9,7 @@ using System;
 using System.IO;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using fiskaltrust.AndroidLauncher.Signing;
+using fiskaltrust.ifPOS.v1.at;
 using fiskaltrust.ifPOS.v1.de;
 using fiskaltrust.ifPOS.v1.it;
 using fiskaltrust.Middleware.Abstractions;
@@ -37,6 +38,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Queue
             var serviceCollection = new ServiceCollection();
             serviceCollection.TryAddSingleton<IClientFactory<IDESSCD>>(new DESSCDClientFactory(scus.OfType<IDESSCD>()));
             serviceCollection.TryAddSingleton<IClientFactory<IITSSCD>>(new ITSSCDClientFactory(scus.OfType<IITSSCD>()));
+            serviceCollection.TryAddSingleton<IClientFactory<IATSSCD>>(new ATSSCDClientFactory(scus.OfType<IATSSCD>(), ftCashBoxId, accessToken));
 
             serviceCollection.AddLogProviders(logLevel);
             serviceCollection.AddAppInsights(Helpers.Configuration.GetAppInsightsInstrumentationKey(isSandbox), "fiskaltrust.Middleware.Queue.SQLite", ftCashBoxId);
