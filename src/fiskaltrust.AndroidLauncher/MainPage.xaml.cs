@@ -53,7 +53,7 @@ public partial class MainPage : ContentPage, INotifyPropertyChanged
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Failed to load ft_notification.png: {ex.Message}");
-                
+
                 try
                 {
                     // Try without extension
@@ -63,7 +63,7 @@ public partial class MainPage : ContentPage, INotifyPropertyChanged
                 catch (Exception ex2)
                 {
                     System.Diagnostics.Debug.WriteLine($"Failed to load ft_notification: {ex2.Message}");
-                    
+
                     // Try using appicon as fallback
                     try
                     {
