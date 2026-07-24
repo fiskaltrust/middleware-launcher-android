@@ -34,6 +34,7 @@ public partial class LogsPage : ContentPage
 	{
 		InitializeComponent();
 		LogView.ItemsSource = _logLines;
+		LogView.Header = null;
 		LogView.HandlerChanged += (_, __) => AttachLogViewTapToClose();
 
 		_timer = Dispatcher.CreateTimer();
