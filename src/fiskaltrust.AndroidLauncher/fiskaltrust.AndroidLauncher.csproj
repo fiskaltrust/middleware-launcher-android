@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net9.0-android</TargetFramework>
+		<TargetFramework>net10.0-android</TargetFramework>
 
 		<OutputType>Exe</OutputType>
 		<RootNamespace>fiskaltrust.AndroidLauncher</RootNamespace>
@@ -61,17 +61,20 @@
 		<PackageReference Include="CsvHelper" Version="28.0.1" />
 		<PackageReference Include="fiskaltrust.Middleware.Abstractions" Version="1.3.3" />
 		<PackageReference Include="fiskaltrust.Middleware.Interface.Client.Http" Version="1.3.55-rc2" />
-		<PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.4" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.4" />
+		<PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<PackageReference Include="System.Security.Cryptography.Xml" Version="5.0.0" />
 		<PackageReference Include="System.ServiceModel.Syndication" Version="4.7.0" />
 		<PackageReference Include="System.Threading.Channels" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Maui.Essentials" Version="9.0.0" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
+		<PackageReference Include="Microsoft.Maui.Essentials" Version="10.0.0" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
 		<PackageReference Include="AathifMahir.Maui.MauiIcons.Material" Version="4.0.0" />
 		<PackageReference Include="Xamarin.AndroidX.DocumentFile" Version="1.0.1.29" />
+		<!-- .NET 10 ships System.Linq.AsyncEnumerable natively; exclude compile-time assets of the
+		     third-party System.Linq.Async pulled transitively via middleware to avoid CS0121 ambiguity. -->
+		<PackageReference Include="System.Linq.Async" Version="6.0.1" ExcludeAssets="compile" />
 		<PackageReference Include="Nerdbank.GitVersioning"
 									Version="3.10.91"
 									PrivateAssets="all"
