@@ -11,16 +11,10 @@ using System.Text.Json;
 
 namespace fiskaltrust.AndroidLauncher.Services
 {
-    /// <summary>
-    /// UI-free implementation of the PosSystemAPI request pipeline.
-    /// Previously lived on <c>PosSystemAPIActivity</c>; now consumed by the bound
-    /// <c>PosSystemAPIService</c>.
-    /// </summary>
     public class PosSystemApiRequestHandler
     {
         private const string TAG = "PosSystemAPI";
 
-        // Local endpoints that should be handled by the local middleware (defaults without version)
         private static readonly HashSet<string> LocalEndpoints = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             "/sign",
@@ -31,11 +25,6 @@ namespace fiskaltrust.AndroidLauncher.Services
             "/v2/journal",
         };
 
-        /// <summary>
-        /// Executes the request end-to-end and returns a fully-formed response.
-        /// Never throws for expected errors — those become <see cref="PosSystemApiResponse"/>
-        /// with an appropriate HTTP status code.
-        /// </summary>
         public async Task<PosSystemApiResponse> HandleAsync(PosSystemApiRequest request)
         {
             try
@@ -79,7 +68,6 @@ namespace fiskaltrust.AndroidLauncher.Services
                     $"The selected path '{request.Path}' and method '{request.Method}' is not supported.");
             }
 
-            // Check if this is a /v2/echo request with null Message to trigger service restart
             if (string.Equals(request.Path, "/v2/echo", StringComparison.OrdinalIgnoreCase))
             {
                 var echoRequest = JsonSerializer.Deserialize<EchoRequest>(request.Body ?? "");
@@ -135,7 +123,7 @@ namespace fiskaltrust.AndroidLauncher.Services
                         continue;
 
                     if (header.Key.Equals("Content-Type", StringComparison.OrdinalIgnoreCase))
-                        continue; // Content-Type is set with the content below
+                        continue;
 
                     try
                     {

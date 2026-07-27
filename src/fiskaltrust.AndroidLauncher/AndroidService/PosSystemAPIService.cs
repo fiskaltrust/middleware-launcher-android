@@ -8,23 +8,7 @@ using fiskaltrust.Api.PosSystem.Core.Models;
 using Newtonsoft.Json;
 
 namespace fiskaltrust.AndroidLauncher.AndroidService
-{
-    /// <summary>
-    /// Pure bound Service that exposes the PosSystemAPI over Android IPC without
-    /// showing any UI. Replaces <c>PosSystemAPIActivity</c>.
-    ///
-    /// Callers bind to <c>eu.fiskaltrust.androidlauncher.PosSystemAPIService</c>,
-    /// then send <see cref="Message"/>s with:
-    /// <list type="bullet">
-    ///   <item><c>What</c> = <see cref="PosSystemApiServiceContract.MsgRequest"/></item>
-    ///   <item><c>Data</c> = Bundle with request fields (Method, Path, HeaderJsonObjectBase64Url, BodyBase64Url, CorrelationId)</item>
-    ///   <item><c>ReplyTo</c> = a client-side <see cref="Messenger"/> to receive the reply</item>
-    /// </list>
-    /// The service replies with a <see cref="Message"/> whose <c>What</c> is
-    /// <see cref="PosSystemApiServiceContract.MsgReply"/> and whose <c>Data</c>
-    /// carries the same shape as the previous intent result extras plus the
-    /// echoed CorrelationId.
-    /// </summary>
+{    
     [Service(
         Name = "eu.fiskaltrust.androidlauncher.PosSystemAPIService",
         Exported = true,
@@ -88,10 +72,7 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                     Log.Warn(TAG, $"Ignoring unknown message.What={msg.What}");
                     return;
                 }
-
-                // Snapshot everything we need from the incoming Message before we
-                // recycle out to a background Task, because Android may recycle
-                // the Message object once HandleMessage returns.
+                
                 var replyTo = msg.ReplyTo;
                 var data = msg.Data;
                 var correlationId = data?.GetString(PosSystemApiServiceContract.KeyCorrelationId);

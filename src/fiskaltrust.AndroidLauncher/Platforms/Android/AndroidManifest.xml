@@ -17,11 +17,11 @@
 		android:supportsRtl="true" 
 		android:extractNativeLibs="true" 
 		android:usesCleartextTraffic="true">
-		<!--
-			PosSystemAPIService: pure bound Service exposing the PosSystemAPI over
-			Messenger-based IPC. No UI, no blank activity during signing.
-			See fiskaltrust.AndroidLauncher.AndroidService.PosSystemAPIService.
-		-->
+		<activity
+			android:name="eu.fiskaltrust.androidlauncher.PosSystemAPI"
+			android:exported="true"
+			android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
 		<service
 			android:name="eu.fiskaltrust.androidlauncher.PosSystemAPIService"
 			android:exported="true"
