@@ -1,7 +1,9 @@
 ﻿using Android.App;
+using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
+using fiskaltrust.AndroidLauncher.Helpers;
 
 namespace fiskaltrust.AndroidLauncher;
 
@@ -17,8 +19,18 @@ public class MainActivity : MauiAppCompatActivity
         }
         catch(Exception ex)
         {
-            
+
         }
         base.OnCreate(savedInstanceState);
+    }
+
+    protected override void OnActivityResult(int requestCode, Result resultCode, Intent? data)
+    {
+        base.OnActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == ActivityResultBridge.PickFolderRequestCode)
+        {
+            ActivityResultBridge.PendingPickFolderResult?.TrySetResult(resultCode == Result.Ok ? data : null);
+        }
     }
 }
