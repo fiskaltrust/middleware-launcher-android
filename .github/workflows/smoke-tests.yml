@@ -46,7 +46,8 @@ jobs:
         run: |
           dotnet build ${{env.BASE_FOLDER}}/fiskaltrust.AndroidLauncher.csproj \
             -f ${{env.MAUI_SDK}} \
-            -c ${{env.BUILD_CONFIGURATION}}
+            -c ${{env.BUILD_CONFIGURATION}} \
+            -t:SignAndroidPackage
 
       - name: Locate built APK
         id: apk
