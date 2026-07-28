@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  BUILD_CONFIGURATION: Debug
+  BUILD_CONFIGURATION: Release
   MAUI_SDK: net10.0-android
   BASE_FOLDER: src/fiskaltrust.AndroidLauncher
   TEST_FOLDER: test/fiskaltrust.AndroidLauncher.SmokeTests
@@ -47,6 +47,8 @@ jobs:
           dotnet build ${{env.BASE_FOLDER}}/fiskaltrust.AndroidLauncher.csproj \
             -f ${{env.MAUI_SDK}} \
             -c ${{env.BUILD_CONFIGURATION}} \
+            -p:AndroidEnableR8=true \
+            -p:AndroidLinkTool=r8 \
             -t:SignAndroidPackage
 
       - name: Locate built APK
@@ -75,8 +77,7 @@ jobs:
 
             adb install -r "${{ steps.apk.outputs.path }}"
 
-            adb shell am start -n ${{env.APP_PACKAGE}}/${{env.APP_PACKAGE}}.MainActivity
-            sleep 30
+            adb shell am start -W -n ${{env.APP_PACKAGE}}/${{env.APP_PACKAGE}}.MainActivity
 
             dotnet test ${{env.TEST_FOLDER}} --filter "Category=possystemapi" -v normal
         env:
