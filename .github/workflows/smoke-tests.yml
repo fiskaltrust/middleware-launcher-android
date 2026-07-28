@@ -52,7 +52,10 @@ jobs:
       - name: Locate built APK
         id: apk
         run: |
-          APK_PATH=$(find ${{env.BASE_FOLDER}}/bin/${{env.BUILD_CONFIGURATION}}/${{env.MAUI_SDK}} -name "*-Signed.apk" -o -name "${{env.APP_PACKAGE}}.apk" | head -n 1)
+          APK_PATH=$(find ${{env.BASE_FOLDER}}/bin/${{env.BUILD_CONFIGURATION}}/${{env.MAUI_SDK}} -name "*-Signed.apk" | head -n 1)
+          if [ -z "$APK_PATH" ]; then
+            APK_PATH=$(find ${{env.BASE_FOLDER}}/bin/${{env.BUILD_CONFIGURATION}}/${{env.MAUI_SDK}} -name "${{env.APP_PACKAGE}}.apk" | head -n 1)
+          fi
           echo "path=$APK_PATH" >> "$GITHUB_OUTPUT"
 
       - name: Run smoke tests on emulator
