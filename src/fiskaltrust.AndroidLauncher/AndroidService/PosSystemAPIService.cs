@@ -128,10 +128,7 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                 {
                     throw new ArgumentException($"Invalid headers format: {ex.Message}", ex);
                 }
-
-                if (!headers.ContainsKey("x-operation-id"))
-                    throw new ArgumentException("The required header x-operation-id was not sent.");
-
+                
                 string? body = null;
                 if (!string.IsNullOrEmpty(bodyBase64Url))
                 {

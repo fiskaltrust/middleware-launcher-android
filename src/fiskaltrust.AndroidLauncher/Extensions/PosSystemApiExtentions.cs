@@ -39,10 +39,7 @@ namespace fiskaltrust.AndroidLauncher.Extensions
             catch (Exception ex)
             {
                 throw new ArgumentException($"Invalid headers format: {ex.Message}", nameof(intent), ex);
-            }
-
-            if (!headers.ContainsKey("x-operation-id"))
-                throw new ArgumentException("The required header x-operation-id was not sent.");
+            }            
 
             // Decode body if present
             string? body = null;
