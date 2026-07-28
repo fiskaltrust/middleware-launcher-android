@@ -1,0 +1,82 @@
+name: Android Smoke Tests
+
+on:
+  workflow_dispatch:
+
+env:
+  BUILD_CONFIGURATION: Debug
+  MAUI_SDK: net10.0-android
+  BASE_FOLDER: src/fiskaltrust.AndroidLauncher
+  TEST_FOLDER: test/fiskaltrust.AndroidLauncher.SmokeTests
+  APP_PACKAGE: eu.fiskaltrust.androidlauncher
+
+jobs:
+  smoke-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          submodules: recursive
+          token: ${{ secrets.SUBMODULES_READ }}
+
+      - name: Enable KVM group perms
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.x.x"
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Install maui-android workload
+        run: dotnet workload install maui-android
+
+      - name: Build APK
+        run: |
+          dotnet build ${{env.BASE_FOLDER}}/fiskaltrust.AndroidLauncher.csproj \
+            -f ${{env.MAUI_SDK}} \
+            -c ${{env.BUILD_CONFIGURATION}}
+
+      - name: Locate built APK
+        id: apk
+        run: |
+          APK_PATH=$(find ${{env.BASE_FOLDER}}/bin/${{env.BUILD_CONFIGURATION}}/${{env.MAUI_SDK}} -name "*-Signed.apk" -o -name "${{env.APP_PACKAGE}}.apk" | head -n 1)
+          echo "path=$APK_PATH" >> "$GITHUB_OUTPUT"
+
+      - name: Run smoke tests on emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          profile: pixel_7_pro
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: |
+            npm install -g appium
+            appium driver install uiautomator2
+            appium --port 4723 --allow-insecure=adb_shell --log appium.log &
+
+            npx wait-on tcp:4723 --timeout 60000
+
+            adb install -r "${{ steps.apk.outputs.path }}"
+
+            dotnet test ${{env.TEST_FOLDER}} --filter "Category=possystemapi" -v normal
+        env:
+          CASHBOXID: ${{ secrets.SMOKETEST_CASHBOXID }}
+          ACCESSTOKEN: ${{ secrets.SMOKETEST_ACCESSTOKEN }}
+
+      - name: Upload Appium log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: appium-log
+          path: appium.log
+          if-no-files-found: ignore
