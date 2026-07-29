@@ -76,7 +76,12 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                 var replyTo = msg.ReplyTo;
                 var data = msg.Data;
                 var correlationId = data?.GetString(PosSystemApiServiceContract.KeyCorrelationId);
-
+                
+                if (replyTo == null)
+                {
+                    Log.Warn(TAG, "No ReplyTo Messenger set on request; dropping response.");
+                    return;
+                }
                 _ = Task.Run(async () =>
                 {
                     PosSystemApiResponse response;
@@ -153,12 +158,6 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
 
             private static void SendReply(Messenger? replyTo, string? correlationId, PosSystemApiResponse response)
             {
-                if (replyTo == null)
-                {
-                    Log.Warn(TAG, "No ReplyTo Messenger set on request; dropping response.");
-                    return;
-                }
-
                 try
                 {
                     var reply = Message.Obtain();
