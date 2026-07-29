@@ -74,6 +74,7 @@ jobs:
             appium driver install uiautomator2
             appium --port 4723 --allow-insecure=uiautomator2:adb_shell --log appium.log > /dev/null 2>&1 &
             APPIUM_PID=$!
+            trap 'kill $APPIUM_PID 2>/dev/null' EXIT
 
             npx wait-on tcp:4723 --timeout 60000
 
@@ -82,8 +83,6 @@ jobs:
             adb shell am start -W -n ${{env.APP_PACKAGE}}/${{env.APP_PACKAGE}}.MainActivity
 
             dotnet test ${{env.TEST_FOLDER}} --filter "Category=possystemapi" -v normal
-
-            kill $APPIUM_PID || true
         env:
           CASHBOXID: ${{ secrets.SMOKETEST_CASHBOXID }}
           ACCESSTOKEN: ${{ secrets.SMOKETEST_ACCESSTOKEN }}
