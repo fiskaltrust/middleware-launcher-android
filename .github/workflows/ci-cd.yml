@@ -123,3 +123,8 @@ jobs:
           az storage blob upload --account-name ${{vars.storageaccountname}} --account-key ${{secrets.storageaccountkey}} --container-name downloads --file ${{env.BASE_FOLDER}}/bin/${{env.BUILD_CONFIGURATION}}/${{env.MAUI_SDK}}/publish/eu.fiskaltrust.androidlauncher-Signed.aab --name android/fiskaltrust-middleware-launcher-android/preview/${{env.RELEASE_VERSION}}/eu.fiskaltrust.androidlauncher-Signed-${{env.RELEASE_VERSION}}.aab
           az storage blob upload --account-name ${{vars.storageaccountname}} --account-key ${{secrets.storageaccountkey}} --container-name downloads --file ${{env.BASE_FOLDER}}/bin/${{env.BUILD_CONFIGURATION}}/${{env.MAUI_SDK}}/publish/eu.fiskaltrust.androidlauncher-Signed.apk --name android/fiskaltrust-middleware-launcher-android/preview/eu.fiskaltrust.androidlauncher-Signed.apk --overwrite
           az storage blob upload --account-name ${{vars.storageaccountname}} --account-key ${{secrets.storageaccountkey}} --container-name downloads --file ${{env.BASE_FOLDER}}/bin/${{env.BUILD_CONFIGURATION}}/${{env.MAUI_SDK}}/publish/eu.fiskaltrust.androidlauncher-Signed.aab --name android/fiskaltrust-middleware-launcher-android/preview/eu.fiskaltrust.androidlauncher-Signed.aab --overwrite
+
+  smoke-tests:
+    needs: buildAndroid
+    uses: ./.github/workflows/smoke-tests.yml
+    secrets: inherit
