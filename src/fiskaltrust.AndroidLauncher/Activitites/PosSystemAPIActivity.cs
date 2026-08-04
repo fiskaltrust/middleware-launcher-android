@@ -5,13 +5,10 @@ using Android.Util;
 using fiskaltrust.AndroidLauncher.Extensions;
 using fiskaltrust.AndroidLauncher.Services;
 using fiskaltrust.Api.PosSystem.Core.Models;
+using System.Reflection;
 
 namespace fiskaltrust.AndroidLauncher.Activitites
-{
-    /// <summary>
-    /// Activity that handles Intent-based POS System API calls.
-    /// Routes /sign and /echo to local middleware, other endpoints to cloud PosSystemAPI.
-    /// </summary>
+{   
     [Activity(
         Label = "PosSystemAPI",
         Name = "eu.fiskaltrust.androidlauncher.PosSystemAPI",
@@ -25,6 +22,8 @@ namespace fiskaltrust.AndroidLauncher.Activitites
         protected override void OnCreate(Bundle? savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+
+            SetContentView(ResolveLayoutId("pos_system_api_activity"));
 
             Log.Info(TAG, "PosSystemAPI Activity started");
 
@@ -118,6 +117,15 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                     Finish();
                 }
             });
+        }
+
+        private static int ResolveLayoutId(string layoutName)
+        {
+            var field = typeof(Resource.Layout).GetField(layoutName, BindingFlags.Public | BindingFlags.Static);
+            if (field?.GetValue(null) is int layoutId && layoutId != 0)
+                return layoutId;
+
+            throw new InvalidOperationException($"Layout resource '{layoutName}' was not found.");
         }
 
     }
