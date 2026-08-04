@@ -69,9 +69,7 @@ jobs:
 
             adb shell am start -W -n ${{env.APP_PACKAGE}}/${{env.APP_PACKAGE}}.MainActivity
 
-            dotnet test ${{env.TEST_FOLDER}} --filter "Category=possystemapi" -v normal \
-              --logger "trx;LogFileName=smoke-tests.trx" \
-              --results-directory TestResults
+            dotnet test ${{env.TEST_FOLDER}} --filter "Category=possystemapi" -v normal --logger "trx;LogFileName=smoke-tests.trx" --results-directory TestResults
         env:
           CASHBOXID: ${{ secrets.SMOKETEST_CASHBOXID }}
           ACCESSTOKEN: ${{ secrets.SMOKETEST_ACCESSTOKEN }}
