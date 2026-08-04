@@ -4,6 +4,11 @@ on:
   workflow_dispatch:
   workflow_call:
 
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
 env:
   TEST_FOLDER: test/fiskaltrust.AndroidLauncher.SmokeTests
   APP_PACKAGE: eu.fiskaltrust.androidlauncher
@@ -64,10 +69,20 @@ jobs:
 
             adb shell am start -W -n ${{env.APP_PACKAGE}}/${{env.APP_PACKAGE}}.MainActivity
 
-            dotnet test ${{env.TEST_FOLDER}} --filter "Category=possystemapi" -v normal
+            dotnet test ${{env.TEST_FOLDER}} --filter "Category=possystemapi" -v normal \
+              --logger "trx;LogFileName=smoke-tests.trx" \
+              --results-directory TestResults
         env:
           CASHBOXID: ${{ secrets.SMOKETEST_CASHBOXID }}
           ACCESSTOKEN: ${{ secrets.SMOKETEST_ACCESSTOKEN }}
+
+      - name: Publish Test Results
+        if: always()
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          check_name: Smoke Test Results
+          check_run: false
+          files: TestResults/*.trx
 
       - name: Upload Appium log
         if: always()
