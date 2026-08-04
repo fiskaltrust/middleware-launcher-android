@@ -12,8 +12,6 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
 
         public const int MsgReply = 2;
 
-        public const string KeyCorrelationId = "CorrelationId";
-
         public const string KeyMethod = "Method";
         public const string KeyPath = "Path";
         public const string KeyHeaderJsonBase64Url = "HeaderJsonObjectBase64Url";
