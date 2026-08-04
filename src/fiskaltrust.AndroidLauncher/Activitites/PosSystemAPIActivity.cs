@@ -2,6 +2,8 @@ using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Util;
+using Android.Widget;
+using fiskaltrust.AndroidLauncher.Constants;
 using fiskaltrust.AndroidLauncher.Extensions;
 using fiskaltrust.AndroidLauncher.Services;
 using fiskaltrust.Api.PosSystem.Core.Models;
@@ -17,13 +19,19 @@ namespace fiskaltrust.AndroidLauncher.Activitites
     public class PosSystemAPIActivity : Activity
     {
         private const string TAG = "PosSystemAPI";
-        private readonly PosSystemApiRequestHandler _requestHandler = new PosSystemApiRequestHandler();
+        private readonly PosSystemApiRequestHandler _requestHandler;
+
+        public PosSystemAPIActivity()
+        {
+            _requestHandler = new PosSystemApiRequestHandler(SetProgressText);
+        }
 
         protected override void OnCreate(Bundle? savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
             SetContentView(ResolveLayoutId("pos_system_api_activity"));
+            PopulateEndpointPreview(Intent);
 
             Log.Info(TAG, "PosSystemAPI Activity started");
 
@@ -126,6 +134,36 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                 return layoutId;
 
             throw new InvalidOperationException($"Layout resource '{layoutName}' was not found.");
+        }
+
+        private static int ResolveId(string idName)
+        {
+            var field = typeof(Resource.Id).GetField(idName, BindingFlags.Public | BindingFlags.Static);
+            if (field?.GetValue(null) is int id && id != 0)
+                return id;
+
+            throw new InvalidOperationException($"View id '{idName}' was not found.");
+        }
+        private void PopulateEndpointPreview(Intent? intent)
+        {
+            var endpointTextView = FindViewById<TextView>(ResolveId("pos_system_api_endpoint"));
+            
+            var method = intent?.GetStringExtra(PosSystemAPIActivityIntentStatics.EXTRA_METHOD);
+            var path = intent?.GetStringExtra(PosSystemAPIActivityIntentStatics.EXTRA_PATH);        
+
+            endpointTextView.Text = $"{method.ToUpperInvariant()} {path}";
+        }        
+        private void SetProgressText(string text)
+        {
+            RunOnUiThread(() =>
+            {
+                var progressTextView = FindViewById<TextView>(ResolveId("pos_system_api_stage"));
+                if (progressTextView == null)
+                    return;
+
+                progressTextView.Text = text;
+            });
+           
         }
 
     }

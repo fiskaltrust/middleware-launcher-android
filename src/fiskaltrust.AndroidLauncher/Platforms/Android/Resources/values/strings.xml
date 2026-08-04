@@ -4,7 +4,7 @@
 	<string name="main_title">You are all set!</string>
 	<string name="log_title">Developer logs</string>
 	<string name="main_content">The Launcher for the fiskaltrust.Middleware is installed on this device and will listen for incoming start requests.</string>
-	<string name="pos_system_api_loading">Request in progress…</string>
+	<string name="pos_system_api_loading">Operation in progress…</string>
 	<string name="manage_space_content">Clearing the app data will delete all fiscalization data stored on this device.</string>
 	<string name="manage_space_warning">This action cannot be undone. Do not proceed, unless you are instructed to do so by technical support.</string>
 	<string name="manage_space_button">Clear Data</string>
