@@ -8,7 +8,7 @@ using fiskaltrust.Api.PosSystem.Core.Models;
 using Newtonsoft.Json;
 
 namespace fiskaltrust.AndroidLauncher.AndroidService
-{    
+{
     [Service(
         Name = "eu.fiskaltrust.androidlauncher.PosSystemAPIService",
         Exported = true,
@@ -72,11 +72,10 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                     Log.Warn(TAG, $"Ignoring unknown message.What={msg.What}");
                     return;
                 }
-                
+
                 var replyTo = msg.ReplyTo;
                 var data = msg.Data;
-                var correlationId = data?.GetString(PosSystemApiServiceContract.KeyCorrelationId);
-                
+
                 if (replyTo == null)
                 {
                     Log.Warn(TAG, "No ReplyTo Messenger set on request; dropping response.");
@@ -101,7 +100,7 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                         response = PosSystemApiResponse.Error(500, $"Internal error: {ex.Message}");
                     }
 
-                    SendReply(replyTo, correlationId, response);
+                    SendReply(replyTo, response);
                 });
             }
 
@@ -133,7 +132,7 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                 {
                     throw new ArgumentException($"Invalid headers format: {ex.Message}", ex);
                 }
-                
+
                 string? body = null;
                 if (!string.IsNullOrEmpty(bodyBase64Url))
                 {
@@ -156,7 +155,7 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                 };
             }
 
-            private static void SendReply(Messenger? replyTo, string? correlationId, PosSystemApiResponse response)
+            private static void SendReply(Messenger? replyTo, PosSystemApiResponse response)
             {
                 try
                 {
@@ -164,8 +163,6 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                     reply.What = PosSystemApiServiceContract.MsgReply;
 
                     var bundle = new Bundle();
-                    if (!string.IsNullOrEmpty(correlationId))
-                        bundle.PutString(PosSystemApiServiceContract.KeyCorrelationId, correlationId);
 
                     var intentData = Extensions.PosSystemApiResponseExtensions.ToIntentData(response);
                     bundle.PutString(PosSystemApiServiceContract.KeyStatusCode, intentData.StatusCode);
@@ -177,7 +174,6 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                     reply.Data = bundle;
 
                     replyTo.Send(reply);
-                    Log.Info(TAG, $"Replied {response.StatusCode} (correlationId={correlationId})");
                 }
                 catch (Exception ex)
                 {
