@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:resources="clr-namespace:fiskaltrust.AndroidLauncher.Resources"
+             x:Class="fiskaltrust.AndroidLauncher.ManageSpaceView">
+
+    <Grid Padding="20,0" RowSpacing="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="62" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="1"
+               Text="{x:Static resources:AppResources.ManageSpaceContent}"
+               FontSize="14"
+               HorizontalTextAlignment="Center"
+               LineBreakMode="WordWrap" />
+
+        <Label Grid.Row="2"
+               Text="{x:Static resources:AppResources.ManageSpaceWarning}"
+               FontSize="14"
+               FontAttributes="Bold"
+               HorizontalTextAlignment="Center"
+               LineBreakMode="WordWrap" />
+
+        <Button Grid.Row="3"
+                Margin="0,40,0,0"
+                Text="{x:Static resources:AppResources.ManageSpaceButton}"
+                BackgroundColor="#FF4444"
+                TextColor="Black"
+                WidthRequest="140"
+                HorizontalOptions="Center"
+                Clicked="OnClearDataClicked" />
+    </Grid>
+</ContentView>
