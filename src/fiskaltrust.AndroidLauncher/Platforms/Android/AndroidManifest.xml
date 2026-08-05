@@ -18,7 +18,7 @@
 		android:extractNativeLibs="true" 
 		android:usesCleartextTraffic="true">
 		<activity
-			android:name=".POSSystemAPIActivity"
+			android:name="eu.fiskaltrust.androidlauncher.PosSystemAPI"
 			android:exported="true"
 			android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
