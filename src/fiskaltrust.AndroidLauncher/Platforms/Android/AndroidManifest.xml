@@ -20,7 +20,7 @@
 		<activity
 			android:name="eu.fiskaltrust.androidlauncher.PosSystemAPI"
 			android:exported="true"
-			android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+			android:theme="@style/PosSystemApiOverlayTheme" />
 
 		<service
 			android:name="eu.fiskaltrust.androidlauncher.PosSystemAPIService"
