@@ -1,0 +1,91 @@
+name: Android Smoke Tests
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+env:
+  TEST_FOLDER: test/fiskaltrust.AndroidLauncher.SmokeTests
+  APP_PACKAGE: eu.fiskaltrust.androidlauncher
+
+jobs:
+  smoke-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 0
+          submodules: recursive
+          token: ${{ secrets.SUBMODULES_READ }}
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.x.x"
+
+      - name: Enable KVM group perms
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Download built APK
+        uses: actions/download-artifact@v4
+        with:
+          name: artifacts-android
+          path: artifacts-android
+
+      - name: Locate built APK
+        id: apk
+        run: |
+          APK_PATH=$(find artifacts-android -name "*-Signed.apk" | head -n 1)
+          echo "path=$APK_PATH" >> "$GITHUB_OUTPUT"
+
+      - name: Run smoke tests on emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          profile: pixel_7_pro
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: |
+            npm install -g appium
+            appium driver install uiautomator2
+            appium --port 4723 --allow-insecure=uiautomator2:adb_shell --log appium.log > /dev/null 2>&1 &
+            APPIUM_PID=$!
+            trap 'kill $APPIUM_PID 2>/dev/null' EXIT
+
+            npx wait-on tcp:4723 --timeout 60000
+
+            adb install -r "${{ steps.apk.outputs.path }}"
+
+            adb shell am start -W -n ${{env.APP_PACKAGE}}/${{env.APP_PACKAGE}}.MainActivity
+
+            dotnet test ${{env.TEST_FOLDER}} --filter "Category=possystemapi" -v normal --logger "trx;LogFileName=smoke-tests.trx" --results-directory TestResults
+        env:
+          CASHBOXID: ${{ secrets.SMOKETEST_CASHBOXID }}
+          ACCESSTOKEN: ${{ secrets.SMOKETEST_ACCESSTOKEN }}
+
+      - name: Publish Test Results
+        if: always()
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          check_name: Smoke Test Results
+          check_run: false
+          files: TestResults/*.trx
+
+      - name: Upload Appium log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: appium-log
+          path: appium.log
+          if-no-files-found: ignore

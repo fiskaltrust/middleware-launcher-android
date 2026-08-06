@@ -1,13 +1,148 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:fiskaltrust.AndroidLauncher"
+             xmlns:mi="http://www.aathifmahir.com/dotnet/2022/maui/icons"
              x:Class="fiskaltrust.AndroidLauncher.LogsPage"
+             Shell.NavBarIsVisible="False"
              Appearing="OnAppearing"
              Disappearing="OnDisappearing">
 
-    <ScrollView x:Name="Scroll">
-        <Label x:Name="LogView"
-               FontFamily="IosevkaRegular"/>
-    </ScrollView>
+    <Grid RowDefinitions="Auto,*">
+
+        <Grid Grid.Row="0" BackgroundColor="{StaticResource Primary}" IsClippedToBounds="True">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="56" />
+                <RowDefinition x:Name="DrawerBodyRow" Height="0" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Padding="16,0">
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnBarTapped" />
+                    <SwipeGestureRecognizer Direction="Down" Swiped="OnBarSwiped" />
+                    <SwipeGestureRecognizer Direction="Up" Swiped="OnBarSwiped" />
+                </Grid.GestureRecognizers>
+                <HorizontalStackLayout VerticalOptions="Center" Spacing="6">
+                    <Label x:Name="DateLabel"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource White}"
+                           VerticalOptions="Center" />
+                    <Image x:Name="ChevronIcon"
+                           Source="{mi:Material Icon=ArrowDropDown, IconColor=White}"
+                           HeightRequest="26"
+                           WidthRequest="26"
+                           VerticalOptions="Center" />
+                </HorizontalStackLayout>
+            </Grid>
+
+            <Grid Grid.Row="1"
+                  x:Name="DrawerBody"
+                  BackgroundColor="#EDEDED"
+                  RowDefinitions="*,Auto"
+                  VerticalOptions="Start"
+                  IsVisible="False">
+                <ScrollView Grid.Row="0" x:Name="DateListScroll">
+                    <VerticalStackLayout x:Name="DateList">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="local:LogDayItem">
+                                <Grid Padding="16,10">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnDateRowTapped" />
+                                    </Grid.GestureRecognizers>
+                                    <Grid.Triggers>
+                                        <DataTrigger TargetType="Grid" Binding="{Binding IsCurrent}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                                        </DataTrigger>
+                                    </Grid.Triggers>
+                                    <HorizontalStackLayout Spacing="10">
+                                        <Label Text="{Binding Label}" FontSize="15">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding IsCurrent}" Value="True">
+                                                    <Setter Property="TextColor" Value="{StaticResource White}" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                        <Label Text="Viewing"
+                                               FontSize="11"
+                                               FontAttributes="Bold"
+                                               TextColor="{StaticResource White}"
+                                               VerticalOptions="Center"
+                                               IsVisible="{Binding IsCurrent}" />
+                                    </HorizontalStackLayout>
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </ScrollView>
+
+                <Grid Grid.Row="1"
+                      x:Name="ExportButtonRow"
+                      ColumnDefinitions="*,*"
+                      Padding="16,10"
+                      ColumnSpacing="12">
+                    <Grid.GestureRecognizers>
+                        <SwipeGestureRecognizer Direction="Up" Swiped="OnBarSwiped" />
+                    </Grid.GestureRecognizers>
+                    <Button Grid.Column="0"
+                            x:Name="ExportCurrentButton"
+                            Text="Export current"
+                            Clicked="OnExportCurrentClicked"
+                            BackgroundColor="Transparent"
+                            TextColor="{StaticResource Primary}" />
+                    <Button Grid.Column="1"
+                            x:Name="ExportAllButton"
+                            Text="Export all"
+                            Clicked="OnExportAllClicked"
+                            BackgroundColor="Transparent"
+                            TextColor="{StaticResource Primary}" />
+                </Grid>
+
+                <Label x:Name="NoLogsPlaceholder"
+                       Grid.RowSpan="2"
+                       Text="No logs available"
+                       FontSize="14"
+                       TextColor="{StaticResource Gray500}"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Padding="16,24"
+                       IsVisible="False" />
+            </Grid>
+        </Grid>
+
+        <CollectionView Grid.Row="1"
+                        x:Name="LogView"
+                        VerticalScrollBarVisibility="Always"
+                        Scrolled="OnLogViewScrolled">
+            <CollectionView.Header>
+                <Grid x:Name="TruncatedLogBanner" RowDefinitions="Auto,Auto">
+                    <VerticalStackLayout Grid.Row="0" Padding="24,20" Spacing="8" HorizontalOptions="Center">
+                        <Image Source="{mi:Material Icon=InfoOutline, IconColor='#6E6E6E'}"
+                               HeightRequest="28"
+                               WidthRequest="28"
+                               HorizontalOptions="Center" />
+                        <Label x:Name="TruncatedLogText"
+                               FontSize="13"
+                               TextColor="{StaticResource Gray500}"
+                               HorizontalTextAlignment="Center" />
+                        <Button Text="Export full log"
+                                Clicked="OnExportCurrentClicked"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource Primary}"
+                                HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                    <BoxView Grid.Row="1" HeightRequest="1" BackgroundColor="#DDDDDD" />
+                </Grid>
+            </CollectionView.Header>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Label Text="{Binding}"
+                           FontFamily="IosevkaRegular"
+                           LineBreakMode="NoWrap" />
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
 
 </ContentPage>

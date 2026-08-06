@@ -1,23 +1,28 @@
 using System;
 using System.Collections.Generic;
-using fiskaltrust.ifPOS.v1.it;
+using fiskaltrust.ifPOS.v1.at;
 using fiskaltrust.Middleware.Abstractions;
 using fiskaltrust.Middleware.Interface.Client;
 using fiskaltrust.Middleware.Interface.Client.Http;
+using fiskaltrust.Middleware.Interface.Client.Http.ATSSCD;
 using fiskaltrust.Middleware.Interface.Client.Soap;
 
 namespace fiskaltrust.AndroidLauncher.Signing
 {
-    public class ITSSCDClientFactory : IClientFactory<IITSSCD>
+    public class ATSSCDClientFactory : IClientFactory<IATSSCD>
     {
-        private readonly Dictionary<string, IITSSCD> _scus;
+        private readonly Dictionary<string, IATSSCD> _scus;
+        private readonly Guid _cashboxId;
+        private readonly string _accessToken;
 
-        public ITSSCDClientFactory(Dictionary<string, IITSSCD> scus)
+        public ATSSCDClientFactory(Dictionary<string, IATSSCD> scus, Guid cashboxId, string accessToken)
         {
             _scus = scus;
+            _cashboxId = cashboxId;
+            _accessToken = accessToken;
         }
 
-        public IITSSCD CreateClient(ClientConfiguration configuration)
+        public IATSSCD CreateClient(ClientConfiguration configuration)
         {
             if (configuration is null)
             {
@@ -38,12 +43,19 @@ namespace fiskaltrust.AndroidLauncher.Signing
 
             return configuration.UrlType switch
             {
-                "rest" => HttpITSSCDFactory.CreateSSCDAsync(new HttpITSSCDClientOptions
+                "rest" => HttpATSSCDFactory.CreateSSCDAsync(new HttpATSSCDClientOptions
                 {
                     Url = new Uri(configuration.Url.Replace("rest://", "http://")),
                     RetryPolicyOptions = retryPolicyoptions
                 }).Result,
-                "http" or "https" or "net.tcp" or "wcf" => SoapITSSCDFactory.CreateSSCDAsync(new ClientOptions
+                "https" => SoapATSSCDFactory.CreateSSCDAsync(new SoapClientOptions
+                {
+                    Url = new Uri(configuration.Url),
+                    RetryPolicyOptions = retryPolicyoptions,
+                    CashboxId = _cashboxId,
+                    AccessToken = _accessToken
+                }).Result,
+                "http" or "net.tcp" or "wcf" => SoapATSSCDFactory.CreateSSCDAsync(new SoapClientOptions
                 {
                     Url = new Uri(configuration.Url),
                     RetryPolicyOptions = retryPolicyoptions

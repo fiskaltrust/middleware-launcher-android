@@ -70,7 +70,7 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                     .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
-                    .WriteTo.File(path: System.IO.Path.Combine(FileLoggerHelper.LogDirectory.FullName, FileLoggerHelper.LogFilename), rollingInterval: RollingInterval.Day, retainedFileCountLimit: 31)
+                    .WriteTo.File(path: System.IO.Path.Combine(FileLoggerHelper.LogDirectory.FullName, FileLoggerHelper.LogFilename), rollingInterval: RollingInterval.Day, retainedFileCountLimit: 31, shared: true)
                     .WriteTo.ApplicationInsights(telemetryConfiguration, TelemetryConverter.Traces, restrictedToMinimumLevel: LogEventLevel.Warning)
                     .WriteTo.Sink(new LogcatSink(AndroidLogger.TAG, logLevel))
                     .CreateLogger();
