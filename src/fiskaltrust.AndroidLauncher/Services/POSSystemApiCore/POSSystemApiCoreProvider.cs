@@ -1,5 +1,4 @@
-﻿using fiskaltrust.AndroidLauncher.Activitites;
-using fiskaltrust.AndroidLauncher.Services.Configuration;
+﻿using fiskaltrust.AndroidLauncher.Services.Configuration;
 using fiskaltrust.AndroidLauncher.Storage;
 using fiskaltrust.Api.PosSystem.Core;
 using fiskaltrust.Api.PosSystem.Core.Interfaces;
@@ -38,7 +37,7 @@ namespace fiskaltrust.AndroidLauncher.Services.POSSystemApiCore
             var services = new ServiceCollection();
             await bootstrapper.ConfigureServices(services);
 
-            services.AddSingleton<IMiddlewareClient>(_ =>PosSystemAPIActivity.LocalMiddlewareServiceInstance.MiddlewareClientAndroid);           
+            services.AddSingleton<IMiddlewareClient>(_ => LauncherRuntimeState.LocalMiddlewareServiceInstance!.MiddlewareClientAndroid);           
             services.AddSingleton<IOperationItemRepository, MemoryOperationItemRepository>();
             services.AddSingleton<IStorageFactory, StorageFactory>();
 

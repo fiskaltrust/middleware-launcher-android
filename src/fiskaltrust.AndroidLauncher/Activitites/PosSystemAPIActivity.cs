@@ -2,24 +2,15 @@ using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Util;
-using fiskaltrust.AndroidLauncher.AndroidService;
+using Android.Widget;
 using fiskaltrust.AndroidLauncher.Constants;
 using fiskaltrust.AndroidLauncher.Extensions;
-using fiskaltrust.AndroidLauncher.Helpers;
 using fiskaltrust.AndroidLauncher.Services;
-using fiskaltrust.Api.PosSystem.Core;
 using fiskaltrust.Api.PosSystem.Core.Models;
-using fiskaltrust.ifPOS.v2;
-using Microsoft.Extensions.Logging;
-using System.Text;
-using System.Text.Json;
+using System.Reflection;
 
 namespace fiskaltrust.AndroidLauncher.Activitites
-{
-    /// <summary>
-    /// Activity that handles Intent-based POS System API calls.
-    /// Routes /sign and /echo to local middleware, other endpoints to cloud PosSystemAPI.
-    /// </summary>
+{   
     [Activity(
         Label = "PosSystemAPI",
         Name = "eu.fiskaltrust.androidlauncher.PosSystemAPI",
@@ -27,47 +18,43 @@ namespace fiskaltrust.AndroidLauncher.Activitites
         Exported = true)]
     public class PosSystemAPIActivity : Activity
     {
-        public static LocalMiddlewareLauncher? LocalMiddlewareServiceInstance { get; set; }
-
-        public static PosSystemApiCore? posSystemApiCore { get; set; }
-
         private const string TAG = "PosSystemAPI";
+        private readonly PosSystemApiRequestHandler _requestHandler;
 
-        // Local endpoints that should be handled by the local middleware (defaults without version)
-        private static readonly HashSet<string> LocalEndpoints = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        public PosSystemAPIActivity()
         {
-            "/sign",
-            "/v2/sign",
-            "/echo",
-            "/v2/echo",
-            "/journal",
-            "/v2/journal",
-        };
+            _requestHandler = new PosSystemApiRequestHandler(SetProgressText);
+        }
 
         protected override void OnCreate(Bundle? savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
+            SetContentView(ResolveLayoutId("pos_system_api_activity"));
+            PopulateEndpointPreview(Intent);
+
             Log.Info(TAG, "PosSystemAPI Activity started");
 
             // Process the intent asynchronously
-            Task.Run(async () => await ProcessIntentAsync());
+            Task.Run(ProcessIntentAsync);
         }
 
         private async Task ProcessIntentAsync()
         {
+            PosSystemApiResponse response;
             try
             {
                 var intent = Intent;
                 if (intent == null)
                 {
                     Log.Error(TAG, "Intent is null");
-                    FinishWithError(500, "Intent is null");
+                    response = PosSystemApiResponse.Error(500, "Intent is null");
+                    FinishWithResponse(response);
                     return;
                 }
 
                 // Parse the intent into a DTO
-                PosSystemApiRequest request;              
+                PosSystemApiRequest request;
 
                 try
                 {
@@ -77,220 +64,25 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                 catch (ArgumentException ex)
                 {
                     Log.Error(TAG, $"Invalid request: {ex.Message}");
-                    FinishWithError(400, ex.Message);
+                    response = PosSystemApiResponse.Error(400, ex.Message);
+                    FinishWithResponse(response);
                     return;
                 }
 
-                // Validate endpoint version - only support defaults (no version) and /v2
-                if (!request.IsValidVersion())
-                {
-                    Log.Error(TAG, $"Unsupported endpoint version: {request.Path}");
-                    FinishWithError(400, $"Unsupported endpoint version. Only default endpoints (e.g., /sign, /echo) and /v2/* endpoints are supported. Please do not use /v0/* or /v1/* versions.");
-                    return;
-                }
-
-                // Determine if this is a local or cloud endpoint
-                var isLocalEndpoint = request.IsLocalEndpoint(LocalEndpoints);
-
-                if (isLocalEndpoint)
-                {
-                    Log.Info(TAG, $"Routing to local middleware: {request.Path}");
-                    await MakeLocalRequestAsync(request);
-                }
-                else
-                {
-                    Log.Info(TAG, $"Routing to cloud PosSystemAPI: {request.Path}");
-                    await MakeCloudRequestAsync(request);
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(TAG, $"Unexpected error: {ex}");
-                FinishWithError(500, $"Internal error: {ex.Message}");
-            }
-        }
-
-        private async Task MakeLocalRequestAsync(PosSystemApiRequest request)
-        {
-            await EnsureSystemReadyAsync((Guid)request.CashBoxId!, request.AccessToken).ConfigureAwait(false);
-            var SupportedPaths = new[] { "/v2/echo", "/v2/sign", "/v2/journal" };
-            if (!SupportedPaths.Contains(request.Path, StringComparer.OrdinalIgnoreCase))
-            {
-                var notSupportedResponse = Api.PosSystem.Core.Models.PosSystemApiResponse.Error( 400, $"The selected path '{request.Path}' and method '{request.Method}' is not supported.");
-
-                FinishWithResponse(notSupportedResponse);
-                return;
-            }
-
-            // Check if this is a /v2/echo request with null Message to trigger service restart
-            if (string.Equals(request.Path, "/v2/echo", StringComparison.OrdinalIgnoreCase))
-            {
-                    var echoRequest = JsonSerializer.Deserialize<EchoRequest>(request.Body ?? "");
-                    if (echoRequest?.Message == null)
-                    {
-                        Log.Info(TAG, "Detected /v2/echo request with null Message - triggering service restart");
-                        await RestartMiddlewareLauncherServiceAsync((Guid)request.CashBoxId, request.AccessToken);
-                    }
-            }
-
-            try
-            {
-                var response = await posSystemApiCore.HandleAsync(request).ConfigureAwait(false);
-                FinishWithResponse(response);
-                return;
-            }
-            catch (Exception ex)
-            {
-                Log.Error(TAG, $"Failed to process {request.Path.Split('/').Last()} request: {ex.Message}");
-                var errorResponse = Api.PosSystem.Core.Models.PosSystemApiResponse.Error(500, $"Failed to process {request.Path.Split('/').Last()} request: {ex.Message}");
-                FinishWithResponse(errorResponse);
-                return;
-            }
-        }
-
-        private async Task RestartMiddlewareLauncherServiceAsync(Guid cashBoxId, string accessToken)
-        {
-            try
-            {
-                Log.Info(TAG, "Starting MiddlewareLauncherService restart process");
-                await StartMiddlewareLauncherServiceAsync(cashBoxId, accessToken);
-
-                Log.Info(TAG, "MiddlewareLauncherService restart process completed");
-            }
-            catch (Exception ex)
-            {
-                Log.Error(TAG, $"Failed to restart MiddlewareLauncherService: {ex.Message}");
-            }
-        }
-
-        public async Task StartMiddlewareLauncherServiceAsync(Guid cashBoxId, string accessToken)
-        {
-            LocalMiddlewareServiceInstance = null;
-            var isSandbox = true;
-            var enableCloseButton = false;
-            var logLevel = LogLevel.Debug;
-            try
-            {
-                MiddlewareLauncherService.Stop();
-            }
-            catch { }
-
-            using var bundle = new Bundle();
-            bundle.PutString("cashboxid", cashBoxId.ToString());
-            bundle.PutString("accesstoken", accessToken);
-            bundle.PutBoolean("sandbox", isSandbox);
-            bundle.PutString("loglevel", logLevel.ToString());
-            bundle.PutBoolean("enableCloseButton", enableCloseButton);
-
-            PowerManagerHelper.AskUserToDisableBatteryOptimization(Android.App.Application.Context);
-            MiddlewareLauncherService.Start(cashBoxId.ToString(), accessToken, isSandbox, logLevel, new Dictionary<string, object> { }, enableCloseButton);
-            await WaitForLocalMiddlewareServiceInitializationAsync();
-        }
-
-        private async Task WaitForLocalMiddlewareServiceInitializationAsync()
-        {
-            const int maxWaitTimeMs = 30000; // 30 seconds timeout
-            const int pollIntervalMs = 500;   // Check every 500ms
-
-            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-
-            Log.Info(TAG, "Waiting for LocalMiddlewareServiceInstance to be initialized...");
-
-            while (stopwatch.ElapsedMilliseconds < maxWaitTimeMs)
-            {
-                if (LocalMiddlewareServiceInstance != null && LocalMiddlewareServiceInstance.IsRunning)
-                {
-                    Log.Info(TAG, $"LocalMiddlewareServiceInstance initialized after {stopwatch.ElapsedMilliseconds}ms");
-                    return;
-                }
-
-                await Task.Delay(pollIntervalMs);
-            }
-
-            Log.Warn(TAG, $"Timeout waiting for LocalMiddlewareServiceInstance initialization after {stopwatch.ElapsedMilliseconds}ms");
-            throw new TimeoutException("LocalMiddlewareServiceInstance failed to initialize within the expected time");
-        }
-
-        private async Task MakeCloudRequestAsync(PosSystemApiRequest request)
-        {
-            using var httpClient = new HttpClient();
-            httpClient.Timeout = TimeSpan.FromMinutes(5);
-
-            try
-            {
-                var baseUrl = Urls.POSSYSTEM_API_SANDBOX;
-                var path = request.Path;
-                if (!path.StartsWith("/v2", StringComparison.OrdinalIgnoreCase))
-                {
-                    path = "/v2" + path;
-                }
-                var url = baseUrl.TrimEnd('/') + path;
-                Log.Info(TAG, $"Making cloud HTTP request to {url}");
-
-                // Create HTTP request
-                var httpRequest = new HttpRequestMessage(new HttpMethod(request.Method), url);
-
-                // Add headers (skip certain headers that HttpClient handles automatically)
-                var skipHeaders = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-                {
-                    "Host", "Content-Length", "Connection"
-                };
-
-                foreach (var header in request.Headers)
-                {
-                    if (skipHeaders.Contains(header.Key))
-                    {
-                        continue;
-                    }
-
-                    try
-                    {
-                        if (header.Key.Equals("Content-Type", StringComparison.OrdinalIgnoreCase))
-                        {
-                            // Content-Type will be set with content
-                            continue;
-                        }
-                        httpRequest.Headers.TryAddWithoutValidation(header.Key, header.Value);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Warn(TAG, $"Failed to add header {header.Key}: {ex.Message}");
-                    }
-                }
-
-                // Add body if present
-                if (!string.IsNullOrEmpty(request.Body))
-                {
-                    var contentType = request.Headers.TryGetValue("Content-Type", out var ct) ? ct : "application/json";
-                    httpRequest.Content = new StringContent(request.Body, Encoding.UTF8, contentType);
-                }
-
-                // Send request
-                var httpResponse = await httpClient.SendAsync(httpRequest);
-
-                Log.Info(TAG, $"Received cloud response: {(int)httpResponse.StatusCode}");
-
-                // Convert HTTP response to our DTO
-                var response = await PosSystemApiResponseExtensions.FromHttpResponseAsync(httpResponse).ConfigureAwait(false);
+                response = await _requestHandler.HandleAsync(request).ConfigureAwait(false);
                 FinishWithResponse(response);
             }
-            catch (HttpRequestException ex)
+            catch (InvalidOperationException ex)
             {
-                Log.Error(TAG, $"Cloud HTTP request failed: {ex.Message}");
-                var errorResponse = PosSystemApiResponse.Error(502, $"Failed to communicate with cloud PosSystemAPI: {ex.Message}");
-                FinishWithResponse(errorResponse);
+                Log.Error(TAG, $"Request processing failed: {ex}");
+                response = PosSystemApiResponse.Error(500, $"Internal error: {ex.Message}");
+                FinishWithResponse(response);
             }
-            catch (TaskCanceledException ex)
+            catch (TimeoutException ex)
             {
-                Log.Error(TAG, $"Cloud request timeout: {ex.Message}");
-                var errorResponse = PosSystemApiResponse.Error(504, "Request timeout");
-                FinishWithResponse(errorResponse);
-            }
-            catch (Exception ex)
-            {
-                Log.Error(TAG, $"Cloud request processing failed: {ex}");
-                var errorResponse = PosSystemApiResponse.Error(500, $"Request processing failed: {ex.Message}");
-                FinishWithResponse(errorResponse);
+                Log.Error(TAG, $"Request processing timeout: {ex}");
+                response = PosSystemApiResponse.Error(500, $"Internal error: {ex.Message}");
+                FinishWithResponse(response);
             }
         }
 
@@ -320,7 +112,11 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                     var contentForLog = response.Content is ResponseBody.Text t ? t.Value : "(binary)";
                     Log.Info(TAG, $"Finishing with response: {response.StatusCode} - {(response.IsSuccess ? "Success" : "Error")} - {contentForLog}");
                 }
-                catch (Exception ex)
+                catch (InvalidOperationException ex)
+                {
+                    Log.Error(TAG, $"Failed to set response result: {ex}");
+                }
+                catch (ArgumentException ex)
                 {
                     Log.Error(TAG, $"Failed to set response result: {ex}");
                 }
@@ -331,34 +127,43 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             });
         }
 
-        private void FinishWithError(int statusCode, string errorMessage)
+        private static int ResolveLayoutId(string layoutName)
         {
-            var errorResponse = PosSystemApiResponse.Error(statusCode, errorMessage);
-            FinishWithResponse(errorResponse);
+            var field = typeof(Resource.Layout).GetField(layoutName, BindingFlags.Public | BindingFlags.Static);
+            if (field?.GetValue(null) is int layoutId && layoutId != 0)
+                return layoutId;
+
+            throw new InvalidOperationException($"Layout resource '{layoutName}' was not found.");
         }
-        private async Task EnsureSystemReadyAsync(Guid cashBoxId, string accessToken, CancellationToken cancellationToken = default)
+
+        private static int ResolveId(string idName)
         {
-            const int maxWaitTimeMs = 10_000;
-            const int pollIntervalMs = 100;
+            var field = typeof(Resource.Id).GetField(idName, BindingFlags.Public | BindingFlags.Static);
+            if (field?.GetValue(null) is int id && id != 0)
+                return id;
 
-            if (LocalMiddlewareServiceInstance == null || !LocalMiddlewareServiceInstance.IsRunning)
+            throw new InvalidOperationException($"View id '{idName}' was not found.");
+        }
+        private void PopulateEndpointPreview(Intent? intent)
+        {
+            var endpointTextView = FindViewById<TextView>(ResolveId("pos_system_api_endpoint"));
+            
+            var method = intent?.GetStringExtra(PosSystemAPIActivityIntentStatics.EXTRA_METHOD);
+            var path = intent?.GetStringExtra(PosSystemAPIActivityIntentStatics.EXTRA_PATH);        
+
+            endpointTextView.Text = $"{method.ToUpperInvariant()} {path}";
+        }        
+        private void SetProgressText(string text)
+        {
+            RunOnUiThread(() =>
             {
-                Log.Info(TAG, "Local middleware not running - triggering service restart");
-                await RestartMiddlewareLauncherServiceAsync(cashBoxId, accessToken);
-            }
+                var progressTextView = FindViewById<TextView>(ResolveId("pos_system_api_stage"));
+                if (progressTextView == null)
+                    return;
 
-            var waitedMs = 0;
-
-            while (posSystemApiCore == null && waitedMs < maxWaitTimeMs)
-            {
-                await Task.Delay(pollIntervalMs, cancellationToken);
-                waitedMs += pollIntervalMs;
-            }
-
-            if (posSystemApiCore == null)
-            {
-                throw new TimeoutException("POS system API core did not become ready in time.");
-            }
+                progressTextView.Text = text;
+            });
+           
         }
 
     }
