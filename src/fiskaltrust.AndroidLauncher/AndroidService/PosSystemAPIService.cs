@@ -11,8 +11,7 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
 {
     [Service(
         Name = "eu.fiskaltrust.androidlauncher.PosSystemAPIService",
-        Exported = true,
-        Permission = PosSystemApiServiceContract.Permission)]
+        Exported = true)]
     public class PosSystemAPIService : Service
     {
         private const string TAG = "PosSystemAPIService";
