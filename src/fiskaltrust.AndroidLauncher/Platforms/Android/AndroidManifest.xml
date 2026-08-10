@@ -8,7 +8,7 @@
 	-->
 	<permission
 		android:name="eu.fiskaltrust.androidlauncher.permission.POSSYSTEMAPI"
-		android:protectionLevel="signature" />
+		android:protectionLevel="normal" />
 
 	<application 
 		android:allowBackup="true" 
