@@ -243,7 +243,7 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
 
             if (enableCloseButton)
             {
-                Intent intent = new Intent(BroadcastConstants.HttpStopBroadcastName);
+                Intent intent = new Intent(BroadcastConstants.StopBroadcastName);
                 intent.SetPackage(Android.App.Application.Context.PackageName);
 
                 PendingIntent pendingIntent = PendingIntent.GetBroadcast(Android.App.Application.Context, 0, intent, PendingIntentFlags.Immutable);

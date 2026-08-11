@@ -2,7 +2,6 @@
 {
     public class BroadcastConstants
     {
-        public const string HttpStartBroadcastName = "eu.fiskaltrust.androidlauncher.Start";
-        public const string HttpStopBroadcastName = "eu.fiskaltrust.androidlauncher.Stop";
+        public const string StopBroadcastName = "eu.fiskaltrust.androidlauncher.Stop";
     }
 }
