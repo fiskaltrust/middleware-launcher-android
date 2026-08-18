@@ -1,11 +1,16 @@
+using Android.Content.Res;
 using Android.Util;
 using fiskaltrust.AndroidLauncher.AndroidService;
 using fiskaltrust.AndroidLauncher.Constants;
 using fiskaltrust.AndroidLauncher.Extensions;
 using fiskaltrust.AndroidLauncher.Helpers;
+using fiskaltrust.AndroidLauncher.Services.InStoreApp;
 using fiskaltrust.Api.PosSystem.Core.Models;
+using fiskaltrust.Api.PosSystem.Core.v2.Pay.Models;
 using fiskaltrust.ifPOS.v2;
+using fiskaltrust.Payment;
 using Microsoft.Extensions.Logging;
+using System.Net;
 using System.Text;
 using System.Text.Json;
 
@@ -24,6 +29,8 @@ namespace fiskaltrust.AndroidLauncher.Services
             "/v2/echo",
             "/journal",
             "/v2/journal",
+            "/pay",
+            "/v2/pay",
         };
 
         public PosSystemApiRequestHandler(Action<string>? progressReporter = null)
@@ -63,11 +70,8 @@ namespace fiskaltrust.AndroidLauncher.Services
         }
 
         private async Task<PosSystemApiResponse> MakeLocalRequestAsync(PosSystemApiRequest request)
-        {
-            _progressReporter?.Invoke(ActivityStages.STAGE_STARTING_MIDDLEWARE);
-            await EnsureSystemReadyAsync((Guid)request.CashBoxId!, request.AccessToken).ConfigureAwait(false);
-
-            var supportedPaths = new[] { "/v2/echo", "/v2/sign", "/v2/journal" };
+        {            
+            var supportedPaths = new[] { "/v2/echo", "/v2/sign", "/v2/journal", "/v2/pay" };
             if (!supportedPaths.Contains(request.Path, StringComparer.OrdinalIgnoreCase))
             {
                 return PosSystemApiResponse.Error(
@@ -88,6 +92,8 @@ namespace fiskaltrust.AndroidLauncher.Services
 
             try
             {
+                _progressReporter?.Invoke(ActivityStages.STAGE_STARTING_MIDDLEWARE);
+                await EnsureSystemReadyAsync((Guid)request.CashBoxId!, request.AccessToken).ConfigureAwait(false);
                 _progressReporter?.Invoke(ActivityStages.STAGE_STARTING_CORE);
                 var core = LauncherRuntimeState.PosSystemApiCore
                     ?? throw new InvalidOperationException("PosSystemApiCore is not initialized.");
@@ -184,17 +190,22 @@ namespace fiskaltrust.AndroidLauncher.Services
                 Log.Info(TAG, "Local middleware not running - triggering service restart");
                 _progressReporter?.Invoke(ActivityStages.STAGE_STARTING_MIDDLEWARE);
                 await RestartMiddlewareLauncherServiceAsync(cashBoxId, accessToken).ConfigureAwait(false);
-            }
-
-            _progressReporter?.Invoke(ActivityStages.STAGE_STARTING_CORE);
+            }           
             var waitedMs = 0;
             while (LauncherRuntimeState.PosSystemApiCore == null && waitedMs < maxWaitTimeMs)
             {
+                if (LauncherRuntimeState.LocalMiddlewareServiceInstance != null && LauncherRuntimeState.LocalMiddlewareServiceInstance.IsRunning)
+                { 
+                    _progressReporter?.Invoke(ActivityStages.STAGE_STARTING_CORE);
+                }
                 await Task.Delay(pollIntervalMs, cancellationToken).ConfigureAwait(false);
                 waitedMs += pollIntervalMs;
             }
-
-            if (LauncherRuntimeState.PosSystemApiCore == null)
+            if (LauncherRuntimeState.LocalMiddlewareServiceInstance == null)
+            {
+                throw new TimeoutException("Middleware did not become ready in time.");
+            }
+            else if (LauncherRuntimeState.PosSystemApiCore == null)
             {
                 throw new TimeoutException("POS system API core did not become ready in time.");
             }
@@ -253,5 +264,6 @@ namespace fiskaltrust.AndroidLauncher.Services
             Log.Warn(TAG, $"Timeout waiting for LocalMiddlewareServiceInstance initialization after {stopwatch.ElapsedMilliseconds}ms");
             throw new TimeoutException("LocalMiddlewareServiceInstance failed to initialize within the expected time");
         }
+        
     }
 }

@@ -75,10 +75,7 @@
 		<!-- .NET 10 ships System.Linq.AsyncEnumerable natively; exclude compile-time assets of the
 		     third-party System.Linq.Async pulled transitively via middleware to avoid CS0121 ambiguity. -->
 		<PackageReference Include="System.Linq.Async" Version="6.0.1" ExcludeAssets="compile" />
-		<PackageReference Include="Nerdbank.GitVersioning"
-									Version="3.10.91"
-									PrivateAssets="all"
-									Condition="!Exists('packages.config')" />
+		<PackageReference Include="Nerdbank.GitVersioning" Version="3.10.91" PrivateAssets="all" Condition="!Exists('packages.config')" />
 	</ItemGroup>
 
 	<ItemGroup>
