@@ -6,6 +6,7 @@ using fiskaltrust.AndroidLauncher.Exceptions;
 using fiskaltrust.AndroidLauncher.Helpers.Logging;
 using fiskaltrust.AndroidLauncher.Notifications;
 using fiskaltrust.AndroidLauncher.Services.Configuration;
+using fiskaltrust.AndroidLauncher.Services.InStoreApp;
 using fiskaltrust.AndroidLauncher.Services.POSSystemApiCore;
 using fiskaltrust.AndroidLauncher.Storage;
 using fiskaltrust.Api.PosSystem.Core;
@@ -60,6 +61,25 @@ internal class PosSystemAPIProvider {
         progressReporter?.Invoke(ActivityStages.STAGE_GETTING_CONFIGURATION);
         var (configuration, isSandbox) = await _configurationProvider.GetCashboxConfigurationAsync(cashboxId, accessToken);
 
+        bool localInstoreAppCommunication = false;
+        {
+            var helperConfigurations = configuration?.helpers
+            ?.Where(h => h.Package == "fiskaltrust.Middleware.Helper.LocalPosSystemApi");
+
+            if (helperConfigurations?.Count() >= 1)
+            {
+                throw new InvalidOperationException($"Multiple LocalPosSystemApi helpers found in the cashbox. Only one helper per cashbox is allowed.");
+            }
+
+            if (helperConfigurations?.Count() == 1) {
+                localInstoreAppCommunication = helperConfigurations
+                    .First()
+                    .Configuration
+                    .TryGetValue("UseLocalInstoreAppCommunication", out var useLocalInstoreAppCommunication)
+                    && string.Equals(useLocalInstoreAppCommunication.ToString(), "true", StringComparison.CurrentCultureIgnoreCase);
+            }
+        }
+
         progressReporter?.Invoke(ActivityStages.STAGE_STARTING_MIDDLEWARE);
         var middlewareTelemetryInitializer = new MiddlewareTelemetryInitializer("fiskaltrust.AndroidLauncher", VersionTracking.CurrentVersion, cashboxId);
 
@@ -70,7 +90,6 @@ internal class PosSystemAPIProvider {
         LauncherLogging.InitializeWithTelemetry(telemetryConfiguration, logLevel);
 
         Log.Logger.Information("Starting the fiskaltrust.Middleware...");
-
 
         Log.Logger.Debug($"CashBox ID: {cashboxId}, IsSandbox: {isSandbox}");
         _middlewareProvider = new MiddlewareProvider(cashboxId, accessToken, configuration, isSandbox, logLevel);
@@ -95,7 +114,15 @@ internal class PosSystemAPIProvider {
             var services = new ServiceCollection();
             await bootstrapper.ConfigureServices(services);
 
+
             services.AddSingleton(_middlewareProvider.MiddlewareClientAndroid);
+            if (localInstoreAppCommunication)
+            {
+                Log.Logger.Information("Using local InStoreAppService for communication with the InStoreApp.");
+                services.AddSingleton<IInStoreAppService, InStoreAppServiceLocal>();
+            } else {
+                services.AddSingleton<IInStoreAppService, Api.PosSystem.Core.InStoreApp.InStoreAppService>();
+            }
             services.AddSingleton<IOperationItemRepository, MemoryOperationItemRepository>();
             services.AddSingleton<IStorageFactory, StorageFactory>();
 
