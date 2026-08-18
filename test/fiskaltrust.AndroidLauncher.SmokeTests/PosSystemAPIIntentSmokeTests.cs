@@ -7,13 +7,13 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
 {
     [TestFixture]
     [Category("possystemapi")]
-    public class PosSystemAPIActivitySmokeTests
+    public class PosSystemAPIIntentSmokeTests
     {
         private const string ActivityTestActivity = "eu.fiskaltrust.androidlauncher.testclient.ActivityTestActivity";
         private const string LogTag = "ActivityTest";
 
         [Test]
-        public async Task Echo_ShouldReturn201_WhenSentViaActivity()
+        public async Task Echo_ShouldReturn201_WhenSentViaPosSystemAPIIntent()
         {
             var headers = TestAppLauncher.BuildHeaders(TestConstants.Http.CashboxId, TestConstants.Http.AccessToken);
             var body = System.Text.Json.JsonSerializer.Serialize(new { Message = "Ping" });
@@ -24,7 +24,7 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
         }
 
         [Test]
-        public async Task Sign_ShouldReturn201_WhenInitialOperationReceiptSentViaActivity()
+        public async Task Sign_ShouldReturn201_WhenInitialOperationReceiptSentViaPosSystemAPIIntent()
         {
             var headers = TestAppLauncher.BuildHeaders(TestConstants.Http.CashboxId, TestConstants.Http.AccessToken);
             var body = TestConstants.InitialOperationReceipt
