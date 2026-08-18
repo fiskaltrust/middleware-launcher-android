@@ -26,7 +26,7 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
 
             RunAdb("logcat -c");
 
-            using var logcat = Process.Start(new ProcessStartInfo("adb", "logcat")
+                        using var logcat = Process.Start(new ProcessStartInfo("adb", $"logcat -v brief PosSystemAPI:I PosSystemAPIService:I {logTag}:I *:S")
             {
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
@@ -51,10 +51,6 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
                     var line = await readLineTask;
                     if (line == null)
                         break;
-
-                    var isRelevant = line.Contains("PosSystemAPI:") || line.Contains("PosSystemAPIService:") || line.Contains($"{logTag}:");
-                    if (!isRelevant)
-                        continue;
 
                     TestContext.Out.WriteLine($"[LOGCAT] {line.Trim()}");
 
