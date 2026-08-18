@@ -26,7 +26,7 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
 
             RunAdb("logcat -c");
 
-                        using var logcat = Process.Start(new ProcessStartInfo("adb", $"logcat -v brief PosSystemAPI:I PosSystemAPIService:I {logTag}:I *:S")
+            using var logcat = Process.Start(new ProcessStartInfo("adb", $"logcat PosSystemAPI:I PosSystemAPIService:I {logTag}:I *:S")
             {
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
