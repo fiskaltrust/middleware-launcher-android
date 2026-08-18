@@ -6,8 +6,8 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
     {
         public static class Http
         {
-            public static readonly string CashboxId = Environment.GetEnvironmentVariable("CASHBOXID") ?? "82229ac9-bad3-4198-a019-62a3eb85a1dd";
-            public static readonly string AccessToken = Environment.GetEnvironmentVariable("ACCESSTOKEN") ?? "BHn+czLqDAIKIZEL1OJNKaqS97DCCm4JQFQ+p97yem01q4fW5u6ipFQDgC0jHykqzl24flaNxx88gEbgmZz9hrM=";
+            public static readonly string CashboxId = Environment.GetEnvironmentVariable("CASHBOXID") ?? "486fedc5-d200-465c-9b68-0c26dd6c0f72";
+            public static readonly string AccessToken = Environment.GetEnvironmentVariable("ACCESSTOKEN") ?? "BMcBfKxQbmBaL7ydBuyhqwz5FwO+yMvQsyfo6Vci/fcTkfjGn/13NvtpuvOHiLN5wr8/TGQia750708eTZoio3o=";
             public static readonly string Url = Environment.GetEnvironmentVariable("URL")?.Replace("rest://", "http://") ?? "http://localhost:1500/c3a2c180-fa33-482a-bcdc-a4cb57515564";
         }
 

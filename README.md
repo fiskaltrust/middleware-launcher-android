@@ -56,46 +56,39 @@ The creation of .DAT files is exclusively handled by the TSE during the startup 
 
 ## Smoke Tests
 
-End-to-end tests covering the Intent-based PosSystemAPI flow (echo + sign receipt) via Appium.
+End-to-end tests covering the PosSystemAPI (echo + sign receipt) through both integration surfaces: the Activity (intent-based) and the bound Service (Messenger-based). A small standalone app, [`fiskaltrust.AndroidLauncher.PosSystemApiTestClient`](test/fiskaltrust.AndroidLauncher.PosSystemApiTestClient), acts as a real third-party POS client - it binds to the Service / starts the Activity from its own process, and reports the result to logcat. The tests drive `adb` directly.
 
 ### Requirements
 
-- [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
+- .NET 10 SDK
 - JDK 21 (`JAVA_HOME` must be set, or discoverable by the .NET Android build)
 - `adb` on `PATH` (part of Android SDK / Android Studio)
-- [Node.js](https://nodejs.org/) + Appium 2 with UIAutomator2 driver:
-  ```sh
-  npm install -g appium
-  appium driver install uiautomator2
-  ```
 - Android emulator (API 24+, x86\_64) or a connected physical device
-
-The APK is built and installed automatically on first run (or when source files change).
 
 ### Before running
 
-Start Appium in a separate terminal and leave it running:
+Build and install both apps onto the emulator/device:
 ```sh
-appium --allow-insecure=adb_shell
+dotnet build src/fiskaltrust.AndroidLauncher/fiskaltrust.AndroidLauncher.csproj -f net10.0-android -t:Install -p:RuntimeIdentifier=android-x64
+dotnet build test/fiskaltrust.AndroidLauncher.PosSystemApiTestClient/fiskaltrust.AndroidLauncher.PosSystemApiTestClient.csproj -f net10.0-android -t:Install -p:RuntimeIdentifier=android-x64
 ```
+Re-run these whenever the respective app's source changes, or after clearing app data (`adb shell pm clear <package>`) — a plain `adb install` is not enough for .NET-for-Android's Debug builds (see `EmbedAssembliesIntoApk` if you need a plain APK to be installable on its own, e.g. in CI).
 
 ### Running
 
 ```sh
-dotnet test test/fiskaltrust.AndroidLauncher.SmokeTests
+dotnet test test/fiskaltrust.AndroidLauncher.SmokeTests --filter "Category=possystemapi"
 ```
 
 ### Credentials
 
 Default sandbox credentials are defined in [`test/fiskaltrust.AndroidLauncher.SmokeTests/TestConstants.cs`](test/fiskaltrust.AndroidLauncher.SmokeTests/TestConstants.cs). Override them via environment variables if needed:
 
-| Variable      | Description                                                                               |
-|---------------|-------------------------------------------------------------------------------------------|
-| `CASHBOXID`   | Cashbox GUID                                                                              |
-| `ACCESSTOKEN` | Access token                                                                              |
-| `APPIUM_URL`  | Appium server URL (default: `http://127.0.0.1:4723`)                                      |
-| `DEVICE_UDID` | Target device (auto-detected if only one is connected)                                    |
-| `ANDROID_RID` | Runtime identifier (default: `android-x64`; use `android-arm64` for physical ARM devices) |
+| Variable        | Description                                                             |
+|-----------------|--------------------------------------------------------------------------|
+| `CASHBOXID`     | Cashbox GUID                                                            |
+| `ACCESSTOKEN`   | Access token                                                            |
+| `ANDROID_SERIAL`| Target a specific device/emulator when more than one is connected (standard `adb` env var) |
 
 ## Contributing
 We welcome all kinds of contributions and feedback, e.g. via issues or pull requests, and want to thank every future contributors in advance!

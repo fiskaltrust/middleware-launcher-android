@@ -11,6 +11,7 @@ permissions:
 
 env:
   TEST_FOLDER: test/fiskaltrust.AndroidLauncher.SmokeTests
+  TEST_CLIENT_PROJECT: test/fiskaltrust.AndroidLauncher.PosSystemApiTestClient/fiskaltrust.AndroidLauncher.PosSystemApiTestClient.csproj
   APP_PACKAGE: eu.fiskaltrust.androidlauncher
 
 jobs:
@@ -29,6 +30,14 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "10.x.x"
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Install Android workload
+        run: dotnet workload install android
 
       - name: Enable KVM group perms
         run: |
@@ -57,15 +66,9 @@ jobs:
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: |
-            npm install -g appium
-            appium driver install uiautomator2
-            appium --port 4723 --allow-insecure=uiautomator2:adb_shell --log appium.log > /dev/null 2>&1 &
-            APPIUM_PID=$!
-            trap 'kill $APPIUM_PID 2>/dev/null' EXIT
-
-            npx wait-on tcp:4723 --timeout 60000
-
             adb install -r "${{ steps.apk.outputs.path }}"
+
+            dotnet build ${{env.TEST_CLIENT_PROJECT}} -f net10.0-android -t:Install -p:RuntimeIdentifier=android-x64
 
             adb shell am start -W -n ${{env.APP_PACKAGE}}/${{env.APP_PACKAGE}}.MainActivity
 
@@ -81,11 +84,3 @@ jobs:
           check_name: Smoke Test Results
           check_run: false
           files: TestResults/*.trx
-
-      - name: Upload Appium log
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: appium-log
-          path: appium.log
-          if-no-files-found: ignore
