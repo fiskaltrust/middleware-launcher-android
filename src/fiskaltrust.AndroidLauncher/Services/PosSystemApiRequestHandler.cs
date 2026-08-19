@@ -4,11 +4,13 @@ using fiskaltrust.AndroidLauncher.AndroidService;
 using fiskaltrust.AndroidLauncher.Constants;
 using fiskaltrust.AndroidLauncher.Extensions;
 using fiskaltrust.AndroidLauncher.Helpers;
+using fiskaltrust.AndroidLauncher.Services.Configuration;
 using fiskaltrust.AndroidLauncher.Services.InStoreApp;
 using fiskaltrust.Api.PosSystem.Core.Models;
 using fiskaltrust.Api.PosSystem.Core.v2.Pay.Models;
 using fiskaltrust.ifPOS.v2;
 using fiskaltrust.Payment;
+using fiskaltrust.storage.serialization.V0;
 using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Text;
@@ -20,7 +22,7 @@ namespace fiskaltrust.AndroidLauncher.Services
     {
         private const string TAG = "PosSystemAPI";
         private readonly Action<string>? _progressReporter;
-
+       
         private static readonly HashSet<string> LocalEndpoints = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             "/sign",
@@ -28,14 +30,12 @@ namespace fiskaltrust.AndroidLauncher.Services
             "/echo",
             "/v2/echo",
             "/journal",
-            "/v2/journal",
-            "/pay",
-            "/v2/pay",
+            "/v2/journal"
         };
 
         public PosSystemApiRequestHandler(Action<string>? progressReporter = null)
         {
-            _progressReporter = progressReporter;
+            _progressReporter = progressReporter;            
         }
 
         public async Task<PosSystemApiResponse> HandleAsync(PosSystemApiRequest request)
@@ -51,7 +51,8 @@ namespace fiskaltrust.AndroidLauncher.Services
                 }
 
                 var isLocalEndpoint = request.IsLocalEndpoint(LocalEndpoints);
-                if (isLocalEndpoint)
+                var isLocalPayment = request.Path.Contains("/pay", StringComparison.OrdinalIgnoreCase) && IsLocalPayment();
+                if (isLocalEndpoint || isLocalPayment)
                 {
                     Log.Info(TAG, $"Routing to local middleware: {request.Path}");
                     return await MakeLocalRequestAsync(request).ConfigureAwait(false);
@@ -265,5 +266,15 @@ namespace fiskaltrust.AndroidLauncher.Services
             throw new TimeoutException("LocalMiddlewareServiceInstance failed to initialize within the expected time");
         }
         
+        private bool IsLocalPayment()
+        {
+            if (LauncherRuntimeState.POSSystemApiCoreConfiguration == null)
+            {
+                throw new InvalidOperationException("Payment requests cannot be the first request because the POS System API Core is not running yet. Please send a StartReceipt request first.");
+            }
+            var cashBoxConfig = JsonSerializer.Deserialize<ftCashBoxConfiguration>(LauncherRuntimeState.POSSystemApiCoreConfiguration.Configuration);
+            var helpers = cashBoxConfig.helpers?.Where(h => h.Package == "fiskaltrust.Middleware.Helper.LocalPosSystemApi" && h.Configuration["UseLocalInstoreAppCommunication"].ToString().Equals("true", StringComparison.CurrentCultureIgnoreCase));
+            return helpers.Any();
+        }
     }
 }

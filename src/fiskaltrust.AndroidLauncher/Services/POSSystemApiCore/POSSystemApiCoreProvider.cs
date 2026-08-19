@@ -30,7 +30,7 @@ namespace fiskaltrust.AndroidLauncher.Services.POSSystemApiCore
                 AppEnvironment = IsSandbox ? AppEnvironments.Sandbox : AppEnvironments.Production,
                 LauncherEnvironment = LauncherEnvironments.Local
             };
-
+            LauncherRuntimeState.POSSystemApiCoreConfiguration = config;
             var bootstrapper = new POSCoreBootstrapper();
             var json = JsonConvert.SerializeObject(config);
             bootstrapper.Configuration = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
