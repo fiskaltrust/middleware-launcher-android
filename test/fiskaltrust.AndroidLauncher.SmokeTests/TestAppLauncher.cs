@@ -60,6 +60,13 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
                         if (match.Success)
                             return match.Groups[1].Value;
                     }
+
+                    if (line.Contains("PosSystemAPI:") && line.Contains("Finishing with response:"))
+                    {
+                        var match = Regex.Match(line, @"Finishing with response: (\d+)");
+                        if (match.Success)
+                            return match.Groups[1].Value;
+                    }
                 }
             }
             finally
