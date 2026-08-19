@@ -74,6 +74,12 @@ dotnet build test/fiskaltrust.AndroidLauncher.PosSystemApiTestClient/fiskaltrust
 ```
 Re-run these whenever the respective app's source changes, or after clearing app data (`adb shell pm clear <package>`) — a plain `adb install` is not enough for .NET-for-Android's Debug builds (see `EmbedAssembliesIntoApk` if you need a plain APK to be installable on its own, e.g. in CI).
 
+If you're only validating a cashbox and aren't changing the launcher's code, the first build command above can be skipped: download the launcher APK from the *Cashbox* section of the management portal instead (see [Getting started](#getting-started)) and install it directly:
+```sh
+adb install -r <downloaded>.apk
+```
+The test client (second command above) still has to be built from source - it isn't published anywhere.
+
 ### Running
 
 ```sh
