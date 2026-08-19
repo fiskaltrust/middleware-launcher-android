@@ -4,6 +4,7 @@ using fiskaltrust.AndroidLauncher.AndroidService;
 using fiskaltrust.AndroidLauncher.Constants;
 using fiskaltrust.AndroidLauncher.Extensions;
 using fiskaltrust.AndroidLauncher.Helpers;
+using fiskaltrust.AndroidLauncher.Services.Configuration;
 using fiskaltrust.AndroidLauncher.Services.InStoreApp;
 using fiskaltrust.AndroidLauncher.Notifications;
 using fiskaltrust.AndroidLauncher.Services.Configuration;
@@ -12,6 +13,7 @@ using fiskaltrust.Api.PosSystem.Core.Models;
 using fiskaltrust.Api.PosSystem.Core.v2.Pay.Models;
 using fiskaltrust.ifPOS.v2;
 using fiskaltrust.Payment;
+using fiskaltrust.storage.serialization.V0;
 using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Text;
@@ -42,7 +44,8 @@ namespace fiskaltrust.AndroidLauncher.Services
             try
             {
                 var isLocalEndpoint = request.IsLocalEndpoint(LocalEndpoints);
-                if (isLocalEndpoint)
+                var isLocalPayment = request.Path.Contains("/pay", StringComparison.OrdinalIgnoreCase) && IsLocalPayment();
+                if (isLocalEndpoint || isLocalPayment)
                 {
                     Log.Info(TAG, $"Routing to local middleware: {request.Path}");
                     return await MakeLocalRequestAsync(request, progressReporter).ConfigureAwait(false);
