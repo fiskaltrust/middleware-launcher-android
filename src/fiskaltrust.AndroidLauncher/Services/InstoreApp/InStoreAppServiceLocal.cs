@@ -1,21 +1,10 @@
-﻿using Android.Content;
-using Android.OS;
-using fiskaltrust.AndroidLauncher.Services.InStoreApp;
+﻿using fiskaltrust.AndroidLauncher.Services.InStoreApp;
 using fiskaltrust.Api.PosSystem.Core.Interfaces;
 using fiskaltrust.Api.PosSystem.Core.Models;
 using fiskaltrust.Api.PosSystem.Core.Payment.Hobex;
-using fiskaltrust.Api.PosSystem.Core.Payment.PayPal.Models;
 using fiskaltrust.Api.PosSystem.Core.v2.Pay.Models;
-using fiskaltrust.ifPOS.v1.it;
-using fiskaltrust.ifPOS.v2.Cases;
 using fiskaltrust.Payment;
-using Javax.Xml.Transform.Sax;
-using Microsoft.Extensions.Logging;
-using MQTTnet;
-using MQTTnet.Client;
-using MQTTnet.Extensions.ManagedClient;
-using MQTTnet.Protocol;
-using MQTTnet.Server;
+using Serilog;
 using System.Collections.Concurrent;
 using System.Text.Json;
 
@@ -23,10 +12,11 @@ namespace fiskaltrust.AndroidLauncher.Services.InStoreApp;
 
 public sealed class InStoreAppServiceLocal : IInStoreAppService, IDisposable
 {
-    private readonly SemaphoreSlim _connectionGate = new SemaphoreSlim(1, 1);
+    private readonly SemaphoreSlim _connectionGate = new(1, 1);
     private readonly InStoreAppClient _inStoreAppClient;
-    private ConcurrentDictionary<Guid, (TaskCompletionSource<PayRequestAcceptedResponse> acknowledge, TaskCompletionSource<PayResponseState> payResponseState)> payRequests = new();
+    private readonly ConcurrentDictionary<Guid, (TaskCompletionSource<PayRequestAcceptedResponse> acknowledge, TaskCompletionSource<PayResponseState> payResponseState)> _payRequests = new();
     private bool _disposed;
+
     public InStoreAppServiceLocal()
     {
         _inStoreAppClient = new InStoreAppClient();
@@ -49,7 +39,7 @@ public sealed class InStoreAppServiceLocal : IInStoreAppService, IDisposable
 
         var tcsAcknowledge = new TaskCompletionSource<PayRequestAcceptedResponse>(TaskCreationOptions.RunContinuationsAsynchronously);
         var tcsPayResponse = new TaskCompletionSource<PayResponseState>(TaskCreationOptions.RunContinuationsAsynchronously);
-        payRequests[operationId] = (tcsAcknowledge, tcsPayResponse);
+        _payRequests[operationId] = (tcsAcknowledge, tcsPayResponse);
 
         try
         {
@@ -73,7 +63,7 @@ public sealed class InStoreAppServiceLocal : IInStoreAppService, IDisposable
         }
         finally
         {
-            payRequests.TryRemove(operationId, out _);
+            _payRequests.TryRemove(operationId, out _);
         }
     }
 
@@ -91,13 +81,16 @@ public sealed class InStoreAppServiceLocal : IInStoreAppService, IDisposable
 
         return (payResult.PaymentResponse, null);
     }
-    private async ValueTask<PayRequestAcceptedResponse?> PublishPayRequestAsync(Guid operationId, Guid cashBoxId,string accessToken, PayRequest payRequest)
+
+    private async ValueTask<PayRequestAcceptedResponse?> PublishPayRequestAsync(Guid operationId, Guid cashBoxId, string accessToken, PayRequest payRequest)
     {
-        var tcs = payRequests[operationId].acknowledge;
+        var tcs = _payRequests[operationId].acknowledge;
         _inStoreAppClient.Send(InStoreAppMessages.MSG_PAY_REQUEST, operationId.ToString(), cashBoxId, accessToken, JsonSerializer.Serialize(payRequest));
         var completed = await Task.WhenAny(tcs.Task, Task.Delay(TimeSpan.FromSeconds(10))).ConfigureAwait(false);
         if (completed != tcs.Task)
-           throw new TimeoutException("InStoreApp response timeout");
+        {
+            throw new TimeoutException("InStoreApp response timeout");
+        }
 
         return await tcs.Task.ConfigureAwait(false);
     }
@@ -133,22 +126,19 @@ public sealed class InStoreAppServiceLocal : IInStoreAppService, IDisposable
             if (!_inStoreAppClient.IsConnected)
             {
                 _inStoreAppClient.Bind(Android.App.Application.Context);
-                var _isbind = await _inStoreAppClient.WaitForConnectionAsync().ConfigureAwait(false);
-                if (!_isbind)
+                var isBound = await _inStoreAppClient.WaitForConnectionAsync().ConfigureAwait(false);
+                if (!isBound)
                 {
                     throw new Exception("InStore App Service is not running.");
                 }
             }
-        }
-        catch
-        {
-            throw;
         }
         finally
         {
             _connectionGate.Release();
         }
     }
+    
     private void ThrowIfDisposed()
     {
         if (_disposed)
@@ -159,9 +149,6 @@ public sealed class InStoreAppServiceLocal : IInStoreAppService, IDisposable
 
     private void OnMessageReceived(InStoreAppEnvelope envelope)
     {
-        var name = envelope.What.ToString();
-
-        string detail = envelope.PayloadJson;
         try
         {
             if (envelope.What == InStoreAppMessages.MSG_PAY_RESPONSE_STATE)
@@ -170,7 +157,7 @@ public sealed class InStoreAppServiceLocal : IInStoreAppService, IDisposable
                 if (payResult != null && (payResult.PaymentResponse != null || payResult.error != null))
                 {
                     var operationId = Guid.Parse(payResult.operationId);
-                    if (payRequests.TryGetValue(operationId, out var payRequest))
+                    if (_payRequests.TryGetValue(operationId, out var payRequest))
                     {
                         payRequest.payResponseState.TrySetResult(payResult);
                     }
@@ -182,7 +169,7 @@ public sealed class InStoreAppServiceLocal : IInStoreAppService, IDisposable
                 if (accepted != null)
                 {
                     var operationId = Guid.Parse(accepted.operationId);
-                    if (payRequests.TryGetValue(operationId, out var payRequest))
+                    if (_payRequests.TryGetValue(operationId, out var payRequest))
                     {
                         payRequest.acknowledge.TrySetResult(accepted);
                     }
@@ -191,9 +178,8 @@ public sealed class InStoreAppServiceLocal : IInStoreAppService, IDisposable
         }
         catch (Exception ex)
         {
-            detail = "(could not parse payload: " + ex.Message + ") " + envelope.PayloadJson;
+            Log.Logger.Warning("InStoreAppServiceLocal", $"Could not parse response payload: {ex.Message}");
         }
-
     }
 }
 
