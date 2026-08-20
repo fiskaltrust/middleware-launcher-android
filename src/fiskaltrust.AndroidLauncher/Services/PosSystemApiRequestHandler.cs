@@ -227,14 +227,14 @@ namespace fiskaltrust.AndroidLauncher.Services
             const int pollIntervalMs = 500;
 
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-            Log.Info(TAG, "Waiting for MiddlewareLauncherService startup task to be initialized...");
+            Log.Info(TAG, "Waiting for MiddlewareLauncherService startup to be initialized...");
 
             while (stopwatch.ElapsedMilliseconds < maxWaitTimeMs)
             {
                 var startupTask = LauncherRuntimeState.StartupTask;
                 if (startupTask != null)
                 {
-                    Log.Info(TAG, $"LocalMiddlewareServiceInstance initialized after{stopwatch.ElapsedMilliseconds}ms");
+                    Log.Info(TAG, $"LocalMiddlewareServiceInstance initialized after {stopwatch.ElapsedMilliseconds}ms");
                     await startupTask.ConfigureAwait(false);
                     return;
                 }

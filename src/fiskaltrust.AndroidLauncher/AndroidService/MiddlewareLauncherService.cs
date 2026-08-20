@@ -113,7 +113,6 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                             SetState(LauncherState.Error, enableCloseButton);
                         }
 
-                        // Rethrow so anyone awaiting LauncherRuntimeState.StartupTask observes the failure immediately.
                         throw;
                     }
                 });
