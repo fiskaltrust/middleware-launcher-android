@@ -82,7 +82,7 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                 LauncherRuntimeState.LocalMiddlewareServiceInstance = new LocalMiddlewareLauncher(cashboxId, accessToken, isSandbox, logLevel, scuParams);
                 //Create Core
                 var coreProvider = new POSSystemApiCoreProvider();
-                _ = Task.Run(async () =>
+                LauncherRuntimeState.StartupTask = Task.Run(async () =>
                 {
                     try
                     {
@@ -112,6 +112,9 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                             StateProvider.Instance.SetState(State.Error, ex.Message);
                             SetState(LauncherState.Error, enableCloseButton);
                         }
+
+                        // Rethrow so anyone awaiting LauncherRuntimeState.StartupTask observes the failure immediately.
+                        throw;
                     }
                 });
                 Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;

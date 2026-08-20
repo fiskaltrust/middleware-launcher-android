@@ -175,9 +175,6 @@ namespace fiskaltrust.AndroidLauncher.Services
 
         private async Task EnsureSystemReadyAsync(Guid cashBoxId, string accessToken, CancellationToken cancellationToken = default)
         {
-            const int maxWaitTimeMs = 10_000;
-            const int pollIntervalMs = 100;
-
             if (LauncherRuntimeState.LocalMiddlewareServiceInstance == null
                 || !LauncherRuntimeState.LocalMiddlewareServiceInstance.IsRunning)
             {
@@ -187,11 +184,11 @@ namespace fiskaltrust.AndroidLauncher.Services
             }
 
             _progressReporter?.Invoke(ActivityStages.STAGE_STARTING_CORE);
-            var waitedMs = 0;
-            while (LauncherRuntimeState.PosSystemApiCore == null && waitedMs < maxWaitTimeMs)
+
+            var startupTask = LauncherRuntimeState.StartupTask;
+            if (startupTask != null && !startupTask.IsCompleted)
             {
-                await Task.Delay(pollIntervalMs, cancellationToken).ConfigureAwait(false);
-                waitedMs += pollIntervalMs;
+                await startupTask.ConfigureAwait(false);
             }
 
             if (LauncherRuntimeState.PosSystemApiCore == null)
@@ -202,16 +199,9 @@ namespace fiskaltrust.AndroidLauncher.Services
 
         private async Task RestartMiddlewareLauncherServiceAsync(Guid cashBoxId, string accessToken)
         {
-            try
-            {
-                Log.Info(TAG, "Starting MiddlewareLauncherService restart process");
-                await StartMiddlewareLauncherServiceAsync(cashBoxId, accessToken).ConfigureAwait(false);
-                Log.Info(TAG, "MiddlewareLauncherService restart process completed");
-            }
-            catch (Exception ex)
-            {
-                Log.Error(TAG, $"Failed to restart MiddlewareLauncherService: {ex.Message}");
-            }
+            Log.Info(TAG, "Starting MiddlewareLauncherService restart process");
+            await StartMiddlewareLauncherServiceAsync(cashBoxId, accessToken).ConfigureAwait(false);
+            Log.Info(TAG, "MiddlewareLauncherService restart process completed");
         }
 
         private async Task StartMiddlewareLauncherServiceAsync(Guid cashBoxId, string accessToken)
@@ -237,20 +227,21 @@ namespace fiskaltrust.AndroidLauncher.Services
             const int pollIntervalMs = 500;
 
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-            Log.Info(TAG, "Waiting for LocalMiddlewareServiceInstance to be initialized...");
+            Log.Info(TAG, "Waiting for MiddlewareLauncherService startup task to be initialized...");
 
             while (stopwatch.ElapsedMilliseconds < maxWaitTimeMs)
             {
-                var instance = LauncherRuntimeState.LocalMiddlewareServiceInstance;
-                if (instance != null && instance.IsRunning)
+                var startupTask = LauncherRuntimeState.StartupTask;
+                if (startupTask != null)
                 {
-                    Log.Info(TAG, $"LocalMiddlewareServiceInstance initialized after {stopwatch.ElapsedMilliseconds}ms");
+                    Log.Info(TAG, $"LocalMiddlewareServiceInstance initialized after{stopwatch.ElapsedMilliseconds}ms");
+                    await startupTask.ConfigureAwait(false);
                     return;
                 }
                 await Task.Delay(pollIntervalMs).ConfigureAwait(false);
             }
 
-            Log.Warn(TAG, $"Timeout waiting for LocalMiddlewareServiceInstance initialization after {stopwatch.ElapsedMilliseconds}ms");
+            Log.Warn(TAG, $"Timeout waiting for MiddlewareLauncherService startup after {stopwatch.ElapsedMilliseconds}ms");
             throw new TimeoutException("LocalMiddlewareServiceInstance failed to initialize within the expected time");
         }
     }
