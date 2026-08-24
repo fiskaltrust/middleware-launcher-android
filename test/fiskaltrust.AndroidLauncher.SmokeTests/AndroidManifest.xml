@@ -2,11 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 	<application android:allowBackup="true" android:supportsRtl="true">
 		<activity
-			android:name="eu.fiskaltrust.androidlauncher.testclient.ServiceTestActivity"
+			android:name="eu.fiskaltrust.androidlauncher.smoketests.ServiceTestActivity"
 			android:exported="true"
 			android:theme="@style/TestActivityOverlayTheme" />
 		<activity
-			android:name="eu.fiskaltrust.androidlauncher.testclient.ActivityTestActivity"
+			android:name="eu.fiskaltrust.androidlauncher.smoketests.ActivityTestActivity"
 			android:exported="true"
 			android:theme="@style/TestActivityOverlayTheme" />
 	</application>

@@ -23,6 +23,5 @@
   </Folder>
   <Folder Name="/test/">
     <Project Path="test/fiskaltrust.AndroidLauncher.SmokeTests/fiskaltrust.AndroidLauncher.SmokeTests.csproj" />
-    <Project Path="test/fiskaltrust.AndroidLauncher.PosSystemApiTestClient/fiskaltrust.AndroidLauncher.PosSystemApiTestClient.csproj" />
   </Folder>
 </Solution>

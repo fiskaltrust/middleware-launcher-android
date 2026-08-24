@@ -10,9 +10,9 @@ permissions:
   pull-requests: write
 
 env:
-  TEST_FOLDER: test/fiskaltrust.AndroidLauncher.SmokeTests
-  TEST_CLIENT_PROJECT: test/fiskaltrust.AndroidLauncher.PosSystemApiTestClient/fiskaltrust.AndroidLauncher.PosSystemApiTestClient.csproj
+  SMOKE_TEST_PROJECT: test/fiskaltrust.AndroidLauncher.SmokeTests/fiskaltrust.AndroidLauncher.SmokeTests.csproj
   APP_PACKAGE: eu.fiskaltrust.androidlauncher
+  INSTRUMENTATION: eu.fiskaltrust.androidlauncher.smoketests/eu.fiskaltrust.androidlauncher.smoketests.TestInstrumentation
 
 jobs:
   smoke-tests:
@@ -55,6 +55,10 @@ jobs:
         id: apk
         run: |
           APK_PATH=$(find artifacts-android -name "*-Signed.apk" | head -n 1)
+          if [ -z "$APK_PATH" ]; then
+            echo "::error::No *-Signed.apk found in artifacts-android"
+            exit 1
+          fi
           echo "path=$APK_PATH" >> "$GITHUB_OUTPUT"
 
       - name: Run smoke tests on emulator
@@ -68,19 +72,29 @@ jobs:
           script: |
             adb install -r "${{ steps.apk.outputs.path }}"
 
-            dotnet build ${{env.TEST_CLIENT_PROJECT}} -f net10.0-android -t:Install -p:RuntimeIdentifier=android-x64
+            dotnet build ${{env.SMOKE_TEST_PROJECT}} -f net10.0-android -t:Install -p:RuntimeIdentifier=android-x64
 
             adb shell am start -W -n ${{env.APP_PACKAGE}}/${{env.APP_PACKAGE}}.MainActivity
 
-            dotnet test ${{env.TEST_FOLDER}} --filter "Category=possystemapi" -v normal --logger "trx;LogFileName=smoke-tests.trx" --results-directory TestResults
+            # Note: the emulator runner executes each script line in a separate shell,
+            # so the instrument arguments must be built inline on a single line.
+            adb shell am instrument -w -r ${CASHBOXID:+-e CashboxId "$CASHBOXID"} ${ACCESSTOKEN:+-e AccessToken "$ACCESSTOKEN"} ${{env.INSTRUMENTATION}} | tee instrument.log
+
+            adb logcat -d > logcat.txt || true
+
+            # `am instrument` exits 0 even when tests fail; the instrumentation reports
+            # code -1 (Activity.RESULT_OK) only if all tests passed.
+            grep -q "INSTRUMENTATION_CODE: -1" instrument.log
         env:
           CASHBOXID: ${{ secrets.SMOKETEST_CASHBOXID }}
           ACCESSTOKEN: ${{ secrets.SMOKETEST_ACCESSTOKEN }}
 
-      - name: Publish Test Results
+      - name: Upload logs
         if: always()
-        uses: EnricoMi/publish-unit-test-result-action@v2
+        uses: actions/upload-artifact@v4
         with:
-          check_name: Smoke Test Results
-          check_run: false
-          files: TestResults/*.trx
+          name: smoke-test-logs
+          path: |
+            instrument.log
+            logcat.txt
+          if-no-files-found: ignore

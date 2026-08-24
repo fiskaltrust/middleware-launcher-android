@@ -56,7 +56,7 @@ The creation of .DAT files is exclusively handled by the TSE during the startup 
 
 ## Smoke Tests
 
-End-to-end tests covering the PosSystemAPI (echo + sign receipt) through both integration surfaces: the Activity (intent-based) and the bound Service (Messenger-based). A small standalone app, [`fiskaltrust.AndroidLauncher.PosSystemApiTestClient`](test/fiskaltrust.AndroidLauncher.PosSystemApiTestClient), acts as a real third-party POS client - it binds to the Service / starts the Activity from its own process, and reports the result to logcat. The tests drive `adb` directly.
+End-to-end tests covering the PosSystemAPI (echo + sign receipt) through both integration surfaces: the Activity (intent-based) and the bound Service (Messenger-based). The whole test suite lives in a small standalone app, [`fiskaltrust.AndroidLauncher.SmokeTests`](test/fiskaltrust.AndroidLauncher.SmokeTests), which acts as a real third-party POS client - it binds to the Service / starts the Activity from its own process. The suite is run on the device via `adb shell am instrument`; no host-side test runner is involved.
 
 ### Requirements
 
@@ -69,8 +69,8 @@ End-to-end tests covering the PosSystemAPI (echo + sign receipt) through both in
 
 Build and install both apps onto the emulator/device:
 ```sh
-dotnet build src/fiskaltrust.AndroidLauncher/fiskaltrust.AndroidLauncher.csproj -f net10.0-android -t:Install -p:RuntimeIdentifier=android-x64
-dotnet build test/fiskaltrust.AndroidLauncher.PosSystemApiTestClient/fiskaltrust.AndroidLauncher.PosSystemApiTestClient.csproj -f net10.0-android -t:Install -p:RuntimeIdentifier=android-x64
+dotnet build src/fiskaltrust.AndroidLauncher/fiskaltrust.AndroidLauncher.csproj -f net10.0-android -t:Install
+dotnet build test/fiskaltrust.AndroidLauncher.SmokeTests/fiskaltrust.AndroidLauncher.SmokeTests.csproj -f net10.0-android -t:Install
 ```
 Re-run these whenever the respective app's source changes, or after clearing app data (`adb shell pm clear <package>`) — a plain `adb install` is not enough for .NET-for-Android's Debug builds (see `EmbedAssembliesIntoApk` if you need a plain APK to be installable on its own, e.g. in CI).
 
@@ -83,18 +83,18 @@ The test client (second command above) still has to be built from source - it is
 ### Running
 
 ```sh
-dotnet test test/fiskaltrust.AndroidLauncher.SmokeTests --filter "Category=possystemapi"
+adb shell am instrument -w eu.fiskaltrust.androidlauncher.smoketests/eu.fiskaltrust.androidlauncher.smoketests.TestInstrumentation
 ```
+
 
 ### Credentials
 
-Default sandbox credentials are defined in [`test/fiskaltrust.AndroidLauncher.SmokeTests/TestConstants.cs`](test/fiskaltrust.AndroidLauncher.SmokeTests/TestConstants.cs). Override them via environment variables if needed:
+Default sandbox credentials are defined in [`test/fiskaltrust.AndroidLauncher.SmokeTests/TestConstants.cs`](test/fiskaltrust.AndroidLauncher.SmokeTests/TestConstants.cs). Override them via instrumentation arguments if needed:
 
-| Variable        | Description                                                             |
-|-----------------|--------------------------------------------------------------------------|
-| `CASHBOXID`     | Cashbox GUID                                                            |
-| `ACCESSTOKEN`   | Access token                                                            |
-| `ANDROID_SERIAL`| Target a specific device/emulator when more than one is connected (standard `adb` env var) |
+| Argument      | Description   |
+|---------------|---------------|
+| `-e CashboxId <guid>`     | Cashbox GUID  |
+| `-e AccessToken <token>`  | Access token  |
 
 ## Contributing
 We welcome all kinds of contributions and feedback, e.g. via issues or pull requests, and want to thank every future contributors in advance!
@@ -106,4 +106,4 @@ The fiskaltrust Middleware is released under the [EUPL 1.2](./LICENSE).
 
 As a Compliance-as-a-Service provider, the security and authenticity of the products installed on our users' endpoints is essential to us. To ensure that only peer-reviewed binaries are distributed by maintainers, fiskaltrust explicitly reserves the sole right to use the brand name "fiskaltrust Middleware" (and the brand names of related products and services) for the software provided here as open source - regardless of the spelling or abbreviation, as long as conclusions can be drawn about the original product name.  
 
-The fiskaltrust Middleware (and related products and services) as contained in these repositories may therefore only be used in the form of binaries signed by fiskaltrust. 
+The fiskaltrust Middleware (and related products and services) as contained in these repositories may therefore only be used in the form of binaries signed by fiskaltrust.
