@@ -6,18 +6,6 @@ using Android.Util;
 
 namespace fiskaltrust.AndroidLauncher.SmokeTests
 {
-    /// <summary>
-    /// Runs the PosSystemAPI smoke test suite (see <see cref="SmokeTestSuite"/>) against
-    /// the installed launcher and reports per-test results using the standard
-    /// instrumentation status protocol, so results can be read from the output of:
-    ///
-    ///   adb shell am instrument -w -r \
-    ///     [-e CashboxId ...] [-e AccessToken ...] [-e Test name-substring] \
-    ///     eu.fiskaltrust.androidlauncher.smoketests/eu.fiskaltrust.androidlauncher.smoketests.TestInstrumentation
-    ///
-    /// The final instrumentation code is -1 (Activity.RESULT_OK) if all tests passed,
-    /// 0 otherwise.
-    /// </summary>
     [Instrumentation(
         Name = "eu.fiskaltrust.androidlauncher.smoketests.TestInstrumentation",
         TargetPackage = "eu.fiskaltrust.androidlauncher.smoketests")]

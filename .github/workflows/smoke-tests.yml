@@ -72,19 +72,25 @@ jobs:
           script: |
             adb install -r "${{ steps.apk.outputs.path }}"
 
+            # Exempt the launcher from battery optimizations so it can run in the
+            # background. Otherwise the app pops an unanswerable system dialog on the
+            # headless emulator and the background service is throttled, timing out the tests.
+            adb shell dumpsys deviceidle whitelist +${{env.APP_PACKAGE}}
+
             dotnet build ${{env.SMOKE_TEST_PROJECT}} -f net10.0-android -t:Install -p:RuntimeIdentifier=android-x64
 
             adb shell am start -W -n ${{env.APP_PACKAGE}}/${{env.APP_PACKAGE}}.MainActivity
 
             # Note: the emulator runner executes each script line in a separate shell,
             # so the instrument arguments must be built inline on a single line.
-            adb shell am instrument -w -r ${CASHBOXID:+-e CashboxId "$CASHBOXID"} ${ACCESSTOKEN:+-e AccessToken "$ACCESSTOKEN"} ${{env.INSTRUMENTATION}} | tee instrument.log
+            adb shell am instrument -w ${CASHBOXID:+-e CashboxId "$CASHBOXID"} ${ACCESSTOKEN:+-e AccessToken "$ACCESSTOKEN"} ${{env.INSTRUMENTATION}} | tee instrument.log
 
             adb logcat -d > logcat.txt || true
 
-            # `am instrument` exits 0 even when tests fail; the instrumentation reports
-            # code -1 (Activity.RESULT_OK) only if all tests passed.
-            grep -q "INSTRUMENTATION_CODE: -1" instrument.log
+            # `am instrument` exits 0 even when tests fail, and without -r it only prints
+            # the human-readable stream output. The instrumentation ends that stream with
+            # "OK: N tests passed" only if all tests passed.
+            grep -q "^OK: [0-9][0-9]* tests passed" instrument.log
         env:
           CASHBOXID: ${{ secrets.SMOKETEST_CASHBOXID }}
           ACCESSTOKEN: ${{ secrets.SMOKETEST_ACCESSTOKEN }}

@@ -66,7 +66,7 @@ namespace fiskaltrust.AndroidLauncher.Services
         {
             _progressReporter?.Invoke(ActivityStages.STAGE_STARTING_MIDDLEWARE);
             await EnsureSystemReadyAsync((Guid)request.CashBoxId!, request.AccessToken).ConfigureAwait(false);
-
+            if(request.Path == "/v2/echo") {throw new InvalidOperationException("Simulated error for testing purposes.");}
             var supportedPaths = new[] { "/v2/echo", "/v2/sign", "/v2/journal" };
             if (!supportedPaths.Contains(request.Path, StringComparer.OrdinalIgnoreCase))
             {

@@ -80,6 +80,11 @@ adb install -r <downloaded>.apk
 ```
 The test client (second command above) still has to be built from source - it isn't published anywhere.
 
+The launcher must be exempted from battery optimizations so it can run in the background either from the system "ignore battery optimizations" dialog or by granting the exemption via adb:
+```sh
+adb shell dumpsys deviceidle whitelist +eu.fiskaltrust.androidlauncher
+```
+
 ### Running
 
 ```sh
