@@ -2,6 +2,6 @@
 {
     public class BroadcastConstants
     {
-        public const string StopBroadcastName = "eu.fiskaltrust.androidlauncher.Stop";
+        public const string StopBroadcastAction = "eu.fiskaltrust.androidlauncher.Stop";
     }
 }
