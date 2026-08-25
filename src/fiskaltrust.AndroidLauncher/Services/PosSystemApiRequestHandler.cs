@@ -218,7 +218,6 @@ namespace fiskaltrust.AndroidLauncher.Services
         {
             LauncherRuntimeState.LocalMiddlewareServiceInstance = null;
             var isSandbox = true;
-            var enableCloseButton = false;
             var logLevel = LogLevel.Debug;
             try
             {
@@ -227,7 +226,7 @@ namespace fiskaltrust.AndroidLauncher.Services
             catch { }
 
             PowerManagerHelper.AskUserToDisableBatteryOptimization(Android.App.Application.Context);
-            MiddlewareLauncherService.Start(cashBoxId.ToString(), accessToken, isSandbox, logLevel, new Dictionary<string, object>(), enableCloseButton);
+            MiddlewareLauncherService.Start(cashBoxId.ToString(), accessToken, isSandbox, logLevel, new Dictionary<string, object>());
             await WaitForLocalMiddlewareServiceInitializationAsync().ConfigureAwait(false);
         }
 
