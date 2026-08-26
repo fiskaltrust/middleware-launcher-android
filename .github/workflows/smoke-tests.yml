@@ -87,6 +87,11 @@ jobs:
 
             adb logcat -d > logcat.txt || true
 
+            # Pull the JUnit report written by TestInstrumentation. run-as works because
+            # the smoke test APK is a debuggable (Debug) build. Must happen before the
+            # grep assertion below so the report survives a failing run.
+            adb shell run-as eu.fiskaltrust.androidlauncher.smoketests cat files/test-results.xml > test-results.xml || true
+
             # `am instrument` exits 0 even when tests fail, and without -r it only prints
             # the human-readable stream output. The instrumentation ends that stream with
             # "OK: N tests passed" only if all tests passed.
@@ -103,4 +108,13 @@ jobs:
           path: |
             instrument.log
             logcat.txt
+            test-results.xml
           if-no-files-found: ignore
+
+      - name: Publish test results
+        if: always()
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          check_name: Android Smoke Test Results
+          files: test-results.xml
+          action_fail_on_inconclusive: true

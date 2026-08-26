@@ -1,3 +1,6 @@
+using System.Diagnostics;
+using System.Globalization;
+using System.Xml.Linq;
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -11,6 +14,8 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
         TargetPackage = "eu.fiskaltrust.androidlauncher.smoketests")]
     public class TestInstrumentation : Instrumentation
     {
+        private sealed record TestResult(string Name, TimeSpan Duration, Exception? Error);
+
         private const string TAG = "TestInstrumentation";
 
         private const string ArgCashboxId = "CashboxId";
@@ -56,34 +61,81 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
                 .Where(t => testFilter == null || t.Name.Contains(testFilter, StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
-            var failures = 0;
+            var results = new List<TestResult>();
             for (var i = 0; i < tests.Count; i++)
             {
                 var test = tests[i];
                 var current = i + 1;
                 ReportStatus(StatusStart, test.Name, tests.Count, current, stream: $"{test.Name}: ");
 
+                var stopwatch = Stopwatch.StartNew();
                 try
                 {
                     Log.Info(TAG, $"Running {test.Name}");
                     test.Run();
+                    stopwatch.Stop();
                     Log.Info(TAG, $"{test.Name} passed");
+                    results.Add(new TestResult(test.Name, stopwatch.Elapsed, Error: null));
                     ReportStatus(StatusOk, test.Name, tests.Count, current, stream: "OK\n");
                 }
                 catch (Exception ex)
                 {
-                    failures++;
+                    stopwatch.Stop();
                     Log.Warn(TAG, $"{test.Name} failed: {ex}");
+                    results.Add(new TestResult(test.Name, stopwatch.Elapsed, ex));
                     ReportStatus(StatusFailure, test.Name, tests.Count, current, stream: $"FAILED\n{ex.Message}\n", stack: ex.ToString());
                 }
             }
 
+            try
+            {
+                WriteJUnitReport(results);
+            }
+            catch (Exception ex)
+            {
+                Log.Warn(TAG, $"Failed to write JUnit report: {ex}");
+            }
+
+            var failures = results.Count(r => r.Error != null);
             var summary = failures > 0
                 ? $"\nFAILURES: {failures} of {tests.Count} tests failed\n"
                 : $"\nOK: {tests.Count} tests passed\n";
-            var results = new Bundle();
-            results.PutString("stream", summary);
-            Finish(failures == 0 && tests.Count > 0 ? Result.Ok : Result.Canceled, results);
+            var resultBundle = new Bundle();
+            resultBundle.PutString("stream", summary);
+            Finish(failures == 0 && tests.Count > 0 ? Result.Ok : Result.Canceled, resultBundle);
+        }
+
+        /// <summary>
+        /// Writes a JUnit XML report to the app's internal files dir, from where CI
+        /// pulls it via `adb shell run-as ... cat files/test-results.xml`.
+        /// </summary>
+        private void WriteJUnitReport(List<TestResult> results)
+        {
+            var doc = new XDocument(
+                new XElement("testsuite",
+                    new XAttribute("name", "fiskaltrust.AndroidLauncher.SmokeTests"),
+                    new XAttribute("tests", results.Count),
+                    new XAttribute("failures", results.Count(r => r.Error != null)),
+                    new XAttribute("time", results.Sum(r => r.Duration.TotalSeconds).ToString("F3", CultureInfo.InvariantCulture)),
+                    new XAttribute("timestamp", DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)),
+                    results.Select(r =>
+                    {
+                        var testcase = new XElement("testcase",
+                            new XAttribute("classname", nameof(SmokeTestSuite)),
+                            new XAttribute("name", r.Name),
+                            new XAttribute("time", r.Duration.TotalSeconds.ToString("F3", CultureInfo.InvariantCulture)));
+                        if (r.Error != null)
+                        {
+                            testcase.Add(new XElement("failure",
+                                new XAttribute("message", r.Error.Message),
+                                r.Error.ToString()));
+                        }
+                        return testcase;
+                    })));
+
+            var path = Path.Combine(TargetContext!.FilesDir!.AbsolutePath, "test-results.xml");
+            doc.Save(path);
+            Log.Info(TAG, $"JUnit report written to {path}");
         }
 
         private void ReportStatus(int statusCode, string testName, int numTests, int current, string stream, string? stack = null)
