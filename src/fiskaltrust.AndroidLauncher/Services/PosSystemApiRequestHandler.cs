@@ -190,16 +190,9 @@ namespace fiskaltrust.AndroidLauncher.Services
                 await startupTask.ConfigureAwait(false);
             }
         }
-
         private async Task RestartMiddlewareLauncherServiceAsync(Guid cashBoxId, string accessToken)
         {
             Log.Info(TAG, "Starting MiddlewareLauncherService restart process");
-            await StartMiddlewareLauncherServiceAsync(cashBoxId, accessToken).ConfigureAwait(false);
-            Log.Info(TAG, "MiddlewareLauncherService restart process completed");
-        }
-
-        private async Task StartMiddlewareLauncherServiceAsync(Guid cashBoxId, string accessToken)
-        {
             LauncherRuntimeState.LocalMiddlewareServiceInstance = null;
             var isSandbox = true;
             var logLevel = LogLevel.Debug;
@@ -212,6 +205,7 @@ namespace fiskaltrust.AndroidLauncher.Services
             PowerManagerHelper.AskUserToDisableBatteryOptimization(Android.App.Application.Context);
             MiddlewareLauncherService.Start(cashBoxId.ToString(), accessToken, isSandbox, logLevel, new Dictionary<string, object>());
             await WaitForLocalMiddlewareServiceInitializationAsync().ConfigureAwait(false);
+            Log.Info(TAG, "MiddlewareLauncherService restart process completed");
         }
 
         private async Task WaitForLocalMiddlewareServiceInitializationAsync()
