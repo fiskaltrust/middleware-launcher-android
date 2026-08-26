@@ -66,7 +66,6 @@ namespace fiskaltrust.AndroidLauncher.Services
         {
             _progressReporter?.Invoke(ActivityStages.STAGE_STARTING_MIDDLEWARE);
             await EnsureSystemReadyAsync((Guid)request.CashBoxId!, request.AccessToken).ConfigureAwait(false);
-
             var supportedPaths = new[] { "/v2/echo", "/v2/sign", "/v2/journal" };
             if (!supportedPaths.Contains(request.Path, StringComparer.OrdinalIgnoreCase))
             {
@@ -190,11 +189,6 @@ namespace fiskaltrust.AndroidLauncher.Services
             {
                 await startupTask.ConfigureAwait(false);
             }
-
-            if (LauncherRuntimeState.PosSystemApiCore == null)
-            {
-                throw new TimeoutException("POS system API core did not become ready in time.");
-            }
         }
 
         private async Task RestartMiddlewareLauncherServiceAsync(Guid cashBoxId, string accessToken)
@@ -208,7 +202,6 @@ namespace fiskaltrust.AndroidLauncher.Services
         {
             LauncherRuntimeState.LocalMiddlewareServiceInstance = null;
             var isSandbox = true;
-            var enableCloseButton = false;
             var logLevel = LogLevel.Debug;
             try
             {
@@ -217,7 +210,7 @@ namespace fiskaltrust.AndroidLauncher.Services
             catch { }
 
             PowerManagerHelper.AskUserToDisableBatteryOptimization(Android.App.Application.Context);
-            MiddlewareLauncherService.Start(cashBoxId.ToString(), accessToken, isSandbox, logLevel, new Dictionary<string, object>(), enableCloseButton);
+            MiddlewareLauncherService.Start(cashBoxId.ToString(), accessToken, isSandbox, logLevel, new Dictionary<string, object>());
             await WaitForLocalMiddlewareServiceInitializationAsync().ConfigureAwait(false);
         }
 

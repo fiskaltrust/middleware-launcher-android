@@ -1,7 +1,6 @@
 ﻿using Android.App;
 using fiskaltrust.AndroidLauncher.Constants;
 using fiskaltrust.AndroidLauncher.Extensions;
-using fiskaltrust.AndroidLauncher.Hosting;
 using fiskaltrust.AndroidLauncher.Signing;
 using fiskaltrust.ifPOS.v1;
 using fiskaltrust.Middleware.Abstractions;
