@@ -189,11 +189,6 @@ namespace fiskaltrust.AndroidLauncher.Services
             {
                 await startupTask.ConfigureAwait(false);
             }
-
-            if (LauncherRuntimeState.PosSystemApiCore == null)
-            {
-                throw new TimeoutException("POS system API core did not become ready in time.");
-            }
         }
 
         private async Task RestartMiddlewareLauncherServiceAsync(Guid cashBoxId, string accessToken)
