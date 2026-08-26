@@ -10,8 +10,9 @@ permissions:
   pull-requests: write
 
 env:
-  TEST_FOLDER: test/fiskaltrust.AndroidLauncher.SmokeTests
+  SMOKE_TEST_PROJECT: test/fiskaltrust.AndroidLauncher.SmokeTests/fiskaltrust.AndroidLauncher.SmokeTests.csproj
   APP_PACKAGE: eu.fiskaltrust.androidlauncher
+  INSTRUMENTATION: eu.fiskaltrust.androidlauncher.smoketests/eu.fiskaltrust.androidlauncher.smoketests.TestInstrumentation
 
 jobs:
   smoke-tests:
@@ -30,6 +31,14 @@ jobs:
         with:
           dotnet-version: "10.x.x"
 
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Install Android workload
+        run: dotnet workload install android
+
       - name: Enable KVM group perms
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -46,6 +55,10 @@ jobs:
         id: apk
         run: |
           APK_PATH=$(find artifacts-android -name "*-Signed.apk" | head -n 1)
+          if [ -z "$APK_PATH" ]; then
+            echo "::error::No *-Signed.apk found in artifacts-android"
+            exit 1
+          fi
           echo "path=$APK_PATH" >> "$GITHUB_OUTPUT"
 
       - name: Run smoke tests on emulator
@@ -57,35 +70,51 @@ jobs:
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: |
-            npm install -g appium
-            appium driver install uiautomator2
-            appium --port 4723 --allow-insecure=uiautomator2:adb_shell --log appium.log > /dev/null 2>&1 &
-            APPIUM_PID=$!
-            trap 'kill $APPIUM_PID 2>/dev/null' EXIT
-
-            npx wait-on tcp:4723 --timeout 60000
-
             adb install -r "${{ steps.apk.outputs.path }}"
+
+            # Exempt the launcher from battery optimizations so it can run in the
+            # background. Otherwise the app pops an unanswerable system dialog on the
+            # headless emulator and the background service is throttled, timing out the tests.
+            adb shell dumpsys deviceidle whitelist +${{env.APP_PACKAGE}}
+
+            dotnet build ${{env.SMOKE_TEST_PROJECT}} -f net10.0-android -t:Install -p:RuntimeIdentifier=android-x64
 
             adb shell am start -W -n ${{env.APP_PACKAGE}}/${{env.APP_PACKAGE}}.MainActivity
 
-            dotnet test ${{env.TEST_FOLDER}} --filter "Category=possystemapi" -v normal --logger "trx;LogFileName=smoke-tests.trx" --results-directory TestResults
+            # Note: the emulator runner executes each script line in a separate shell,
+            # so the instrument arguments must be built inline on a single line.
+            adb shell am instrument -w ${CASHBOXID:+-e CashboxId "$CASHBOXID"} ${ACCESSTOKEN:+-e AccessToken "$ACCESSTOKEN"} ${{env.INSTRUMENTATION}} | tee instrument.log
+
+            adb logcat -d > logcat.txt || true
+
+            # Pull the JUnit report written by TestInstrumentation. run-as works because
+            # the smoke test APK is a debuggable (Debug) build. Must happen before the
+            # grep assertion below so the report survives a failing run.
+            adb shell run-as eu.fiskaltrust.androidlauncher.smoketests cat files/test-results.xml > test-results.xml || true
+
+            # `am instrument` exits 0 even when tests fail, and without -r it only prints
+            # the human-readable stream output. The instrumentation ends that stream with
+            # "OK: N tests passed" only if all tests passed.
+            grep -q "^OK: [0-9][0-9]* tests passed" instrument.log
         env:
           CASHBOXID: ${{ secrets.SMOKETEST_CASHBOXID }}
           ACCESSTOKEN: ${{ secrets.SMOKETEST_ACCESSTOKEN }}
 
-      - name: Publish Test Results
-        if: always()
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        with:
-          check_name: Smoke Test Results
-          check_run: false
-          files: TestResults/*.trx
-
-      - name: Upload Appium log
+      - name: Upload logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: appium-log
-          path: appium.log
+          name: smoke-test-logs
+          path: |
+            instrument.log
+            logcat.txt
+            test-results.xml
           if-no-files-found: ignore
+
+      - name: Publish test results
+        if: always()
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          check_name: Android Smoke Test Results
+          files: test-results.xml
+          action_fail_on_inconclusive: true

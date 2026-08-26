@@ -6,22 +6,18 @@ For samples on how to **implement and roll-out** this App, please refer to our [
 ## Overview
 The Launcher for Android is - similar to our [Desktop Launcher](https://github.com/fiskaltrust/middleware-launcher) for Windows, Linux and macOS - responsible for hosting our dynamic Middleware packages on mobile devices running the Android operating system (version 7+). 
 
-It hosts the same public, international [IPOS](https://github.com/fiskaltrust/middleware-interface-dotnet) interface as the Desktop Launcher, either via gRPC or REST, which means that multi-platform POS systems with existing Middleware implementations can easily embed it into their existing workflows.
-
-Unlike the Desktop Launcher, where all supported communication protocols are supported by a single application, we've split the Android version into different Apps to reduce their respective size.
+It exposes the same public, international [IPOS](https://github.com/fiskaltrust/middleware-interface-dotnet) interface as the Desktop Launcher via the **PosSystemAPI**, which POS System Apps call directly through Android IPC (Intents or Messenger) - no network configuration is required.
 
 ## Getting started
-There are two ways of using the fiskaltrust.Middleware on Android:
-1. By using the App directly from Google's Play store ([gRPC](https://play.google.com/store/apps/details?id=eu.fiskaltrust.androidlauncher.grpc) | [HTTP](https://play.google.com/store/apps/details?id=eu.fiskaltrust.androidlauncher.http))
-2. By downloading the APK files from the _Cashbox_ section in our management portal, and installing them on the devices (ideally via device management). Please note that the download option is only available for cashboxes that contain supported packages and communication protocols only (as described under _Features and Limitations_ below).
+To use the fiskaltrust.Middleware on Android, download the APK file from the [releases section](https://github.com/fiskaltrust/middleware-launcher-android/releases) of this repository and install it on the devices.
 
 ## Implementation details & architecture
-The `fiskaltrust.AndroidLauncher` App consists of a foreground service runnint the fiskaltrust.Middleware that is started or stopped from POS System Apps via **intents**. This allows the POS software to maintain full control about the fiscalization dependencies, and reduces the signing time when e.g. using hardware TSEs that can take up to 45 seconds to initialize (a delay that would not be acceptable for each receipt).
+The `fiskaltrust.AndroidLauncher` App consists of a foreground service running the fiskaltrust.Middleware. POS System Apps communicate with it directly via the **PosSystemAPI**, either through Android **Intents** or a bound **Messenger** service. This allows the POS software to maintain full control about the fiscalization dependencies, and reduces the signing time when e.g. using hardware TSEs that can take up to 45 seconds to initialize (a delay that would not be acceptable for each receipt).
 
 In both our internal tests and on-site at installations, the foreground service has been proven to be very energy-efficient in standby, not consuming notable battery amounts.
 
 ## How to use it
-Download and install the _.APK_ on the Portal's Cashbox page or via the Play Store, as described above. 
+Download and install the _.APK_ from the GitHub releases section, as described above. 
 
 A working internet connection is required at least during the first start of the Middleware, as it automatically downloads the configuration from our background services. Later, an internet connection is not required anymore (except when using a cloud TSE, of course). When using one of our archiving add-ons, we still recommend keeping the device connected to make use of our automatic cloud storage.
 
@@ -29,11 +25,10 @@ A working internet connection is required at least during the first start of the
 
 The Android Launcher supports multiple ways to communicate with the Middleware:
 
-1. **Direct HTTP/REST**: Connect via standard HTTP requests to the local REST endpoint
-2. **gRPC**: Use gRPC protocol for high-performance communication
-3. **Intent-based PosSystemAPI** (NEW): Use Android Intents to call the PosSystemAPI directly from your Android app, enabling offline fiscalization without network configuration. 
+1. **Intent-based PosSystemAPI**: Use Android Intents to call the PosSystemAPI directly from your Android app, enabling offline fiscalization without network configuration. 
+2. **Messenger-based PosSystemAPI**: Use Android Messenger to call the PosSystemAPI directly from your Android app, enabling offline fiscalization without network configuration.
 
-All details about our IPOS interface and how to use it for different business cases can be found in our [middleware documentation](https://docs.fiskaltrust.cloud/docs/poscreators/get-started).
+All details about our IPOS interface and how to use it for different business cases can be found in our [documentation](https://docs.fiskaltrust.eu/docs/poscreators/possystem-api/android-intent).
 
 ## Features and Limitations
 The current project offers very similar functionality to the Middleware's Desktop Launcher. It works with different SCUs, pulls the configuration from our Cloud services, and also recurrently uploads the processed receipts to fiskaltrust's revision-safe storage.
@@ -53,49 +48,45 @@ In recent Android versions, applications are restricted from accessing the root 
 Swissbit supports additional .DAT files, and they are automatically created by putting a ".swissbitworm" file into any folder of the TSE. 
 The creation of .DAT files is exclusively handled by the TSE during the startup process. To ensure the proper generation of these files, the TSE needs to be remounted or the device must be restarted. Failure to do so may result in a remount error, preventing the successful creation of .DAT files.
 
-
 ## Smoke Tests
 
-End-to-end tests covering the Intent-based PosSystemAPI flow (echo + sign receipt) via Appium.
+End-to-end tests covering the PosSystemAPI (echo + sign receipt) through both integration surfaces: the Activity (intent-based) and the bound Service (Messenger-based). The whole test suite lives in a small standalone app, [`fiskaltrust.AndroidLauncher.SmokeTests`](test/fiskaltrust.AndroidLauncher.SmokeTests), which acts as a real third-party POS client - it binds to the Service / starts the Activity from its own process. The suite is run on the device via `adb shell am instrument`; no host-side test runner is involved.
 
 ### Requirements
 
-- [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
+- .NET 10 SDK
 - JDK 21 (`JAVA_HOME` must be set, or discoverable by the .NET Android build)
 - `adb` on `PATH` (part of Android SDK / Android Studio)
-- [Node.js](https://nodejs.org/) + Appium 2 with UIAutomator2 driver:
-  ```sh
-  npm install -g appium
-  appium driver install uiautomator2
-  ```
 - Android emulator (API 24+, x86\_64) or a connected physical device
-
-The APK is built and installed automatically on first run (or when source files change).
 
 ### Before running
 
-Start Appium in a separate terminal and leave it running:
+Build and install both apps onto the emulator/device:
 ```sh
-appium --allow-insecure=adb_shell
+dotnet build src/fiskaltrust.AndroidLauncher/fiskaltrust.AndroidLauncher.csproj -f net10.0-android -t:Install
+dotnet build test/fiskaltrust.AndroidLauncher.SmokeTests/fiskaltrust.AndroidLauncher.SmokeTests.csproj -f net10.0-android -t:Install
+```
+
+The launcher must be exempted from battery optimizations so it can run in the background either from the system "ignore battery optimizations" dialog or by granting the exemption via adb:
+```sh
+adb shell dumpsys deviceidle whitelist +eu.fiskaltrust.androidlauncher
 ```
 
 ### Running
 
 ```sh
-dotnet test test/fiskaltrust.AndroidLauncher.SmokeTests
+adb shell am instrument -w eu.fiskaltrust.androidlauncher.smoketests/eu.fiskaltrust.androidlauncher.smoketests.TestInstrumentation
 ```
+
 
 ### Credentials
 
-Default sandbox credentials are defined in [`test/fiskaltrust.AndroidLauncher.SmokeTests/TestConstants.cs`](test/fiskaltrust.AndroidLauncher.SmokeTests/TestConstants.cs). Override them via environment variables if needed:
+Default sandbox credentials are defined in [`test/fiskaltrust.AndroidLauncher.SmokeTests/TestConstants.cs`](test/fiskaltrust.AndroidLauncher.SmokeTests/TestConstants.cs). Override them via instrumentation arguments if needed:
 
-| Variable      | Description                                                                               |
-|---------------|-------------------------------------------------------------------------------------------|
-| `CASHBOXID`   | Cashbox GUID                                                                              |
-| `ACCESSTOKEN` | Access token                                                                              |
-| `APPIUM_URL`  | Appium server URL (default: `http://127.0.0.1:4723`)                                      |
-| `DEVICE_UDID` | Target device (auto-detected if only one is connected)                                    |
-| `ANDROID_RID` | Runtime identifier (default: `android-x64`; use `android-arm64` for physical ARM devices) |
+| Argument      | Description   |
+|---------------|---------------|
+| `-e CashboxId <guid>`     | Cashbox GUID  |
+| `-e AccessToken <token>`  | Access token  |
 
 ## Contributing
 We welcome all kinds of contributions and feedback, e.g. via issues or pull requests, and want to thank every future contributors in advance!
@@ -107,4 +98,4 @@ The fiskaltrust Middleware is released under the [EUPL 1.2](./LICENSE).
 
 As a Compliance-as-a-Service provider, the security and authenticity of the products installed on our users' endpoints is essential to us. To ensure that only peer-reviewed binaries are distributed by maintainers, fiskaltrust explicitly reserves the sole right to use the brand name "fiskaltrust Middleware" (and the brand names of related products and services) for the software provided here as open source - regardless of the spelling or abbreviation, as long as conclusions can be drawn about the original product name.  
 
-The fiskaltrust Middleware (and related products and services) as contained in these repositories may therefore only be used in the form of binaries signed by fiskaltrust. 
+The fiskaltrust Middleware (and related products and services) as contained in these repositories may therefore only be used in the form of binaries signed by fiskaltrust.
