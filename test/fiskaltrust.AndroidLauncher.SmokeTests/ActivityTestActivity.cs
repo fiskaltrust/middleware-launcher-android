@@ -36,7 +36,11 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
             try
             {
                 var intent = new Intent(context, typeof(ActivityTestActivity));
-                intent.AddFlags(ActivityFlags.NewTask);
+                // ClearTask forces a fresh instance (and OnCreate) even when the previous
+                // test's instance is still finishing. Without it, a back-to-back launch can
+                // resolve as START_DELIVERED_TO_TOP into the dying instance, silently
+                // dropping the intent (observed on slow CI emulators).
+                intent.AddFlags(ActivityFlags.NewTask | ActivityFlags.ClearTask);
                 request.WriteTo(intent);
                 context.StartActivity(intent);
 
