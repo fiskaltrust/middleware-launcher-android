@@ -81,14 +81,13 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                 LauncherRuntimeState.LocalMiddlewareServiceInstance = new LocalMiddlewareLauncher(cashboxId, accessToken, isSandbox, logLevel, scuParams);
                 //Create Core
                 var coreProvider = new POSSystemApiCoreProvider();
-                _ = Task.Run(async () =>
+                LauncherRuntimeState.StartupTask = Task.Run(async () =>
                 {
                     try
                     {
                         await LauncherRuntimeState.LocalMiddlewareServiceInstance.StartAsync();
                         LauncherRuntimeState.PosSystemApiCore = await coreProvider.CreateAsync(cashboxId, accessToken, isSandbox);
                         SetState(LauncherState.Connected);
-                        StateProvider.Instance.SetState(State.Running);
                     }
                     catch (Exception ex)
                     {
@@ -98,19 +97,18 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                         Log.Logger.Error(ex, "An error occured while trying to start the fiskaltrust Android Launcher.");
                         if (ex is RemountRequiredException remountRequiredEx)
                         {
-                            StateProvider.Instance.SetState(State.Error, StateReasons.RemountRequired);
                             SetState(LauncherState.Error, remountRequiredEx.Message);
                         }
                         else if (ex is ConfigurationNotFoundException confNotFoundEx)
                         {
-                            StateProvider.Instance.SetState(State.Error, StateReasons.ConfigurationNotFound);
                             SetState(LauncherState.Error, confNotFoundEx.Message);
                         }
                         else
                         {
-                            StateProvider.Instance.SetState(State.Error, ex.Message);
                             SetState(LauncherState.Error);
                         }
+
+                        throw;
                     }
                 });
                 Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
@@ -125,17 +123,14 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                 Log.Logger.Error(ex, "An error occured while trying to start the fiskaltrust Android Launcher.");
                 if (ex is RemountRequiredException remountRequiredEx)
                 {
-                    StateProvider.Instance.SetState(State.Error, StateReasons.RemountRequired);
                     SetState(LauncherState.Error, remountRequiredEx.Message);
                 }
                 else if (ex is ConfigurationNotFoundException confNotFoundEx)
                 {
-                    StateProvider.Instance.SetState(State.Error, StateReasons.ConfigurationNotFound);
                     SetState(LauncherState.Error, confNotFoundEx.Message);
                 }
                 else
                 {
-                    StateProvider.Instance.SetState(State.Error, ex.Message);
                     SetState(LauncherState.Error);
                 }
 
