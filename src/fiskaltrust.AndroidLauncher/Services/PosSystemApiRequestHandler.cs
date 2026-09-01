@@ -14,6 +14,7 @@ namespace fiskaltrust.AndroidLauncher.Services
     public class PosSystemApiRequestHandler
     {
         private const string TAG = "PosSystemAPI";
+        private static readonly SemaphoreSlim _restartLock = new SemaphoreSlim(1, 1);
         private readonly Action<string>? _progressReporter;
 
         private static readonly HashSet<string> LocalEndpoints = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
@@ -179,7 +180,7 @@ namespace fiskaltrust.AndroidLauncher.Services
             {
                 Log.Info(TAG, "Local middleware not running - triggering service restart");
                 _progressReporter?.Invoke(ActivityStages.STAGE_STARTING_MIDDLEWARE);
-                await RestartMiddlewareLauncherServiceAsync(cashBoxId, accessToken).ConfigureAwait(false);
+                await RestartMiddlewareLauncherServiceAsync(cashBoxId, accessToken, force: false).ConfigureAwait(false);
             }
 
             _progressReporter?.Invoke(ActivityStages.STAGE_STARTING_CORE);
@@ -190,22 +191,64 @@ namespace fiskaltrust.AndroidLauncher.Services
                 await startupTask.ConfigureAwait(false);
             }
         }
-        private async Task RestartMiddlewareLauncherServiceAsync(Guid cashBoxId, string accessToken)
+        private async Task RestartMiddlewareLauncherServiceAsync(Guid cashBoxId, string accessToken, bool force = true)
         {
-            Log.Info(TAG, "Starting MiddlewareLauncherService restart process");
-            LauncherRuntimeState.LocalMiddlewareServiceInstance = null;
-            var isSandbox = true;
-            var logLevel = LogLevel.Debug;
+            await _restartLock.WaitAsync().ConfigureAwait(false);
             try
             {
-                MiddlewareLauncherService.Stop();
-            }
-            catch { }
+                if (!force && IsSystemReady())
+                {
+                    Log.Info(TAG, "Skipping restart - a concurrent request already restarted the MiddlewareLauncherService");
+                    return;
+                }
 
-            PowerManagerHelper.AskUserToDisableBatteryOptimization(Android.App.Application.Context);
-            MiddlewareLauncherService.Start(cashBoxId.ToString(), accessToken, isSandbox, logLevel, new Dictionary<string, object>());
-            await WaitForLocalMiddlewareServiceInitializationAsync().ConfigureAwait(false);
-            Log.Info(TAG, "MiddlewareLauncherService restart process completed");
+                Log.Info(TAG, "Starting MiddlewareLauncherService restart process");
+                var isSandbox = true;
+                var logLevel = LogLevel.Debug;
+                try
+                {
+                    MiddlewareLauncherService.Stop();
+                }
+                catch { }
+
+                await WaitForMiddlewareLauncherServiceToStopAsync().ConfigureAwait(false);
+
+                LauncherRuntimeState.LocalMiddlewareServiceInstance = null;
+                LauncherRuntimeState.PosSystemApiCore = null;
+                LauncherRuntimeState.StartupTask = null;
+
+                PowerManagerHelper.AskUserToDisableBatteryOptimization(Android.App.Application.Context);
+                MiddlewareLauncherService.Start(cashBoxId.ToString(), accessToken, isSandbox, logLevel, new Dictionary<string, object>());
+                await WaitForLocalMiddlewareServiceInitializationAsync().ConfigureAwait(false);
+                Log.Info(TAG, "MiddlewareLauncherService restart process completed");
+            }
+            finally
+            {
+                _restartLock.Release();
+            }
+        }
+
+        private static bool IsSystemReady()
+            => LauncherRuntimeState.LocalMiddlewareServiceInstance?.IsRunning == true
+                && LauncherRuntimeState.StartupTask?.IsCompletedSuccessfully == true;
+
+
+        private async Task WaitForMiddlewareLauncherServiceToStopAsync()
+        {
+            const int maxWaitTimeMs = 10_000;
+            const int pollIntervalMs = 100;
+
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+            while (MiddlewareLauncherService.IsRunning())
+            {
+                if (stopwatch.ElapsedMilliseconds >= maxWaitTimeMs)
+                {
+                    Log.Warn(TAG, $"Timeout waiting for MiddlewareLauncherService to stop after {stopwatch.ElapsedMilliseconds}ms");
+                    throw new TimeoutException("MiddlewareLauncherService failed to stop within the expected time");
+                }
+                await Task.Delay(pollIntervalMs).ConfigureAwait(false);
+            }
+            Log.Info(TAG, $"MiddlewareLauncherService stopped after {stopwatch.ElapsedMilliseconds}ms");
         }
 
         private async Task WaitForLocalMiddlewareServiceInitializationAsync()

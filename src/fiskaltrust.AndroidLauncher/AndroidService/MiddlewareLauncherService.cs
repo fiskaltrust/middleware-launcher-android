@@ -26,6 +26,14 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
         private const int NOTIFICATION_ID = 0x66746d77;
         private const string NOTIFICATION_CHANNEL_ID = "eu.fiskaltrust.launcher.android";
 
+        private static volatile bool _isRunning;
+
+        public override void OnCreate()
+        {
+            base.OnCreate();
+            _isRunning = true;
+        }
+
         [return: GeneratedEnum]
         public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
         {
@@ -164,6 +172,7 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
 
             Log.CloseAndFlush();
             base.OnDestroy();
+            _isRunning = false;
         }
 
         private void Connectivity_ConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
@@ -173,7 +182,7 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
 
         public static void Start(string cashboxId, string accessToken, bool isSandbox, LogLevel logLevel, Dictionary<string, object> additionalScuParams)
         {
-            if (!IsRunning(typeof(MiddlewareLauncherService)))
+            if (!IsRunning())
             {
                 var bundle = new Bundle();
                 bundle.PutString("cashboxid", cashboxId);
@@ -194,12 +203,14 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
             // TODO: helipad-upload
             Log.Logger.Information("Stopping the fiskaltrust.Middleware service");
 
-            if (IsRunning(typeof(MiddlewareLauncherService)))
+            if (IsRunning())
             {
                 var intent = new Intent(Android.App.Application.Context, typeof(MiddlewareLauncherService));
                 Android.App.Application.Context.StopService(intent);
             }
         }
+
+        public static bool IsRunning() => _isRunning;
 
         public static void SetState(LauncherState state, string contentText = null)
         {
@@ -248,20 +259,6 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                 var manager = (NotificationManager)Android.App.Application.Context.GetSystemService(NotificationService);
                 manager.CreateNotificationChannel(channel);
             }
-        }
-
-        private static bool IsRunning(Type type)
-        {
-            var manager = (ActivityManager)Android.App.Application.Context.GetSystemService(ActivityService);
-
-            foreach (var service in manager.GetRunningServices(int.MaxValue))
-            {
-                if (service.Service.ClassName.Equals(Java.Lang.Class.FromType(type).CanonicalName))
-                {
-                    return true;
-                }
-            }
-            return false;
         }
 
         public override IBinder? OnBind(Intent? intent)
