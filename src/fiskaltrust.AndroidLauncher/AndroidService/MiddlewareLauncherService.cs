@@ -153,7 +153,6 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
 
             Task.Run(async () =>
             {
-                // await AdminEndpointService.Instance.StopAsync();
                 if (LauncherRuntimeState.LocalMiddlewareServiceInstance != null)
                 {
                     await LauncherRuntimeState.LocalMiddlewareServiceInstance.StopAsync();
