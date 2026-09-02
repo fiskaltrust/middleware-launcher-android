@@ -30,7 +30,9 @@ namespace fiskaltrust.AndroidLauncher.Services
             "/echo",
             "/v2/echo",
             "/journal",
-            "/v2/journal"
+            "/v2/journal",
+             "/pay",
+            "/v2/pay"
         };
 
         public PosSystemApiRequestHandler(Action<string>? progressReporter = null)
@@ -51,8 +53,8 @@ namespace fiskaltrust.AndroidLauncher.Services
                 }
 
                 var isLocalEndpoint = request.IsLocalEndpoint(LocalEndpoints);
-                var isLocalPayment = request.Path.Contains("/pay", StringComparison.OrdinalIgnoreCase) && IsLocalPayment();
-                if (isLocalEndpoint || isLocalPayment)
+                
+                if (isLocalEndpoint)
                 {
                     Log.Info(TAG, $"Routing to local middleware: {request.Path}");
                     return await MakeLocalRequestAsync(request).ConfigureAwait(false);
@@ -264,17 +266,6 @@ namespace fiskaltrust.AndroidLauncher.Services
 
             Log.Warn(TAG, $"Timeout waiting for LocalMiddlewareServiceInstance initialization after {stopwatch.ElapsedMilliseconds}ms");
             throw new TimeoutException("LocalMiddlewareServiceInstance failed to initialize within the expected time");
-        }
-        
-        private bool IsLocalPayment()
-        {
-            if (LauncherRuntimeState.POSSystemApiCoreConfiguration == null)
-            {
-                throw new InvalidOperationException("Payment requests cannot be the first request because the POS System API Core is not running yet. Please send a StartReceipt request first.");
-            }
-            var cashBoxConfig = JsonSerializer.Deserialize<ftCashBoxConfiguration>(LauncherRuntimeState.POSSystemApiCoreConfiguration.Configuration);
-            var helpers = cashBoxConfig.helpers?.Where(h => h.Package == "fiskaltrust.Middleware.Helper.LocalPosSystemApi" && h.Configuration["UseLocalInstoreAppCommunication"].ToString().Equals("true", StringComparison.CurrentCultureIgnoreCase));
-            return helpers.Any();
         }
     }
 }

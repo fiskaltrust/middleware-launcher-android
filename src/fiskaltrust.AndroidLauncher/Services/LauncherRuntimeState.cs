@@ -8,6 +8,5 @@ namespace fiskaltrust.AndroidLauncher.Services
         public static LocalMiddlewareLauncher? LocalMiddlewareServiceInstance { get; set; }
 
         public static PosSystemApiCore? PosSystemApiCore { get; set; }
-        public static POSSystemApiCoreConfiguration? POSSystemApiCoreConfiguration { get; set; }
     }
 }
