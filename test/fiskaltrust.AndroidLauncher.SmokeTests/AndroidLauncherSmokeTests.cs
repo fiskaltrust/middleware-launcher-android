@@ -1,56 +1,23 @@
-﻿using FluentAssertions;
 using NUnit.Framework;
-using System;
-using System.Threading.Tasks;
-using Xamarin.UITest;
+using OpenQA.Selenium.Appium.Android;
 
 namespace fiskaltrust.AndroidLauncher.SmokeTests
 {
+    [TestFixture]
     public abstract class AndroidLauncherSmokeTests
     {
-        protected IApp App;
+        protected AndroidDriver _driver;
 
-        protected abstract string AppProtocol { get; }
-
-        [SetUp]
-        public void BeforeEachTest()
+        [OneTimeSetUp]
+        public void InitFixture()
         {
-            App = AppInitializer.StartApp(AppProtocol);
+            _driver = AppiumSetup.RunBeforeAnyTests();
         }
 
-        protected void StartLauncher(string cashboxId, string accessToken)
+        [OneTimeTearDown]
+        public void CleanupFixture()
         {
-            var results = App.WaitForElement(c => c.Id("ftLogo"));
-            App.Screenshot("MainActivity");
-            results.Should().HaveCount(1);
-
-            App.Invoke("SendStartIntentTestBackdoor", new object[] { cashboxId, accessToken });
-        }
-
-        protected async Task WaitForStart(string url, TimeSpan timeSpan)
-        {
-            const string message = "Ping";
-            var startTime = DateTime.UtcNow;
-
-            while (DateTime.UtcNow < startTime + timeSpan)
-            {
-                try
-                {
-                    var result = App.Invoke("SendEchoTestBackdoor", new object[] { url, message }) as string;
-                    if (result == message)
-                        return;
-                    TestContext.Out.WriteLine("Echo result: " + result);
-                }
-                catch (Exception ex)
-                {
-                    TestContext.Error.WriteLine(ex);
-                }
-
-                await Task.Delay(3000);
-            }
-
-            App.Screenshot("Timeout");
-            throw new TimeoutException($"endpoint at {url} was not reachable after {timeSpan}.");
+            AppiumSetup.RunAfterAnyTests(_driver);
         }
     }
 }

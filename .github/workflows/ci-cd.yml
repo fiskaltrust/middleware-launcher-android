@@ -2,100 +2,151 @@ name: Android Build and Upload
 
 on:
   push:
-    branches: [ master ]
+    branches: [maui]
+    tags: ["*"]
   pull_request:
-    branches: [ master ]
+    branches: [maui]
 
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
+  checks: write
+  pull-requests: write
 
 env:
-    BUILD_CONFIGURATION: Release
-    APP_NAME: eu.fiskaltrust.androidlauncher
-    MAUI_SDK: net9.0-android
-    BASE_FOLDER: src/fiskaltrust.AndroidLauncher
-    APPLICATION_DISPLAY_VERSION: ${{format('{0}{1}', '1.3.69.', github.run_id)}}
+  BUILD_CONFIGURATION: Release
+  APP_NAME: eu.fiskaltrust.androidlauncher
+  MAUI_SDK: net10.0-android
+  BASE_FOLDER: src/fiskaltrust.AndroidLauncher
 jobs:
   buildAndroid:
-      runs-on: windows-latest
+    runs-on: windows-latest
+    outputs:
+      release_version: ${{ steps.version.outputs.release_version }}
+      is_prerelease: ${{ steps.version.outputs.is_prerelease }}
 
-      steps:
-        - uses: actions/checkout@v4
-          with:
-            lfs: true
-            submodules: true
-  
-        - uses: actions/setup-dotnet@v4
-          with:
-            dotnet-version: '9.x.x'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 0
+          submodules: recursive
+          token: ${{secrets.SUBMODULES_READ}}
 
-        - name: Calculate dynamic version code
-          shell: bash
-          run: |
-            # Get current date and time
-            CURRENT_YEAR=$(date +%y)
-            DAY_OF_YEAR=$(date +%j)
-            
-            # Format: YYDDDXXX where XXX is GitHub run number modulo 1000 to keep it within 3 digits
-            RUN_NUMBER_MOD=$((${GITHUB_RUN_NUMBER} % 1000))
-            RUN_NUMBER_PADDED=$(printf "%03d" $RUN_NUMBER_MOD)
-            
-            # Format: YYDDDXXX
-            VERSION_CODE="${CURRENT_YEAR}${DAY_OF_YEAR}${RUN_NUMBER_PADDED}"
-            
-            echo "APPLICATION_VERSION_CODE=${VERSION_CODE}" >> $GITHUB_ENV
-            echo "Calculated version code: ${VERSION_CODE}"
-            echo "  Year (YY): ${CURRENT_YEAR}"
-            echo "  Day of year (DDD): ${DAY_OF_YEAR}"
-            echo "  Run number (XXX): ${RUN_NUMBER_PADDED} (from run #${GITHUB_RUN_NUMBER})"
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.x.x"
 
-        - name: Print versions
-          shell: bash
-          run: |
-            echo "Display Version: ${{env.APPLICATION_DISPLAY_VERSION}}" 
-            echo "Versioncode: ${{env.APPLICATION_VERSION_CODE}}" 
+      - name: Resolve version from Nerdbank.GitVersion
+        id: version
+        shell: bash
+        run: |
+          dotnet tool install --global nbgv
+          export PATH="$PATH:$HOME/.dotnet/tools"
 
-        - name: Extract Android signing key from env
-          shell: bash
-          run: |
-            mkdir android
-            echo "${{secrets.ANDROID_KEYSTORE_FILE }}" > android/release.jks.base64
-            base64 -d android/release.jks.base64 > android/release.decrypted.jks
-            realpath android/release.decrypted.jks
+          NBGV_SEMVER2=$(nbgv get-version -v SemVer2)
+          NBGV_PRERELEASE_VERSION=$(nbgv get-version -v PrereleaseVersion)
 
-        - name : Install android workload
-          shell: bash
-          run: |
-            dotnet workload install maui-android
+          if [[ -n "${NBGV_PRERELEASE_VERSION}" ]]; then
+            IS_PRERELEASE=true
+          else
+            IS_PRERELEASE=false
+          fi
 
-        - name : Build Android App
-          shell: bash
-          run: |
-            dotnet publish ${{env.BASE_FOLDER}}/fiskaltrust.AndroidLauncher.csproj \
-              -f ${{env.MAUI_SDK}} \
-              -c ${{env.BUILD_CONFIGURATION}} \
-              -p:AndroidEnableR8=true \
-              -p:AndroidLinkTool=r8 \
-              -p:AndroidSigningKeyPass="${{secrets.SIGNING_KEY_PASSWORD}}" \
-              -p:AndroidSigningStorePass="${{secrets.SIGNING_STORE_PASSWORD}}" \
-              -p:AndroidSigningKeyStore="${{github.workspace}}/android/release.decrypted.jks" \
-              -p:AndroidSigningKeyAlias="fiskaltrust-build" \
-              -p:AndroidKeyStore=true \
-              -p:ApplicationVersion=${{env.APPLICATION_VERSION_CODE}} \
-              -p:ApplicationDisplayVersion=${{env.APPLICATION_DISPLAY_VERSION}}
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            TAG_NAME="${GITHUB_REF_NAME}"
+            TAG_VERSION="${TAG_NAME#v}"
 
-        - uses: actions/upload-artifact@v4
-          with:
-            name: artifacts-android
-            path: |
-               ${{env.BASE_FOLDER}}/bin/${{env.BUILD_CONFIGURATION}}/${{env.MAUI_SDK}}/publish/**
+            if [[ "${TAG_NAME}" != "v${NBGV_SEMVER2}" ]]; then
+              echo "Tag '${TAG_NAME}' must match 'v${NBGV_SEMVER2}' (v-prefixed SemVer2)."
+              exit 1
+            fi
 
-        # - name: Upload artifacts to Azure Storage
-        #   shell: bash
-        #   run: |
-        #     az storage blob upload --account-name ${{vars.storageaccountname}} --account-key ${{secrets.storageaccountkey}} --container-name downloads --file ${{env.BASE_FOLDER}}/bin/${{env.BUILD_CONFIGURATION}}/${{env.MAUI_SDK}}/publish/eu.fiskaltrust.instore.app-Signed.apk --name android/fiskaltrust-instore-app/preview/${{env.APPLICATION_DISPLAY_VERSION}}/eu.fiskaltrust.instore.app-Signed-${{env.APPLICATION_DISPLAY_VERSION}}.apk
-        #     az storage blob upload --account-name ${{vars.storageaccountname}} --account-key ${{secrets.storageaccountkey}} --container-name downloads --file ${{env.BASE_FOLDER}}/bin/${{env.BUILD_CONFIGURATION}}/${{env.MAUI_SDK}}/publish/eu.fiskaltrust.instore.app-Signed.aab --name android/fiskaltrust-instore-app/preview/${{env.APPLICATION_DISPLAY_VERSION}}/eu.fiskaltrust.instore.app-Signed-${{env.APPLICATION_DISPLAY_VERSION}}.aab
-        #     az storage blob upload --account-name ${{vars.storageaccountname}} --account-key ${{secrets.storageaccountkey}} --container-name downloads --file ${{env.BASE_FOLDER}}/bin/${{env.BUILD_CONFIGURATION}}/${{env.MAUI_SDK}}/publish/eu.fiskaltrust.instore.app-Signed.apk --name android/fiskaltrust-instore-app/preview/eu.fiskaltrust.instore.app-Signed.apk --overwrite
-        #     az storage blob upload --account-name ${{vars.storageaccountname}} --account-key ${{secrets.storageaccountkey}} --container-name downloads --file ${{env.BASE_FOLDER}}/bin/${{env.BUILD_CONFIGURATION}}/${{env.MAUI_SDK}}/publish/eu.fiskaltrust.instore.app-Signed.aab --name android/fiskaltrust-instore-app/preview/eu.fiskaltrust.instore.app-Signed.aab --overwrite
+            RELEASE_VERSION="${TAG_VERSION}"
+          else
+            RELEASE_VERSION="${NBGV_SEMVER2}"
+          fi
+
+          echo "Release Version: ${RELEASE_VERSION}"
+          echo "release_version=${RELEASE_VERSION}" >> "$GITHUB_OUTPUT"
+          echo "is_prerelease=${IS_PRERELEASE}" >> "$GITHUB_OUTPUT"
+
+      - name: Extract Android signing key from env
+        shell: bash
+        run: |
+          mkdir android
+          echo "${{secrets.ANDROID_KEYSTORE_FILE }}" > android/release.jks.base64
+          base64 -d android/release.jks.base64 > android/release.decrypted.jks
+          realpath android/release.decrypted.jks
+
+      - name: Install android workload
+        shell: bash
+        run: |
+          dotnet workload install maui-android
+
+      - name: Build Android App
+        shell: bash
+        run: |
+          dotnet publish ${{env.BASE_FOLDER}}/fiskaltrust.AndroidLauncher.csproj \
+            -f ${{env.MAUI_SDK}} \
+            -c ${{env.BUILD_CONFIGURATION}} \
+            -p:AndroidEnableR8=true \
+            -p:AndroidLinkTool=r8 \
+            -p:AndroidSigningKeyPass="${{secrets.SIGNING_KEY_PASSWORD}}" \
+            -p:AndroidSigningStorePass="${{secrets.SIGNING_STORE_PASSWORD}}" \
+            -p:AndroidSigningKeyStore="${{github.workspace}}/android/release.decrypted.jks" \
+            -p:AndroidSigningKeyAlias="fiskaltrust-build" \
+            -p:AndroidKeyStore=true
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: artifacts-android
+          path: |
+            ${{env.BASE_FOLDER}}/bin/${{env.BUILD_CONFIGURATION}}/${{env.MAUI_SDK}}/publish/**
+
+  smoke-tests:
+    needs: buildAndroid
+    uses: ./.github/workflows/smoke-tests.yml
+    secrets: inherit
+
+  release:
+    needs: [buildAndroid, smoke-tests]
+    if: startsWith(github.ref, 'refs/tags/') || github.ref_name == 'maui'
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_VERSION: ${{ needs.buildAndroid.outputs.release_version }}
+      NBGV_IS_PRERELEASE: ${{ needs.buildAndroid.outputs.is_prerelease }}
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: artifacts-android
+          path: artifacts-android
+
+      - name: Locate built artifacts
+        id: artifacts
+        run: |
+          echo "apk=$(find artifacts-android -name 'eu.fiskaltrust.androidlauncher-Signed.apk')" >> "$GITHUB_OUTPUT"
+          echo "aab=$(find artifacts-android -name 'eu.fiskaltrust.androidlauncher-Signed.aab')" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          prerelease: ${{ env.NBGV_IS_PRERELEASE == 'true' }}
+          generate_release_notes: true
+          files: |
+            ${{ steps.artifacts.outputs.apk }}
+            ${{ steps.artifacts.outputs.aab }}
+
+      - name: Upload artifacts to Azure Storage
+        if: "github.ref_name == 'maui'"
+        shell: bash
+        run: |
+          az storage blob upload --account-name ${{vars.storageaccountname}} --account-key ${{secrets.storageaccountkey}} --container-name downloads --file ${{ steps.artifacts.outputs.apk }} --name android/fiskaltrust-middleware-launcher-android/preview/${{env.RELEASE_VERSION}}/eu.fiskaltrust.androidlauncher-Signed-${{env.RELEASE_VERSION}}.apk
+          az storage blob upload --account-name ${{vars.storageaccountname}} --account-key ${{secrets.storageaccountkey}} --container-name downloads --file ${{ steps.artifacts.outputs.aab }} --name android/fiskaltrust-middleware-launcher-android/preview/${{env.RELEASE_VERSION}}/eu.fiskaltrust.androidlauncher-Signed-${{env.RELEASE_VERSION}}.aab
+          az storage blob upload --account-name ${{vars.storageaccountname}} --account-key ${{secrets.storageaccountkey}} --container-name downloads --file ${{ steps.artifacts.outputs.apk }} --name android/fiskaltrust-middleware-launcher-android/preview/eu.fiskaltrust.androidlauncher-Signed.apk --overwrite
+          az storage blob upload --account-name ${{vars.storageaccountname}} --account-key ${{secrets.storageaccountkey}} --container-name downloads --file ${{ steps.artifacts.outputs.aab }} --name android/fiskaltrust-middleware-launcher-android/preview/eu.fiskaltrust.androidlauncher-Signed.aab --overwrite

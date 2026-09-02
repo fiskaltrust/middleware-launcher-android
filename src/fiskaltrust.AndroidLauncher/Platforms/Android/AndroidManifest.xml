@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+	<application 
+		android:allowBackup="true" 
+		android:icon="@mipmap/appicon" 
+		android:manageSpaceActivity="eu.fiskaltrust.androidlauncher.ManageSpaceActivity" 
+		android:supportsRtl="true" 
+		android:extractNativeLibs="true" 
+		android:usesCleartextTraffic="true">
+		<activity
+			android:name="eu.fiskaltrust.androidlauncher.PosSystemAPI"
+			android:exported="true"
+			android:theme="@style/PosSystemApiOverlayTheme" />
+
+		<service
+			android:name="eu.fiskaltrust.androidlauncher.PosSystemAPIService"
+			android:exported="true" />
+	</application>
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+	<uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" android:maxSdkVersion="32" />
+	<uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
+	<!--
+		REQUIRED on Android 11+ (API 30): without declaring the InStore App package here it stays invisible to
+		this app and bindService() fails silently (returns false / never calls onServiceConnected).
+	-->
+	<queries>
+		<package android:name="eu.fiskaltrust.instore.app" />
+	</queries>
+</manifest>

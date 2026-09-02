@@ -6,9 +6,9 @@ namespace fiskaltrust.AndroidLauncher.SmokeTests
     {
         public static class Http
         {
-            public static readonly string CashboxId = Environment.GetEnvironmentVariable("CASHBOXID") ?? "e02e85a4-dc4b-448f-9c30-3e1e9da71abf";
-            public static readonly string AccessToken = Environment.GetEnvironmentVariable("ACCESSTOKEN") ?? "BH0MPsyWk3uqFy6fL3W2fPCRmjhXJrobOYSL9reW7c44kR7ycBN3G1vWmc1bdUbh4grU/c6CsQzYGcMH6RTJPr8=";
-            public static readonly string Url = Environment.GetEnvironmentVariable("URL")?.Replace("rest://", "http://") ?? "http://localhost:1500/dec70a9c-4bb4-47e3-9686-78995b2c9f4e";
+            public static readonly string CashboxId = Environment.GetEnvironmentVariable("CASHBOXID") ?? "82229ac9-bad3-4198-a019-62a3eb85a1dd";
+            public static readonly string AccessToken = Environment.GetEnvironmentVariable("ACCESSTOKEN") ?? "BHn+czLqDAIKIZEL1OJNKaqS97DCCm4JQFQ+p97yem01q4fW5u6ipFQDgC0jHykqzl24flaNxx88gEbgmZz9hrM=";
+            public static readonly string Url = Environment.GetEnvironmentVariable("URL")?.Replace("rest://", "http://") ?? "http://localhost:1500/c3a2c180-fa33-482a-bcdc-a4cb57515564";
         }
 
         public static class Grpc

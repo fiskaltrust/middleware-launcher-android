@@ -1,0 +1,14 @@
+<Project>
+	<PropertyGroup>
+		<BuildingForAndroid Condition="'$(BuildingForAndroid)' == ''">true</BuildingForAndroid>
+	</PropertyGroup>
+	<!-- Workaround .NET 10 SDK bug in Microsoft.NET.Sdk.DefaultItems.targets:
+	     the condition '$(_TargetFrameworkVersionWithoutV)' >= '8.0' fails MSB4086 when
+	       (a) TargetFramework is empty (multi-target outer build), or
+	       (b) TargetFramework has a 3-part version like net461 (v4.6.1).
+	     Pre-setting PublishRelease short-circuits the buggy condition ONLY in those cases,
+	     leaving the launcher (net10.0-android) with the SDK default (Release for TFM >= 8). -->
+	<PropertyGroup Condition="'$(PublishRelease)' == '' and ('$(TargetFramework)' == '' or '$(TargetFramework)' == 'net461')">
+		<PublishRelease>false</PublishRelease>
+	</PropertyGroup>
+</Project>

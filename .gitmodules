@@ -1,3 +1,9 @@
 [submodule "middleware"]
 	path = middleware
 	url = https://github.com/fiskaltrust/middleware
+	branch = main
+[submodule "possystem-api"]
+	path = possystem-api
+	url = https://github.com/fiskaltrust/service-possystem-api
+	branch = main
+
