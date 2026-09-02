@@ -44,8 +44,8 @@ namespace fiskaltrust.AndroidLauncher.Services
             try
             {
                 var isLocalEndpoint = request.IsLocalEndpoint(LocalEndpoints);
-                var isLocalPayment = request.Path.Contains("/pay", StringComparison.OrdinalIgnoreCase) && IsLocalPayment();
-                if (isLocalEndpoint || isLocalPayment)
+                
+                if (isLocalEndpoint)
                 {
                     Log.Info(TAG, $"Routing to local middleware: {request.Path}");
                     return await MakeLocalRequestAsync(request, progressReporter).ConfigureAwait(false);

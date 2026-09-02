@@ -10,7 +10,9 @@ public class POSSystemApiCoreConfiguration
     [Required(AllowEmptyStrings = false)]
     public string AccessToken { get; set; } = null!;
     [Required(AllowEmptyStrings = false)]
-    public string Configuration { get; set; } = null!;   
+    public string Configuration { get; set; } = null!;
+    [Required(AllowEmptyStrings = false)]
+    public string MessageBusUri { get; set; } = "gateway-sandbox.fiskaltrust.eu/mqtt"!;
     [Required(AllowEmptyStrings = false)]
     public AppEnvironments AppEnvironment { get; set; }
     [Required(AllowEmptyStrings = false)]

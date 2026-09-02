@@ -44,7 +44,7 @@ namespace fiskaltrust.AndroidLauncher.Services.InStoreApp
         {
             if (IsConnected) return true;
 
-            var completed = await Task.WhenAny(_connectTcs.Task, Task.Delay(100)).ConfigureAwait(false);
+            var completed = await Task.WhenAny(_connectTcs.Task, Task.Delay(TimeSpan.FromSeconds(5))).ConfigureAwait(false);
             return completed == _connectTcs.Task && IsConnected;
         }
 
