@@ -1,9 +1,14 @@
 using Android.App;
 using Android.Content;
+using Android.Content.PM;
 using Android.OS;
+using Android.Runtime;
 using Android.Util;
+using fiskaltrust.AndroidLauncher.Extensions;
 using fiskaltrust.AndroidLauncher.Helpers;
+using fiskaltrust.AndroidLauncher.Notifications;
 using fiskaltrust.AndroidLauncher.Services;
+using fiskaltrust.AndroidLauncher.Services.Configuration;
 using fiskaltrust.Api.PosSystem.Core.Models;
 using Newtonsoft.Json;
 
@@ -11,9 +16,12 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
 {
     [Service(
         Name = "eu.fiskaltrust.androidlauncher.PosSystemAPIService",
-        Exported = true)]
+        Exported = true,
+        ForegroundServiceType = ForegroundService.TypeSpecialUse)]
     public class PosSystemAPIService : Service
     {
+        public const string ActionLocalBind = "eu.fiskaltrust.androidlauncher.action.LOCAL_BIND";
+
         private const string TAG = "PosSystemAPIService";
 
         private HandlerThread? _handlerThread;
@@ -28,14 +36,80 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
             _handlerThread = new HandlerThread("PosSystemAPIServiceThread");
             _handlerThread.Start();
 
-            _requestHandler = new PosSystemApiRequestHandler();
+            _requestHandler = new PosSystemApiRequestHandler(new ConfigurationProvider(
+                new HelipadConfigurationProvider(),
+                new LocalConfigurationProvider()),
+                LauncherNotificationHandler.Instance);
+
             _messenger = new Messenger(new IncomingHandler(_handlerThread.Looper!, _requestHandler));
+
+            LauncherNotificationHandler.Instance.EnsureNotificationChannel();
+        }
+
+        [return: GeneratedEnum]
+        public override StartCommandResult OnStartCommand(Intent? intent, [GeneratedEnum] StartCommandFlags flags, int startId)
+        {
+            Log.Info(TAG, "OnStartCommand");
+
+            var notification = LauncherNotificationHandler.Instance.BuildCurrentNotification();
+            if (Build.VERSION.SdkInt > BuildVersionCodes.Tiramisu)
+            {
+                // Android 14 requires us to specify the service type
+                StartForeground(LauncherNotificationHandler.NotificationId, notification, ForegroundService.TypeSpecialUse);
+            }
+            else
+            {
+                StartForeground(LauncherNotificationHandler.NotificationId, notification);
+            }
+
+            return StartCommandResult.Sticky;
+        }
+
+        /// <summary>
+        /// Called by the system when the foreground service exceeds its type-specific
+        /// runtime budget (e.g. the 6h/24h cap Android 15+ applies to some types). We
+        /// must stop within a few seconds or the system kills the app with an ANR.
+        /// The next request re-binds and re-promotes the service, restarting the
+        /// middleware.
+        /// </summary>
+        public override void OnTimeout(int startId, [GeneratedEnum] ForegroundService fgsType)
+        {
+            Log.Warn(TAG, $"Foreground service runtime budget exhausted (type={fgsType}); stopping service.");
+            StopForeground(StopForegroundFlags.Remove);
+            StopSelf();
         }
 
         public override IBinder? OnBind(Intent? intent)
         {
             Log.Info(TAG, "OnBind");
+            PromoteToForegroundService();
+
+            if (intent?.Action == ActionLocalBind)
+                return _requestHandler is { } handler ? new LocalBinder(handler) : null;
+
             return _messenger?.Binder;
+        }
+
+        /// <summary>
+        /// Starts this service as a foreground service so it survives unbinding and
+        /// shows the middleware state notification, regardless of which client bound
+        /// to it. A bound-only service would be destroyed on the last unbind, even
+        /// with foreground status.
+        /// </summary>
+        private void PromoteToForegroundService()
+        {
+            try
+            {
+                this.StartForegroundServiceCompat<PosSystemAPIService>();
+            }
+            catch (Exception ex)
+            {
+                // Android 12+ forbids starting a foreground service while the app is in
+                // the background (e.g. bound by a non-visible client). Fall back to
+                // bound-only operation: requests still work, but the service won't
+                // outlive the binding.
+                Log.Warn(TAG, $"Could not promote to foreground service: {ex.Message}");
+            }
         }
 
         public override void OnDestroy()
@@ -52,7 +126,41 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
             _handlerThread = null;
             _messenger = null;
             _requestHandler = null;
+
+            try
+            {
+                StopForeground(StopForegroundFlags.Remove);
+            }
+            catch (Exception ex)
+            {
+                Log.Warn(TAG, $"StopForeground failed: {ex.Message}");
+            }
+
             base.OnDestroy();
+        }
+
+
+        /// <summary>
+        /// Binder handed out to in-process clients (bound with <see cref="ActionLocalBind"/>).
+        /// It captures the request handler at bind time, so callers can never observe a
+        /// torn-down service (no null race with <see cref="OnDestroy"/>). Callers parse
+        /// and validate their raw input into a <see cref="PosSystemApiRequest"/> via the
+        /// shared <see cref="PosSystemApiRequestExtensions"/> helpers before calling, so
+        /// requests reach the handler identically to the Messenger path.
+        /// </summary>
+        public sealed class LocalBinder : Binder
+        {
+            private readonly PosSystemApiRequestHandler _requestHandler;
+
+            internal LocalBinder(PosSystemApiRequestHandler requestHandler)
+            {
+                _requestHandler = requestHandler;
+            }
+
+            public Task<PosSystemApiResponse> HandleRequestAsync(PosSystemApiRequest request, Action<string> progressReporter)
+            {
+                return _requestHandler.HandleAsync(request, progressReporter);
+            }
         }
 
         private sealed class IncomingHandler : Handler
@@ -113,45 +221,7 @@ namespace fiskaltrust.AndroidLauncher.AndroidService
                 var headerBase64Url = data.GetString(PosSystemApiServiceContract.KeyHeaderJsonBase64Url);
                 var bodyBase64Url = data.GetString(PosSystemApiServiceContract.KeyBodyBase64Url);
 
-                if (string.IsNullOrEmpty(method))
-                    throw new ArgumentException("Method is required");
-                if (string.IsNullOrEmpty(path))
-                    throw new ArgumentException("Path is required");
-                if (string.IsNullOrEmpty(headerBase64Url))
-                    throw new ArgumentException("HeaderJsonObjectBase64Url is required");
-
-                Dictionary<string, string> headers;
-                try
-                {
-                    var headersJson = Base64UrlHelper.Decode(headerBase64Url);
-                    headers = JsonConvert.DeserializeObject<Dictionary<string, string>>(headersJson)
-                        ?? new Dictionary<string, string>();
-                }
-                catch (Exception ex)
-                {
-                    throw new ArgumentException($"Invalid headers format: {ex.Message}", ex);
-                }
-
-                string? body = null;
-                if (!string.IsNullOrEmpty(bodyBase64Url))
-                {
-                    try
-                    {
-                        body = Base64UrlHelper.Decode(bodyBase64Url);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new ArgumentException($"Invalid body format: {ex.Message}", ex);
-                    }
-                }
-
-                return new PosSystemApiRequest
-                {
-                    Method = method!,
-                    Path = path!,
-                    Headers = headers,
-                    Body = body,
-                };
+                return PosSystemApiRequestExtensions.Parse(method, path, headerBase64Url, bodyBase64Url);
             }
 
             private static void SendReply(Messenger? replyTo, PosSystemApiResponse response)

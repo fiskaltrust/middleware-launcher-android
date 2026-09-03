@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:resources="clr-namespace:fiskaltrust.AndroidLauncher.Resources"
+             x:Class="fiskaltrust.AndroidLauncher.PosSystemApiView"
+             BackgroundColor="#44000000">
+
+    <Border BackgroundColor="#F7FFFFFF"
+            Stroke="#33FFFFFF"
+            StrokeThickness="1"
+            StrokeShape="RoundRectangle 18"
+            Padding="24"
+            HorizontalOptions="Center"
+            VerticalOptions="Center">
+
+        <VerticalStackLayout HorizontalOptions="Center">
+
+            <ActivityIndicator IsRunning="True"
+                               Color="#512BD4"
+                               HorizontalOptions="Center" />
+
+            <Label Text="{x:Static resources:AppResources.PosSystemApiLoading}"
+                   Margin="0,16,0,0"
+                   FontSize="16"
+                   FontAttributes="Bold"
+                   TextColor="#FF222222"
+                   HorizontalOptions="Center" />
+
+            <Label x:Name="stageLabel"
+                   Margin="0,10,0,0"
+                   FontSize="14"
+                   TextColor="#FF333333"
+                   HorizontalOptions="Center" />
+
+            <Label x:Name="endpointLabel"
+                   Margin="0,10,0,0"
+                   FontSize="14"
+                   TextColor="#FF333333"
+                   HorizontalOptions="Center" />
+        </VerticalStackLayout>
+    </Border>
+</ContentView>

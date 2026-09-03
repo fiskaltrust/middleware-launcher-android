@@ -2,6 +2,7 @@
 using Android.Runtime;
 using System.Runtime.InteropServices;
 using fiskaltrust.AndroidLauncher;
+using fiskaltrust.AndroidLauncher.Helpers.Logging;
 
 namespace fiskaltrust.AndroidLauncher;
 
@@ -22,6 +23,13 @@ public class MainApplication : MauiApplication
 				});
 		}
 		catch { }
+	}
+
+	public override void OnCreate()
+	{
+		LauncherLogging.InitializeDefault();
+
+		base.OnCreate();
 	}
 
 	protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
