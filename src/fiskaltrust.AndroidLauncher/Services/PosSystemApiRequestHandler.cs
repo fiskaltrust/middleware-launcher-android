@@ -3,6 +3,9 @@ using fiskaltrust.AndroidLauncher.AndroidService;
 using fiskaltrust.AndroidLauncher.Constants;
 using fiskaltrust.AndroidLauncher.Extensions;
 using fiskaltrust.AndroidLauncher.Helpers;
+using fiskaltrust.AndroidLauncher.Notifications;
+using fiskaltrust.AndroidLauncher.Services.Configuration;
+using fiskaltrust.Api.PosSystem.Core;
 using fiskaltrust.Api.PosSystem.Core.Models;
 using fiskaltrust.ifPOS.v2;
 using Microsoft.Extensions.Logging;
@@ -11,43 +14,32 @@ using System.Text.Json;
 
 namespace fiskaltrust.AndroidLauncher.Services
 {
-    public class PosSystemApiRequestHandler
+    internal class PosSystemApiRequestHandler
     {
         private const string TAG = "PosSystemAPI";
-        private readonly Action<string>? _progressReporter;
+        private readonly PosSystemAPIProvider _posSystemAPIProvider;
 
         private static readonly HashSet<string> LocalEndpoints = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
-            "/sign",
             "/v2/sign",
-            "/echo",
             "/v2/echo",
-            "/journal",
             "/v2/journal",
         };
 
-        public PosSystemApiRequestHandler(Action<string>? progressReporter = null)
+        public PosSystemApiRequestHandler(IConfigurationProvider configurationProvider, ILauncherStateNotifier stateNotifier)
         {
-            _progressReporter = progressReporter;
+            _posSystemAPIProvider = new PosSystemAPIProvider(configurationProvider, stateNotifier);
         }
 
-        public async Task<PosSystemApiResponse> HandleAsync(PosSystemApiRequest request)
+        public async Task<PosSystemApiResponse> HandleAsync(PosSystemApiRequest request, Action<string>? progressReporter = null)
         {
             try
             {
-                if (!request.IsValidVersion())
-                {
-                    Log.Error(TAG, $"Unsupported endpoint version: {request.Path}");
-                    return PosSystemApiResponse.Error(
-                        400,
-                        $"Unsupported endpoint version. Only default endpoints (e.g., /sign, /echo) and /v2/* endpoints are supported. Please do not use /v0/* or /v1/* versions.");
-                }
-
                 var isLocalEndpoint = request.IsLocalEndpoint(LocalEndpoints);
                 if (isLocalEndpoint)
                 {
                     Log.Info(TAG, $"Routing to local middleware: {request.Path}");
-                    return await MakeLocalRequestAsync(request).ConfigureAwait(false);
+                    return await MakeLocalRequestAsync(request, progressReporter).ConfigureAwait(false);
                 }
                 else
                 {
@@ -62,35 +54,22 @@ namespace fiskaltrust.AndroidLauncher.Services
             }
         }
 
-        private async Task<PosSystemApiResponse> MakeLocalRequestAsync(PosSystemApiRequest request)
+        private async Task<PosSystemApiResponse> MakeLocalRequestAsync(PosSystemApiRequest request, Action<string>? progressReporter)
         {
-            _progressReporter?.Invoke(ActivityStages.STAGE_STARTING_MIDDLEWARE);
-            await EnsureSystemReadyAsync((Guid)request.CashBoxId!, request.AccessToken).ConfigureAwait(false);
-            var supportedPaths = new[] { "/v2/echo", "/v2/sign", "/v2/journal" };
-            if (!supportedPaths.Contains(request.Path, StringComparer.OrdinalIgnoreCase))
-            {
-                return PosSystemApiResponse.Error(
-                    400,
-                    $"The selected path '{request.Path}' and method '{request.Method}' is not supported.");
-            }
-
             if (string.Equals(request.Path, "/v2/echo", StringComparison.OrdinalIgnoreCase))
             {
                 var echoRequest = JsonSerializer.Deserialize<EchoRequest>(request.Body ?? "");
                 if (echoRequest?.Message == null)
                 {
                     Log.Info(TAG, "Detected /v2/echo request with null Message - triggering service restart");
-                    _progressReporter?.Invoke(ActivityStages.STAGE_STARTING_MIDDLEWARE);
-                    await RestartMiddlewareLauncherServiceAsync((Guid)request.CashBoxId, request.AccessToken).ConfigureAwait(false);
+                    await _posSystemAPIProvider.Restart(request.CashBoxId!.Value, request.AccessToken, progressReporter);
                 }
             }
 
             try
             {
-                _progressReporter?.Invoke(ActivityStages.STAGE_STARTING_CORE);
-                var core = LauncherRuntimeState.PosSystemApiCore
-                    ?? throw new InvalidOperationException("PosSystemApiCore is not initialized.");
-                _progressReporter?.Invoke(ActivityStages.STAGE_PROCESSING_REQUEST);
+                var core = await _posSystemAPIProvider.Get(request.CashBoxId!.Value, request.AccessToken, progressReporter).ConfigureAwait(false);
+                progressReporter?.Invoke(ActivityStages.STAGE_PROCESSING_REQUEST);
                 return await core.HandleAsync(request).ConfigureAwait(false);
             }
             catch (Exception ex)
@@ -103,10 +82,7 @@ namespace fiskaltrust.AndroidLauncher.Services
 
         private async Task<PosSystemApiResponse> MakeCloudRequestAsync(PosSystemApiRequest request)
         {
-            using var httpClient = new HttpClient
-            {
-                Timeout = TimeSpan.FromMinutes(5),
-            };
+            using var httpClient = new HttpClient();
 
             try
             {
@@ -170,66 +146,6 @@ namespace fiskaltrust.AndroidLauncher.Services
                 Log.Error(TAG, $"Cloud request processing failed: {ex}");
                 return PosSystemApiResponse.Error(500, $"Request processing failed: {ex.Message}");
             }
-        }
-
-        private async Task EnsureSystemReadyAsync(Guid cashBoxId, string accessToken, CancellationToken cancellationToken = default)
-        {
-            if (LauncherRuntimeState.LocalMiddlewareServiceInstance == null
-                || !LauncherRuntimeState.LocalMiddlewareServiceInstance.IsRunning)
-            {
-                Log.Info(TAG, "Local middleware not running - triggering service restart");
-                _progressReporter?.Invoke(ActivityStages.STAGE_STARTING_MIDDLEWARE);
-                await RestartMiddlewareLauncherServiceAsync(cashBoxId, accessToken).ConfigureAwait(false);
-            }
-
-            _progressReporter?.Invoke(ActivityStages.STAGE_STARTING_CORE);
-
-            var startupTask = LauncherRuntimeState.StartupTask;
-            if (startupTask != null && !startupTask.IsCompleted)
-            {
-                await startupTask.ConfigureAwait(false);
-            }
-        }
-        private async Task RestartMiddlewareLauncherServiceAsync(Guid cashBoxId, string accessToken)
-        {
-            Log.Info(TAG, "Starting MiddlewareLauncherService restart process");
-            LauncherRuntimeState.LocalMiddlewareServiceInstance = null;
-            var isSandbox = true;
-            var logLevel = LogLevel.Debug;
-            try
-            {
-                MiddlewareLauncherService.Stop();
-            }
-            catch { }
-
-            PowerManagerHelper.AskUserToDisableBatteryOptimization(Android.App.Application.Context);
-            MiddlewareLauncherService.Start(cashBoxId.ToString(), accessToken, isSandbox, logLevel, new Dictionary<string, object>());
-            await WaitForLocalMiddlewareServiceInitializationAsync().ConfigureAwait(false);
-            Log.Info(TAG, "MiddlewareLauncherService restart process completed");
-        }
-
-        private async Task WaitForLocalMiddlewareServiceInitializationAsync()
-        {
-            const int maxWaitTimeMs = 30_000;
-            const int pollIntervalMs = 500;
-
-            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-            Log.Info(TAG, "Waiting for MiddlewareLauncherService startup to be initialized...");
-
-            while (stopwatch.ElapsedMilliseconds < maxWaitTimeMs)
-            {
-                var startupTask = LauncherRuntimeState.StartupTask;
-                if (startupTask != null)
-                {
-                    Log.Info(TAG, $"LocalMiddlewareServiceInstance initialized after {stopwatch.ElapsedMilliseconds}ms");
-                    await startupTask.ConfigureAwait(false);
-                    return;
-                }
-                await Task.Delay(pollIntervalMs).ConfigureAwait(false);
-            }
-
-            Log.Warn(TAG, $"Timeout waiting for MiddlewareLauncherService startup after {stopwatch.ElapsedMilliseconds}ms");
-            throw new TimeoutException("LocalMiddlewareServiceInstance failed to initialize within the expected time");
         }
     }
 }

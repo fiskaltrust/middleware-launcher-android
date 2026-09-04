@@ -14,7 +14,7 @@ using Serilog;
 
 namespace fiskaltrust.AndroidLauncher.Services
 {
-    public class LocalMiddlewareLauncher
+    public class MiddlewareProvider
     {
         private const string PACKAGE_NAME_DE_SWISSBIT = "fiskaltrust.Middleware.SCU.DE.Swissbit";
         private const string PACKAGE_NAME_DE_SWISSBIT_CLOUD_V2 = "fiskaltrust.Middleware.SCU.DE.SwissbitCloudV2";
@@ -23,21 +23,19 @@ namespace fiskaltrust.AndroidLauncher.Services
         private const string PACKAGE_NAME_IT_CUSTOM_RT_SERVER = "fiskaltrust.Middleware.SCU.IT.CustomRTServer";
         private const string PACKAGE_NAME_IT_CUSTOM_RT_PRINTER = "fiskaltrust.Middleware.SCU.IT.CustomRTPrinter";
 
-        private readonly IConfigurationProvider _configurationProvider;
-        private readonly ILocalConfigurationProvider _localConfigurationProvider;
+        private readonly ftCashBoxConfiguration _configuration;
 
         private readonly Guid _cashboxId;
+        public Guid CashboxId => _cashboxId;
         private readonly string _accessToken;
+        public string AccessToken => _accessToken;
         private readonly bool _isSandbox;
-        private readonly Dictionary<string, object> _scuParams;
         private readonly LogLevel _logLevel;
 
         private Android.OS.PowerManager.WakeLock _wakeLock;
         private List<IHelper> _helpers;
         private IPOS _poss;
         private AbstractScuList _scus;
-
-        public bool IsRunning { get; set; }
 
         public IPOS POS => _poss;
 
@@ -47,41 +45,21 @@ namespace fiskaltrust.AndroidLauncher.Services
 
         public PackageConfiguration QueueConfiguration { get; private set; }
 
-        public LocalMiddlewareLauncher(Guid cashboxId, string accessToken, bool isSandbox, LogLevel logLevel, Dictionary<string, object> scuParams)
+        public MiddlewareProvider(Guid cashboxId, string accessToken, ftCashBoxConfiguration configuration, bool isSandbox, LogLevel logLevel)
         {
+            _configuration = configuration;
             _cashboxId = cashboxId;
             _accessToken = accessToken;
             _isSandbox = isSandbox;
-            _scuParams = scuParams;
             _logLevel = logLevel;
 
-            _configurationProvider = new HelipadConfigurationProvider();
-            _localConfigurationProvider = new LocalConfigurationProvider();
             _helpers = new List<IHelper>();
             _scus = new AbstractScuList();
         }
 
         public async Task StartAsync()
         {
-            ftCashBoxConfiguration configuration;
-            try
-            {
-                configuration = await _configurationProvider.GetCashboxConfigurationAsync(_cashboxId, _accessToken, _isSandbox);
-                await _localConfigurationProvider.PersistAsync(_cashboxId, _accessToken, configuration);
-            }
-            catch (Exception e)
-            {
-                try
-                {
-                    configuration = await _localConfigurationProvider.GetCashboxConfigurationAsync(_cashboxId, _accessToken, _isSandbox);
-                }
-                catch
-                {
-                    throw new ConfigurationNotFoundException($"The configuration for the cashbox {_cashboxId} could not be downloaded. An internet connection is required at least on the initialization attempt of a cashbox.", e);
-                }
-            }
-
-            foreach (var scuConfig in configuration.ftSignaturCreationDevices)
+            foreach (var scuConfig in _configuration.ftSignaturCreationDevices)
             {
                 scuConfig.Configuration["sandbox"] = _isSandbox;
 
@@ -113,25 +91,23 @@ namespace fiskaltrust.AndroidLauncher.Services
                 }
             }
 
-            if (configuration.ftQueues.Count() != 1)
+            if (_configuration.ftQueues.Count() != 1)
             {
                 throw new ArgumentException("The Android launcher currently only supports exactly one queue package.");
             }
 
-            foreach (var queueConfig in configuration.ftQueues)
+            foreach (var queueConfig in _configuration.ftQueues)
             {
                 queueConfig.Configuration["sandbox"] = _isSandbox;
                 await InitializeQueueAsync(queueConfig);
             }
 
-            await InitializeHelipadHelperAsync(configuration);
-
-            IsRunning = true;
+            await InitializeHelipadHelperAsync(_configuration);
         }
 
         public async Task StopAsync()
         {
-            // LocalMiddlewareLauncher doesn't manage hosts directly, just helpers and wake locks
+            // MiddlewareProvider doesn't manage hosts directly, just helpers and wake locks
             foreach (var helper in _helpers)
             {
                 helper.StopBegin();
@@ -139,8 +115,6 @@ namespace fiskaltrust.AndroidLauncher.Services
             }
 
             _wakeLock?.Release();
-
-            IsRunning = false;
         }
 
         private async Task InitializeDESwissbitScuAsync(PackageConfiguration packageConfig)

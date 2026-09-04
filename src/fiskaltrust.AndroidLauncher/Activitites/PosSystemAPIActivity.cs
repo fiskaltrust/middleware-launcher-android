@@ -2,15 +2,13 @@ using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Util;
-using Android.Widget;
-using fiskaltrust.AndroidLauncher.Constants;
+using fiskaltrust.AndroidLauncher.AndroidService;
 using fiskaltrust.AndroidLauncher.Extensions;
-using fiskaltrust.AndroidLauncher.Services;
 using fiskaltrust.Api.PosSystem.Core.Models;
-using System.Reflection;
+using Microsoft.Maui.Controls.Embedding;
 
 namespace fiskaltrust.AndroidLauncher.Activitites
-{   
+{
     [Activity(
         Label = "PosSystemAPI",
         Name = "eu.fiskaltrust.androidlauncher.PosSystemAPI",
@@ -19,18 +17,26 @@ namespace fiskaltrust.AndroidLauncher.Activitites
     public class PosSystemAPIActivity : Activity
     {
         private const string TAG = "PosSystemAPI";
-        private readonly PosSystemApiRequestHandler _requestHandler;
+
+        private static readonly TimeSpan BindTimeout = TimeSpan.FromSeconds(30);
+
+        private ServiceBinderConnection? _connection;
+        private bool _bound;
+        private PosSystemApiView? _view;
 
         public PosSystemAPIActivity()
         {
-            _requestHandler = new PosSystemApiRequestHandler(SetProgressText);
         }
 
         protected override void OnCreate(Bundle? savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
-            SetContentView(ResolveLayoutId("pos_system_api_activity"));
+            var services = IPlatformApplication.Current!.Services;
+            var context = new MauiContext(services, this);
+            _view = new PosSystemApiView();
+            SetContentView(_view.ToPlatformEmbedded(context));
+
             PopulateEndpointPreview(Intent);
 
             Log.Info(TAG, "PosSystemAPI Activity started");
@@ -39,55 +45,76 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             Task.Run(ProcessIntentAsync);
         }
 
+        protected override void OnDestroy()
+        {
+            UnbindFromService();
+
+            base.OnDestroy();
+        }
+
         private async Task ProcessIntentAsync()
         {
-            PosSystemApiResponse response;
+            var intent = Intent;
+            if (intent == null)
+            {
+                Log.Error(TAG, "Intent is null");
+                FinishWithResponse(PosSystemApiResponse.Error(500, "Intent is null"));
+                return;
+            }
+
             try
             {
-                var intent = Intent;
-                if (intent == null)
-                {
-                    Log.Error(TAG, "Intent is null");
-                    response = PosSystemApiResponse.Error(500, "Intent is null");
-                    FinishWithResponse(response);
-                    return;
-                }
+                var request = PosSystemApiRequestExtensions.FromIntent(intent);
 
-                // Parse the intent into a DTO
-                PosSystemApiRequest request;
+                Log.Info(TAG, $"Processing request: {request.Method} {request.Path}");
 
-                try
-                {
-                    request = PosSystemApiRequestExtensions.FromIntent(intent);
-                    Log.Info(TAG, $"Processing request: {request.Method} {request.Path}");
-                }
-                catch (ArgumentException ex)
-                {
-                    Log.Error(TAG, $"Invalid request: {ex.Message}");
-                    response = PosSystemApiResponse.Error(400, ex.Message);
-                    FinishWithResponse(response);
-                    return;
-                }
-
-                response = await _requestHandler.HandleAsync(request).ConfigureAwait(false);
+                var response = await SendRequestToServiceAsync(request).ConfigureAwait(false);
                 FinishWithResponse(response);
             }
-            catch (InvalidOperationException ex)
+            catch (ArgumentException ex)
             {
-                Log.Error(TAG, $"Request processing failed: {ex}");
-                response = PosSystemApiResponse.Error(500, $"Internal error: {ex.Message}");
-                FinishWithResponse(response);
+                Log.Error(TAG, $"Invalid request: {ex.Message}");
+                FinishWithResponse(PosSystemApiResponse.Error(400, ex.Message));
             }
             catch (TimeoutException ex)
             {
                 Log.Error(TAG, $"Request processing timeout: {ex}");
-                response = PosSystemApiResponse.Error(500, $"Internal error: {ex.Message}");
-                FinishWithResponse(response);
+                FinishWithResponse(PosSystemApiResponse.Error(500, $"Internal error: {ex.Message}"));
+            }
+            catch (Exception ex)
+            {
+                Log.Error(TAG, $"Request processing failed: {ex}");
+                FinishWithResponse(PosSystemApiResponse.Error(500, $"Internal error: {ex.Message}"));
             }
         }
 
         /// <summary>
-        /// Finishes the activity with a structured response using the DTO
+        /// Binds to <see cref="PosSystemAPIService"/> with the local-bind action and
+        /// invokes the request handler directly through the local binder. The request
+        /// is parsed before binding, so malformed requests fail without starting the
+        /// service.
+        /// </summary>
+        private async Task<PosSystemApiResponse> SendRequestToServiceAsync(PosSystemApiRequest request)
+        {
+            _connection = new ServiceBinderConnection();
+
+            var serviceIntent = new Intent(this, typeof(PosSystemAPIService));
+            serviceIntent.SetAction(PosSystemAPIService.ActionLocalBind);
+            _bound = BindService(serviceIntent, _connection, Bind.AutoCreate);
+            if (!_bound)
+                throw new InvalidOperationException("Failed to bind to PosSystemAPIService");
+
+            var binder = await _connection.BinderTask.WaitAsync(BindTimeout).ConfigureAwait(false);
+
+            if (binder is not PosSystemAPIService.LocalBinder localBinder)
+                throw new InvalidOperationException("Unexpected binder type returned by PosSystemAPIService");
+
+            return await localBinder.HandleRequestAsync(request, SetProgressText).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Finishes the activity with a structured response using the DTO.
+        /// Used for errors raised locally, before or instead of a service reply.
         /// </summary>
         /// <param name="response">The PosSystemApiResponse to return</param>
         private void FinishWithResponse(PosSystemApiResponse response)
@@ -127,44 +154,58 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             });
         }
 
-        private static int ResolveLayoutId(string layoutName)
+        private void UnbindFromService()
         {
-            var field = typeof(Resource.Layout).GetField(layoutName, BindingFlags.Public | BindingFlags.Static);
-            if (field?.GetValue(null) is int layoutId && layoutId != 0)
-                return layoutId;
-
-            throw new InvalidOperationException($"Layout resource '{layoutName}' was not found.");
+            if (_bound && _connection != null)
+            {
+                try
+                {
+                    UnbindService(_connection);
+                }
+                catch (Exception ex)
+                {
+                    Log.Warn(TAG, $"UnbindService failed: {ex.Message}");
+                }
+            }
+            _bound = false;
+            _connection = null;
         }
 
-        private static int ResolveId(string idName)
-        {
-            var field = typeof(Resource.Id).GetField(idName, BindingFlags.Public | BindingFlags.Static);
-            if (field?.GetValue(null) is int id && id != 0)
-                return id;
-
-            throw new InvalidOperationException($"View id '{idName}' was not found.");
-        }
         private void PopulateEndpointPreview(Intent? intent)
         {
-            var endpointTextView = FindViewById<TextView>(ResolveId("pos_system_api_endpoint"));
-            
             var method = intent?.GetStringExtra(PosSystemAPIActivityIntentStatics.EXTRA_METHOD);
-            var path = intent?.GetStringExtra(PosSystemAPIActivityIntentStatics.EXTRA_PATH);        
+            var path = intent?.GetStringExtra(PosSystemAPIActivityIntentStatics.EXTRA_PATH);
 
-            endpointTextView.Text = $"{method.ToUpperInvariant()} {path}";
-        }        
-        private void SetProgressText(string text)
-        {
-            RunOnUiThread(() =>
-            {
-                var progressTextView = FindViewById<TextView>(ResolveId("pos_system_api_stage"));
-                if (progressTextView == null)
-                    return;
-
-                progressTextView.Text = text;
-            });
-           
+            _view?.SetEndpoint($"{method?.ToUpperInvariant()} {path}");
         }
 
+        private void SetProgressText(string text)
+        {
+            RunOnUiThread(() => _view?.SetStage(text));
+        }
+
+        private sealed class ServiceBinderConnection : Java.Lang.Object, IServiceConnection
+        {
+            private readonly TaskCompletionSource<IBinder> _tcs = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+            public Task<IBinder> BinderTask => _tcs.Task;
+
+            public void OnServiceConnected(ComponentName? name, IBinder? service)
+            {
+                if (service != null)
+                    _tcs.TrySetResult(service);
+                else
+                    _tcs.TrySetException(new InvalidOperationException("Service connected with a null binder"));
+            }
+
+            public void OnServiceDisconnected(ComponentName? name)
+            {
+            }
+
+            public void OnNullBinding(ComponentName? name)
+            {
+                _tcs.TrySetException(new InvalidOperationException("PosSystemAPIService returned a null binding"));
+            }
+        }
     }
 }

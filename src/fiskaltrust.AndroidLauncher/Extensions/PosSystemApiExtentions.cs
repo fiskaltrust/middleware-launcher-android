@@ -1,6 +1,7 @@
 ﻿using Android.Content;
 using fiskaltrust.AndroidLauncher.Helpers;
 using fiskaltrust.Api.PosSystem.Core.Models;
+using fiskaltrust.ifPOS.v2;
 using Newtonsoft.Json;
 
 namespace fiskaltrust.AndroidLauncher.Extensions
@@ -12,21 +13,29 @@ namespace fiskaltrust.AndroidLauncher.Extensions
             if (intent == null)
                 throw new ArgumentNullException(nameof(intent));
 
-            // Extract required fields
-            var method = intent.GetStringExtra(PosSystemAPIActivityIntentStatics.EXTRA_METHOD);
-            var path = intent.GetStringExtra(PosSystemAPIActivityIntentStatics.EXTRA_PATH);
-            var headerBase64Url = intent.GetStringExtra(PosSystemAPIActivityIntentStatics.EXTRA_HEADER_JSON_BASE64URL);
-            var bodyBase64Url = intent.GetStringExtra(PosSystemAPIActivityIntentStatics.EXTRA_BODY_BASE64URL);
+            return Parse(
+                intent.GetStringExtra(PosSystemAPIActivityIntentStatics.EXTRA_METHOD),
+                intent.GetStringExtra(PosSystemAPIActivityIntentStatics.EXTRA_PATH),
+                intent.GetStringExtra(PosSystemAPIActivityIntentStatics.EXTRA_HEADER_JSON_BASE64URL),
+                intent.GetStringExtra(PosSystemAPIActivityIntentStatics.EXTRA_BODY_BASE64URL));
+        }
 
-            // Validate required fields
+        /// <summary>
+        /// Validates and decodes the four raw request fields shared by the intent
+        /// surface and the Messenger bundle path into a <see cref="PosSystemApiRequest"/>.
+        /// Throws <see cref="ArgumentException"/> with wire-visible messages on
+        /// missing or malformed input.
+        /// </summary>
+        public static PosSystemApiRequest Parse(string? method, string? path, string? headerBase64Url, string? bodyBase64Url)
+        {
             if (string.IsNullOrEmpty(method))
-                throw new ArgumentException("Method is required", nameof(intent));
+                throw new ArgumentException("Method is required");
 
             if (string.IsNullOrEmpty(path))
-                throw new ArgumentException("Path is required", nameof(intent));
+                throw new ArgumentException("Path is required");
 
             if (string.IsNullOrEmpty(headerBase64Url))
-                throw new ArgumentException("HeaderJsonObjectBase64Url is required", nameof(intent));
+                throw new ArgumentException("HeaderJsonObjectBase64Url is required");
 
             // Decode headers
             Dictionary<string, string> headers;
@@ -38,8 +47,8 @@ namespace fiskaltrust.AndroidLauncher.Extensions
             }
             catch (Exception ex)
             {
-                throw new ArgumentException($"Invalid headers format: {ex.Message}", nameof(intent), ex);
-            }            
+                throw new ArgumentException($"Invalid headers format: {ex.Message}", ex);
+            }
 
             // Decode body if present
             string? body = null;
@@ -51,31 +60,17 @@ namespace fiskaltrust.AndroidLauncher.Extensions
                 }
                 catch (Exception ex)
                 {
-                    throw new ArgumentException($"Invalid body format: {ex.Message}", nameof(intent), ex);
+                    throw new ArgumentException($"Invalid body format: {ex.Message}", ex);
                 }
             }
 
             return new PosSystemApiRequest
             {
-                Method = method,
-                Path = path,
+                Method = method!,
+                Path = path!,
                 Headers = headers,
                 Body = body
             };
-        }
-        public static bool IsValidVersion(this PosSystemApiRequest request)
-        {
-            var unsupportedPrefixes = new[] { "/v0/", "/v1/", "/json/v0/", "/json/v1/", "/xml/v0/", "/xml/v1/" };
-
-            foreach (var prefix in unsupportedPrefixes)
-            {
-                if (request.Path.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
-                {
-                    return false;
-                }
-            }
-
-            return true;
         }
 
         public static bool IsLocalEndpoint(this PosSystemApiRequest request, HashSet<string> localEndpoints)
@@ -83,6 +78,7 @@ namespace fiskaltrust.AndroidLauncher.Extensions
             return localEndpoints.Contains(request.Path);
         }
     }
+
     public static class PosSystemApiResponseExtensions
     {
         /// <summary>

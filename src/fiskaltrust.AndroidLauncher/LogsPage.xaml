@@ -10,33 +10,73 @@
 
     <Grid RowDefinitions="Auto,*">
 
-        <Grid Grid.Row="0" BackgroundColor="{StaticResource Primary}" IsClippedToBounds="True">
+        <Grid Grid.Row="0"
+              BackgroundColor="{StaticResource Primary}"
+              HeightRequest="56"
+              Padding="16,0">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnBarTapped" />
+                <SwipeGestureRecognizer Direction="Down" Swiped="OnBarSwiped" />
+                <SwipeGestureRecognizer Direction="Up" Swiped="OnBarSwiped" />
+            </Grid.GestureRecognizers>
+            <HorizontalStackLayout VerticalOptions="Center" Spacing="6">
+                <Label x:Name="DateLabel"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource White}"
+                       VerticalOptions="Center" />
+                <Image x:Name="ChevronIcon"
+                       Source="{mi:Material Icon=ArrowDropDown, IconColor=White}"
+                       HeightRequest="26"
+                       WidthRequest="26"
+                       VerticalOptions="Center" />
+            </HorizontalStackLayout>
+        </Grid>
+
+        <CollectionView Grid.Row="1"
+                        x:Name="LogView"
+                        VerticalScrollBarVisibility="Always"
+                        Scrolled="OnLogViewScrolled">
+            <CollectionView.Header>
+                <Grid x:Name="TruncatedLogBanner" RowDefinitions="Auto,Auto">
+                    <VerticalStackLayout Grid.Row="0" Padding="24,20" Spacing="8" HorizontalOptions="Center">
+                        <Image Source="{mi:Material Icon=InfoOutline, IconColor='#6E6E6E'}"
+                               HeightRequest="28"
+                               WidthRequest="28"
+                               HorizontalOptions="Center" />
+                        <Label x:Name="TruncatedLogText"
+                               FontSize="13"
+                               TextColor="{StaticResource Gray500}"
+                               HorizontalTextAlignment="Center" />
+                        <Button Text="Export full log"
+                                Clicked="OnExportCurrentClicked"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource Primary}"
+                                HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                    <BoxView Grid.Row="1" HeightRequest="1" BackgroundColor="#DDDDDD" />
+                </Grid>
+            </CollectionView.Header>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Label Text="{Binding}"
+                           FontFamily="IosevkaRegular"
+                           LineBreakMode="CharacterWrap" />
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- The drawer overlays the log view instead of resizing it, so the
+             list's scroll position is never disturbed by opening/closing. -->
+        <Grid Grid.Row="1"
+              VerticalOptions="Start"
+              IsClippedToBounds="True"
+              ZIndex="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="56" />
                 <RowDefinition x:Name="DrawerBodyRow" Height="0" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" Padding="16,0">
-                <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnBarTapped" />
-                    <SwipeGestureRecognizer Direction="Down" Swiped="OnBarSwiped" />
-                    <SwipeGestureRecognizer Direction="Up" Swiped="OnBarSwiped" />
-                </Grid.GestureRecognizers>
-                <HorizontalStackLayout VerticalOptions="Center" Spacing="6">
-                    <Label x:Name="DateLabel"
-                           FontSize="18"
-                           FontAttributes="Bold"
-                           TextColor="{StaticResource White}"
-                           VerticalOptions="Center" />
-                    <Image x:Name="ChevronIcon"
-                           Source="{mi:Material Icon=ArrowDropDown, IconColor=White}"
-                           HeightRequest="26"
-                           WidthRequest="26"
-                           VerticalOptions="Center" />
-                </HorizontalStackLayout>
-            </Grid>
-
-            <Grid Grid.Row="1"
+            <Grid Grid.Row="0"
                   x:Name="DrawerBody"
                   BackgroundColor="#EDEDED"
                   RowDefinitions="*,Auto"
@@ -109,39 +149,6 @@
                        IsVisible="False" />
             </Grid>
         </Grid>
-
-        <CollectionView Grid.Row="1"
-                        x:Name="LogView"
-                        VerticalScrollBarVisibility="Always"
-                        Scrolled="OnLogViewScrolled">
-            <CollectionView.Header>
-                <Grid x:Name="TruncatedLogBanner" RowDefinitions="Auto,Auto">
-                    <VerticalStackLayout Grid.Row="0" Padding="24,20" Spacing="8" HorizontalOptions="Center">
-                        <Image Source="{mi:Material Icon=InfoOutline, IconColor='#6E6E6E'}"
-                               HeightRequest="28"
-                               WidthRequest="28"
-                               HorizontalOptions="Center" />
-                        <Label x:Name="TruncatedLogText"
-                               FontSize="13"
-                               TextColor="{StaticResource Gray500}"
-                               HorizontalTextAlignment="Center" />
-                        <Button Text="Export full log"
-                                Clicked="OnExportCurrentClicked"
-                                BackgroundColor="Transparent"
-                                TextColor="{StaticResource Primary}"
-                                HorizontalOptions="Center" />
-                    </VerticalStackLayout>
-                    <BoxView Grid.Row="1" HeightRequest="1" BackgroundColor="#DDDDDD" />
-                </Grid>
-            </CollectionView.Header>
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Label Text="{Binding}"
-                           FontFamily="IosevkaRegular"
-                           LineBreakMode="NoWrap" />
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
 
     </Grid>
 
