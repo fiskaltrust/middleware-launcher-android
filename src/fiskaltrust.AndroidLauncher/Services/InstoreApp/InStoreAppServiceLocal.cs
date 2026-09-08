@@ -39,7 +39,7 @@ public sealed class InStoreAppServiceLocal : IInStoreAppService, IDisposable
 
         var tcsAcknowledge = new TaskCompletionSource<PayRequestAcceptedResponse>(TaskCreationOptions.RunContinuationsAsynchronously);
         var tcsPayResponse = new TaskCompletionSource<PayResponseState>(TaskCreationOptions.RunContinuationsAsynchronously);
-        _payRequests[operationId] = (tcsAcknowledge, tcsPayResponse);
+        _payRequests[options.OperationId] = (tcsAcknowledge, tcsPayResponse);
 
         try
         {
@@ -63,7 +63,7 @@ public sealed class InStoreAppServiceLocal : IInStoreAppService, IDisposable
         }
         finally
         {
-            _payRequests.TryRemove(operationId, out _);
+            _payRequests.TryRemove(options.OperationId, out _);
         }
     }
 
@@ -138,7 +138,7 @@ public sealed class InStoreAppServiceLocal : IInStoreAppService, IDisposable
             _connectionGate.Release();
         }
     }
-    
+
     private void ThrowIfDisposed()
     {
         if (_disposed)

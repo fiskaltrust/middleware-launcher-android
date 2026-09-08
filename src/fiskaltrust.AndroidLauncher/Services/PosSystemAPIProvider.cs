@@ -66,7 +66,7 @@ internal class PosSystemAPIProvider {
             var helperConfigurations = configuration?.helpers
             ?.Where(h => h.Package == "fiskaltrust.Middleware.Helper.LocalPosSystemApi");
 
-            if (helperConfigurations?.Count() >= 1)
+            if (helperConfigurations?.Count() > 1)
             {
                 throw new InvalidOperationException($"Multiple LocalPosSystemApi helpers found in the cashbox. Only one helper per cashbox is allowed.");
             }
