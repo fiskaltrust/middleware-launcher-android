@@ -1,14 +1,21 @@
+using Android.Content.Res;
 using Android.Util;
 using fiskaltrust.AndroidLauncher.AndroidService;
 using fiskaltrust.AndroidLauncher.Constants;
 using fiskaltrust.AndroidLauncher.Extensions;
 using fiskaltrust.AndroidLauncher.Helpers;
+using fiskaltrust.AndroidLauncher.Services.Configuration;
+using fiskaltrust.AndroidLauncher.Services.InStoreApp;
 using fiskaltrust.AndroidLauncher.Notifications;
 using fiskaltrust.AndroidLauncher.Services.Configuration;
 using fiskaltrust.Api.PosSystem.Core;
 using fiskaltrust.Api.PosSystem.Core.Models;
+using fiskaltrust.Api.PosSystem.Core.v2.Pay.Models;
 using fiskaltrust.ifPOS.v2;
+using fiskaltrust.Payment;
+using fiskaltrust.storage.serialization.V0;
 using Microsoft.Extensions.Logging;
+using System.Net;
 using System.Text;
 using System.Text.Json;
 
@@ -24,6 +31,7 @@ namespace fiskaltrust.AndroidLauncher.Services
             "/v2/sign",
             "/v2/echo",
             "/v2/journal",
+            "/v2/pay",
         };
 
         public PosSystemApiRequestHandler(IConfigurationProvider configurationProvider, ILauncherStateNotifier stateNotifier)
@@ -36,6 +44,7 @@ namespace fiskaltrust.AndroidLauncher.Services
             try
             {
                 var isLocalEndpoint = request.IsLocalEndpoint(LocalEndpoints);
+                
                 if (isLocalEndpoint)
                 {
                     Log.Info(TAG, $"Routing to local middleware: {request.Path}");
