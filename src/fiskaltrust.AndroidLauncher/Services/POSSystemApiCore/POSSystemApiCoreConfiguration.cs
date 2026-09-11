@@ -12,10 +12,10 @@ public class POSSystemApiCoreConfiguration
     [Required(AllowEmptyStrings = false)]
     public string Configuration { get; set; } = null!;
     [Required(AllowEmptyStrings = false)]
-    public string MessageBusUri { get; set; } = "gateway-sandbox.fiskaltrust.eu/mqtt"!;
+    public string MessageBusUri { get => AppEnvironment == AppEnvironments.Production ? "gateway.fiskaltrust.eu/mqtt" : "gateway-sandbox.fiskaltrust.eu/mqtt"; set; }
     [Required(AllowEmptyStrings = false)]
     public AppEnvironments AppEnvironment { get; set; }
     [Required(AllowEmptyStrings = false)]
-    public LauncherEnvironments LauncherEnvironment { get; set; } = LauncherEnvironments.Local;   
+    public LauncherEnvironments LauncherEnvironment { get; set; } = LauncherEnvironments.Local;
 
 }
