@@ -1,19 +1,23 @@
 ﻿using Android.App;
 using fiskaltrust.AndroidLauncher.Extensions;
-using fiskaltrust.ifPOS.v1;
-using fiskaltrust.Middleware.Queue.SQLite;
-using fiskaltrust.storage.serialization.V0;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using System;
-using System.IO;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+using fiskaltrust.AndroidLauncher.PosApiPrint;
+using fiskaltrust.AndroidLauncher.Services.middleware;
 using fiskaltrust.AndroidLauncher.Signing;
+using fiskaltrust.ifPOS.v1;
 using fiskaltrust.ifPOS.v1.at;
 using fiskaltrust.ifPOS.v1.de;
 using fiskaltrust.ifPOS.v1.it;
 using fiskaltrust.Middleware.Abstractions;
-using fiskaltrust.AndroidLauncher.PosApiPrint;
+using fiskaltrust.Middleware.Localization.v2;
+using fiskaltrust.Middleware.Queue.SQLite;
+using fiskaltrust.Middleware.SCU.PL.InMemory;
+using fiskaltrust.Middleware.Storage.SQLite;
+using fiskaltrust.storage.serialization.V0;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
+using System;
+using System.IO;
 
 namespace fiskaltrust.AndroidLauncher.Services.Queue
 {
@@ -52,6 +56,33 @@ namespace fiskaltrust.AndroidLauncher.Services.Queue
                 return posApiHelper;
             }
             return pos;
+        }
+        public POSV2 CreatePOSV2(PackageConfiguration queueConfiguration,string countryCode, ILoggerFactory loggerFactory)
+        {
+            var workingDir = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            var migrationsFolder = Path.Combine(workingDir, "Migrations");
+
+            CopyMigrationsToDataDir(migrationsFolder);
+
+            queueConfiguration.Configuration["servicefolder"] = workingDir;
+            queueConfiguration.Configuration["migrationDirectory"] = migrationsFolder;
+          
+            if (countryCode != "PL")
+            {
+                throw new NotSupportedException($"The market \"{countryCode}\" of the queue {queueConfiguration.Id} is not served by this Android launcher instance. This instance serves only market Poland.");
+            }
+            var storageProvider = new SQLiteStorageProvider(loggerFactory, queueConfiguration.Id, queueConfiguration.Configuration, new SQLiteStorageConfiguration());
+            var queueBootStrapper = countryCode switch
+            {
+
+                "PL" => new fiskaltrust.Middleware.Localization.QueuePL.QueuePLBootstrapper(queueConfiguration.Id, loggerFactory, queueConfiguration.Configuration, new InMemorySCU(), storageProvider),
+                "AT" or "DE" or "FR" => throw new NotSupportedException($"For markets DE, AT and FR, v1 endpoint should be used."),
+                _ => throw new NotSupportedException($"The Countrycode {countryCode} for the Queue with id {queueConfiguration.Id} is not supported."),
+            };
+
+            var posV2 = new POSV2((queueBootStrapper.RegisterForEcho(), queueBootStrapper.RegisterForSign(), queueBootStrapper.RegisterForJournal()));
+
+            return posV2;
         }
 
         public static void CopyMigrationsToDataDir(string targetDirectory)

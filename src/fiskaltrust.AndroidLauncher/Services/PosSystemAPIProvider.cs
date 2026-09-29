@@ -14,6 +14,7 @@ using fiskaltrust.Api.PosSystem.Core.Interfaces;
 using fiskaltrust.Api.PosSystem.Core.Models;
 using Java.Util;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace fiskaltrust.AndroidLauncher.Services;
@@ -24,7 +25,7 @@ internal class PosSystemAPIProvider {
 
     private SemaphoreSlim _startupLock = new(1);
     private PosSystemApiCore? _posSystemApiCore = null;
-    private MiddlewareProvider? _middlewareProvider = null;
+    private IMiddlewareProvider? _middlewareProvider = null;
     private bool _running = false;
 
     public PosSystemAPIProvider(IConfigurationProvider configurationProvider, ILauncherStateNotifier stateNotifier)
@@ -43,7 +44,7 @@ internal class PosSystemAPIProvider {
                 await Start(cashboxId, accessToken, progressReporter);
             }
 
-            if (_middlewareProvider.CashboxId != cashboxId || _middlewareProvider.AccessToken != accessToken)
+            if (_middlewareProvider is null || _middlewareProvider.CashboxId != cashboxId || _middlewareProvider.AccessToken != accessToken)
             {
                 throw new InvalidOperationException("The requested cashboxid or accesstoken do not match the currently running cashbox. To start the requested cashbox send an echo null.");
             }
@@ -92,9 +93,14 @@ internal class PosSystemAPIProvider {
         Log.Logger.Information("Starting the fiskaltrust.Middleware...");
 
         Log.Logger.Debug($"CashBox ID: {cashboxId}, IsSandbox: {isSandbox}");
-        _middlewareProvider = new MiddlewareProvider(cashboxId, accessToken, configuration, isSandbox, logLevel);
+        var loggerFactory = IPlatformApplication.Current?.Services.GetService<ILoggerFactory>();
+        var countryCode = Helpers.Configuration.GetQueueLocalization(configuration.ftQueues.First());
+        
         try
         {
+            _middlewareProvider = countryCode == "PL"
+                ? new MiddlewareV2Provider(cashboxId, accessToken, configuration, isSandbox, loggerFactory, logLevel)
+                : new MiddlewareProvider(cashboxId, accessToken, configuration, isSandbox, logLevel);
             await _middlewareProvider.StartAsync();
 
             var config = new POSSystemApiCoreConfiguration
@@ -115,7 +121,8 @@ internal class PosSystemAPIProvider {
             await bootstrapper.ConfigureServices(services);
 
 
-            services.AddSingleton(_middlewareProvider.MiddlewareClientAndroid);
+            var middlewareClient = _middlewareProvider.MiddlewareClient;
+            services.AddSingleton(middlewareClient);
             if (localInstoreAppCommunication)
             {
                 Log.Logger.Information("Using local InStoreAppService for communication with the InStoreApp.");
@@ -125,7 +132,7 @@ internal class PosSystemAPIProvider {
             }
             services.AddSingleton<IOperationItemRepository, MemoryOperationItemRepository>();
             services.AddSingleton<IStorageFactory, StorageFactory>();
-
+           
             var provider = services.BuildServiceProvider();
             _posSystemApiCore = provider.GetRequiredService<PosSystemApiCore>();
 
@@ -160,7 +167,7 @@ internal class PosSystemAPIProvider {
 
         try
         {
-            if((_running || forceStop) && _middlewareProvider is not null)
+            if ((_running || forceStop) && _middlewareProvider is not null)
             {
                 await _middlewareProvider.StopAsync();
             }
