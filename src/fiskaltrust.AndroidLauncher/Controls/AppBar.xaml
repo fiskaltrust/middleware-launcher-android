@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:helpers="clr-namespace:fiskaltrust.AndroidLauncher.Helpers"
+             x:Class="fiskaltrust.AndroidLauncher.Controls.AppBar"
+             x:Name="Root">
+
+    <Grid HeightRequest="64"
+          Padding="8,0,20,0"
+          ColumnDefinitions="*,Auto"
+          BackgroundColor="{AppThemeBinding Light={StaticResource FtWhite}, Dark={StaticResource FtWhiteNight}}">
+
+        <Label Grid.Column="0"
+               Style="{StaticResource FtTitleLarge}"
+               Text="{Binding Title, Source={x:Reference Root}}"
+               TextColor="{AppThemeBinding Light={StaticResource FtOnSurface}, Dark={StaticResource FtOnSurfaceNight}}"
+               Padding="8,0"
+               VerticalOptions="Center"
+               LineBreakMode="TailTruncation"
+               MaxLines="1" />
+
+        <Grid Grid.Column="1"
+              x:Name="TrailingButton"
+              WidthRequest="48"
+              HeightRequest="48"
+              VerticalOptions="Center"
+              IsVisible="False">
+            <Button Style="{StaticResource FtTextButton}"
+                    FontFamily="{x:Static helpers:FaIcons.FontFamily}"
+                    Text="{Binding TrailingGlyph, Source={x:Reference Root}}"
+                    FontSize="24"
+                    CharacterSpacing="0"
+                    Padding="0"
+                    WidthRequest="40"
+                    HeightRequest="40"
+                    MinimumWidthRequest="40"
+                    MinimumHeightRequest="40"
+                    CornerRadius="20"
+                    TextColor="{AppThemeBinding Light={StaticResource FtIconDefault}, Dark={StaticResource FtIconDefaultNight}}"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    SemanticProperties.Description="{Binding TrailingDescription, Source={x:Reference Root}}"
+                    Clicked="OnTrailingTapped" />
+        </Grid>
+    </Grid>
+</ContentView>

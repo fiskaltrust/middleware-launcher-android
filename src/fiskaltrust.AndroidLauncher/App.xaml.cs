@@ -1,13 +1,10 @@
-﻿using MauiIcons.Core;
-
-namespace fiskaltrust.AndroidLauncher;
+﻿namespace fiskaltrust.AndroidLauncher;
 
 public partial class App : Application
 {
 	public App()
 	{
 		InitializeComponent();
-		_ = new MauiIcon();
 	}
 
 	public static event Action? Resumed;

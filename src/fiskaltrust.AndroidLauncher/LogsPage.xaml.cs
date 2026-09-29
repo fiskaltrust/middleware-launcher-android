@@ -1,40 +1,38 @@
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using Android.Content;
-using Android.Views;
-using Android.Widget;
 using AndroidX.DocumentFile.Provider;
-using AndroidX.RecyclerView.Widget;
 using fiskaltrust.AndroidLauncher.Helpers;
 using fiskaltrust.AndroidLauncher.Helpers.Logging;
 
 namespace fiskaltrust.AndroidLauncher;
 
-public class LogDayItem
+public class LogLineItem
 {
-	public string Label { get; set; } = "";
-	public bool IsCurrent { get; set; }
+	public string Text { get; init; } = "";
+	public bool IsBanded { get; init; }
 }
 
 public partial class LogsPage : ContentPage
 {
 	IDispatcherTimer _timer;
 	List<FileInfo> _logFiles = new();
-	List<LogDayItem> _dayItems = new();
-	ObservableCollection<string> _logLines = new();
-	int _currentIndex = -1;
-	bool _drawerExpanded;
+	ObservableCollection<LogLineItem> _logLines = new();
+	DateTime _selectedDate;
 	bool _isFollowing = true;
+	bool _newestFirst;
 	string? _loadedFilePath;
 	long _readOffset;
-	GestureDetector? _logViewTapDetector;
+	long _nextLineNumber;
+	long _totalLines;
+	bool _isTruncated;
 
 	public LogsPage()
 	{
 		InitializeComponent();
 		LogView.ItemsSource = _logLines;
 		LogView.Header = null;
-		LogView.HandlerChanged += (_, __) => AttachLogViewTapToClose();
 
 		_timer = Dispatcher.CreateTimer();
 		_timer.Interval = TimeSpan.FromSeconds(1);
@@ -43,121 +41,86 @@ public partial class LogsPage : ContentPage
 		_timer.Tick += (_, __) => OnTick(false);
 	}
 
-	private void AttachLogViewTapToClose()
-	{
-		if (FindRecyclerView(LogView.Handler?.PlatformView as Android.Views.View) is not RecyclerView recyclerView) return;
-
-		_logViewTapDetector ??= new GestureDetector(Platform.CurrentActivity, new LogViewTapListener(() =>
-		{
-			if (_drawerExpanded) SetDrawer(false);
-		}));
-
-		recyclerView.AddOnItemTouchListener(new LogViewItemTouchListener(_logViewTapDetector));
-	}
-
-	private static RecyclerView? FindRecyclerView(Android.Views.View? view)
-	{
-		if (view is RecyclerView recyclerView) return recyclerView;
-		if (view is ViewGroup group)
-		{
-			for (var i = 0; i < group.ChildCount; i++)
-			{
-				var found = FindRecyclerView(group.GetChildAt(i));
-				if (found != null) return found;
-			}
-		}
-		return null;
-	}
-
-	private sealed class LogViewTapListener : GestureDetector.SimpleOnGestureListener
-	{
-		readonly Action _onTap;
-		public LogViewTapListener(Action onTap) => _onTap = onTap;
-		public override bool OnSingleTapUp(MotionEvent e)
-		{
-			_onTap();
-			return true;
-		}
-	}
-
-	private sealed class LogViewItemTouchListener : Java.Lang.Object, RecyclerView.IOnItemTouchListener
-	{
-		readonly GestureDetector _detector;
-		public LogViewItemTouchListener(GestureDetector detector) => _detector = detector;
-
-		public bool OnInterceptTouchEvent(RecyclerView rv, MotionEvent e)
-		{
-			_detector.OnTouchEvent(e);
-			return false;
-		}
-
-		public void OnTouchEvent(RecyclerView rv, MotionEvent e) { }
-
-		public void OnRequestDisallowInterceptTouchEvent(bool disallowIntercept) { }
-	}
-
-	private FileInfo? SelectedLogFile =>
-		_currentIndex >= 0 && _currentIndex < _logFiles.Count ? _logFiles[_currentIndex] : null;
+	private FileInfo? SelectedLogFile => _logFiles.FirstOrDefault(f => f.LastWriteTime.Date == _selectedDate);
 
 	private void RefreshLogFileList()
 	{
-		var previouslySelectedPath = SelectedLogFile?.FullName;
-
 		_logFiles = FileLoggerHelper.GetLogFilesOrderedByDateDescending();
 
-		var preservedIndex = previouslySelectedPath != null
-			? _logFiles.FindIndex(f => f.FullName == previouslySelectedPath)
-			: -1;
-
-		_currentIndex = preservedIndex >= 0 ? preservedIndex : (_logFiles.Count > 0 ? 0 : -1);
-		RebuildDayItems();
-	}
-
-	private void RebuildDayItems()
-	{
-		_dayItems = _logFiles.Select((f, i) => new LogDayItem
+		if (_selectedDate == default && _logFiles.Count > 0)
 		{
-			Label = f.LastWriteTime.ToString("yyyy-MM-dd"),
-			IsCurrent = i == _currentIndex
-		}).ToList();
+			_selectedDate = _logFiles[0].LastWriteTime.Date;
+		}
 
-		BindableLayout.SetItemsSource(DateList, _dayItems);
-		DateLabel.Text = _currentIndex >= 0 ? _dayItems[_currentIndex].Label : "";
-
-		var hasLogs = _logFiles.Count > 0;
-		DateListScroll.IsVisible = hasLogs;
-		ExportButtonRow.IsVisible = hasLogs;
-		NoLogsPlaceholder.IsVisible = !hasLogs;
-
-		ExportCurrentButton.IsEnabled = SelectedLogFile != null;
-		ExportAllButton.IsEnabled = hasLogs;
+		UpdateView();
 	}
 
+	private void UpdateView()
+	{
+		var hasLogs = _logFiles.Count > 0;
+		var file = SelectedLogFile;
+
+		DateValue.Text = _selectedDate == default ? "" : _selectedDate.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture);
+		DateFieldArea.IsVisible = hasLogs;
+		CountRow.IsVisible = file != null;
+		ListTopBorder.IsVisible = file != null;
+		LogView.IsVisible = file != null;
+		EmptyState.IsVisible = file == null;
+		LogsAppBar.TrailingGlyph = hasLogs ? FaIcons.Gear : null;
+
+		if (file != null) return;
+
+		_logLines.Clear();
+		_loadedFilePath = null;
+		_isTruncated = false;
+		PlaceBanner();
+
+		if (!hasLogs)
+		{
+			StateIcon.Text = FaIcons.FileLines;
+			StateTitle.Text = "No logs yet";
+			StateBody.Text = "Logs appear here once the Middleware starts handling requests from the POS.";
+			StateAction.IsVisible = false;
+		}
+		else
+		{
+			StateIcon.Text = FaIcons.CalendarDays;
+			StateTitle.Text = "No logs for this date";
+			StateBody.Text = $"Nothing was recorded on {DateValue.Text}. Choose another date to keep looking.";
+			StateAction.IsVisible = true;
+		}
+	}
 
 	private const int MaxInitialLines = 1024;
 
 	private void LoadInitialContent(FileInfo file)
 	{
+		var lines = FileLoggerHelper.SplitIntoLines(FileLoggerHelper.GetLastLines(file, MaxInitialLines)).ToList();
+		_totalLines = FileLoggerHelper.CountLines(file);
+		_nextLineNumber = Math.Max(0, _totalLines - lines.Count);
+
 		_logLines.Clear();
-		foreach (var line in FileLoggerHelper.SplitIntoLines(FileLoggerHelper.GetLastLines(file, MaxInitialLines)))
+		var items = lines.Select(CreateLine).ToList();
+		if (_newestFirst) items.Reverse();
+		foreach (var item in items)
 		{
-			_logLines.Add(line);
+			_logLines.Add(item);
 		}
 
-		var totalLines = FileLoggerHelper.CountLines(file);
-		var truncated = totalLines > MaxInitialLines;
-		if (truncated)
-		{
-			TruncatedLogText.Text = $"Showing the last {MaxInitialLines} of {totalLines} lines in this file.";
-			LogView.Header = TruncatedLogBanner;
-		}
-		else
-		{
-			LogView.Header = null;
-		}
+		_isTruncated = _totalLines > MaxInitialLines;
+		TruncatedLogText.Text = $"Showing the last {lines.Count} of {_totalLines} lines in this file.";
+		PlaceBanner();
 
 		_readOffset = file.Length;
 		_loadedFilePath = file.FullName;
+		UpdateCount();
+	}
+
+	private LogLineItem CreateLine(string text) => new() { Text = text, IsBanded = _nextLineNumber++ % 2 == 1 };
+
+	private void UpdateCount()
+	{
+		CountLabel.Text = _totalLines == 1 ? "1 line" : $"{_totalLines} lines";
 	}
 
 	private void OnTick(bool forceFollow = false)
@@ -185,15 +148,18 @@ public partial class LogsPage : ContentPage
 				{
 					foreach (var line in newLines)
 					{
-						_logLines.Add(line);
+						if (_newestFirst) _logLines.Insert(0, CreateLine(line));
+						else _logLines.Add(CreateLine(line));
 					}
+					_totalLines += newLines.Count;
+					UpdateCount();
 					contentChanged = true;
 				}
 			}
 
 			if (follow && contentChanged && _logLines.Count > 0)
 			{
-				LogView.ScrollTo(_logLines.Count - 1, position: ScrollToPosition.End, animate: false);
+				ScrollToNewest();
 			}
 		}
 		catch (Exception ex)
@@ -202,12 +168,53 @@ public partial class LogsPage : ContentPage
 		}
 	}
 
+	private void ScrollToNewest()
+	{
+		ScrollToNewestNow();
+		Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(150), ScrollToNewestNow);
+	}
+
+	private void ScrollToNewestNow()
+	{
+		if (_logLines.Count == 0) return;
+		if (_newestFirst) LogView.ScrollTo(_logLines[0], position: ScrollToPosition.Start, animate: false);
+		else LogView.ScrollTo(_logLines[^1], position: ScrollToPosition.End, animate: false);
+	}
+
+	private void PlaceBanner()
+	{
+		LogView.Header = null;
+		LogView.Footer = null;
+		if (!_isTruncated) return;
+		if (_newestFirst) LogView.Footer = TruncatedLogBanner;
+		else LogView.Header = TruncatedLogBanner;
+	}
+
 	private void OnLogViewScrolled(object sender, ItemsViewScrolledEventArgs e)
 	{
 		if (e.LastVisibleItemIndex < 0) return;
 
-		const int bottomToleranceItems = 2;
-		_isFollowing = e.LastVisibleItemIndex >= _logLines.Count - 1 - bottomToleranceItems;
+		const int toleranceItems = 2;
+		_isFollowing = _newestFirst
+			? e.FirstVisibleItemIndex <= toleranceItems
+			: e.LastVisibleItemIndex >= _logLines.Count - 1 - toleranceItems;
+	}
+
+	private void OnSortTapped(object sender, TappedEventArgs e)
+	{
+		_newestFirst = !_newestFirst;
+		SemanticProperties.SetDescription(SortButton, _newestFirst ? "Oldest first" : "Newest first");
+
+		var reversed = _logLines.Reverse().ToList();
+		_logLines.Clear();
+		foreach (var item in reversed)
+		{
+			_logLines.Add(item);
+		}
+
+		PlaceBanner();
+		_isFollowing = true;
+		if (_logLines.Count > 0) ScrollToNewest();
 	}
 
 	private void OnAppearing(object sender, EventArgs e)
@@ -225,6 +232,7 @@ public partial class LogsPage : ContentPage
 	{
 		App.Resumed -= OnAppResumed;
 		_timer.Stop();
+		CloseMenus();
 	}
 
 	private void OnAppResumed()
@@ -236,78 +244,92 @@ public partial class LogsPage : ContentPage
 		});
 	}
 
-	private void OnBarTapped(object sender, EventArgs e) => SetDrawer(!_drawerExpanded);
-
-	private void OnBarSwiped(object sender, SwipedEventArgs e)
+	private void OnSettingsTapped(object? sender, EventArgs e)
 	{
-		if (e.Direction == SwipeDirection.Down) SetDrawer(true);
-		else if (e.Direction == SwipeDirection.Up) SetDrawer(false);
-	}
-
-	private void SetDrawer(bool expand)
-	{
-		if (expand == _drawerExpanded) return;
-		_drawerExpanded = expand;
-
-		var currentHeight = DrawerBodyRow.Height.Value;
-
-		if (expand)
+		if (ActionsMenu.IsVisible)
 		{
-			RefreshLogFileList();
-			DrawerBody.IsVisible = true;
+			CloseMenus();
+			return;
 		}
 
-		var targetHeight = expand ? GetDrawerContentHeight() : 0;
-
-		new Animation(v => DrawerBodyRow.Height = new GridLength(v), currentHeight, targetHeight)
-			.Commit(this, "DrawerAnimation", 16, 250, Easing.CubicInOut, (v, cancelled) =>
-			{
-				if (!expand)
-				{
-					DrawerBody.IsVisible = false;
-				}
-			});
-
-		ChevronIcon.RotateTo(expand ? 180 : 0, 200, Easing.CubicInOut);
+		CloseMenus();
+		ExportCurrentItem.IsEnabled = SelectedLogFile != null;
+		ExportCurrentItem.Opacity = SelectedLogFile != null ? 1 : 0.38;
+		ActionsMenu.IsVisible = true;
+		MenuOverlay.IsVisible = true;
 	}
 
-	private double GetDrawerContentHeight()
+	private void OnDateFieldTapped(object sender, TappedEventArgs e)
 	{
-		const double MaxDrawerHeight = 320;
-
-		if (_logFiles.Count == 0)
+		if (Calendar.IsVisible)
 		{
-			return NoLogsPlaceholder.Measure(Width, double.PositiveInfinity).Height;
+			CloseMenus();
+			return;
 		}
 
-		var dayListHeight = DateList.Measure(Width, double.PositiveInfinity).Height;
-		var buttonRowHeight = ExportButtonRow.Measure(Width, double.PositiveInfinity).Height;
-
-		return Math.Min(dayListHeight + buttonRowHeight, MaxDrawerHeight);
+		OpenCalendar();
 	}
 
-	private void OnDateRowTapped(object sender, EventArgs e)
+	private void OnChangeDateClicked(object sender, EventArgs e) => OpenCalendar();
+
+	private void OpenCalendar()
 	{
-		if (sender is not Element element || element.BindingContext is not LogDayItem tapped) return;
+		CloseMenus();
+		Calendar.Open(_selectedDate == default ? DateTime.Today : _selectedDate);
+		Calendar.IsVisible = true;
+		MenuOverlay.IsVisible = true;
+		SetDateFieldFocused(true);
+	}
 
-		var index = _dayItems.IndexOf(tapped);
-		if (index < 0 || index == _currentIndex) return;
+	private void OnCalendarConfirmed(object? sender, DateTime date)
+	{
+		CloseMenus();
+		if (date == _selectedDate) return;
 
-		_currentIndex = index;
+		_selectedDate = date;
 		_isFollowing = true;
-		RebuildDayItems();
+		RefreshLogFileList();
 		OnTick(true);
+	}
+
+	private void OnCalendarCancelled(object? sender, EventArgs e) => CloseMenus();
+
+	private void OnMenuOverlayTapped(object sender, TappedEventArgs e) => CloseMenus();
+
+	private void CloseMenus()
+	{
+		ActionsMenu.IsVisible = false;
+		Calendar.IsVisible = false;
+		MenuOverlay.IsVisible = false;
+		SetDateFieldFocused(false);
+	}
+
+	private void SetDateFieldFocused(bool focused)
+	{
+		var dark = Application.Current?.RequestedTheme == AppTheme.Dark;
+		string Key(string name) => dark ? name + "Night" : name;
+
+		DateField.StrokeThickness = focused ? 2 : 1;
+		DateField.Padding = focused ? new Thickness(15, 0, 3, 0) : new Thickness(16, 0, 4, 0);
+		DateField.Stroke = (Color)Application.Current!.Resources[Key(focused ? "FtPrimary" : "FtBorder")];
+		DateFieldLabel.TextColor = (Color)Application.Current.Resources[Key(focused ? "FtPrimary" : "FtTextSecondary")];
 	}
 
 	private async void OnExportCurrentClicked(object sender, EventArgs e)
 	{
+		CloseMenus();
+
 		var selectedFile = SelectedLogFile;
 		if (selectedFile == null) return;
 
 		await ExportFilesAsync(new[] { selectedFile });
 	}
 
-	private async void OnExportAllClicked(object sender, EventArgs e) => await ExportFilesAsync(FileLoggerHelper.GetLogFiles());
+	private async void OnExportAllClicked(object sender, EventArgs e)
+	{
+		CloseMenus();
+		await ExportFilesAsync(FileLoggerHelper.GetLogFiles());
+	}
 
 	private async Task ExportFilesAsync(IEnumerable<FileInfo> files)
 	{
@@ -342,8 +364,7 @@ public partial class LogsPage : ContentPage
 			await input.CopyToAsync(output);
 		}
 
-		SetDrawer(false);
-		await DisplayAlert("Success", "The log files were saved to the selected folder.", "OK");
+		Android.Widget.Toast.MakeText(activity, "Logs saved to the selected folder.", Android.Widget.ToastLength.Short)?.Show();
 	}
 
 	private static string GetUniqueLogFileName(string originalName)
