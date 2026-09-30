@@ -13,25 +13,24 @@ using fiskaltrust.Middleware.Queue.SQLite;
 using fiskaltrust.Middleware.SCU.PL.InMemory;
 using fiskaltrust.Middleware.Storage.SQLite;
 using fiskaltrust.storage.serialization.V0;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using System;
-using System.IO;
+using static fiskaltrust.Middleware.Storage.Base.BaseStorageBootStrapper;
 
 namespace fiskaltrust.AndroidLauncher.Services.Queue
 {
 
     public class SQLiteQueueProvider
     {
+        private readonly string sqlLitemigrationsFolder = "Migrations"; 
         public IPOS CreatePOS(string workingDir, PackageConfiguration queueConfiguration, Guid ftCashBoxId, string accessToken, bool isSandbox, LogLevel logLevel, AbstractScuList scus)
         {
-            var migrationsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Migrations");
+            var migrationsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), sqlLitemigrationsFolder);
 
-            CopyMigrationsToDataDir(migrationsFolder);
+            CopyMigrationsToDataDir(migrationsPath);
 
             queueConfiguration.Configuration["servicefolder"] = workingDir;
-            queueConfiguration.Configuration["migrationDirectory"] = migrationsFolder;
+            queueConfiguration.Configuration["migrationDirectory"] = migrationsPath;
 
             var bootstrapper = new PosBootstrapper
             {
@@ -60,13 +59,12 @@ namespace fiskaltrust.AndroidLauncher.Services.Queue
         public POSV2 CreatePOSV2(PackageConfiguration queueConfiguration,string countryCode, ILoggerFactory loggerFactory)
         {
             var workingDir = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            var migrationsFolder = Path.Combine(workingDir, "Migrations");
+            var migrationsPath = Path.Combine(workingDir, sqlLitemigrationsFolder);
 
-            CopyMigrationsToDataDir(migrationsFolder);
+            CopyMigrationsToDataDir(migrationsPath);
 
             queueConfiguration.Configuration["servicefolder"] = workingDir;
-            queueConfiguration.Configuration["migrationDirectory"] = migrationsFolder;
-          
+
             if (countryCode != "PL")
             {
                 throw new NotSupportedException($"The market \"{countryCode}\" of the queue {queueConfiguration.Id} is not served by this Android launcher instance. This instance serves only market Poland.");
@@ -85,15 +83,13 @@ namespace fiskaltrust.AndroidLauncher.Services.Queue
             return posV2;
         }
 
-        public static void CopyMigrationsToDataDir(string targetDirectory)
+        private void CopyMigrationsToDataDir(string targetDirectory)
         {
-            const string migrationDir = "Migrations";
-
-            var assets = Android.App.Application.Context.Assets.List(migrationDir);
+            var assets = Android.App.Application.Context.Assets.List(sqlLitemigrationsFolder);
             Directory.CreateDirectory(targetDirectory);
             foreach (var asset in assets)
             {
-                using (var br = new BinaryReader(Android.App.Application.Context.Assets.Open(Path.Combine(migrationDir, asset))))
+                using (var br = new BinaryReader(Android.App.Application.Context.Assets.Open(Path.Combine(sqlLitemigrationsFolder, asset))))
                 {
                     var targetFile = Path.Combine(targetDirectory, asset);
                     if (!File.Exists(targetFile))
