@@ -105,6 +105,17 @@ stages:
               jdkArchitectureOption: "x64"
               jdkSourceOption: "PreInstalled"
 
+          # The hosted image no longer ships the Android platforms targeted by the Xamarin projects (API 31 for SCU.DE.SwissbitAndroid, API 33 for the launcher)
+          - pwsh: |
+              $sdkRoot = "${env:ProgramFiles(x86)}\Android\android-sdk"
+              if (-not (Test-Path $sdkRoot)) { $sdkRoot = $env:ANDROID_HOME }
+              $sdkManager = Get-ChildItem "$env:ANDROID_HOME\cmdline-tools", "$sdkRoot\cmdline-tools" -Recurse -Filter sdkmanager.bat -ErrorAction SilentlyContinue | Select-Object -First 1
+              if (-not $sdkManager) { throw "sdkmanager.bat not found" }
+              "y`n" * 10 | & $sdkManager.FullName --sdk_root="$sdkRoot" "platforms;android-31" "platforms;android-33"
+              if ($LASTEXITCODE -ne 0) { throw "sdkmanager failed with exit code $LASTEXITCODE" }
+              Get-ChildItem "$sdkRoot\platforms" | Select-Object -ExpandProperty Name
+            displayName: Install Android SDK platforms
+
           - task: XamarinAndroid@1
             inputs:
               projectFile: "**/fiskaltrust.AndroidLauncher.Http.csproj"
