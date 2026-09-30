@@ -64,6 +64,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Queue
             CopyMigrationsToDataDir(migrationsPath);
 
             queueConfiguration.Configuration["servicefolder"] = workingDir;
+            queueConfiguration.Configuration["migrationDirectory"] = migrationsPath;
 
             if (countryCode != "PL")
             {
