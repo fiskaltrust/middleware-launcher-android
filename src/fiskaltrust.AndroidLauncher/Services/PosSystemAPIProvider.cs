@@ -99,7 +99,7 @@ internal class PosSystemAPIProvider {
         try
         {
             _middlewareProvider = countryCode == "PL"
-                ? new MiddlewareV2Provider(cashboxId, accessToken, configuration, isSandbox, loggerFactory, logLevel)
+                ? new MiddlewareV2Provider(cashboxId, accessToken, configuration, isSandbox, loggerFactory)
                 : new MiddlewareProvider(cashboxId, accessToken, configuration, isSandbox, logLevel);
             await _middlewareProvider.StartAsync();
 
