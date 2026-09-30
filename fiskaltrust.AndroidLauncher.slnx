@@ -2,8 +2,11 @@
   <Folder Name="/middleware/" />
   <Folder Name="/middleware/queue/">
     <Project Path="middleware/queue/src/fiskaltrust.Middleware.Contracts/fiskaltrust.Middleware.Contracts.csproj" />
+    <Project Path="middleware/queue/src/fiskaltrust.Middleware.Localization.QueuePL/fiskaltrust.Middleware.Localization.QueuePL.csproj" />
+    <Project Path="middleware/queue/src/fiskaltrust.Middleware.Localization.v2/fiskaltrust.Middleware.Localization.v2.csproj" />
     <Project Path="middleware/queue/src/fiskaltrust.Middleware.Queue.SQLite/fiskaltrust.Middleware.Queue.SQLite.csproj" />
     <Project Path="middleware/queue/src/fiskaltrust.Middleware.Queue/fiskaltrust.Middleware.Queue.csproj" />
+    <Project Path="middleware/queue/src/fiskaltrust.Middleware.Storage.SQLite/fiskaltrust.Middleware.Storage.SQLite.csproj" />
   </Folder>
   <Folder Name="/middleware/scu-de/">
     <Project Path="middleware/scu-de/src/fiskaltrust.Middleware.SCU.DE.FiskalyCertified/fiskaltrust.Middleware.SCU.DE.FiskalyCertified.csproj" />
@@ -17,6 +20,10 @@
     <Project Path="src/fiskaltrust.AndroidLauncher/fiskaltrust.AndroidLauncher.csproj">
       <Deploy Solution="Debug|*" />
     </Project>
+  </Folder>
+  <Folder Name="/middleware/scu-pl/">
+    <Project Path="middleware/scu-pl/src/fiskaltrust.Middleware.SCU.PL.InMemory/fiskaltrust.Middleware.SCU.PL.InMemory.csproj" />
+    <Project Path="middleware/scu-pl/src/fiskaltrust.Middleware.SCU.PL.PosNet/fiskaltrust.Middleware.SCU.PL.PosNet.csproj" />
   </Folder>
   <Folder Name="/possystem-api/">
     <Project Path="possystem-api/src/fiskaltrust.Api.PosSystem.Core/fiskaltrust.Api.PosSystem.Core.csproj" />

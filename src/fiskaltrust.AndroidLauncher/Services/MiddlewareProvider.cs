@@ -14,7 +14,7 @@ using Serilog;
 
 namespace fiskaltrust.AndroidLauncher.Services
 {
-    public class MiddlewareProvider
+    public class MiddlewareProvider : IMiddlewareProvider
     {
         private const string PACKAGE_NAME_DE_SWISSBIT = "fiskaltrust.Middleware.SCU.DE.Swissbit";
         private const string PACKAGE_NAME_DE_SWISSBIT_CLOUD_V2 = "fiskaltrust.Middleware.SCU.DE.SwissbitCloudV2";
@@ -41,7 +41,7 @@ namespace fiskaltrust.AndroidLauncher.Services
 
         public string CountryCode { get; set; }
 
-        public Api.PosSystem.Core.Interfaces.IMiddlewareClient MiddlewareClientAndroid => new MiddlewareClientAndroid(_poss, CountryCode);
+        public Api.PosSystem.Core.Interfaces.IMiddlewareClient MiddlewareClient => MiddlewareClientAndroid.FromV1(_poss, CountryCode);
 
         public PackageConfiguration QueueConfiguration { get; private set; }
 
