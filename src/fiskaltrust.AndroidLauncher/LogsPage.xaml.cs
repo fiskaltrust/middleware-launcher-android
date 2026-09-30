@@ -16,6 +16,40 @@ public class LogLineItem
 	public bool IsBanded { get; init; }
 }
 
+public class LogLineTemplateSelector : DataTemplateSelector
+{
+	readonly DataTemplate _plain;
+	readonly DataTemplate _banded;
+
+	public LogLineTemplateSelector(BindableObject offsetSource)
+	{
+		_plain = Create(offsetSource, false);
+		_banded = Create(offsetSource, true);
+	}
+
+	protected override DataTemplate OnSelectTemplate(object item, BindableObject container) => item is LogLineItem { IsBanded: true } ? _banded : _plain;
+
+	private static DataTemplate Create(BindableObject offsetSource, bool banded) => new(() =>
+	{
+		var label = new Label
+		{
+			LineHeight = 1.463,
+			Padding = new Thickness(16, 4),
+			MaxLines = 1,
+			LineBreakMode = LineBreakMode.TailTruncation,
+		};
+		label.SetBinding(Label.TextProperty, static (LogLineItem item) => item.Text);
+		label.SetBinding(Label.MarginProperty, new Binding("LineMargin", source: offsetSource));
+		label.SetBinding(Label.TranslationXProperty, new Binding("LineTranslation", source: offsetSource));
+		if (banded)
+		{
+			var resources = Application.Current!.Resources;
+			label.SetAppThemeColor(Label.BackgroundColorProperty, (Color)resources["FtGround"], (Color)resources["FtGroundNight"]);
+		}
+		return label;
+	});
+}
+
 public partial class LogsPage : ContentPage
 {
 	IDispatcherTimer _timer;
@@ -40,6 +74,7 @@ public partial class LogsPage : ContentPage
 	public LogsPage()
 	{
 		InitializeComponent();
+		LogView.ItemTemplate = new LogLineTemplateSelector(this);
 		LogView.ItemsSource = _logLines;
 		LogView.Header = null;
 
@@ -110,14 +145,14 @@ public partial class LogsPage : ContentPage
 		_totalLines = FileLoggerHelper.CountLines(file);
 		_nextLineNumber = Math.Max(0, _totalLines - lines.Count);
 
-		_logLines.Clear();
 		ResetLineWidth();
 		var items = lines.Select(CreateLine).ToList();
-		if (_newestFirst) items.Reverse();
-		foreach (var item in items)
+		foreach (var item in items.OrderByDescending(i => i.Text.Length).Take(20))
 		{
-			_logLines.Add(item);
+			TrackLineWidth(item.Text);
 		}
+		if (_newestFirst) items.Reverse();
+		SetLines(items);
 
 		_isTruncated = _totalLines > MaxInitialLines;
 		TruncatedLogText.Text = $"Showing the last {lines.Count} of {_totalLines} lines in this file.";
@@ -130,10 +165,15 @@ public partial class LogsPage : ContentPage
 
 	private const int MaxDisplayedChars = 1000;
 
+	private void SetLines(List<LogLineItem> items)
+	{
+		_logLines = new ObservableCollection<LogLineItem>(items);
+		LogView.ItemsSource = _logLines;
+	}
+
 	private LogLineItem CreateLine(string text)
 	{
 		var display = text.Length > MaxDisplayedChars ? text[..MaxDisplayedChars] + "…" : text;
-		TrackLineWidth(display);
 		return new() { Text = display, IsBanded = _nextLineNumber++ % 2 == 1 };
 	}
 
@@ -200,6 +240,44 @@ public partial class LogsPage : ContentPage
 		if (LogView.Handler?.PlatformView is not RecyclerView recycler || recycler.Context == null) return;
 		var density = recycler.Context.Resources!.DisplayMetrics!.Density;
 		recycler.AddOnItemTouchListener(new HorizontalDragListener(recycler.Context, dx => SetLineOffset(_lineOffset + dx / density)));
+		recycler.AddItemDecoration(new HairlineDecoration((int)Math.Max(1, density), IsLogLinePosition));
+	}
+
+	private bool IsLogLinePosition(int position)
+	{
+		if (LogView.Header != null) position--;
+		return position >= 0 && position < _logLines.Count;
+	}
+
+	private sealed class HairlineDecoration : RecyclerView.ItemDecoration
+	{
+		readonly int _height;
+		readonly Func<int, bool> _isLine;
+		readonly Android.Graphics.Paint _paint = new();
+
+		public HairlineDecoration(int height, Func<int, bool> isLine)
+		{
+			_height = height;
+			_isLine = isLine;
+		}
+
+		public override void GetItemOffsets(Android.Graphics.Rect outRect, Android.Views.View view, RecyclerView parent, RecyclerView.State state)
+		{
+			outRect.Set(0, 0, 0, _isLine(parent.GetChildAdapterPosition(view)) ? _height : 0);
+		}
+
+		public override void OnDraw(Android.Graphics.Canvas c, RecyclerView parent, RecyclerView.State state)
+		{
+			var dark = Application.Current?.RequestedTheme == AppTheme.Dark;
+			_paint.Color = new Android.Graphics.Color(((Color)Application.Current!.Resources[dark ? "FtHairlineNight" : "FtHairline"]).ToInt());
+			for (var i = 0; i < parent.ChildCount; i++)
+			{
+				var child = parent.GetChildAt(i);
+				if (child == null || !_isLine(parent.GetChildAdapterPosition(child))) continue;
+				var top = child.Bottom + (int)child.TranslationY;
+				c.DrawRect(0, top, parent.Width, top + _height, _paint);
+			}
+		}
 	}
 
 	private sealed class HorizontalDragListener : Java.Lang.Object, RecyclerView.IOnItemTouchListener
@@ -296,8 +374,10 @@ public partial class LogsPage : ContentPage
 				{
 					foreach (var line in newLines)
 					{
-						if (_newestFirst) _logLines.Insert(0, CreateLine(line));
-						else _logLines.Add(CreateLine(line));
+						var item = CreateLine(line);
+						TrackLineWidth(item.Text);
+						if (_newestFirst) _logLines.Insert(0, item);
+						else _logLines.Add(item);
 					}
 					_totalLines += newLines.Count;
 					UpdateCount();
@@ -354,12 +434,7 @@ public partial class LogsPage : ContentPage
 		_newestFirst = !_newestFirst;
 		UpdateCount();
 
-		var reversed = _logLines.Reverse().ToList();
-		_logLines.Clear();
-		foreach (var item in reversed)
-		{
-			_logLines.Add(item);
-		}
+		SetLines(_logLines.Reverse().ToList());
 
 		PlaceBanner();
 		_isFollowing = true;
@@ -435,9 +510,8 @@ public partial class LogsPage : ContentPage
 		SetDateFieldFocused(true);
 	}
 
-	private void OnCalendarConfirmed(object? sender, DateTime date)
+	private void OnCalendarDateSelected(object? sender, DateTime date)
 	{
-		CloseMenus();
 		if (date == _selectedDate) return;
 
 		_selectedDate = date;
@@ -445,8 +519,6 @@ public partial class LogsPage : ContentPage
 		RefreshLogFileList();
 		OnTick(true);
 	}
-
-	private void OnCalendarCancelled(object? sender, EventArgs e) => CloseMenus();
 
 	private void OnMenuOverlayTapped(object sender, TappedEventArgs e) => CloseMenus();
 
@@ -463,7 +535,6 @@ public partial class LogsPage : ContentPage
 		var dark = Application.Current?.RequestedTheme == AppTheme.Dark;
 		string Key(string name) => dark ? name + "Night" : name;
 
-		DateFieldSupport.IsVisible = focused;
 		DateField.StrokeThickness = focused ? 2 : 1;
 		DateField.Padding = focused ? new Thickness(15, 0, 3, 0) : new Thickness(16, 0, 4, 0);
 		DateField.Stroke = (Color)Application.Current!.Resources[Key(focused ? "FtPrimary" : "FtBorder")];

@@ -5,7 +5,6 @@
              xmlns:controls="clr-namespace:fiskaltrust.AndroidLauncher.Controls"
              xmlns:helpers="clr-namespace:fiskaltrust.AndroidLauncher.Helpers"
              x:Class="fiskaltrust.AndroidLauncher.LogsPage"
-             x:Name="Page"
              Title="Logs"
              Shell.NavBarIsVisible="False"
              Appearing="OnAppearing"
@@ -22,7 +21,6 @@
 
         <Grid Grid.Row="1"
               x:Name="DateFieldArea"
-              RowDefinitions="Auto,Auto"
               Padding="16,16,16,0">
             <Border Grid.Row="0"
                     x:Name="DateField"
@@ -57,13 +55,6 @@
                     </Border>
                 </Grid>
             </Border>
-            <Label Grid.Row="1"
-                   x:Name="DateFieldSupport"
-                   Text="YYYY-MM-DD"
-                   Style="{StaticResource FtBodySmall}"
-                   TextColor="{AppThemeBinding Light={StaticResource FtTextSecondary}, Dark={StaticResource FtTextSecondaryNight}}"
-                   Margin="16,4,0,0"
-                   IsVisible="False" />
             <Label Grid.Row="0"
                    x:Name="DateFieldLabel"
                    Text="Date"
@@ -114,6 +105,7 @@
                             x:Name="LogView"
                             SizeChanged="OnLogViewSizeChanged"
                             HandlerChanged="OnLogViewHandlerChanged"
+                            ItemSizingStrategy="MeasureFirstItem"
                             VerticalScrollBarVisibility="Always"
                             Scrolled="OnLogViewScrolled">
                 <CollectionView.Header>
@@ -130,29 +122,6 @@
                                 Clicked="OnExportCurrentClicked" />
                     </VerticalStackLayout>
                 </CollectionView.Header>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="local:LogLineItem">
-                        <Grid RowDefinitions="*,Auto" IsClippedToBounds="True">
-                            <Grid.Triggers>
-                                <DataTrigger TargetType="Grid" Binding="{Binding IsBanded}" Value="True">
-                                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource FtGround}, Dark={StaticResource FtGroundNight}}" />
-                                </DataTrigger>
-                            </Grid.Triggers>
-                            <ContentView Grid.Row="0"
-                                         x:DataType="local:LogsPage"
-                                         Margin="{Binding LineMargin, Source={x:Reference Page}}"
-                                         TranslationX="{Binding LineTranslation, Source={x:Reference Page}}">
-                                <Label x:DataType="local:LogLineItem"
-                                       Text="{Binding Text}"
-                                       LineHeight="1.463"
-                                       Padding="16,4"
-                                       MaxLines="1"
-                                       LineBreakMode="TailTruncation" />
-                            </ContentView>
-                            <BoxView Grid.Row="1" HeightRequest="1" />
-                        </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
             </CollectionView>
 
             <Grid Grid.Row="0"
@@ -271,11 +240,10 @@
 
             <controls:DockedCalendar x:Name="Calendar"
                                      IsVisible="False"
-                                     Margin="16,164,0,0"
-                                     HorizontalOptions="Start"
+                                     Margin="16,144,16,0"
+                                     HorizontalOptions="Fill"
                                      VerticalOptions="Start"
-                                     Confirmed="OnCalendarConfirmed"
-                                     Cancelled="OnCalendarCancelled" />
+                                     DateSelected="OnCalendarDateSelected" />
         </Grid>
 
     </Grid>

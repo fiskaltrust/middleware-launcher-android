@@ -20,12 +20,14 @@ public class DockedCalendar : ContentView
 	readonly VerticalStackLayout _list;
 	readonly ScrollView _listView;
 	readonly ContentView _body;
+	readonly Button[] _dayButtons = new Button[42];
+	readonly Ellipse[] _dayDots = new Ellipse[42];
+	readonly DateTime[] _dayDates = new DateTime[42];
 	DateTime _displayMonth;
 	DateTime _pending;
 	PickerMode _mode;
 
-	public event EventHandler<DateTime>? Confirmed;
-	public event EventHandler? Cancelled;
+	public event EventHandler<DateTime>? DateSelected;
 
 	public Func<DateTime, bool>? HasLogs { get; set; }
 
@@ -59,29 +61,22 @@ public class DockedCalendar : ContentView
 		}
 
 		_days = CreateGrid(6);
+		for (var i = 0; i < 42; i++)
+		{
+			_days.Add(CreateDayCell(i), i % 7, i / 7);
+		}
 		_dayView = new VerticalStackLayout { Children = { weekdays, _days } };
 		_list = new VerticalStackLayout();
 		_listView = new ScrollView { HeightRequest = BodyHeight, Content = _list };
 		_body = new ContentView { HeightRequest = BodyHeight, Content = _dayView };
 
-		var cancel = ActionButton("Cancel", () => Cancelled?.Invoke(this, EventArgs.Empty));
-		var ok = ActionButton("OK", () => Confirmed?.Invoke(this, _pending));
-		var actions = new HorizontalStackLayout
-		{
-			Spacing = 8,
-			Padding = new Thickness(0, 8, 0, 0),
-			HorizontalOptions = LayoutOptions.End,
-			Children = { cancel, ok },
-		};
-
 		var panel = new Border
 		{
-			WidthRequest = 328,
 			Padding = 12,
 			StrokeThickness = 0,
 			StrokeShape = new RoundRectangle { CornerRadius = 12 },
 			Shadow = new Shadow { Brush = Brush.Black, Opacity = 0.15f, Radius = 6, Offset = new Point(0, 2) },
-			Content = new VerticalStackLayout { Children = { header, _body, actions } },
+			Content = new VerticalStackLayout { Children = { header, _body } },
 		};
 		panel.SetAppThemeColor(BackgroundColorProperty, Token("FtWhite"), Token("FtWhiteNight"));
 		panel.GestureRecognizers.Add(new TapGestureRecognizer());
@@ -128,14 +123,14 @@ public class DockedCalendar : ContentView
 
 	private void RenderDays()
 	{
-		_days.Clear();
 		var first = _displayMonth.AddDays(-(int)_displayMonth.DayOfWeek);
 		var today = DateTime.Today;
 
 		for (var i = 0; i < 42; i++)
 		{
 			var date = first.AddDays(i);
-			_days.Add(DayCell(date, date.Month == _displayMonth.Month, date == _pending, date == today, HasLogs?.Invoke(date) == true), i % 7, i / 7);
+			_dayDates[i] = date;
+			UpdateDayCell(i, date, date.Month == _displayMonth.Month, date == _pending, date == today, HasLogs?.Invoke(date) == true);
 		}
 	}
 
@@ -241,11 +236,10 @@ public class DockedCalendar : ContentView
 		return row;
 	}
 
-	private View DayCell(DateTime date, bool inMonth, bool selected, bool today, bool hasLogs)
+	private View CreateDayCell(int index)
 	{
 		var cell = new Button
 		{
-			Text = date.Day.ToString(CultureInfo.InvariantCulture),
 			Style = (Style)Application.Current!.Resources["FtTextButton"],
 			FontFamily = "RobotoRegular",
 			FontSize = 14,
@@ -257,7 +251,7 @@ public class DockedCalendar : ContentView
 			MinimumHeightRequest = CellSize,
 			CornerRadius = (int)(CellSize / 2),
 		};
-		SemanticProperties.SetDescription(cell, date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) + (hasLogs ? ", has logs" : ""));
+		cell.SetAppThemeColor(Button.BorderColorProperty, Token("FtPrimary"), Token("FtPrimaryNight"));
 
 		var dot = new Ellipse
 		{
@@ -267,47 +261,58 @@ public class DockedCalendar : ContentView
 			VerticalOptions = LayoutOptions.End,
 			Margin = new Thickness(0, 0, 0, 6),
 			InputTransparent = true,
-			IsVisible = hasLogs,
 		};
+
+		cell.Clicked += (_, _) => OnDayClicked(_dayDates[index]);
+
+		_dayButtons[index] = cell;
+		_dayDots[index] = dot;
+		return new Grid { WidthRequest = CellSize, HeightRequest = CellSize, HorizontalOptions = LayoutOptions.Center, Children = { cell, dot } };
+	}
+
+	private void OnDayClicked(DateTime date)
+	{
+		_pending = date;
+		if (date.Month != _displayMonth.Month || date.Year != _displayMonth.Year) _displayMonth = new DateTime(date.Year, date.Month, 1);
+		Render();
+		Dispatcher.Dispatch(() => DateSelected?.Invoke(this, date));
+	}
+
+	private void UpdateDayCell(int index, DateTime date, bool inMonth, bool selected, bool today, bool hasLogs)
+	{
+		var cell = _dayButtons[index];
+		var dot = _dayDots[index];
+
+		cell.Text = date.Day.ToString(CultureInfo.InvariantCulture);
+		SemanticProperties.SetDescription(cell, date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) + (hasLogs ? ", has logs" : ""));
+		dot.IsVisible = hasLogs;
+		cell.BorderWidth = !selected && inMonth && today ? 1 : 0;
 
 		if (selected)
 		{
 			cell.SetAppThemeColor(Button.BackgroundColorProperty, Token("FtPrimary"), Token("FtPrimaryNight"));
-			cell.SetAppThemeColor(Button.TextColorProperty, Token("FtWhite"), Token("FtWhiteNight"));
-			dot.SetAppThemeColor(Shape.FillProperty, Token("FtWhite"), Token("FtWhiteNight"));
-		}
-		else if (!inMonth)
-		{
-			cell.SetAppThemeColor(Button.TextColorProperty, Token("FtTextDisabled"), Token("FtTextDisabledNight"));
-			dot.SetAppThemeColor(Shape.FillProperty, Token("FtTextDisabled"), Token("FtTextDisabledNight"));
-		}
-		else if (today)
-		{
-			cell.BorderWidth = 1;
-			cell.SetAppThemeColor(Button.BorderColorProperty, Token("FtPrimary"), Token("FtPrimaryNight"));
-			cell.SetAppThemeColor(Button.TextColorProperty, Token("FtPrimary"), Token("FtPrimaryNight"));
-			dot.SetAppThemeColor(Shape.FillProperty, Token("FtPrimary"), Token("FtPrimaryNight"));
 		}
 		else
 		{
-			cell.SetAppThemeColor(Button.TextColorProperty, Token("FtTextPrimary"), Token("FtTextPrimaryNight"));
-			dot.SetAppThemeColor(Shape.FillProperty, Token("FtPrimary"), Token("FtPrimaryNight"));
+			cell.BackgroundColor = Colors.Transparent;
 		}
 
-		cell.Clicked += (_, _) =>
-		{
-			_pending = date;
-			if (!inMonth) _displayMonth = new DateTime(date.Year, date.Month, 1);
-			Render();
-		};
+		var (text, textNight) = selected ? ("FtWhite", "FtWhiteNight")
+			: !inMonth ? ("FtTextDisabled", "FtTextDisabledNight")
+			: today ? ("FtPrimary", "FtPrimaryNight")
+			: ("FtTextPrimary", "FtTextPrimaryNight");
+		var (fill, fillNight) = selected ? ("FtWhite", "FtWhiteNight")
+			: !inMonth ? ("FtTextDisabled", "FtTextDisabledNight")
+			: ("FtPrimary", "FtPrimaryNight");
 
-		return new Grid { WidthRequest = CellSize, HeightRequest = CellSize, Children = { cell, dot } };
+		cell.SetAppThemeColor(Button.TextColorProperty, Token(text), Token(textNight));
+		dot.SetAppThemeColor(Shape.FillProperty, Token(fill), Token(fillNight));
 	}
 
 	private static Grid CreateGrid(int rows)
 	{
 		var grid = new Grid { ColumnSpacing = CellGap, RowSpacing = CellGap };
-		for (var c = 0; c < 7; c++) grid.ColumnDefinitions.Add(new ColumnDefinition(CellSize));
+		for (var c = 0; c < 7; c++) grid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
 		for (var r = 0; r < rows; r++) grid.RowDefinitions.Add(new RowDefinition(CellSize));
 		return grid;
 	}
@@ -369,18 +374,6 @@ public class DockedCalendar : ContentView
 		};
 		button.SetAppThemeColor(Button.TextColorProperty, Token("FtIconDefault"), Token("FtIconDefaultNight"));
 		SemanticProperties.SetDescription(button, description);
-		button.Clicked += (_, _) => action();
-		return button;
-	}
-
-	private static Button ActionButton(string text, Action action)
-	{
-		var button = new Button
-		{
-			Text = text,
-			Style = (Style)Application.Current!.Resources["FtTextButton"],
-			Padding = new Thickness(12, 0),
-		};
 		button.Clicked += (_, _) => action();
 		return button;
 	}
