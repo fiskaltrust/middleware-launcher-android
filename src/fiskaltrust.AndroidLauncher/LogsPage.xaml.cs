@@ -67,6 +67,14 @@ public partial class LogsPage : ContentPage
 	double _lineOffset;
 	bool _widthPending;
 	Android.Graphics.Paint? _linePaint;
+	int _loadGeneration;
+	string? _loadingPath;
+	bool _loadFailed;
+	StateActionKind _stateAction;
+
+	enum StateActionKind { None, ChangeDate, Retry }
+
+	sealed record InitialContent(List<string> Lines, long TotalLines, long Length);
 
 	public Thickness LineMargin { get; private set; }
 	public double LineTranslation => -_lineOffset;
@@ -107,15 +115,18 @@ public partial class LogsPage : ContentPage
 		DateValue.Text = _selectedDate == default ? "" : _selectedDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
 		DateFieldArea.IsVisible = hasLogs;
 		DateFieldArea.Padding = new Thickness(16, 16, 16, file == null ? 16 : 0);
-		CountRow.IsVisible = file != null;
-		ListTopBorder.IsVisible = file != null;
-		LogView.IsVisible = file != null;
-		EmptyState.IsVisible = file == null;
 		LogsAppBar.TrailingGlyph = hasLogs ? FaIcons.Gear : null;
 
-		if (file != null) return;
+		if (file != null)
+		{
+			if (!_loadFailed || file.FullName != _loadingPath) HideStateView();
+			return;
+		}
 
-		_logLines.Clear();
+		_loadGeneration++;
+		_loadingPath = null;
+		_loadFailed = false;
+		SetLines(new List<LogLineItem>());
 		ResetLineWidth();
 		_loadedFilePath = null;
 		_isTruncated = false;
@@ -123,26 +134,121 @@ public partial class LogsPage : ContentPage
 
 		if (!hasLogs)
 		{
-			StateIcon.Text = FaIcons.FileLines;
-			StateTitle.Text = "No logs yet";
-			StateBody.Text = "Logs appear here once the Middleware starts handling requests from the POS.";
-			StateAction.IsVisible = false;
+			ShowStateView(FaIcons.FileLines, false, "No logs yet", "Logs appear here once the Middleware starts handling requests from the POS.", StateActionKind.None);
 		}
 		else
 		{
-			StateIcon.Text = FaIcons.CalendarDays;
-			StateTitle.Text = "No logs for this date";
-			StateBody.Text = $"Nothing was recorded on {DateValue.Text}. Choose another date to keep looking.";
-			StateAction.IsVisible = true;
+			ShowStateView(FaIcons.CalendarDays, false, "No logs for this date", $"Nothing was recorded on {DateValue.Text}. Choose another date to keep looking.", StateActionKind.ChangeDate);
 		}
+	}
+
+	private void ShowStateView(string? glyph, bool danger, string title, string body, StateActionKind action)
+	{
+		var resources = Application.Current!.Resources;
+		Color Token(string key, bool night) => (Color)resources[night ? key + "Night" : key];
+
+		StateSpinner.IsVisible = glyph == null;
+		StateSpinner.IsRunning = glyph == null;
+		StateIconCircle.IsVisible = glyph != null;
+		if (glyph != null)
+		{
+			StateIcon.Text = glyph;
+			var circle = danger ? "FtDangerContainer" : "FtChip";
+			var icon = danger ? "FtDanger" : "FtIconDefault";
+			StateIconCircle.SetAppThemeColor(VisualElement.BackgroundColorProperty, Token(circle, false), Token(circle, true));
+			StateIcon.SetAppThemeColor(Label.TextColorProperty, Token(icon, false), Token(icon, true));
+		}
+
+		StateTitle.Text = title;
+		StateBody.Text = body;
+		_stateAction = action;
+		StateAction.IsVisible = action != StateActionKind.None;
+		StateAction.Text = action == StateActionKind.Retry ? "Try again" : "Change date";
+		StateAction.Style = (Style)resources[action == StateActionKind.Retry ? "FtFilledButton" : "FtOutlinedButton"];
+
+		EmptyState.IsVisible = true;
+		CountRow.IsVisible = false;
+		ListTopBorder.IsVisible = false;
+		LogView.IsVisible = false;
+		DateFieldArea.Padding = new Thickness(16, 16, 16, 16);
+	}
+
+	private void HideStateView()
+	{
+		StateSpinner.IsRunning = false;
+		EmptyState.IsVisible = false;
+		CountRow.IsVisible = true;
+		ListTopBorder.IsVisible = true;
+		LogView.IsVisible = true;
+		DateFieldArea.Padding = new Thickness(16, 16, 16, 0);
+	}
+
+	private void OnStateActionClicked(object? sender, EventArgs e)
+	{
+		if (_stateAction == StateActionKind.Retry)
+		{
+			_loadFailed = false;
+			_loadedFilePath = null;
+			_loadingPath = null;
+			OnTick(true);
+		}
+		else
+		{
+			OpenCalendar();
+		}
+	}
+
+	private void StartInitialLoad(FileInfo file)
+	{
+		var generation = ++_loadGeneration;
+		_loadingPath = file.FullName;
+		_loadFailed = false;
+		SetLines(new List<LogLineItem>());
+		HideStateView();
+
+		Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(300), () =>
+		{
+			if (generation != _loadGeneration || _loadingPath == null || _loadFailed) return;
+			ShowStateView(null, false, "Loading logs…", "This usually takes a moment.", StateActionKind.None);
+		});
+
+		Task.Run(() => ReadInitialContent(file)).ContinueWith(task => Dispatcher.Dispatch(() =>
+		{
+			if (generation != _loadGeneration) return;
+			if (task.IsFaulted)
+			{
+				ShowLoadError(task.Exception?.GetBaseException());
+				return;
+			}
+			_loadingPath = null;
+			HideStateView();
+			ApplyInitialContent(file, task.Result);
+			ScrollToNewest();
+		}));
+	}
+
+	private void ShowLoadError(Exception? ex)
+	{
+		Android.Util.Log.Warn("LogsPage", $"Failed to load logs: {ex?.Message}");
+		_loadFailed = true;
+		_loadingPath ??= SelectedLogFile?.FullName;
+		SetLines(new List<LogLineItem>());
+		_loadedFilePath = null;
+		ShowStateView(FaIcons.CircleExclamation, true, "Couldn’t load logs", "Something went wrong reading the log files. Try again, and send support the build string if it keeps happening.", StateActionKind.Retry);
 	}
 
 	private const int MaxInitialLines = 1024;
 
-	private void LoadInitialContent(FileInfo file)
+	private static InitialContent ReadInitialContent(FileInfo file)
 	{
 		var lines = FileLoggerHelper.SplitIntoLines(FileLoggerHelper.GetLastLines(file, MaxInitialLines)).ToList();
-		_totalLines = FileLoggerHelper.CountLines(file);
+		return new InitialContent(lines, FileLoggerHelper.CountLines(file), file.Length);
+	}
+
+	private void ApplyInitialContent(FileInfo file, InitialContent content)
+	{
+		var lines = content.Lines;
+		_totalLines = content.TotalLines;
 		_nextLineNumber = Math.Max(0, _totalLines - lines.Count);
 
 		ResetLineWidth();
@@ -158,7 +264,7 @@ public partial class LogsPage : ContentPage
 		TruncatedLogText.Text = $"Showing the last {lines.Count} of {_totalLines} lines in this file.";
 		PlaceBanner();
 
-		_readOffset = file.Length;
+		_readOffset = content.Length;
 		_loadedFilePath = file.FullName;
 		UpdateCount();
 	}
@@ -407,9 +513,8 @@ public partial class LogsPage : ContentPage
 
 			if (selectedFile.FullName != _loadedFilePath)
 			{
-				LoadInitialContent(selectedFile);
-				follow = true;
-				contentChanged = true;
+				if (selectedFile.FullName != _loadingPath || (forceFollow && !_loadFailed)) StartInitialLoad(selectedFile);
+				return;
 			}
 			else
 			{
@@ -438,7 +543,7 @@ public partial class LogsPage : ContentPage
 		}
 		catch (Exception ex)
 		{
-			Android.Util.Log.Warn("LogsPage", $"Failed to refresh log view: {ex.Message}");
+			ShowLoadError(ex);
 		}
 	}
 
@@ -542,8 +647,6 @@ public partial class LogsPage : ContentPage
 
 		OpenCalendar();
 	}
-
-	private void OnChangeDateClicked(object sender, EventArgs e) => OpenCalendar();
 
 	private void OpenCalendar()
 	{

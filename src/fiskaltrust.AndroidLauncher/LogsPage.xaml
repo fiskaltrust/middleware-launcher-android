@@ -132,16 +132,22 @@
                 <VerticalStackLayout Padding="24,0"
                                      Spacing="16"
                                      VerticalOptions="Center">
-                    <Border WidthRequest="64"
+                    <ActivityIndicator x:Name="StateSpinner"
+                                       IsVisible="False"
+                                       IsRunning="False"
+                                       WidthRequest="36"
+                                       HeightRequest="36"
+                                       HorizontalOptions="Center"
+                                       Color="{AppThemeBinding Light={StaticResource FtPrimary}, Dark={StaticResource FtPrimaryNight}}" />
+                    <Border x:Name="StateIconCircle"
+                            WidthRequest="64"
                             HeightRequest="64"
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 32"
-                            BackgroundColor="{AppThemeBinding Light={StaticResource FtChip}, Dark={StaticResource FtChipNight}}"
                             HorizontalOptions="Center">
                         <Label x:Name="StateIcon"
                                FontFamily="{x:Static helpers:FaIcons.FontFamily}"
                                FontSize="28"
-                               TextColor="{AppThemeBinding Light={StaticResource FtIconDefault}, Dark={StaticResource FtIconDefaultNight}}"
                                HorizontalOptions="Center"
                                VerticalOptions="Center" />
                     </Border>
@@ -161,7 +167,7 @@
                             Margin="0,8,0,0"
                             HorizontalOptions="Center"
                             IsVisible="False"
-                            Clicked="OnChangeDateClicked" />
+                            Clicked="OnStateActionClicked" />
                 </VerticalStackLayout>
             </Grid>
         </Grid>
