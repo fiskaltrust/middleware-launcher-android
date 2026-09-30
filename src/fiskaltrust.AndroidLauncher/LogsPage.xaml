@@ -76,7 +76,7 @@
                                    CascadeInputTransparent="True">
                 <Label x:Name="SortIcon"
                        FontFamily="{x:Static helpers:FaIcons.FontFamily}"
-                       Text="{x:Static helpers:FaIcons.Sort}"
+                       Text="{x:Static helpers:FaIcons.SortUp}"
                        FontSize="20"
                        WidthRequest="20"
                        HorizontalTextAlignment="Center"

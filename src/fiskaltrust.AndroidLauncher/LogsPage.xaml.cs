@@ -346,7 +346,8 @@ public partial class LogsPage : ContentPage
 	private void UpdateCount()
 	{
 		CountLabel.Text = _totalLines == 1 ? "1 line" : $"{_totalLines} lines";
-		SemanticProperties.SetDescription(SortButton, _newestFirst ? "Sort order: newest first" : "Sort order: oldest first");
+		SortIcon.Text = _newestFirst ? FaIcons.SortDown : FaIcons.SortUp;
+		SemanticProperties.SetDescription(SortButton, _newestFirst ? "Sorted newest first, tap to sort oldest first" : "Sorted oldest first, tap to sort newest first");
 	}
 
 	private void OnTick(bool forceFollow = false)

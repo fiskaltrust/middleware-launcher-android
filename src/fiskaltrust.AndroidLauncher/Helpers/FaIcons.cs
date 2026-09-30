@@ -13,6 +13,8 @@ namespace fiskaltrust.AndroidLauncher.Helpers
         public const string Download = "";
         public const string CalendarDays = "";
         public const string Sort = "";
+        public const string SortUp = "";
+        public const string SortDown = "";
         public const string Check = "";
         public const string TriangleExclamation = "";
         public const string CircleExclamation = "";
