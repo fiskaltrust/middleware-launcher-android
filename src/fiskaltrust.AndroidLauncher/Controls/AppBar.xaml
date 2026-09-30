@@ -14,7 +14,7 @@
                Style="{StaticResource FtTitleLarge}"
                Text="{Binding Title, Source={x:Reference Root}}"
                TextColor="{AppThemeBinding Light={StaticResource FtOnSurface}, Dark={StaticResource FtOnSurfaceNight}}"
-               Padding="8,0"
+               Padding="20,0,4,0"
                VerticalOptions="Center"
                LineBreakMode="TailTruncation"
                MaxLines="1" />

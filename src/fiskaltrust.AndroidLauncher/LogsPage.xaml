@@ -5,6 +5,7 @@
              xmlns:controls="clr-namespace:fiskaltrust.AndroidLauncher.Controls"
              xmlns:helpers="clr-namespace:fiskaltrust.AndroidLauncher.Helpers"
              x:Class="fiskaltrust.AndroidLauncher.LogsPage"
+             x:Name="Page"
              Title="Logs"
              Shell.NavBarIsVisible="False"
              Appearing="OnAppearing"
@@ -21,8 +22,10 @@
 
         <Grid Grid.Row="1"
               x:Name="DateFieldArea"
+              RowDefinitions="Auto,Auto"
               Padding="16,16,16,0">
-            <Border x:Name="DateField"
+            <Border Grid.Row="0"
+                    x:Name="DateField"
                     HeightRequest="56"
                     Padding="16,0,4,0"
                     StrokeThickness="1"
@@ -54,7 +57,15 @@
                     </Border>
                 </Grid>
             </Border>
-            <Label x:Name="DateFieldLabel"
+            <Label Grid.Row="1"
+                   x:Name="DateFieldSupport"
+                   Text="YYYY-MM-DD"
+                   Style="{StaticResource FtBodySmall}"
+                   TextColor="{AppThemeBinding Light={StaticResource FtTextSecondary}, Dark={StaticResource FtTextSecondaryNight}}"
+                   Margin="16,4,0,0"
+                   IsVisible="False" />
+            <Label Grid.Row="0"
+                   x:Name="DateFieldLabel"
                    Text="Date"
                    Style="{StaticResource FtBodySmall}"
                    TextColor="{AppThemeBinding Light={StaticResource FtTextSecondary}, Dark={StaticResource FtTextSecondaryNight}}"
@@ -65,35 +76,44 @@
                    VerticalOptions="Start" />
         </Grid>
 
-        <HorizontalStackLayout Grid.Row="2"
-                               x:Name="CountRow"
-                               Padding="16,10"
-                               Spacing="8">
-            <Label FontFamily="{x:Static helpers:FaIcons.FontFamily}"
-                   Text="{x:Static helpers:FaIcons.Sort}"
-                   FontSize="20"
-                   WidthRequest="48"
-                   HeightRequest="48"
-                   Margin="-14,-14"
-                   HorizontalTextAlignment="Center"
-                   VerticalTextAlignment="Center"
-                   TextColor="{AppThemeBinding Light={StaticResource FtIconDefault}, Dark={StaticResource FtIconDefaultNight}}"
-                   x:Name="SortButton"
-                   SemanticProperties.Description="Newest first">
-                <Label.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnSortTapped" />
-                </Label.GestureRecognizers>
-            </Label>
-            <Label x:Name="CountLabel"
-                   Style="{StaticResource FtLabelLarge}"
-                   TextColor="{AppThemeBinding Light={StaticResource FtTextSecondary}, Dark={StaticResource FtTextSecondaryNight}}"
-                   VerticalOptions="Center" />
-        </HorizontalStackLayout>
+        <Grid Grid.Row="2"
+              x:Name="CountRow"
+              HeightRequest="40">
+            <HorizontalStackLayout Padding="16,0"
+                                   Spacing="8"
+                                   InputTransparent="True"
+                                   CascadeInputTransparent="True">
+                <Label x:Name="SortIcon"
+                       FontFamily="{x:Static helpers:FaIcons.FontFamily}"
+                       Text="{x:Static helpers:FaIcons.Sort}"
+                       FontSize="20"
+                       WidthRequest="20"
+                       HorizontalTextAlignment="Center"
+                       VerticalTextAlignment="Center"
+                       TextColor="{AppThemeBinding Light={StaticResource FtIconDefault}, Dark={StaticResource FtIconDefaultNight}}" />
+                <Label x:Name="CountLabel"
+                       Style="{StaticResource FtLabelLarge}"
+                       TextColor="{AppThemeBinding Light={StaticResource FtTextSecondary}, Dark={StaticResource FtTextSecondaryNight}}"
+                       VerticalOptions="Center" />
+            </HorizontalStackLayout>
+            <Button x:Name="SortButton"
+                    Style="{StaticResource FtTextButton}"
+                    Text=""
+                    Padding="0"
+                    CornerRadius="0"
+                    HeightRequest="48"
+                    MinimumHeightRequest="48"
+                    Margin="0,-4"
+                    SemanticProperties.Description="Sort order: oldest first"
+                    Clicked="OnSortTapped" />
+        </Grid>
 
         <Grid Grid.Row="3" RowDefinitions="Auto,*">
             <BoxView Grid.Row="0" HeightRequest="1" x:Name="ListTopBorder" />
             <CollectionView Grid.Row="1"
                             x:Name="LogView"
+                            SizeChanged="OnLogViewSizeChanged"
+                            HandlerChanged="OnLogViewHandlerChanged"
                             VerticalScrollBarVisibility="Always"
                             Scrolled="OnLogViewScrolled">
                 <CollectionView.Header>
@@ -112,18 +132,23 @@
                 </CollectionView.Header>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="local:LogLineItem">
-                        <Grid RowDefinitions="*,Auto">
+                        <Grid RowDefinitions="*,Auto" IsClippedToBounds="True">
                             <Grid.Triggers>
                                 <DataTrigger TargetType="Grid" Binding="{Binding IsBanded}" Value="True">
                                     <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource FtGround}, Dark={StaticResource FtGroundNight}}" />
                                 </DataTrigger>
                             </Grid.Triggers>
-                            <Label Grid.Row="0"
-                                   Text="{Binding Text}"
-                                   LineHeight="1.463"
-                                   Padding="16,4"
-                                   MaxLines="1"
-                                   LineBreakMode="TailTruncation" />
+                            <ContentView Grid.Row="0"
+                                         x:DataType="local:LogsPage"
+                                         Margin="{Binding LineMargin, Source={x:Reference Page}}"
+                                         TranslationX="{Binding LineTranslation, Source={x:Reference Page}}">
+                                <Label x:DataType="local:LogLineItem"
+                                       Text="{Binding Text}"
+                                       LineHeight="1.463"
+                                       Padding="16,4"
+                                       MaxLines="1"
+                                       LineBreakMode="TailTruncation" />
+                            </ContentView>
                             <BoxView Grid.Row="1" HeightRequest="1" />
                         </Grid>
                     </DataTemplate>
@@ -223,27 +248,30 @@
                           ColumnDefinitions="24,*"
                           ColumnSpacing="12"
                           SemanticProperties.Description="Export current">
-                        <Label Grid.Column="0"
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer />
+                        </Grid.GestureRecognizers>
+                        <Label Grid.Column="0" x:Name="ExportCurrentIcon"
                                FontFamily="{x:Static helpers:FaIcons.FontFamily}"
                                Text="{x:Static helpers:FaIcons.FileArrowDown}"
                                FontSize="24"
                                TextColor="{AppThemeBinding Light={StaticResource FtTextSecondary}, Dark={StaticResource FtTextSecondaryNight}}"
                                HorizontalOptions="Center"
                                VerticalOptions="Center" />
-                        <Label Grid.Column="1"
+                        <Label Grid.Column="1" x:Name="ExportCurrentLabel"
                                Text="Export current"
                                Style="{StaticResource FtBodyLarge}"
                                CharacterSpacing="0.5"
                                TextColor="{AppThemeBinding Light={StaticResource FtTextSecondary}, Dark={StaticResource FtTextSecondaryNight}}"
                                VerticalOptions="Center" />
-                        <Button Grid.ColumnSpan="2" Style="{StaticResource FtTextButton}" Text="" Padding="0" Margin="-12,0" HeightRequest="56" CornerRadius="0" Clicked="OnExportCurrentClicked" />
+                        <Button x:Name="ExportCurrentTouch" Grid.ColumnSpan="2" Style="{StaticResource FtTextButton}" Text="" Padding="0" Margin="-12,0" HeightRequest="56" CornerRadius="0" Clicked="OnExportCurrentClicked" />
                     </Grid>
                 </VerticalStackLayout>
             </Border>
 
             <controls:DockedCalendar x:Name="Calendar"
                                      IsVisible="False"
-                                     Margin="16,136,0,0"
+                                     Margin="16,164,0,0"
                                      HorizontalOptions="Start"
                                      VerticalOptions="Start"
                                      Confirmed="OnCalendarConfirmed"

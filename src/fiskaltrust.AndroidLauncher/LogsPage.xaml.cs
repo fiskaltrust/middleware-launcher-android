@@ -2,6 +2,8 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using Android.Content;
+using Android.Views;
+using AndroidX.RecyclerView.Widget;
 using AndroidX.DocumentFile.Provider;
 using fiskaltrust.AndroidLauncher.Helpers;
 using fiskaltrust.AndroidLauncher.Helpers.Logging;
@@ -27,6 +29,13 @@ public partial class LogsPage : ContentPage
 	long _nextLineNumber;
 	long _totalLines;
 	bool _isTruncated;
+	double _widestLine;
+	double _lineOffset;
+	bool _widthPending;
+	Android.Graphics.Paint? _linePaint;
+
+	public Thickness LineMargin { get; private set; }
+	public double LineTranslation => -_lineOffset;
 
 	public LogsPage()
 	{
@@ -60,8 +69,9 @@ public partial class LogsPage : ContentPage
 		var hasLogs = _logFiles.Count > 0;
 		var file = SelectedLogFile;
 
-		DateValue.Text = _selectedDate == default ? "" : _selectedDate.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture);
+		DateValue.Text = _selectedDate == default ? "" : _selectedDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
 		DateFieldArea.IsVisible = hasLogs;
+		DateFieldArea.Padding = new Thickness(16, 16, 16, file == null ? 16 : 0);
 		CountRow.IsVisible = file != null;
 		ListTopBorder.IsVisible = file != null;
 		LogView.IsVisible = file != null;
@@ -71,6 +81,7 @@ public partial class LogsPage : ContentPage
 		if (file != null) return;
 
 		_logLines.Clear();
+		ResetLineWidth();
 		_loadedFilePath = null;
 		_isTruncated = false;
 		PlaceBanner();
@@ -100,6 +111,7 @@ public partial class LogsPage : ContentPage
 		_nextLineNumber = Math.Max(0, _totalLines - lines.Count);
 
 		_logLines.Clear();
+		ResetLineWidth();
 		var items = lines.Select(CreateLine).ToList();
 		if (_newestFirst) items.Reverse();
 		foreach (var item in items)
@@ -116,11 +128,147 @@ public partial class LogsPage : ContentPage
 		UpdateCount();
 	}
 
-	private LogLineItem CreateLine(string text) => new() { Text = text, IsBanded = _nextLineNumber++ % 2 == 1 };
+	private const int MaxDisplayedChars = 1000;
+
+	private LogLineItem CreateLine(string text)
+	{
+		var display = text.Length > MaxDisplayedChars ? text[..MaxDisplayedChars] + "…" : text;
+		TrackLineWidth(display);
+		return new() { Text = display, IsBanded = _nextLineNumber++ % 2 == 1 };
+	}
+
+	private void ResetLineWidth()
+	{
+		_widestLine = 0;
+		_lineOffset = 0;
+		OnPropertyChanged(nameof(LineTranslation));
+		ApplyListWidth();
+	}
+
+	private void TrackLineWidth(string text)
+	{
+		try
+		{
+			var metrics = Platform.AppContext.Resources!.DisplayMetrics!;
+			if (_linePaint == null)
+			{
+				_linePaint = new Android.Graphics.Paint { TextSize = 14 * metrics.ScaledDensity };
+				_linePaint.SetTypeface(Android.Graphics.Typeface.CreateFromAsset(Platform.AppContext.Assets, "Roboto-Regular.ttf"));
+			}
+			var width = _linePaint.MeasureText(text) / metrics.Density + 40;
+			if (width <= _widestLine) return;
+			_widestLine = width;
+			if (_widthPending) return;
+			_widthPending = true;
+			Dispatcher.Dispatch(() =>
+			{
+				_widthPending = false;
+				ApplyListWidth();
+			});
+		}
+		catch (Exception ex)
+		{
+			Android.Util.Log.Warn("LogsPage", $"Failed to measure log line: {ex.Message}");
+		}
+	}
+
+	private double MaxLineOffset => Math.Max(0, _widestLine - (LogView.Width > 0 ? LogView.Width : Width));
+
+	private void ApplyListWidth()
+	{
+		var margin = new Thickness(0, 0, -MaxLineOffset, 0);
+		if (margin != LineMargin)
+		{
+			LineMargin = margin;
+			OnPropertyChanged(nameof(LineMargin));
+		}
+		SetLineOffset(_lineOffset);
+	}
+
+	private void SetLineOffset(double offset)
+	{
+		offset = Math.Clamp(offset, 0, MaxLineOffset);
+		if (offset == _lineOffset) return;
+		_lineOffset = offset;
+		OnPropertyChanged(nameof(LineTranslation));
+	}
+
+	private void OnLogViewSizeChanged(object? sender, EventArgs e) => ApplyListWidth();
+
+	private void OnLogViewHandlerChanged(object? sender, EventArgs e)
+	{
+		if (LogView.Handler?.PlatformView is not RecyclerView recycler || recycler.Context == null) return;
+		var density = recycler.Context.Resources!.DisplayMetrics!.Density;
+		recycler.AddOnItemTouchListener(new HorizontalDragListener(recycler.Context, dx => SetLineOffset(_lineOffset + dx / density)));
+	}
+
+	private sealed class HorizontalDragListener : Java.Lang.Object, RecyclerView.IOnItemTouchListener
+	{
+		readonly Action<float> _onDrag;
+		readonly int _touchSlop;
+		float _startX;
+		float _startY;
+		float _lastX;
+		bool _dragging;
+
+		public HorizontalDragListener(Context context, Action<float> onDrag)
+		{
+			_onDrag = onDrag;
+			_touchSlop = ViewConfiguration.Get(context)!.ScaledTouchSlop;
+		}
+
+		public bool OnInterceptTouchEvent(RecyclerView recyclerView, MotionEvent e)
+		{
+			switch (e.ActionMasked)
+			{
+				case MotionEventActions.Down:
+					_startX = _lastX = e.GetX();
+					_startY = e.GetY();
+					_dragging = false;
+					break;
+				case MotionEventActions.Move when !_dragging:
+					var dx = e.GetX() - _startX;
+					var dy = e.GetY() - _startY;
+					if (Math.Abs(dx) > _touchSlop && Math.Abs(dx) > Math.Abs(dy))
+					{
+						_dragging = true;
+						_lastX = e.GetX();
+						recyclerView.Parent?.RequestDisallowInterceptTouchEvent(true);
+					}
+					break;
+				case MotionEventActions.Up:
+				case MotionEventActions.Cancel:
+					_dragging = false;
+					break;
+			}
+			return _dragging;
+		}
+
+		public void OnTouchEvent(RecyclerView recyclerView, MotionEvent e)
+		{
+			switch (e.ActionMasked)
+			{
+				case MotionEventActions.Move:
+					var x = e.GetX();
+					_onDrag(_lastX - x);
+					_lastX = x;
+					break;
+				case MotionEventActions.Up:
+				case MotionEventActions.Cancel:
+					_dragging = false;
+					break;
+			}
+		}
+
+		public void OnRequestDisallowInterceptTouchEvent(bool disallowIntercept)
+		{
+		}
+	}
 
 	private void UpdateCount()
 	{
 		CountLabel.Text = _totalLines == 1 ? "1 line" : $"{_totalLines} lines";
+		SemanticProperties.SetDescription(SortButton, _newestFirst ? "Sort order: newest first" : "Sort order: oldest first");
 	}
 
 	private void OnTick(bool forceFollow = false)
@@ -200,10 +348,11 @@ public partial class LogsPage : ContentPage
 			: e.LastVisibleItemIndex >= _logLines.Count - 1 - toleranceItems;
 	}
 
-	private void OnSortTapped(object sender, TappedEventArgs e)
+	private void OnSortTapped(object? sender, EventArgs e)
 	{
+		CloseMenus();
 		_newestFirst = !_newestFirst;
-		SemanticProperties.SetDescription(SortButton, _newestFirst ? "Oldest first" : "Newest first");
+		UpdateCount();
 
 		var reversed = _logLines.Reverse().ToList();
 		_logLines.Clear();
@@ -253,8 +402,11 @@ public partial class LogsPage : ContentPage
 		}
 
 		CloseMenus();
-		ExportCurrentItem.IsEnabled = SelectedLogFile != null;
-		ExportCurrentItem.Opacity = SelectedLogFile != null ? 1 : 0.38;
+		var canExportCurrent = SelectedLogFile != null;
+		var itemColor = canExportCurrent ? "FtTextSecondary" : "FtTextDisabled";
+		ExportCurrentTouch.IsVisible = canExportCurrent;
+		ExportCurrentIcon.SetAppThemeColor(Label.TextColorProperty, (Color)Application.Current!.Resources[itemColor], (Color)Application.Current.Resources[itemColor + "Night"]);
+		ExportCurrentLabel.SetAppThemeColor(Label.TextColorProperty, (Color)Application.Current.Resources[itemColor], (Color)Application.Current.Resources[itemColor + "Night"]);
 		ActionsMenu.IsVisible = true;
 		MenuOverlay.IsVisible = true;
 	}
@@ -275,6 +427,8 @@ public partial class LogsPage : ContentPage
 	private void OpenCalendar()
 	{
 		CloseMenus();
+		var logDates = _logFiles.Select(f => f.LastWriteTime.Date).ToHashSet();
+		Calendar.HasLogs = logDates.Contains;
 		Calendar.Open(_selectedDate == default ? DateTime.Today : _selectedDate);
 		Calendar.IsVisible = true;
 		MenuOverlay.IsVisible = true;
@@ -309,6 +463,7 @@ public partial class LogsPage : ContentPage
 		var dark = Application.Current?.RequestedTheme == AppTheme.Dark;
 		string Key(string name) => dark ? name + "Night" : name;
 
+		DateFieldSupport.IsVisible = focused;
 		DateField.StrokeThickness = focused ? 2 : 1;
 		DateField.Padding = focused ? new Thickness(15, 0, 3, 0) : new Thickness(16, 0, 4, 0);
 		DateField.Stroke = (Color)Application.Current!.Resources[Key(focused ? "FtPrimary" : "FtBorder")];
