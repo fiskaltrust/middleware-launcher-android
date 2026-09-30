@@ -239,7 +239,11 @@ public partial class LogsPage : ContentPage
 	{
 		if (LogView.Handler?.PlatformView is not RecyclerView recycler || recycler.Context == null) return;
 		var density = recycler.Context.Resources!.DisplayMetrics!.Density;
-		recycler.AddOnItemTouchListener(new HorizontalDragListener(recycler.Context, dx => SetLineOffset(_lineOffset + dx / density)));
+		recycler.AddOnItemTouchListener(new HorizontalDragListener(
+			recycler.Context,
+			() => (float)(_lineOffset * density),
+			() => (float)(MaxLineOffset * density),
+			px => SetLineOffset(px / density)));
 		recycler.AddItemDecoration(new HairlineDecoration((int)Math.Max(1, density), IsLogLinePosition));
 	}
 
@@ -282,17 +286,32 @@ public partial class LogsPage : ContentPage
 
 	private sealed class HorizontalDragListener : Java.Lang.Object, RecyclerView.IOnItemTouchListener
 	{
-		readonly Action<float> _onDrag;
+		readonly Func<float> _offset;
+		readonly Func<float> _maxOffset;
+		readonly Action<float> _setOffset;
 		readonly int _touchSlop;
+		readonly int _minFlingVelocity;
+		readonly int _maxFlingVelocity;
+		readonly Android.Widget.OverScroller _scroller;
+		readonly Java.Lang.Runnable _flingStep;
+		VelocityTracker? _velocity;
+		RecyclerView? _flingTarget;
 		float _startX;
 		float _startY;
 		float _lastX;
 		bool _dragging;
 
-		public HorizontalDragListener(Context context, Action<float> onDrag)
+		public HorizontalDragListener(Context context, Func<float> offset, Func<float> maxOffset, Action<float> setOffset)
 		{
-			_onDrag = onDrag;
-			_touchSlop = ViewConfiguration.Get(context)!.ScaledTouchSlop;
+			_offset = offset;
+			_maxOffset = maxOffset;
+			_setOffset = setOffset;
+			var configuration = ViewConfiguration.Get(context)!;
+			_touchSlop = configuration.ScaledTouchSlop;
+			_minFlingVelocity = configuration.ScaledMinimumFlingVelocity;
+			_maxFlingVelocity = configuration.ScaledMaximumFlingVelocity;
+			_scroller = new Android.Widget.OverScroller(context);
+			_flingStep = new Java.Lang.Runnable(StepFling);
 		}
 
 		public bool OnInterceptTouchEvent(RecyclerView recyclerView, MotionEvent e)
@@ -300,11 +319,16 @@ public partial class LogsPage : ContentPage
 			switch (e.ActionMasked)
 			{
 				case MotionEventActions.Down:
+					_scroller.ForceFinished(true);
+					_velocity ??= VelocityTracker.Obtain();
+					_velocity!.Clear();
+					_velocity.AddMovement(e);
 					_startX = _lastX = e.GetX();
 					_startY = e.GetY();
 					_dragging = false;
 					break;
 				case MotionEventActions.Move when !_dragging:
+					_velocity?.AddMovement(e);
 					var dx = e.GetX() - _startX;
 					var dy = e.GetY() - _startY;
 					if (Math.Abs(dx) > _touchSlop && Math.Abs(dx) > Math.Abs(dy))
@@ -324,14 +348,21 @@ public partial class LogsPage : ContentPage
 
 		public void OnTouchEvent(RecyclerView recyclerView, MotionEvent e)
 		{
+			_velocity?.AddMovement(e);
 			switch (e.ActionMasked)
 			{
 				case MotionEventActions.Move:
 					var x = e.GetX();
-					_onDrag(_lastX - x);
+					_setOffset(_offset() + _lastX - x);
 					_lastX = x;
 					break;
 				case MotionEventActions.Up:
+					_dragging = false;
+					if (_velocity == null) break;
+					_velocity.ComputeCurrentVelocity(1000, _maxFlingVelocity);
+					var velocity = _velocity.XVelocity;
+					if (Math.Abs(velocity) >= _minFlingVelocity) StartFling(recyclerView, -velocity);
+					break;
 				case MotionEventActions.Cancel:
 					_dragging = false;
 					break;
@@ -340,6 +371,20 @@ public partial class LogsPage : ContentPage
 
 		public void OnRequestDisallowInterceptTouchEvent(bool disallowIntercept)
 		{
+		}
+
+		private void StartFling(RecyclerView recyclerView, float velocity)
+		{
+			_scroller.Fling((int)_offset(), 0, (int)velocity, 0, 0, (int)_maxOffset(), 0, 0);
+			_flingTarget = recyclerView;
+			recyclerView.PostOnAnimation(_flingStep);
+		}
+
+		private void StepFling()
+		{
+			if (_flingTarget == null || !_scroller.ComputeScrollOffset()) return;
+			_setOffset(_scroller.CurrX);
+			_flingTarget.PostOnAnimation(_flingStep);
 		}
 	}
 
