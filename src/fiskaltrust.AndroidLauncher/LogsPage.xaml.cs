@@ -5,6 +5,7 @@ using Android.Content;
 using Android.Views;
 using AndroidX.RecyclerView.Widget;
 using AndroidX.DocumentFile.Provider;
+using fiskaltrust.AndroidLauncher.Controls;
 using fiskaltrust.AndroidLauncher.Helpers;
 using fiskaltrust.AndroidLauncher.Helpers.Logging;
 
@@ -596,6 +597,7 @@ public partial class LogsPage : ContentPage
 	{
 		App.Resumed += OnAppResumed;
 		RefreshLogFileList();
+		if (_calendar == null) Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(500), () => { if (_calendar == null) Calendar.Prewarm(); });
 		Dispatcher.Dispatch(() =>
 		{
 			OnTick(true);
@@ -637,9 +639,29 @@ public partial class LogsPage : ContentPage
 		MenuOverlay.IsVisible = true;
 	}
 
+	private DockedCalendar? _calendar;
+
+	private DockedCalendar Calendar
+	{
+		get
+		{
+			if (_calendar != null) return _calendar;
+			_calendar = new DockedCalendar
+			{
+				IsVisible = false,
+				Margin = new Thickness(16, 144, 16, 0),
+				HorizontalOptions = LayoutOptions.Fill,
+				VerticalOptions = LayoutOptions.Start,
+			};
+			_calendar.DateSelected += OnCalendarDateSelected;
+			MenuOverlay.Children.Add(_calendar);
+			return _calendar;
+		}
+	}
+
 	private void OnDateFieldTapped(object sender, TappedEventArgs e)
 	{
-		if (Calendar.IsVisible)
+		if (_calendar?.IsVisible == true)
 		{
 			CloseMenus();
 			return;
@@ -674,7 +696,7 @@ public partial class LogsPage : ContentPage
 	private void CloseMenus()
 	{
 		ActionsMenu.IsVisible = false;
-		Calendar.IsVisible = false;
+		if (_calendar != null) _calendar.IsVisible = false;
 		MenuOverlay.IsVisible = false;
 		SetDateFieldFocused(false);
 	}

@@ -244,12 +244,6 @@
                 </VerticalStackLayout>
             </Border>
 
-            <controls:DockedCalendar x:Name="Calendar"
-                                     IsVisible="False"
-                                     Margin="16,144,16,0"
-                                     HorizontalOptions="Fill"
-                                     VerticalOptions="Start"
-                                     DateSelected="OnCalendarDateSelected" />
         </Grid>
 
     </Grid>
