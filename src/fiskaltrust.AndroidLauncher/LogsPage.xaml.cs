@@ -69,6 +69,7 @@ public partial class LogsPage : ContentPage
 	bool _widthPending;
 	Android.Graphics.Paint? _linePaint;
 	int _loadGeneration;
+	bool _tailBusy;
 	string? _loadingPath;
 	bool _loadFailed;
 	StateActionKind _stateAction;
@@ -504,61 +505,64 @@ public partial class LogsPage : ContentPage
 
 	private void OnTick(bool forceFollow = false)
 	{
-		try
+		var selectedFile = SelectedLogFile;
+		if (selectedFile == null) return;
+
+		if (selectedFile.FullName != _loadedFilePath)
 		{
-			var selectedFile = SelectedLogFile;
-			if (selectedFile == null) return;
+			if (selectedFile.FullName != _loadingPath || (forceFollow && !_loadFailed)) StartInitialLoad(selectedFile);
+			return;
+		}
 
-			bool follow = forceFollow || _isFollowing;
-			bool contentChanged = false;
+		if (_tailBusy) return;
+		_tailBusy = true;
 
-			if (selectedFile.FullName != _loadedFilePath)
+		var follow = forceFollow || _isFollowing;
+		var path = _loadedFilePath;
+		var generation = _loadGeneration;
+		var offset = _readOffset;
+
+		Task.Run(() =>
+		{
+			var newOffset = offset;
+			var lines = FileLoggerHelper.ReadNewLines(selectedFile, ref newOffset);
+			return (Lines: lines, Offset: newOffset);
+		}).ContinueWith(task => Dispatcher.Dispatch(() =>
+		{
+			_tailBusy = false;
+			if (generation != _loadGeneration || path != _loadedFilePath) return;
+			if (task.IsFaulted)
 			{
-				if (selectedFile.FullName != _loadingPath || (forceFollow && !_loadFailed)) StartInitialLoad(selectedFile);
+				ShowLoadError(task.Exception?.GetBaseException());
 				return;
 			}
-			else
-			{
-				var offset = _readOffset;
-				var newLines = FileLoggerHelper.ReadNewLines(selectedFile, ref offset);
-				_readOffset = offset;
-				if (newLines.Count > 0)
-				{
-					foreach (var line in newLines)
-					{
-						var item = CreateLine(line);
-						TrackLineWidth(item.Text);
-						if (_newestFirst) _logLines.Insert(0, item);
-						else _logLines.Add(item);
-					}
-					_totalLines += newLines.Count;
-					UpdateCount();
-					contentChanged = true;
-				}
-			}
 
-			if (follow && contentChanged && _logLines.Count > 0)
+			var (newLines, newOffset) = task.Result;
+			_readOffset = newOffset;
+			if (newLines.Count == 0) return;
+
+			foreach (var line in newLines)
 			{
-				ScrollToNewest();
+				var item = CreateLine(line);
+				TrackLineWidth(item.Text);
+				if (_newestFirst) _logLines.Insert(0, item);
+				else _logLines.Add(item);
 			}
-		}
-		catch (Exception ex)
-		{
-			ShowLoadError(ex);
-		}
+			_totalLines += newLines.Count;
+			UpdateCount();
+
+			if (follow) ScrollToNewest();
+		}));
 	}
 
 	private void ScrollToNewest()
 	{
-		ScrollToNewestNow();
-		Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(150), ScrollToNewestNow);
-	}
-
-	private void ScrollToNewestNow()
-	{
-		if (_logLines.Count == 0) return;
-		if (_newestFirst) LogView.ScrollTo(_logLines[0], position: ScrollToPosition.Start, animate: false);
-		else LogView.ScrollTo(_logLines[^1], position: ScrollToPosition.End, animate: false);
+		if (_logLines.Count == 0 || LogView.Handler?.PlatformView is not RecyclerView recycler) return;
+		recycler.Post(() =>
+		{
+			var count = recycler.GetAdapter()?.ItemCount ?? 0;
+			if (count > 0) recycler.ScrollToPosition(_newestFirst ? 0 : count - 1);
+		});
 	}
 
 	private void PlaceBanner()

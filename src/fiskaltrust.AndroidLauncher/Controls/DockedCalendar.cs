@@ -17,7 +17,11 @@ public class DockedCalendar : ContentView
 	readonly Button _yearButton;
 	readonly Grid _days;
 	readonly VerticalStackLayout _dayView;
-	readonly VerticalStackLayout _list;
+	readonly VerticalStackLayout _monthList = new();
+	readonly VerticalStackLayout _yearList = new();
+	readonly List<PeriodRow> _monthRows = new();
+	readonly List<PeriodRow> _yearRows = new();
+	(int From, int To) _yearRange;
 	readonly ScrollView _listView;
 	readonly ContentView _body;
 	readonly Button[] _dayButtons = new Button[42];
@@ -69,8 +73,7 @@ public class DockedCalendar : ContentView
 		Grid.SetRowSpan(_dotsView, 6);
 		if (Application.Current != null) Application.Current.RequestedThemeChanged += (_, _) => _dotsView.Invalidate();
 		_dayView = new VerticalStackLayout { Children = { weekdays, _days } };
-		_list = new VerticalStackLayout();
-		_listView = new ScrollView { HeightRequest = BodyHeight, Content = _list };
+		_listView = new ScrollView { HeightRequest = BodyHeight };
 		_body = new ContentView { HeightRequest = BodyHeight, Content = _dayView };
 
 		var panel = new Border
@@ -154,36 +157,58 @@ public class DockedCalendar : ContentView
 		_dotsView.Invalidate();
 	}
 
+	sealed record PeriodRow(int Value, Grid Row, Label Check, Label Label);
+
 	private void RenderList()
 	{
-		_list.Clear();
-		View? selectedRow = null;
+		List<PeriodRow> rows;
+		int selectedValue;
 
 		if (_mode == PickerMode.Months)
 		{
-			for (var m = 1; m <= 12; m++)
+			if (_monthRows.Count == 0)
 			{
-				var month = m;
-				var selected = month == _displayMonth.Month;
-				var name = new DateTime(2000, month, 1).ToString("MMMM", CultureInfo.InvariantCulture);
-				var row = ListRow(name, selected, () => PickPeriod(new DateTime(_displayMonth.Year, month, 1)));
-				_list.Add(row);
-				if (selected) selectedRow = row;
+				for (var m = 1; m <= 12; m++)
+				{
+					var month = m;
+					var name = new DateTime(2000, month, 1).ToString("MMMM", CultureInfo.InvariantCulture);
+					var row = CreatePeriodRow(month, name, () => PickPeriod(new DateTime(_displayMonth.Year, month, 1)));
+					_monthRows.Add(row);
+					_monthList.Add(row.Row);
+				}
 			}
+			_listView.Content = _monthList;
+			rows = _monthRows;
+			selectedValue = _displayMonth.Month;
 		}
 		else
 		{
 			var today = DateTime.Today;
-			var from = Math.Min(_displayMonth.Year, today.Year - 10);
-			var to = Math.Max(_displayMonth.Year, today.Year);
-			for (var y = to; y >= from; y--)
+			var range = (From: Math.Min(_displayMonth.Year, today.Year - 10), To: Math.Max(_displayMonth.Year, today.Year));
+			if (range != _yearRange)
 			{
-				var year = y;
-				var selected = year == _displayMonth.Year;
-				var row = ListRow(year.ToString(CultureInfo.InvariantCulture), selected, () => PickPeriod(new DateTime(year, _displayMonth.Month, 1)));
-				_list.Add(row);
-				if (selected) selectedRow = row;
+				_yearRange = range;
+				_yearRows.Clear();
+				_yearList.Clear();
+				for (var y = range.To; y >= range.From; y--)
+				{
+					var year = y;
+					var row = CreatePeriodRow(year, year.ToString(CultureInfo.InvariantCulture), () => PickPeriod(new DateTime(year, _displayMonth.Month, 1)));
+					_yearRows.Add(row);
+					_yearList.Add(row.Row);
+				}
 			}
+			_listView.Content = _yearList;
+			rows = _yearRows;
+			selectedValue = _displayMonth.Year;
+		}
+
+		View? selectedRow = null;
+		foreach (var row in rows)
+		{
+			var selected = row.Value == selectedValue;
+			MarkPeriodRow(row, selected);
+			if (selected) selectedRow = row.Row;
 		}
 
 		if (selectedRow != null)
@@ -199,17 +224,18 @@ public class DockedCalendar : ContentView
 		Render();
 	}
 
-	private static View ListRow(string text, bool selected, Action action)
+	private static PeriodRow CreatePeriodRow(int value, string text, Action action)
 	{
 		var check = new Label
 		{
 			FontFamily = FaIcons.FontFamily,
-			Text = selected ? FaIcons.Check : "",
+			Text = FaIcons.Check,
 			FontSize = 20,
 			HorizontalTextAlignment = TextAlignment.Center,
 			VerticalTextAlignment = TextAlignment.Center,
 			InputTransparent = true,
 		};
+		check.SetAppThemeColor(Label.TextColorProperty, Token("FtPrimaryDark"), Token("FtPrimaryDarkNight"));
 		var label = new Label
 		{
 			Text = text,
@@ -237,23 +263,26 @@ public class DockedCalendar : ContentView
 			ColumnSpacing = 12,
 			ColumnDefinitions = { new ColumnDefinition(24), new ColumnDefinition(GridLength.Star) },
 		};
-
-		if (selected)
-		{
-			row.SetAppThemeColor(BackgroundColorProperty, Token("FtPrimaryContainer"), Token("FtPrimaryContainerNight"));
-			check.SetAppThemeColor(Label.TextColorProperty, Token("FtPrimaryDark"), Token("FtPrimaryDarkNight"));
-			label.SetAppThemeColor(Label.TextColorProperty, Token("FtPrimaryDark"), Token("FtPrimaryDarkNight"));
-		}
-		else
-		{
-			label.SetAppThemeColor(Label.TextColorProperty, Token("FtTextSecondary"), Token("FtTextSecondaryNight"));
-		}
-
 		row.Add(touch, 0, 0);
 		Grid.SetColumnSpan(touch, 2);
 		row.Add(check, 0, 0);
 		row.Add(label, 1, 0);
-		return row;
+		return new PeriodRow(value, row, check, label);
+	}
+
+	private static void MarkPeriodRow(PeriodRow row, bool selected)
+	{
+		row.Check.IsVisible = selected;
+		if (selected)
+		{
+			row.Row.SetAppThemeColor(BackgroundColorProperty, Token("FtPrimaryContainer"), Token("FtPrimaryContainerNight"));
+			row.Label.SetAppThemeColor(Label.TextColorProperty, Token("FtPrimaryDark"), Token("FtPrimaryDarkNight"));
+		}
+		else
+		{
+			row.Row.BackgroundColor = Colors.Transparent;
+			row.Label.SetAppThemeColor(Label.TextColorProperty, Token("FtTextSecondary"), Token("FtTextSecondaryNight"));
+		}
 	}
 
 	private View CreateDayCell(int index)
