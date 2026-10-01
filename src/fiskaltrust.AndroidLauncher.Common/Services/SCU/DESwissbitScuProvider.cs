@@ -40,7 +40,9 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
 
             foreach (var dir in dirs)
             {
-                if (File.Exists(Path.Combine(dir, "TSE_INFO.DAT")))
+                // The TSE only maps its files into a folder after a remount; empty leftovers (e.g. from another app using the TSE) make worm_init crash natively
+                var tseInfoFile = new FileInfo(Path.Combine(dir, "TSE_INFO.DAT"));
+                if (tseInfoFile.Exists && tseInfoFile.Length > 0)
                 {
                     return dir;
                 }
