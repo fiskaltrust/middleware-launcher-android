@@ -68,6 +68,10 @@ namespace fiskaltrust.AndroidLauncher.Common.Services
 
         public async Task StartAsync()
         {
+            // The process working directory on Android is "/", which is not writable. Middleware packages that create files
+            // with relative paths (e.g. temp files of the TSE TAR journal export) would fail, so use the app's files directory.
+            System.IO.Directory.SetCurrentDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Personal));
+
             ftCashBoxConfiguration configuration;
             try
             {
