@@ -11,7 +11,8 @@ namespace fiskaltrust.AndroidLauncher.Activitites
         {
             base.OnCreate(savedInstanceState);
 
-            (Microsoft.Maui.Controls.Application.Current as IApplication)?.ThemeChanged();            var services = IPlatformApplication.Current!.Services;
+            (Microsoft.Maui.Controls.Application.Current as IApplication)?.ThemeChanged();
+            var services = IPlatformApplication.Current!.Services;
             var context = new MauiContext(services, this);
             var mauiView = new ManageSpaceView(this);
             SetContentView(mauiView.ToPlatformEmbedded(context));
