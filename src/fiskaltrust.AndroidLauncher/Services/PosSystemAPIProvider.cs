@@ -125,8 +125,7 @@ internal class PosSystemAPIProvider {
                 services.AddSingleton<IInStoreAppService, Api.PosSystem.Core.InStoreApp.InStoreAppService>();
             }
             //add Sqlite Storage services and dependencies
-            var sqliteStoragebootstrapper = new SqliteStorageBootstrapper();
-            var loggerFactory = IPlatformApplication.Current?.Services.GetService<ILoggerFactory>()
+           var loggerFactory = IPlatformApplication.Current?.Services.GetService<ILoggerFactory>()
             ?? LoggerFactory.Create(_ => { });
             var databasePath = System.IO.Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.Personal),
@@ -135,9 +134,7 @@ internal class PosSystemAPIProvider {
                 Environment.GetFolderPath(Environment.SpecialFolder.Personal),
                 "POSMigrations");
             CopyPosMigrationsToDataDir(migrationsPath);
-            await sqliteStoragebootstrapper.ConfigureStorageAsync(services, loggerFactory, databasePath);
-
-             services.AddSingleton<IStorageFactory, StorageFactory>();
+            services.AddSingleton<IStorageFactory, StorageFactory>( _ => new StorageFactory(loggerFactory, databasePath));
 
             var provider = services.BuildServiceProvider();
             _posSystemApiCore = provider.GetRequiredService<PosSystemApiCore>();
