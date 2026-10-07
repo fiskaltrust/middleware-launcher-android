@@ -3,6 +3,8 @@ using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
+using AndroidX.Core.View;
+using Microsoft.Maui.Platform;
 using fiskaltrust.AndroidLauncher.Helpers;
 
 namespace fiskaltrust.AndroidLauncher;
@@ -22,6 +24,28 @@ public class MainActivity : MauiAppCompatActivity
 
         }
         base.OnCreate(savedInstanceState);
+        ApplySystemBarColors();
+    }
+
+    public override void OnConfigurationChanged(Android.Content.Res.Configuration newConfig)
+    {
+        base.OnConfigurationChanged(newConfig);
+        ApplySystemBarColors();
+    }
+
+    private void ApplySystemBarColors()
+    {
+        if (Window == null || Microsoft.Maui.Controls.Application.Current == null) return;
+
+        var dark = (Resources?.Configuration?.UiMode & Android.Content.Res.UiMode.NightMask) == Android.Content.Res.UiMode.NightYes;
+        var color = ((Microsoft.Maui.Graphics.Color)Microsoft.Maui.Controls.Application.Current.Resources[dark ? "FtWhiteNight" : "FtWhite"]).ToPlatform();
+
+        Window.SetStatusBarColor(color);
+        Window.SetNavigationBarColor(color);
+
+        var insets = WindowCompat.GetInsetsController(Window, Window.DecorView);
+        insets.AppearanceLightStatusBars = !dark;
+        insets.AppearanceLightNavigationBars = !dark;
     }
 
     protected override void OnActivityResult(int requestCode, Result resultCode, Intent? data)

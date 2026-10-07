@@ -6,6 +6,66 @@
 
     <!-- Note: For Android please see also Platforms\Android\Resources\values\colors.xml -->
 
+    <Color x:Key="FtPrimary">#00a7ce</Color>
+    <Color x:Key="FtPrimaryNight">#40bdda</Color>
+    <Color x:Key="FtPrimaryContainer">#e5f6fa</Color>
+    <Color x:Key="FtPrimaryContainerNight">#002a34</Color>
+    <Color x:Key="FtPrimaryDark">#007d9a</Color>
+    <Color x:Key="FtPrimaryDarkNight">#bfe9f3</Color>
+    <Color x:Key="FtOnPrimary">#ffffff</Color>
+    <Color x:Key="FtOnPrimaryNight">#002a34</Color>
+
+    <Color x:Key="FtWhite">#ffffff</Color>
+    <Color x:Key="FtWhiteNight">#2b3035</Color>
+    <Color x:Key="FtBackground">#f3f3f4</Color>
+    <Color x:Key="FtBackgroundNight">#212529</Color>
+    <Color x:Key="FtGround">#f8f8f8</Color>
+    <Color x:Key="FtGroundNight">#212529</Color>
+    <Color x:Key="FtTextPrimary">#212529</Color>
+    <Color x:Key="FtTextPrimaryNight">#ffffff</Color>
+    <Color x:Key="FtTextSecondary">#676a69</Color>
+    <Color x:Key="FtTextSecondaryNight">#d9dcdd</Color>
+    <Color x:Key="FtNavInactive">#676a69</Color>
+    <Color x:Key="FtNavInactiveNight">#d9dcdd</Color>
+    <Color x:Key="FtOnSurface">#212529</Color>
+    <Color x:Key="FtOnSurfaceNight">#ffffff</Color>
+    <Color x:Key="FtOnSurfaceSub">#676a69</Color>
+    <Color x:Key="FtOnSurfaceSubNight">#d9dcdd</Color>
+    <Color x:Key="FtIconDefault">#676a69</Color>
+    <Color x:Key="FtIconDefaultNight">#d9dcdd</Color>
+    <Color x:Key="FtBorder">#d9dcdd</Color>
+    <Color x:Key="FtBorderNight">#676a69</Color>
+    <Color x:Key="FtHairline">#eeeeee</Color>
+    <Color x:Key="FtHairlineNight">#1AFFFFFF</Color>
+    <Color x:Key="FtChip">#f3f3f4</Color>
+    <Color x:Key="FtChipNight">#2b3035</Color>
+    <Color x:Key="FtSurfaceDisabled">#e5e6e7</Color>
+    <Color x:Key="FtSurfaceDisabledNight">#3a3f45</Color>
+    <Color x:Key="FtTextDisabled">#b3b4b4</Color>
+    <Color x:Key="FtTextDisabledNight">#8a8d90</Color>
+
+    <Color x:Key="FtSuccess">#95c11f</Color>
+    <Color x:Key="FtSuccessNight">#afd157</Color>
+    <Color x:Key="FtSuccessInk">#709117</Color>
+    <Color x:Key="FtSuccessInkNight">#afd157</Color>
+    <Color x:Key="FtSuccessContainer">#e5efc7</Color>
+    <Color x:Key="FtSuccessContainerNight">#253008</Color>
+    <Color x:Key="FtWarning">#ffb102</Color>
+    <Color x:Key="FtWarningNight">#ffc540</Color>
+    <Color x:Key="FtWarningInk">#bf8500</Color>
+    <Color x:Key="FtWarningInkNight">#ffc540</Color>
+    <Color x:Key="FtWarningContainer">#ffebbf</Color>
+    <Color x:Key="FtWarningContainerNight">#402c00</Color>
+    <Color x:Key="FtDanger">#ed5565</Color>
+    <Color x:Key="FtDangerNight">#f1808b</Color>
+    <Color x:Key="FtDangerInk">#b2404c</Color>
+    <Color x:Key="FtDangerInkNight">#f1808b</Color>
+    <Color x:Key="FtDangerContainer">#fdeef0</Color>
+    <Color x:Key="FtDangerContainerNight">#3b1519</Color>
+    <Color x:Key="FtOnDanger">#212529</Color>
+
+    <Color x:Key="FtScrim">#52000000</Color>
+
     <Color x:Key="Primary">#30add1</Color>
     <Color x:Key="PrimaryDark">#30add1</Color>
     <Color x:Key="PrimaryDarkText">#242424</Color>

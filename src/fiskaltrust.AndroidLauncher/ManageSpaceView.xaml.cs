@@ -18,4 +18,8 @@ public partial class ManageSpaceView : ContentView
         ((ActivityManager)_activity.GetSystemService(Context.ActivityService)!).ClearApplicationUserData();
         _activity.Finish();
     }
+
+    private void OnCancelClicked(object sender, EventArgs e) => _activity.Finish();
+
+    private void OnScrimTapped(object sender, TappedEventArgs e) => _activity.Finish();
 }

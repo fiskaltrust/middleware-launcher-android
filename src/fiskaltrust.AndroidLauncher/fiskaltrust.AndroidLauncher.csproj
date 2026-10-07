@@ -31,9 +31,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<MauiIcon Include="Resources\AppIcon\appicon.png" />
-		<MauiSplashScreen Include="Resources\Splash\splash.png" Color="#FFFFFF" BaseSize="192,192" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" ForegroundScale="0.62" Color="#FFFFFF" />
+		<MauiSplashScreen Include="Resources\Splash\ft_splash.svg" Color="Transparent" BaseSize="192,192" />
 		<MauiImage Include="Resources\Images\*" />
+		<MauiImage Update="Resources\Images\ft_badge.svg" BaseSize="100,100" />
 		<MauiFont Include="Resources\Fonts\*" />
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 		<AndroidResource Include="Platforms\Android\Resources\**" TargetPath="%(RecursiveDir)%(Filename)%(Extension)" />
@@ -72,7 +73,6 @@
 		<PackageReference Include="Microsoft.Maui.Essentials" Version="10.0.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
-		<PackageReference Include="AathifMahir.Maui.MauiIcons.Material" Version="4.0.0" />
 		<PackageReference Include="Xamarin.AndroidX.DocumentFile" Version="1.0.1.29" />
 		<!-- .NET 10 ships System.Linq.AsyncEnumerable natively; exclude compile-time assets of the
      third-party System.Linq.Async pulled transitively via middleware to avoid CS0121 ambiguity. -->
