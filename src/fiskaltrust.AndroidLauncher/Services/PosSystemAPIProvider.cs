@@ -6,16 +6,12 @@ using fiskaltrust.AndroidLauncher.Notifications;
 using fiskaltrust.AndroidLauncher.Services.Configuration;
 using fiskaltrust.AndroidLauncher.Services.InStoreApp;
 using fiskaltrust.AndroidLauncher.Services.POSSystemApiCore;
-using fiskaltrust.AndroidLauncher.Storage;
 using fiskaltrust.Api.PosSystem.Core;
 using fiskaltrust.Api.PosSystem.Core.Interfaces;
 using fiskaltrust.Api.PosSystem.Core.Models;
-using fiskaltrust.Api.PosSystem.Core.Payment;
 using fiskaltrust.Api.PosSystem.Local;
 using Microsoft.ApplicationInsights.Extensibility;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Maui;
 using Serilog;
 
 namespace fiskaltrust.AndroidLauncher.Services;
