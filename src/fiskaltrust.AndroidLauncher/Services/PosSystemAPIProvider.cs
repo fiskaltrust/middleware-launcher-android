@@ -1,5 +1,3 @@
-using Android.App;
-using Android.OS;
 using fiskaltrust.AndroidLauncher.Constants;
 using fiskaltrust.AndroidLauncher.Enums;
 using fiskaltrust.AndroidLauncher.Exceptions;
@@ -8,12 +6,12 @@ using fiskaltrust.AndroidLauncher.Notifications;
 using fiskaltrust.AndroidLauncher.Services.Configuration;
 using fiskaltrust.AndroidLauncher.Services.InStoreApp;
 using fiskaltrust.AndroidLauncher.Services.POSSystemApiCore;
-using fiskaltrust.AndroidLauncher.Storage;
 using fiskaltrust.Api.PosSystem.Core;
 using fiskaltrust.Api.PosSystem.Core.Interfaces;
 using fiskaltrust.Api.PosSystem.Core.Models;
-using Java.Util;
+using fiskaltrust.Api.PosSystem.Local;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace fiskaltrust.AndroidLauncher.Services;
@@ -30,7 +28,7 @@ internal class PosSystemAPIProvider {
     public PosSystemAPIProvider(IConfigurationProvider configurationProvider, ILauncherStateNotifier stateNotifier)
     {
         _configurationProvider = configurationProvider;
-        _stateNotifier = stateNotifier;
+        _stateNotifier = stateNotifier;        
     }
 
     public async Task<PosSystemApiCore> Get(Guid cashboxId, string accessToken, Action<string>? progressReporter = null)
@@ -123,8 +121,17 @@ internal class PosSystemAPIProvider {
             } else {
                 services.AddSingleton<IInStoreAppService, Api.PosSystem.Core.InStoreApp.InStoreAppService>();
             }
-            services.AddSingleton<IOperationItemRepository, MemoryOperationItemRepository>();
-            services.AddSingleton<IStorageFactory, StorageFactory>();
+            //add Sqlite Storage services and dependencies
+           var loggerFactory = IPlatformApplication.Current?.Services.GetService<ILoggerFactory>()
+            ?? LoggerFactory.Create(_ => { });
+            var databasePath = System.IO.Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.Personal),
+                $"possystemapi-{cashboxId}-{configuration.ftQueues.First().Id}.sqlite");
+            var migrationsPath = System.IO.Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.Personal),
+                "POSMigrations");
+            CopyPosMigrationsToDataDir(migrationsPath);
+            services.AddSingleton<IStorageFactory, StorageFactory>( _ => new StorageFactory(loggerFactory, databasePath));
 
             var provider = services.BuildServiceProvider();
             _posSystemApiCore = provider.GetRequiredService<PosSystemApiCore>();
@@ -153,6 +160,24 @@ internal class PosSystemAPIProvider {
 
             await Stop(true);
             throw;
+        }
+    }
+
+    public static void CopyPosMigrationsToDataDir(string targetDirectory)
+    {
+        const string migrationDir = "POSMigrations";
+
+        var assets = Android.App.Application.Context.Assets.List(migrationDir);
+        Directory.CreateDirectory(targetDirectory);
+        foreach (var asset in assets)
+        {
+            var targetFile = System.IO.Path.Combine(targetDirectory, asset);
+            if (!File.Exists(targetFile))
+            {
+                using var source = Android.App.Application.Context.Assets.Open(System.IO.Path.Combine(migrationDir, asset));
+                using var target = File.Create(targetFile);
+                source.CopyTo(target);
+            }
         }
     }
 
