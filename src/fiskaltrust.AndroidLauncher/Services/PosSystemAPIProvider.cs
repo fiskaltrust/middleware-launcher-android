@@ -10,6 +10,7 @@ using fiskaltrust.AndroidLauncher.Storage;
 using fiskaltrust.Api.PosSystem.Core;
 using fiskaltrust.Api.PosSystem.Core.Interfaces;
 using fiskaltrust.Api.PosSystem.Core.Models;
+using fiskaltrust.Api.PosSystem.Core.Payment;
 using fiskaltrust.Api.PosSystem.Local;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.DependencyInjection;
@@ -129,7 +130,7 @@ internal class PosSystemAPIProvider {
             ?? LoggerFactory.Create(_ => { });
             var databasePath = System.IO.Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.Personal),
-                $"{cashboxId}.pos.sqlite");
+                $"possystemapi-{cashboxId}-{configuration.ftQueues.First().Id}.sqlite");
             var migrationsPath = System.IO.Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.Personal),
                 "POSMigrations");
