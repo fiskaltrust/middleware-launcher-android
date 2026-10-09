@@ -42,7 +42,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="fiskaltrust.Exports.DSFinVK" Version="1.6.11" />
+		<PackageReference Include="fiskaltrust.Exports.DSFinVK" Version="1.6.13" />
 		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.11" />
 		<ProjectReference Include="../../possystem-api/src/fiskaltrust.Api.PosSystem.Core/fiskaltrust.Api.PosSystem.Core.csproj" />
 		<ProjectReference Include="../../middleware/queue/src/fiskaltrust.Middleware.Queue.SQLite/fiskaltrust.Middleware.Queue.SQLite.csproj" />
