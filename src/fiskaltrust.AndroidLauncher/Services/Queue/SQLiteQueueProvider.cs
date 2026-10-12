@@ -15,8 +15,6 @@ using fiskaltrust.Middleware.Storage.SQLite;
 using fiskaltrust.storage.serialization.V0;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using static fiskaltrust.Middleware.Storage.Base.BaseStorageBootStrapper;
-
 namespace fiskaltrust.AndroidLauncher.Services.Queue
 {
 
