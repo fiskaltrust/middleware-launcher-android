@@ -126,7 +126,7 @@ internal class PosSystemAPIProvider {
             ?? LoggerFactory.Create(_ => { });
             var databasePath = System.IO.Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.Personal),
-                $"possystemapi-{cashboxId}-{configuration.ftQueues.First().Id}.sqlite");
+                $"possystemapi-{cashboxId}-{configuration.ftQueues.Single().Id}.sqlite");
             var migrationsPath = System.IO.Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.Personal),
                 "POSMigrations");
