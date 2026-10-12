@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="design_bottom_navigation_height">72dp</dimen>
+    <dimen name="design_bottom_navigation_item_max_width">1000dp</dimen>
+    <dimen name="design_bottom_navigation_active_item_max_width">1000dp</dimen>
+</resources>
