@@ -22,32 +22,30 @@ namespace fiskaltrust.AndroidLauncher.Helpers.Logging
 
         public static string GetLastLines(FileInfo logFile, int lineCount)
         {
-            int count = 0;
-            byte[] buffer = new byte[1];
-
             using FileStream fs = logFile.OpenRead();
-            fs.Seek(0, SeekOrigin.End);
+            var end = fs.Length;
+            var buffer = new byte[8192];
+            var position = end;
+            var start = 0L;
+            var count = 0;
 
-            while (count < lineCount)
+            while (position > 0 && count < lineCount)
             {
-                try
-                {
-                    fs.Seek(-1, SeekOrigin.Current);
-                    fs.Read(buffer, 0, 1);
-                    if (buffer[0] == '\n')
-                    {
-                        count++;
-                    }
+                var size = (int)Math.Min(buffer.Length, position);
+                position -= size;
+                fs.Seek(position, SeekOrigin.Begin);
+                fs.ReadExactly(buffer, 0, size);
 
-                    fs.Seek(-1, SeekOrigin.Current);
-                }
-                catch
+                for (var i = size - 1; i >= 0; i--)
                 {
+                    if (buffer[i] != '\n' || position + i == end - 1) continue;
+                    if (++count < lineCount) continue;
+                    start = position + i + 1;
                     break;
                 }
             }
-            fs.Seek(1, SeekOrigin.Current);
 
+            fs.Seek(start, SeekOrigin.Begin);
             using var sr = new StreamReader(fs);
             var lines = sr.ReadToEnd();
             return lines;
