@@ -44,7 +44,7 @@ namespace fiskaltrust.AndroidLauncher.Services
             try
             {
                 var isLocalEndpoint = request.IsLocalEndpoint(LocalEndpoints);
-                
+
                 if (isLocalEndpoint)
                 {
                     Log.Info(TAG, $"Routing to local middleware: {request.Path}");
