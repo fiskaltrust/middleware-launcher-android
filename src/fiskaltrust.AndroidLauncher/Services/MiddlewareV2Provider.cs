@@ -59,9 +59,9 @@ namespace fiskaltrust.AndroidLauncher.Services
             try
             {
                 var queueConfiguration = _configuration.ftQueues[0];
-                var countryCode = Helpers.Configuration.GetQueueLocalization(queueConfiguration);
+                CountryCode = Helpers.Configuration.GetQueueLocalization(queueConfiguration);
                 var queueProvider = new SQLiteQueueProvider();
-                _poss = queueProvider.CreatePOSV2(queueConfiguration, countryCode, _loggerFactory);
+                _poss = queueProvider.CreatePOSV2(queueConfiguration, CountryCode, _loggerFactory);
                 Log.Logger.Information("Queue created. cashboxid: {cashbox.id}, queueId: {queue.id}", _cashboxId, queueConfiguration.Id);
                 // Helipad is v1-only (IPOS-based) and has no V2/POSV2 adapter yet, so it isn't wired up here. that have to be add later. 
             }

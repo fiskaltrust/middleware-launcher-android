@@ -93,11 +93,13 @@ internal class PosSystemAPIProvider {
         Log.Logger.Information("Starting the fiskaltrust.Middleware...");
 
         Log.Logger.Debug($"CashBox ID: {cashboxId}, IsSandbox: {isSandbox}");
-        var loggerFactory = IPlatformApplication.Current?.Services.GetService<ILoggerFactory>();
-        var countryCode = Helpers.Configuration.GetQueueLocalization(configuration.ftQueues.First());
+        
         
         try
         {
+            var loggerFactory = IPlatformApplication.Current?.Services.GetService<ILoggerFactory>();
+            var countryCode = Helpers.Configuration.GetQueueLocalization(configuration.ftQueues.First());
+
             _middlewareProvider = countryCode == "PL"
                 ? new MiddlewareV2Provider(cashboxId, accessToken, configuration, isSandbox, loggerFactory)
                 : new MiddlewareProvider(cashboxId, accessToken, configuration, isSandbox, logLevel);
