@@ -44,7 +44,7 @@ namespace fiskaltrust.AndroidLauncher.Services
             try
             {
                 var isLocalEndpoint = request.IsLocalEndpoint(LocalEndpoints);
-                
+
                 if (isLocalEndpoint)
                 {
                     Log.Info(TAG, $"Routing to local middleware: {request.Path}");
@@ -59,7 +59,7 @@ namespace fiskaltrust.AndroidLauncher.Services
             catch (Exception ex)
             {
                 Log.Error(TAG, $"Unexpected error: {ex}");
-                return PosSystemApiResponse.Error(500, $"Internal error: {ex.Message}");
+                return PosSystemApiResponse.Error(500, $"Internal error: {ex.Message}, {ex.InnerException?.Message}");
             }
         }
 
