@@ -61,7 +61,7 @@ namespace fiskaltrust.AndroidLauncher.Notifications
             {
                 LauncherState.NotConnected => "The fiskaltrust Middleware is starting. This will take a few seconds, depending on the TSE.",
                 LauncherState.Connected => "The fiskaltrust Middleware is running.",
-                LauncherState.Error => "An error occured in the fiskaltrust Middleware. Please restart it.",
+                LauncherState.Error => "An error occurred in the fiskaltrust Middleware. Please restart it.",
                 _ => throw new NotImplementedException(),
             };
             if (contentText != null)

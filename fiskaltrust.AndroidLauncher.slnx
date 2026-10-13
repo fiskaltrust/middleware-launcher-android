@@ -20,6 +20,7 @@
   </Folder>
   <Folder Name="/possystem-api/">
     <Project Path="possystem-api/src/fiskaltrust.Api.PosSystem.Core/fiskaltrust.Api.PosSystem.Core.csproj" />
+    <Project Path="possystem-api/src/fiskaltrust.Api.PosSystem.Local/fiskaltrust.Api.PosSystem.Local.csproj" />
   </Folder>
   <Folder Name="/test/">
     <Project Path="test/fiskaltrust.AndroidLauncher.SmokeTests/fiskaltrust.AndroidLauncher.SmokeTests.csproj" />
