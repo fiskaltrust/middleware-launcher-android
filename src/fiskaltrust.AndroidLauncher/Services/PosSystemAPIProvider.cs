@@ -94,7 +94,7 @@ internal class PosSystemAPIProvider {
         
         try
         {
-            var loggerFactory = IPlatformApplication.Current?.Services.GetService<ILoggerFactory>();
+            var loggerFactory = IPlatformApplication.Current?.Services.GetService<ILoggerFactory>() ?? LoggerFactory.Create(_ => { });
             var countryCode = Helpers.Configuration.GetQueueLocalization(configuration.ftQueues.First());
 
             _middlewareProvider = countryCode == "PL"
@@ -130,8 +130,6 @@ internal class PosSystemAPIProvider {
                 services.AddSingleton<IInStoreAppService, Api.PosSystem.Core.InStoreApp.InStoreAppService>();
             }
             //add Sqlite Storage services and dependencies
-           var loggerFactory = IPlatformApplication.Current?.Services.GetService<ILoggerFactory>()
-            ?? LoggerFactory.Create(_ => { });
             var databasePath = System.IO.Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.Personal),
                 $"possystemapi-{cashboxId}-{configuration.ftQueues.Single().Id}.sqlite");
