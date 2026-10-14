@@ -54,7 +54,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Queue
             }
             return pos;
         }
-        public POSV2 CreatePOSV2(Guid cashboxId, string accessToken, PackageConfiguration queueConfiguration, PackageConfiguration scuConfiguration, string countryCode, ILoggerFactory loggerFactory)
+        public POSV2 CreatePOSV2(Guid cashboxId, string accessToken, PackageConfiguration queueConfiguration, PackageConfiguration? scuConfiguration, string countryCode, ILoggerFactory loggerFactory)
         {
             var workingDir = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             var migrationsPath = Path.Combine(workingDir, sqlLitemigrationsFolder);
