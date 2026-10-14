@@ -51,6 +51,7 @@
 		<ProjectReference Include="../../middleware/queue/src/fiskaltrust.Middleware.Localization.QueuePL/fiskaltrust.Middleware.Localization.QueuePL.csproj" />
 		<ProjectReference Include="../../middleware/scu-pl/src/fiskaltrust.Middleware.SCU.PL.InMemory/fiskaltrust.Middleware.SCU.PL.InMemory.csproj" />
 		<ProjectReference Include="../../middleware/scu-pl/src/fiskaltrust.Middleware.SCU.PL.PosNet/fiskaltrust.Middleware.SCU.PL.PosNet.csproj" />
+		<ProjectReference Include="../../middleware/scu-pl/src/fiskaltrust.Middleware.SCU.PL.PosNet.Android/fiskaltrust.Middleware.SCU.PL.PosNet.Android.csproj" />
 		<ProjectReference Include="../../middleware/scu-it/src/fiskaltrust.Middleware.SCU.IT.CustomRTServer/fiskaltrust.Middleware.SCU.IT.CustomRTServer.csproj" />
 		<ProjectReference Include="../../middleware/scu-it/src/fiskaltrust.Middleware.SCU.IT.CustomRTPrinter/fiskaltrust.Middleware.SCU.IT.CustomRTPrinter.csproj" />
 		<ProjectReference Include="../../middleware/scu-it/src/fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter/fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter.csproj" />

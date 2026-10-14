@@ -54,7 +54,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Queue
             }
             return pos;
         }
-        public POSV2 CreatePOSV2(Guid cashboxId, string accessToken, PackageConfiguration queueConfiguration, PackageConfiguration scuConfiguration, string countryCode, ILoggerFactory loggerFactory)
+        public POSV2 CreatePOSV2(PackageConfiguration queueConfiguration, fiskaltrust.ifPOS.v2.pl.IPLSSCD plSSCD, string countryCode, ILoggerFactory loggerFactory)
         {
             var workingDir = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             var migrationsPath = Path.Combine(workingDir, sqlLitemigrationsFolder);
@@ -70,11 +70,6 @@ namespace fiskaltrust.AndroidLauncher.Services.Queue
             }
             var storageProvider = new SQLiteStorageProvider(loggerFactory, queueConfiguration.Id, queueConfiguration.Configuration, new SQLiteStorageConfiguration());
 
-            var plSSCD = PLSSCDFactory.CreateHostedScu(loggerFactory, scuConfiguration)
-                ?? new SigningIPLSSCD(cashboxId, accessToken, new ClientConfiguration
-                {
-                    Url = "https://signing-sandbox.fiskaltrust.pl"
-                });
 
             var queueBootStrapper = countryCode switch
             {

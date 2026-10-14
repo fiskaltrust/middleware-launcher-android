@@ -7,6 +7,8 @@ using fiskaltrust.Middleware.Interface.Client.Http;
 using fiskaltrust.Middleware.Interface.Client.Soap;
 using fiskaltrust.storage.serialization.V0;
 using Microsoft.Extensions.Logging;
+using fiskaltrust.Middleware.SCU.PL.PosNet;
+using fiskaltrust.Middleware.SCU.PL.PosNet.Android;
 using fiskaltrust.ifPOS.v2.pl;
 using fiskaltrust.ifPOS.v2;
 using System.Text.Json;
@@ -86,37 +88,67 @@ namespace fiskaltrust.AndroidLauncher.Signing
     public static class PLSSCDFactory
     {
         private const string PolishScuPackagePrefix = "fiskaltrust.Middleware.SCU.PL.";
+        private const string PosNetPackage = "fiskaltrust.Middleware.SCU.PL.PosNet";
 
-        public static IPLSSCD CreateHostedScu(ILoggerFactory loggerFactory, PackageConfiguration? scuConfiguration)
+        /// <summary>
+        /// Builds the SCU when it is hosted in this app. The returned provider owns the SCU and its
+        /// connection to the device (over USB: the claimed interface), so the caller disposes it on stop;
+        /// null means the SCU is not hosted here.
+        /// </summary>
+        public static ServiceProvider? CreateHostedScu(ILoggerFactory loggerFactory, PackageConfiguration? scuConfiguration)
         {
-                // Single decision point: a bootstrapper means "host it here", null means "not ours".
-                IMiddlewareBootstrapper? bootstrapper = scuConfiguration?.Package switch
-                {
-                    "fiskaltrust.Middleware.SCU.PL.PosNet" => new fiskaltrust.Middleware.SCU.PL.PosNet.ScuBootstrapper(),
+            // Single decision point: a bootstrapper means "host it here", null means "not ours".
+            IMiddlewareBootstrapper? bootstrapper = scuConfiguration?.Package switch
+            {
+                PosNetPackage => new fiskaltrust.Middleware.SCU.PL.PosNet.ScuBootstrapper(),
 
-                    // No device declared, or a device of another market — not ours.
-                    _ when !IsHostedByMe(scuConfiguration?.Package) => null,
+                // No device declared, or a device of another market — not ours.
+                _ when !IsHostedByMe(scuConfiguration?.Package) => null,
 
-                    _ => throw new NotSupportedException($"The selected SCU is not supported by this platform ({scuConfiguration!.Package}).")
-                };
+                _ => throw new NotSupportedException($"The selected SCU is not supported by this platform ({scuConfiguration!.Package}).")
+            };
 
-                if (bootstrapper is null)
-                {
-                    return null;
-                }
-
-                var serviceCollection = new ServiceCollection();
-                serviceCollection.AddSingleton(loggerFactory);
-                serviceCollection.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
-
-                bootstrapper.Id = scuConfiguration!.Id;
-                bootstrapper.Configuration = scuConfiguration.Configuration;
-                bootstrapper.ConfigureServices(serviceCollection);
-    // test
-                return serviceCollection.BuildServiceProvider().GetRequiredService<IPLSSCD>();
+            if (bootstrapper is null)
+            {
+                return null;
             }
 
-            private static bool IsHostedByMe(string? package)
-                => package is not null && package.StartsWith(PolishScuPackagePrefix, StringComparison.InvariantCulture);
+            var serviceCollection = new ServiceCollection();
+            serviceCollection.AddSingleton(loggerFactory);
+            serviceCollection.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
+            // Lets a usbhost:// DeviceUrl open the printer through the Android USB host API.
+            serviceCollection.AddPosNetAndroidUsbHost(Android.App.Application.Context);
+
+            bootstrapper.Id = scuConfiguration!.Id;
+            bootstrapper.Configuration = scuConfiguration.Configuration;
+            bootstrapper.ConfigureServices(serviceCollection);
+
+            return serviceCollection.BuildServiceProvider();
+        }
+
+        /// <summary>
+        /// Asks the user for access to a PosNet printer attached over USB, which Android requires before
+        /// the SCU can open it. Without it the SCU still starts, but reports the printer as unreachable.
+        /// </summary>
+        public static async Task RequestUsbPermissionAsync(PackageConfiguration? scuConfiguration)
+        {
+            if (scuConfiguration?.Package != PosNetPackage
+                || PosNetConfiguration.FromConfiguration(scuConfiguration.Configuration).ParseDeviceAddress() is not PosNetDeviceAddress.UsbHost usb)
+            {
+                return;
+            }
+
+            if (await PosNetUsbPermission.RequestAsync(Android.App.Application.Context, usb))
+            {
+                Serilog.Log.Logger.Information("Access to the USB device {device} is granted.", usb);
+            }
+            else
+            {
+                Serilog.Log.Logger.Warning("No access to the USB device {device}: it is not attached, or access was denied.", usb);
+            }
+        }
+
+        private static bool IsHostedByMe(string? package)
+            => package is not null && package.StartsWith(PolishScuPackagePrefix, StringComparison.InvariantCulture);
     }
 }
