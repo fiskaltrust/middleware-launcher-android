@@ -59,7 +59,7 @@ namespace fiskaltrust.AndroidLauncher.Services
             try
             {
                 var queueConfiguration = _configuration.ftQueues[0];
-                if (queueConfiguration.Package != SupportedQueues.PACKAGE_SQLite_Queue)
+                if (queueConfiguration.Package != SupportedQueues.Package_SQLite_Queue)
                 {
                     throw new ArgumentException($"The Android launcher currently only supports the SQLite queue");
                 }

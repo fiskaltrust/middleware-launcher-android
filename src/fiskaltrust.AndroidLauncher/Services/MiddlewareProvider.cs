@@ -99,7 +99,7 @@ namespace fiskaltrust.AndroidLauncher.Services
             foreach (var queueConfig in _configuration.ftQueues)
             {
                 queueConfig.Configuration["sandbox"] = _isSandbox;
-                if (queueConfig.Package != SupportedQueues.PACKAGE_SQLite_Queue)
+                if (queueConfig.Package != SupportedQueues.Package_SQLite_Queue)
                 {
                     throw new ArgumentException($"The Android launcher currently only supports the SQLite queue");
                 }
