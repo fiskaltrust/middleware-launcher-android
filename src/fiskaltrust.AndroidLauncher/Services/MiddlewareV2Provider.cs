@@ -1,4 +1,5 @@
-﻿using fiskaltrust.AndroidLauncher.Services.middleware;
+﻿using fiskaltrust.AndroidLauncher.Constants;
+using fiskaltrust.AndroidLauncher.Services.middleware;
 using fiskaltrust.AndroidLauncher.Services.Queue;
 using fiskaltrust.storage.serialization.V0;
 using Microsoft.Extensions.Logging;
@@ -15,7 +16,6 @@ namespace fiskaltrust.AndroidLauncher.Services
         private readonly string _accessToken;
         public string AccessToken => _accessToken;
         private readonly bool _isSandbox;
-        private readonly string _countryCode;
         private readonly ILoggerFactory _loggerFactory;
 
         private POSV2? _pos;
@@ -25,16 +25,16 @@ namespace fiskaltrust.AndroidLauncher.Services
         public Api.PosSystem.Core.Interfaces.IMiddlewareClient MiddlewareClient => MiddlewareClientAndroid.FromV2(_pos!);
 
         public PackageConfiguration? QueueConfiguration { get; private set; }
+        public string CountryCode { get; private set; }
 
-        public MiddlewareV2Provider(Guid cashboxId, string accessToken, ftCashBoxConfiguration configuration, string countryCode, bool isSandbox, ILoggerFactory loggerFactory)
+        public MiddlewareV2Provider(Guid cashboxId, string accessToken, ftCashBoxConfiguration configuration, bool isSandbox, ILoggerFactory loggerFactory)
         {
             _configuration = configuration;
             _cashboxId = cashboxId;
             _accessToken = accessToken;
-            _countryCode = countryCode;
             _isSandbox = isSandbox;
             _loggerFactory = loggerFactory;
-        }
+        }       
 
         public async Task StopAsync()
         {
@@ -44,7 +44,7 @@ namespace fiskaltrust.AndroidLauncher.Services
             //    helper.StopBegin();
             //    helper.StopEnd();
             //}
-        }
+        }     
         public async Task StartAsync()
         {
             if (_configuration.ftQueues.Length != 1)
@@ -55,14 +55,19 @@ namespace fiskaltrust.AndroidLauncher.Services
             {
                 throw new ArgumentException("Only one signatur creation device is supported in V2.");
             }
-
+         
             try
             {
                 var queueConfiguration = _configuration.ftQueues[0];
+                if (queueConfiguration.Package != SupportedQueues.PACKAGE_SQLite_Queue)
+                {
+                    throw new ArgumentException($"The Android launcher currently only supports the SQLite queue");
+                }
+                CountryCode = Helpers.Configuration.GetQueueLocalization(queueConfiguration);
                 var queueProvider = new SQLiteQueueProvider();
-                _pos = queueProvider.CreatePOSV2(CashboxId, AccessToken, queueConfiguration, _configuration.ftSignaturCreationDevices.FirstOrDefault(), _countryCode, _loggerFactory);
+                _pos = queueProvider.CreatePOSV2(CashboxId, AccessToken, queueConfiguration, _configuration.ftSignaturCreationDevices.FirstOrDefault(), CountryCode, _loggerFactory);
                 Log.Logger.Information("Queue created. cashboxid: {cashbox.id}, queueId: {queue.id}", _cashboxId, queueConfiguration.Id);
-                // Helipad is v1-only (IPOS-based) and has no V2/POSV2 adapter yet, so it isn't wired up here. that have to be add later.
+                // Helipad is v1-only (IPOS-based) and has no V2/POSV2 adapter yet, so it isn't wired up here. that have to be add later. 
             }
             catch (Exception x)
             {
