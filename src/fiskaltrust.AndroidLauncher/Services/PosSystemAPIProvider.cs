@@ -28,7 +28,7 @@ internal class PosSystemAPIProvider {
     public PosSystemAPIProvider(IConfigurationProvider configurationProvider, ILauncherStateNotifier stateNotifier)
     {
         _configurationProvider = configurationProvider;
-        _stateNotifier = stateNotifier;        
+        _stateNotifier = stateNotifier;
     }
 
     public async Task<PosSystemApiCore> Get(Guid cashboxId, string accessToken, Action<string>? progressReporter = null)
@@ -90,15 +90,15 @@ internal class PosSystemAPIProvider {
         Log.Logger.Information("Starting the fiskaltrust.Middleware...");
 
         Log.Logger.Debug($"CashBox ID: {cashboxId}, IsSandbox: {isSandbox}");
-        
-        
+
+
         try
         {
             var loggerFactory = IPlatformApplication.Current?.Services.GetService<ILoggerFactory>() ?? LoggerFactory.Create(_ => { });
             var countryCode = Helpers.Configuration.GetQueueLocalization(configuration.ftQueues.First());
 
             _middlewareProvider = countryCode == "PL"
-                ? new MiddlewareV2Provider(cashboxId, accessToken, configuration, isSandbox, loggerFactory)
+                ? new MiddlewareV2Provider(cashboxId, accessToken, configuration, countryCode, isSandbox, loggerFactory)
                 : new MiddlewareProvider(cashboxId, accessToken, configuration, isSandbox, logLevel);
             await _middlewareProvider.StartAsync();
 

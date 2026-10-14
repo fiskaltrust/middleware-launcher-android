@@ -4,7 +4,6 @@ namespace fiskaltrust.AndroidLauncher.Services
     {
         Guid CashboxId { get; }
         string AccessToken { get; }
-        string CountryCode { get; }
         Api.PosSystem.Core.Interfaces.IMiddlewareClient MiddlewareClient { get; }
 
         Task StartAsync();

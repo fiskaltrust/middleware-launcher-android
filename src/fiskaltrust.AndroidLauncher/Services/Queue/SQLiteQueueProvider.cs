@@ -20,7 +20,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Queue
 
     public class SQLiteQueueProvider
     {
-        private readonly string sqlLitemigrationsFolder = "Migrations"; 
+        private readonly string sqlLitemigrationsFolder = "Migrations";
         public IPOS CreatePOS(string workingDir, PackageConfiguration queueConfiguration, Guid ftCashBoxId, string accessToken, bool isSandbox, LogLevel logLevel, AbstractScuList scus)
         {
             var migrationsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), sqlLitemigrationsFolder);
@@ -54,7 +54,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Queue
             }
             return pos;
         }
-        public POSV2 CreatePOSV2(PackageConfiguration queueConfiguration,string countryCode, ILoggerFactory loggerFactory)
+        public POSV2 CreatePOSV2(Guid cashboxId, string accessToken, PackageConfiguration queueConfiguration, PackageConfiguration scuConfiguration, string countryCode, ILoggerFactory loggerFactory)
         {
             var workingDir = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             var migrationsPath = Path.Combine(workingDir, sqlLitemigrationsFolder);
@@ -69,10 +69,17 @@ namespace fiskaltrust.AndroidLauncher.Services.Queue
                 throw new NotSupportedException($"The market \"{countryCode}\" of the queue {queueConfiguration.Id} is not served by this Android launcher instance. This instance serves only market Poland.");
             }
             var storageProvider = new SQLiteStorageProvider(loggerFactory, queueConfiguration.Id, queueConfiguration.Configuration, new SQLiteStorageConfiguration());
+
+            var plSSCD = PLSSCDFactory.CreateHostedScu(loggerFactory, scuConfiguration)
+                ?? new SigningIPLSSCD(cashboxId, accessToken, new ClientConfiguration
+                {
+                    Url = "https://signing-sandbox.fiskaltrust.pl"
+                });
+
             var queueBootStrapper = countryCode switch
             {
 
-                "PL" => new fiskaltrust.Middleware.Localization.QueuePL.QueuePLBootstrapper(queueConfiguration.Id, loggerFactory, queueConfiguration.Configuration, new InMemorySCU(), storageProvider),
+                "PL" => new fiskaltrust.Middleware.Localization.QueuePL.QueuePLBootstrapper(queueConfiguration.Id, loggerFactory, queueConfiguration.Configuration, plSSCD, storageProvider),
                 "AT" or "DE" or "FR" => throw new NotSupportedException($"For markets DE, AT and FR, v1 endpoint should be used."),
                 _ => throw new NotSupportedException($"The Countrycode {countryCode} for the Queue with id {queueConfiguration.Id} is not supported."),
             };

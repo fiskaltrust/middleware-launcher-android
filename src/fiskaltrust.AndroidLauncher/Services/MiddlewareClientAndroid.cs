@@ -13,19 +13,15 @@ namespace fiskaltrust.AndroidLauncher.Services
     {
         private readonly IPOS _pos;
         private readonly POSV2 _posV2;
-        private readonly string _market;
 
-        public MiddlewareClientAndroid(IPOS? pos, POSV2? posV2, string market)
+        public MiddlewareClientAndroid(IPOS? pos, POSV2? posV2)
         {
             _pos = pos!;
             _posV2 = posV2!;
-            _market = market;
         }
 
-        public static MiddlewareClientAndroid FromV1(IPOS pos, string market) => new(pos, null, market);
-        public static MiddlewareClientAndroid FromV2(POSV2 posV2, string market) => new(null, posV2, market);
-
-        public string CountryCode => _market;
+        public static MiddlewareClientAndroid FromV1(IPOS pos) => new(pos, null);
+        public static MiddlewareClientAndroid FromV2(POSV2 posV2) => new(null, posV2);
 
         public async Task<(EchoResponse?, string? error)> EchoAsync(MiddlewareRequestOptions requestOptions, EchoRequest request)
         {
@@ -86,7 +82,7 @@ namespace fiskaltrust.AndroidLauncher.Services
             {
                var response = await _pos.SignAsync(request);
                return (response, null);
-               
+
             }
             catch (Exception ex)
             {

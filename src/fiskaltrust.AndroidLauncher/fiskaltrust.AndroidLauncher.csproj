@@ -50,6 +50,7 @@
 		<ProjectReference Include="../../middleware/queue/src/fiskaltrust.Middleware.Storage.SQLite/fiskaltrust.Middleware.Storage.SQLite.csproj" />
 		<ProjectReference Include="../../middleware/queue/src/fiskaltrust.Middleware.Localization.QueuePL/fiskaltrust.Middleware.Localization.QueuePL.csproj" />
 		<ProjectReference Include="../../middleware/scu-pl/src/fiskaltrust.Middleware.SCU.PL.InMemory/fiskaltrust.Middleware.SCU.PL.InMemory.csproj" />
+		<ProjectReference Include="../../middleware/scu-pl/src/fiskaltrust.Middleware.SCU.PL.PosNet/fiskaltrust.Middleware.SCU.PL.PosNet.csproj" />
 		<ProjectReference Include="../../middleware/scu-it/src/fiskaltrust.Middleware.SCU.IT.CustomRTServer/fiskaltrust.Middleware.SCU.IT.CustomRTServer.csproj" />
 		<ProjectReference Include="../../middleware/scu-it/src/fiskaltrust.Middleware.SCU.IT.CustomRTPrinter/fiskaltrust.Middleware.SCU.IT.CustomRTPrinter.csproj" />
 		<ProjectReference Include="../../middleware/scu-it/src/fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter/fiskaltrust.Middleware.SCU.IT.EpsonRTPrinter.csproj" />
@@ -84,7 +85,7 @@
      third-party System.Linq.Async pulled transitively via middleware to avoid CS0121 ambiguity. -->
 		<PackageReference Include="System.Linq.Async" Version="6.0.1" ExcludeAssets="compile" />
 		<PackageReference Include="Nerdbank.GitVersioning" Version="3.10.91" PrivateAssets="all" Condition="!Exists('packages.config')" />
-	
+
 	</ItemGroup>
 
 	<ItemGroup>

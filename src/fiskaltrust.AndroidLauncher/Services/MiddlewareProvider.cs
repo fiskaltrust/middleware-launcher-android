@@ -34,14 +34,13 @@ namespace fiskaltrust.AndroidLauncher.Services
 
         private Android.OS.PowerManager.WakeLock _wakeLock;
         private List<IHelper> _helpers;
-        private IPOS _poss;
+        private IPOS _pos;
         private AbstractScuList _scus;
 
-        public IPOS POS => _poss;
+        public IPOS POS => _pos;
 
-        public string CountryCode { get; set; }
 
-        public Api.PosSystem.Core.Interfaces.IMiddlewareClient MiddlewareClient => MiddlewareClientAndroid.FromV1(_poss, CountryCode);
+        public Api.PosSystem.Core.Interfaces.IMiddlewareClient MiddlewareClient => MiddlewareClientAndroid.FromV1(_pos);
 
         public PackageConfiguration QueueConfiguration { get; private set; }
 
@@ -169,31 +168,15 @@ namespace fiskaltrust.AndroidLauncher.Services
         {
             var queueProvider = new SQLiteQueueProvider();
             var pos = await Task.Run(() => queueProvider.CreatePOS(Environment.GetFolderPath(Environment.SpecialFolder.Personal), packageConfig, _cashboxId, _accessToken, _isSandbox, _logLevel, _scus));
-            _poss = pos;
-            var queues = ParseParameter<List<ftQueue>>(packageConfig.Configuration, "init_ftQueue") ?? new List<ftQueue>();
+            _pos = pos;
             QueueConfiguration = packageConfig;
-            CountryCode = queues.FirstOrDefault()?.CountryCode?.ToUpper();
             Log.Logger.Debug($"REST endpoint for type 'fiskaltrust.Middleware.Queue.SQLite' is listening on 'Intnet Interface'.");
-        }
-
-        private T ParseParameter<T>(Dictionary<string, object> config, string key) where T : new()
-        {
-            T parameter;
-            if (config.ContainsKey(key))
-            {
-                parameter = JsonConvert.DeserializeObject<T>(config[key].ToString());
-            }
-            else
-            {
-                return default; // Sometimes we don't get that data. We just expect it to be empty then.
-            }
-            return parameter;
         }
 
         private async Task InitializeHelipadHelperAsync(ftCashBoxConfiguration configuration)
         {
             var helipadHelperProvider = new HelipadHelperProvider();
-            var helper = await Task.Run(() => helipadHelperProvider.CreateHelper(configuration, _accessToken, _isSandbox, _logLevel, new List<IPOS> { _poss }));
+            var helper = await Task.Run(() => helipadHelperProvider.CreateHelper(configuration, _accessToken, _isSandbox, _logLevel, new List<IPOS> { _pos }));
             helper.StartBegin();
             helper.StartEnd();
             _helpers.Add(helper);
