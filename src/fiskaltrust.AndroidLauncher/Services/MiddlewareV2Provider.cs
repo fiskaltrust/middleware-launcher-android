@@ -71,7 +71,7 @@ namespace fiskaltrust.AndroidLauncher.Services
                 await PLSSCDFactory.RequestUsbPermissionAsync(scuConfiguration);
                 _scuServices = PLSSCDFactory.CreateHostedScu(_loggerFactory, scuConfiguration);
                 var plSSCD = _scuServices?.GetRequiredService<fiskaltrust.ifPOS.v2.pl.IPLSSCD>()
-                    ?? new SigningIPLSSCD(_cashboxId, _accessToken, new fiskaltrust.Middleware.Interface.Client.ClientConfiguration
+                    ?? new SigningIPLSSCD(_cashboxId, _accessToken, new fiskaltrust.Middleware.Abstractions.ClientConfiguration
                     {
                         Url = _isSandbox ? Constants.Urls.SIGNING_PL_SANDBOX : Constants.Urls.SIGNING_PL_PRODUCTION
                     });
