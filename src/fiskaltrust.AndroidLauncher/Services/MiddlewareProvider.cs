@@ -1,4 +1,5 @@
-﻿using fiskaltrust.AndroidLauncher.Exceptions;
+﻿using fiskaltrust.AndroidLauncher.Constants;
+using fiskaltrust.AndroidLauncher.Exceptions;
 using fiskaltrust.AndroidLauncher.Services.Configuration;
 using fiskaltrust.AndroidLauncher.Services.Helper;
 using fiskaltrust.AndroidLauncher.Services.Queue;
@@ -99,6 +100,10 @@ namespace fiskaltrust.AndroidLauncher.Services
             foreach (var queueConfig in _configuration.ftQueues)
             {
                 queueConfig.Configuration["sandbox"] = _isSandbox;
+                if (queueConfig.Package != SupportedQueues.PACKAGE_SQLite_Queue)
+                {
+                    throw new ArgumentException($"The Android launcher currently only supports the SQLite queue");
+                }
                 await InitializeQueueAsync(queueConfig);
             }
 
