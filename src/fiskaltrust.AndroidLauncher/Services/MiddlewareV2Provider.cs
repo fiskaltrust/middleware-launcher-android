@@ -73,7 +73,7 @@ namespace fiskaltrust.AndroidLauncher.Services
                 var plSSCD = _scuServices?.GetRequiredService<fiskaltrust.ifPOS.v2.pl.IPLSSCD>()
                     ?? new SigningIPLSSCD(_cashboxId, _accessToken, new fiskaltrust.Middleware.Interface.Client.ClientConfiguration
                     {
-                        Url = "https://signing-sandbox.fiskaltrust.pl"
+                        Url = _isSandbox ? Constants.Urls.SIGNING_PL_SANDBOX : Constants.Urls.SIGNING_PL_PRODUCTION
                     });
 
                 var queueProvider = new SQLiteQueueProvider();

@@ -18,9 +18,9 @@ namespace fiskaltrust.AndroidLauncher.Signing
 {
 
     /// <summary>
-    /// IPLSSCD client for the PL signing service. In the sandbox this talks to the fake register
-    /// hosted at signing-sandbox.fiskaltrust.pl/sandbox; the production register SCU (Posnet)
-    /// follows the same v2 binding once it is available.
+    /// IPLSSCD client for the PL signing service. The configured URL is the base of the v2 binding
+    /// (see <see cref="Constants.Urls.SIGNING_PL_SANDBOX"/> and <see cref="Constants.Urls.SIGNING_PL_PRODUCTION"/>);
+    /// the sandbox serves a fake register.
     /// </summary>
     public class SigningIPLSSCD : IPLSSCD
     {
@@ -41,7 +41,7 @@ namespace fiskaltrust.AndroidLauncher.Signing
 
         public async Task<EchoResponse> EchoAsync(EchoRequest request)
         {
-            var response = await _httpClient.PostAsJsonAsync("/sandbox/v2/Echo", request);
+            var response = await _httpClient.PostAsJsonAsync("Echo", request);
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception("Failed to echo with result " + await response.Content.ReadAsStringAsync() + ". Status code: " + response.StatusCode);
@@ -56,7 +56,7 @@ namespace fiskaltrust.AndroidLauncher.Signing
 
         public async Task<PLSSCDInfo> GetInfoAsync()
         {
-            var response = await _httpClient.GetAsync("/sandbox/v2/GetInfo");
+            var response = await _httpClient.GetAsync("GetInfo");
             if (response.IsSuccessStatusCode == false)
             {
                 throw new Exception("Failed to get PLSSCD info with result " + await response.Content.ReadAsStringAsync() + ". Status code: " + response.StatusCode);
@@ -71,7 +71,7 @@ namespace fiskaltrust.AndroidLauncher.Signing
 
         public async Task<ProcessResponse> ProcessReceiptAsync(ProcessRequest request)
         {
-            var response = await _httpClient.PostAsJsonAsync("/sandbox/v2/ProcessReceipt", request);
+            var response = await _httpClient.PostAsJsonAsync("ProcessReceipt", request);
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception("Failed to process receipt with result " + await response.Content.ReadAsStringAsync() + ". Status code: " + response.StatusCode);
