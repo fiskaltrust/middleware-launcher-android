@@ -129,11 +129,16 @@ namespace fiskaltrust.AndroidLauncher.Signing
         /// <summary>
         /// Asks the user for access to a PosNet printer attached over USB, which Android requires before
         /// the SCU can open it. Without it the SCU still starts, but reports the printer as unreachable.
+        /// Also turns the app's USB attach handler on only for such a cashbox, so other markets never get it.
         /// </summary>
         public static async Task RequestUsbPermissionAsync(PackageConfiguration? scuConfiguration)
         {
-            if (scuConfiguration?.Package != PosNetPackage
-                || PosNetConfiguration.FromConfiguration(scuConfiguration.Configuration).ParseDeviceAddress() is not PosNetDeviceAddress.UsbHost usb)
+            var usb = scuConfiguration?.Package == PosNetPackage
+                ? PosNetConfiguration.FromConfiguration(scuConfiguration.Configuration).ParseDeviceAddress() as PosNetDeviceAddress.UsbHost
+                : null;
+
+            SetUsbAttachedActivityEnabled(usb is not null);
+            if (usb is null)
             {
                 return;
             }
@@ -146,6 +151,15 @@ namespace fiskaltrust.AndroidLauncher.Signing
             {
                 Serilog.Log.Logger.Warning("No access to the USB device {device}: it is not attached, or access was denied.", usb);
             }
+        }
+
+        private static void SetUsbAttachedActivityEnabled(bool enabled)
+        {
+            var context = Android.App.Application.Context;
+            context.PackageManager?.SetComponentEnabledSetting(
+                new Android.Content.ComponentName(context, Java.Lang.Class.FromType(typeof(PosNetUsbAttachedActivity))),
+                enabled ? Android.Content.PM.ComponentEnabledState.Enabled : Android.Content.PM.ComponentEnabledState.Default,
+                Android.Content.PM.ComponentEnableOption.DontKillApp);
         }
 
         private static bool IsHostedByMe(string? package)

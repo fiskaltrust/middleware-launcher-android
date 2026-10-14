@@ -1,7 +1,6 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.Content.PM;
-using Android.Hardware.Usb;
 using Android.OS;
 using Android.Runtime;
 using AndroidX.Core.View;
@@ -11,9 +10,6 @@ using fiskaltrust.AndroidLauncher.Helpers;
 namespace fiskaltrust.AndroidLauncher;
 
 [Activity(Label = "@string/app_name", Theme = "@style/Maui.SplashTheme", MainLauncher = true, LaunchMode = LaunchMode.SingleTop, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
-// Plugging in a PosNet printer (PL) opens the app, and accepting that prompt grants the USB permission the SCU needs.
-[IntentFilter([UsbManager.ActionUsbDeviceAttached])]
-[MetaData(UsbManager.ActionUsbDeviceAttached, Resource = "@xml/device_filter")]
 [Register("eu.fiskaltrust.androidlauncher.MainActivity")]
 public class MainActivity : MauiAppCompatActivity
 {
