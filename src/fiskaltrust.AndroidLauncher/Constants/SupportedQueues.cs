@@ -2,6 +2,6 @@
 {
     public static class SupportedQueues
     {
-        public const string PACKAGE_SQLite_Queue = "fiskaltrust.Middleware.Queue.SQLite";
+        public const string Package_SQLite_Queue = "fiskaltrust.Middleware.Queue.SQLite";
     }
 }
