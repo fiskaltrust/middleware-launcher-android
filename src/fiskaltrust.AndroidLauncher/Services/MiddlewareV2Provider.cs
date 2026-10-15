@@ -1,5 +1,6 @@
 ﻿using fiskaltrust.AndroidLauncher.Services.middleware;
 using fiskaltrust.AndroidLauncher.Services.Queue;
+using fiskaltrust.AndroidLauncher.Signing;
 using fiskaltrust.storage.serialization.V0;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -19,6 +20,7 @@ namespace fiskaltrust.AndroidLauncher.Services
         private readonly ILoggerFactory _loggerFactory;
 
         private POSV2? _pos;
+        private ServiceProvider? _scuServices;
 
         public POSV2? POSV2 => _pos;
 
@@ -38,6 +40,11 @@ namespace fiskaltrust.AndroidLauncher.Services
 
         public async Task StopAsync()
         {
+            // Releases the SCU's connection to the device; over USB the claimed interface would otherwise
+            // keep a restarted middleware from opening the printer again.
+            _scuServices?.Dispose();
+            _scuServices = null;
+
             // MiddlewareProvider doesn't manage hosts directly, just helpers and wake locks
             //foreach (var helper in _helpers)
             //{
@@ -59,8 +66,19 @@ namespace fiskaltrust.AndroidLauncher.Services
             try
             {
                 var queueConfiguration = _configuration.ftQueues[0];
+                queueConfiguration.Configuration["sandbox"] = _isSandbox;
+                var scuConfiguration = _configuration.ftSignaturCreationDevices.FirstOrDefault();
+
+                await PLSSCDFactory.RequestUsbPermissionAsync(scuConfiguration);
+                _scuServices = PLSSCDFactory.CreateHostedScu(_loggerFactory, scuConfiguration);
+                var plSSCD = _scuServices?.GetRequiredService<fiskaltrust.ifPOS.v2.pl.IPLSSCD>()
+                    ?? new SigningIPLSSCD(_cashboxId, _accessToken, new fiskaltrust.Middleware.Abstractions.ClientConfiguration
+                    {
+                        Url = _isSandbox ? Constants.Urls.SIGNING_PL_SANDBOX : Constants.Urls.SIGNING_PL_PRODUCTION
+                    });
+
                 var queueProvider = new SQLiteQueueProvider();
-                _pos = queueProvider.CreatePOSV2(CashboxId, AccessToken, queueConfiguration, _configuration.ftSignaturCreationDevices.FirstOrDefault(), _countryCode, _loggerFactory);
+                _pos = queueProvider.CreatePOSV2(queueConfiguration, plSSCD, _countryCode, _loggerFactory);
                 Log.Logger.Information("Queue created. cashboxid: {cashbox.id}, queueId: {queue.id}", _cashboxId, queueConfiguration.Id);
                 // Helipad is v1-only (IPOS-based) and has no V2/POSV2 adapter yet, so it isn't wired up here. that have to be add later.
             }
