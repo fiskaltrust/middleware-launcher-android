@@ -193,5 +193,10 @@ namespace fiskaltrust.AndroidLauncher.Extensions
         public const string EXTRA_CONTENT_TYPE_BASE64URL = "ContentTypeBase64Url";
         // Base64URL-encoded JSON headers object (optional, for response headers)
         public const string EXTRA_RESPONSE_HEADER_JSON_BASE64URL = "HeaderJsonObjectBase64Url";
+
+        // Callback URL for browser-based callers (optional). When set, the activity opens
+        // this URL with response data as query parameters instead of using SetResult.
+        // Must be https, or http for loopback hosts (localhost, 127.0.0.1, ::1); anything else is rejected with a 400.
+        public const string EXTRA_CALLBACK_URL = "CallbackUrl";
     }
 }
