@@ -67,7 +67,7 @@ namespace fiskaltrust.AndroidLauncher.Extensions
             return new PosSystemApiRequest
             {
                 Method = method!,
-                Path = path!,
+                PathAndQuery = path!,
                 Headers = headers,
                 Body = body
             };
@@ -76,8 +76,8 @@ namespace fiskaltrust.AndroidLauncher.Extensions
         public static bool IsLocalEndpoint(this PosSystemApiRequest request, HashSet<string> localEndpoints)
         {
             return localEndpoints.Any(endpoint =>
-                request.Path.Equals(endpoint, StringComparison.OrdinalIgnoreCase) ||
-                request.Path.StartsWith(endpoint + "/", StringComparison.OrdinalIgnoreCase));
+                request.GetPath().Equals(endpoint, StringComparison.OrdinalIgnoreCase) ||
+                request.GetPath().StartsWith(endpoint + "/", StringComparison.OrdinalIgnoreCase));
         }
     }
 

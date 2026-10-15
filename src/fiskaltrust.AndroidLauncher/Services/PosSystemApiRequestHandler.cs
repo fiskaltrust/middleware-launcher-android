@@ -47,12 +47,12 @@ namespace fiskaltrust.AndroidLauncher.Services
 
                 if (isLocalEndpoint)
                 {
-                    Log.Info(TAG, $"Routing to local middleware: {request.Path}");
+                    Log.Info(TAG, $"Routing to local middleware: {request.PathAndQuery}");
                     return await MakeLocalRequestAsync(request, progressReporter).ConfigureAwait(false);
                 }
                 else
                 {
-                    Log.Info(TAG, $"Routing to cloud PosSystemAPI: {request.Path}");
+                    Log.Info(TAG, $"Routing to cloud PosSystemAPI: {request.PathAndQuery}");
                     return await MakeCloudRequestAsync(request).ConfigureAwait(false);
                 }
             }
@@ -65,7 +65,7 @@ namespace fiskaltrust.AndroidLauncher.Services
 
         private async Task<PosSystemApiResponse> MakeLocalRequestAsync(PosSystemApiRequest request, Action<string>? progressReporter)
         {
-            if (string.Equals(request.Path, "/v2/echo", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(request.GetPath(), "/v2/echo", StringComparison.OrdinalIgnoreCase))
             {
                 var echoRequest = JsonSerializer.Deserialize<EchoRequest>(request.Body ?? "");
                 if (echoRequest?.Message == null)
@@ -83,7 +83,7 @@ namespace fiskaltrust.AndroidLauncher.Services
             }
             catch (Exception ex)
             {
-                var endpoint = request.Path.Split('/').Last();
+                var endpoint = request.GetPath();
                 Log.Error(TAG, $"Failed to process {endpoint} request: {ex.Message}");
                 return PosSystemApiResponse.Error(500, $"Failed to process {endpoint} request: {ex.Message}");
             }
@@ -96,7 +96,7 @@ namespace fiskaltrust.AndroidLauncher.Services
             try
             {
                 var baseUrl = Urls.POSSYSTEM_API_SANDBOX;
-                var path = request.Path;
+                var path = request.GetPath();
                 if (!path.StartsWith("/v2", StringComparison.OrdinalIgnoreCase))
                 {
                     path = "/v2" + path;
