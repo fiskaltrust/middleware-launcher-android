@@ -66,6 +66,7 @@ namespace fiskaltrust.AndroidLauncher.Services
             try
             {
                 var queueConfiguration = _configuration.ftQueues[0];
+                queueConfiguration.Configuration["sandbox"] = _isSandbox;
                 var scuConfiguration = _configuration.ftSignaturCreationDevices.FirstOrDefault();
 
                 await PLSSCDFactory.RequestUsbPermissionAsync(scuConfiguration);
