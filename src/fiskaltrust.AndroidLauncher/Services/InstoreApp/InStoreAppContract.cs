@@ -7,7 +7,7 @@ namespace fiskaltrust.AndroidLauncher.Services.InStoreApp
     /// The caller binds the InStore App's exported Messenger service and exchanges Messages with it. The
     /// InStore App answers to the Messenger supplied in Message.ReplyTo.
     /// </summary>
-    public static class InStoreAppService
+    public static class InStoreAppContract
     {
         /// <summary>Package of the InStore App hosting the bound service.</summary>
         public const string Package = "eu.fiskaltrust.instore.app";
@@ -45,7 +45,9 @@ namespace fiskaltrust.AndroidLauncher.Services.InStoreApp
         MSG_PAY_RESPONSE_REQUEST = 3,
 
         /// <summary>app -> caller: a PayResponseState (final or still in progress).</summary>
-        MSG_PAY_RESPONSE_STATE = 4
+        MSG_PAY_RESPONSE_STATE = 4,
+        /// <summary>app -> caller: a PayRequestNotAcceptedResponse.</summary>
+        MSG_PAY_REQUEST_NOT_ACCEPTED = 5
     }
 
     public static class InStoreAppMessagesExtensions

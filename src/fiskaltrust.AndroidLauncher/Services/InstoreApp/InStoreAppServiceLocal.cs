@@ -43,16 +43,19 @@ public sealed class InStoreAppServiceLocal : IInStoreAppService, IDisposable
 
         try
         {
-            await EnsureConnectedAsync().ConfigureAwait(false);
-            await PublishPayRequestAsync(options.OperationId, options.CashBoxId, options.AccessToken, request).ConfigureAwait(false);
-            return await AwaitPaymentResponseAsync(tcsPayResponse).ConfigureAwait(false);
-        }
-        catch (TimeoutException)
-        {
-            return (null, new PaymentErrorResponse
+            if (await EnsureConnectedAsync().ConfigureAwait(false))
             {
-                error = "Failed to send payment request. Please check the connected devices."
-            });
+                await PublishPayRequestAsync(options.OperationId, options.CashBoxId, options.AccessToken, request).ConfigureAwait(false);
+                return await AwaitPaymentResponseAsync(tcsPayResponse).ConfigureAwait(false);
+            }
+            else
+            {
+                throw new InStoreAppPaymentNotAcceptedException("InStore App Service is not running");
+            }
+        }
+        catch (InStoreAppPaymentNotAcceptedException)
+        {
+            throw;
         }
         catch (Exception ex)
         {
@@ -87,10 +90,10 @@ public sealed class InStoreAppServiceLocal : IInStoreAppService, IDisposable
         var tcs = _payRequests[operationId].acknowledge;
         _inStoreAppClient.Send(InStoreAppMessages.MSG_PAY_REQUEST, operationId.ToString(), cashBoxId, accessToken, JsonSerializer.Serialize(payRequest));
         var completed = await Task.WhenAny(tcs.Task, Task.Delay(TimeSpan.FromSeconds(10))).ConfigureAwait(false);
-        if (completed != tcs.Task)
-        {
-            throw new TimeoutException("InStoreApp response timeout");
-        }
+       // if (completed != tcs.Task)
+        //{
+            throw new InStoreAppPaymentNotAcceptedException("InStoreApp response timeout");
+        //}
 
         return await tcs.Task.ConfigureAwait(false);
     }
@@ -117,7 +120,7 @@ public sealed class InStoreAppServiceLocal : IInStoreAppService, IDisposable
             _connectionGate.Dispose();
         }
     }
-    private async Task EnsureConnectedAsync()
+    public async Task<bool> EnsureConnectedAsync()
     {
         await _connectionGate.WaitAsync().ConfigureAwait(false);
         try
@@ -126,12 +129,9 @@ public sealed class InStoreAppServiceLocal : IInStoreAppService, IDisposable
             if (!_inStoreAppClient.IsConnected)
             {
                 _inStoreAppClient.Bind(Android.App.Application.Context);
-                var isBound = await _inStoreAppClient.WaitForConnectionAsync().ConfigureAwait(false);
-                if (!isBound)
-                {
-                    throw new Exception("InStore App Service is not running.");
-                }
+                return await _inStoreAppClient.WaitForConnectionAsync().ConfigureAwait(false);                
             }
+            return true;
         }
         finally
         {
@@ -175,10 +175,38 @@ public sealed class InStoreAppServiceLocal : IInStoreAppService, IDisposable
                     }
                 }
             }
+            else if (envelope.What == InStoreAppMessages.MSG_PAY_REQUEST_NOT_ACCEPTED)
+            {
+                var notAccepted = JsonSerializer.Deserialize<PayRequestNotAcceptedResponse>(envelope.PayloadJson);
+                if (notAccepted != null)
+                {
+                    var operationId = Guid.Parse(notAccepted.operationId);
+                    if (_payRequests.TryGetValue(operationId, out var payRequest))
+                    {
+                        Log.Logger.Warning("InStoreAppServiceLocal", $"Payment request not accepted in local: {notAccepted.reason.code.ToString()}:{notAccepted.reason.message}");
+                        payRequest.acknowledge.TrySetException(new InStoreAppPaymentNotAcceptedException($"Payment Request is not accepted in local.{notAccepted.reason.code.ToString()}:{notAccepted.reason.message}"));
+                    }
+                }
+            }
         }
         catch (Exception ex)
         {
             Log.Logger.Warning("InStoreAppServiceLocal", $"Could not parse response payload: {ex.Message}");
         }
+    }
+}
+
+public sealed class InStoreAppPaymentNotAcceptedException : Exception
+{
+    public InStoreAppPaymentNotAcceptedException()
+    {
+    }
+
+    public InStoreAppPaymentNotAcceptedException(string message) : base(message)
+    {
+    }
+
+    public InStoreAppPaymentNotAcceptedException(string message, Exception innerException) : base(message, innerException)
+    {
     }
 }
