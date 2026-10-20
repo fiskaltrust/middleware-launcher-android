@@ -50,6 +50,7 @@ public sealed class InStoreAppServiceLocal : IInStoreAppService, IDisposable
             }
             else
             {
+                Log.Logger.Warning("InStoreAppServiceLocal", "InStore App Service is not running");
                 throw new InStoreAppPaymentNotAcceptedException("InStore App Service is not running");
             }
         }
