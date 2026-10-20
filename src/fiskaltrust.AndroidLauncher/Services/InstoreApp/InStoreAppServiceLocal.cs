@@ -90,10 +90,10 @@ public sealed class InStoreAppServiceLocal : IInStoreAppService, IDisposable
         var tcs = _payRequests[operationId].acknowledge;
         _inStoreAppClient.Send(InStoreAppMessages.MSG_PAY_REQUEST, operationId.ToString(), cashBoxId, accessToken, JsonSerializer.Serialize(payRequest));
         var completed = await Task.WhenAny(tcs.Task, Task.Delay(TimeSpan.FromSeconds(10))).ConfigureAwait(false);
-       // if (completed != tcs.Task)
-        //{
+        if (completed != tcs.Task)
+        {
             throw new InStoreAppPaymentNotAcceptedException("InStoreApp response timeout");
-        //}
+        }
 
         return await tcs.Task.ConfigureAwait(false);
     }
