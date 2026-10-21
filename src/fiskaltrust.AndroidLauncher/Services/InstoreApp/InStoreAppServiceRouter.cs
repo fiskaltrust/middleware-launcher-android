@@ -5,6 +5,7 @@ using fiskaltrust.Api.PosSystem.Core.Payment.Hobex;
 using fiskaltrust.Api.PosSystem.Core.v2.Pay.Models;
 using Microsoft.Extensions.Logging;
 using MQTTnet.Extensions.ManagedClient;
+using Serilog;
 
 namespace fiskaltrust.AndroidLauncher.Services.InStoreApp;
 
@@ -13,15 +14,17 @@ public class InStoreAppServiceRouter : IInStoreAppService, IDisposable
     private readonly InStoreAppServiceLocal _inStoreAppServiceLocal;
     private readonly InStoreAppService _inStoreAppServiceCloud;
     private bool _disposed;
+    private readonly Task<bool> _inStoreAppServiceLocalAvailable;
     public InStoreAppServiceRouter(IManagedMqttClient managedMqttClient, ILoggerFactory loggerFactory)
     {
         _inStoreAppServiceLocal = new InStoreAppServiceLocal();
+        _inStoreAppServiceLocalAvailable = _inStoreAppServiceLocal.EnsureConnectedAsync();            
         _inStoreAppServiceCloud = new InStoreAppService(managedMqttClient,loggerFactory.CreateLogger<InStoreAppService>());
     }
 
     public async Task<(PayResponse? response, PaymentErrorResponse? errorResponse)> TriggerPaymentAsync(InStoreAppOptions inStoreAppOptions, PayRequest request)
     {
-        if(await _inStoreAppServiceLocal.EnsureConnectedAsync().ConfigureAwait(false))
+        if(await _inStoreAppServiceLocalAvailable.ConfigureAwait(false))
         {
             try
             {
@@ -33,7 +36,7 @@ public class InStoreAppServiceRouter : IInStoreAppService, IDisposable
             }
             catch (InStoreAppPaymentNotAcceptedException)
             {
-                return await _inStoreAppServiceCloud.TriggerPaymentAsync(inStoreAppOptions, request).ConfigureAwait(false);
+                Log.Logger.Information("InStoreAppServiceLocal", "InStore App Service is not running");                
             }
         }
        
