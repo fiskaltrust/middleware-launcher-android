@@ -65,7 +65,7 @@ namespace fiskaltrust.AndroidLauncher.Services.InStoreApp
             var ok = context.BindService(intent, this, Android.Content.Bind.AutoCreate);
             if (!ok)
             {
-                Report(LogPriority.Warn, "bindService returned false - is the InStore App installed? (and is the <queries> entry present?)");
+                Report(LogPriority.Info, "Could not bind to InStore App");
             }
             return ok;
         }
