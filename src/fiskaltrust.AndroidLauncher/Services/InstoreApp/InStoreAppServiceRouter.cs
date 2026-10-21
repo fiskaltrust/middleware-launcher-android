@@ -33,7 +33,7 @@ public class InStoreAppServiceRouter : IInStoreAppService, IDisposable
             }
             catch (InStoreAppPaymentNotAcceptedException)
             {
-                return await _inStoreAppServiceCloud.TriggerPaymentAsync(inStoreAppOptions, request).ConfigureAwait(false);
+
             }
         }
        
