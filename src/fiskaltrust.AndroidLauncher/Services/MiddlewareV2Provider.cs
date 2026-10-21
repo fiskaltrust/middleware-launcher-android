@@ -17,8 +17,11 @@ namespace fiskaltrust.AndroidLauncher.Services
         public string AccessToken => _accessToken;
         private readonly bool _isSandbox;
         private readonly ILoggerFactory _loggerFactory;
+        private POSV2? _pos;
 
+        public POSV2? POSV2 => _pos;
 
+        public Api.PosSystem.Core.Interfaces.IMiddlewareClient MiddlewareClient => MiddlewareClientAndroid.FromV2(_pos!);
 
 
         public PackageConfiguration? QueueConfiguration { get; private set; }
@@ -52,7 +55,7 @@ namespace fiskaltrust.AndroidLauncher.Services
             {
                 throw new ArgumentException("Only one signatur creation device is supported in V2.");
             }
-         
+
             try
             {
                 var queueConfiguration = _configuration.ftQueues[0];
@@ -60,10 +63,11 @@ namespace fiskaltrust.AndroidLauncher.Services
                 {
                     throw new ArgumentException($"The Android launcher currently only supports the SQLite queue");
                 }
-                CountryCode = Helpers.Configuration.GetQueueLocalization(queueConfiguration);
                 var queueProvider = new SQLiteQueueProvider();
+                var countryCode = Helpers.Configuration.GetQueueLocalization(queueConfiguration);
+                _pos = queueProvider.CreatePOSV2(CashboxId, AccessToken, queueConfiguration, _configuration.ftSignaturCreationDevices.FirstOrDefault(), countryCode, _loggerFactory);
                 Log.Logger.Information("Queue created. cashboxid: {cashbox.id}, queueId: {queue.id}", _cashboxId, queueConfiguration.Id);
-                // Helipad is v1-only (IPOS-based) and has no V2/POSV2 adapter yet, so it isn't wired up here. that have to be add later. 
+                // Helipad is v1-only (IPOS-based) and has no V2/POSV2 adapter yet, so it isn't wired up here. that have to be add later.
             }
             catch (Exception x)
             {
