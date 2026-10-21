@@ -98,7 +98,7 @@ internal class PosSystemAPIProvider {
             var countryCode = Helpers.Configuration.GetQueueLocalization(configuration.ftQueues.First());
 
             _middlewareProvider = countryCode == "PL"
-                ? new MiddlewareV2Provider(cashboxId, accessToken, configuration, countryCode, isSandbox, loggerFactory)
+                ? new MiddlewareV2Provider(cashboxId, accessToken, configuration, isSandbox, loggerFactory)
                 : new MiddlewareProvider(cashboxId, accessToken, configuration, isSandbox, logLevel);
             await _middlewareProvider.StartAsync();
 

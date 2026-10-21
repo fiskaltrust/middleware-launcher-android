@@ -18,12 +18,8 @@ namespace fiskaltrust.AndroidLauncher.Services
         private readonly bool _isSandbox;
         private readonly ILoggerFactory _loggerFactory;
         private POSV2? _pos;
-
         public POSV2? POSV2 => _pos;
-
         public Api.PosSystem.Core.Interfaces.IMiddlewareClient MiddlewareClient => MiddlewareClientAndroid.FromV2(_pos!);
-
-
         public PackageConfiguration? QueueConfiguration { get; private set; }
         public string CountryCode { get; private set; }
 
