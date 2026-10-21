@@ -129,8 +129,12 @@ public sealed class InStoreAppServiceLocal : IInStoreAppService, IDisposable
             ThrowIfDisposed();
             if (!_inStoreAppClient.IsConnected)
             {
-                _inStoreAppClient.Bind(Android.App.Application.Context);
-                return await _inStoreAppClient.WaitForConnectionAsync().ConfigureAwait(false);                
+                var bind = _inStoreAppClient.Bind(Android.App.Application.Context);
+                if (bind)
+                {
+                    return await _inStoreAppClient.WaitForConnectionAsync().ConfigureAwait(false);
+                }
+                return bind;
             }
             return true;
         }
