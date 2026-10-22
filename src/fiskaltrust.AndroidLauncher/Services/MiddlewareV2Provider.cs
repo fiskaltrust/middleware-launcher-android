@@ -1,4 +1,5 @@
-﻿using fiskaltrust.AndroidLauncher.Services.middleware;
+﻿using fiskaltrust.AndroidLauncher.Constants;
+using fiskaltrust.AndroidLauncher.Services.middleware;
 using fiskaltrust.AndroidLauncher.Services.Queue;
 using fiskaltrust.storage.serialization.V0;
 using Microsoft.Extensions.Logging;
@@ -59,6 +60,10 @@ namespace fiskaltrust.AndroidLauncher.Services
             try
             {
                 var queueConfiguration = _configuration.ftQueues[0];
+                if (queueConfiguration.Package != SupportedQueues.Package_SQLite_Queue)
+                {
+                    throw new ArgumentException($"The Android launcher currently only supports the SQLite queue");
+                }
                 var queueProvider = new SQLiteQueueProvider();
                 _pos = queueProvider.CreatePOSV2(CashboxId, AccessToken, queueConfiguration, _configuration.ftSignaturCreationDevices.FirstOrDefault(), _countryCode, _loggerFactory);
                 Log.Logger.Information("Queue created. cashboxid: {cashbox.id}, queueId: {queue.id}", _cashboxId, queueConfiguration.Id);

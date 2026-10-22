@@ -122,13 +122,8 @@ internal class PosSystemAPIProvider {
 
             var middlewareClient = _middlewareProvider.MiddlewareClient;
             services.AddSingleton(middlewareClient);
-            if (localInstoreAppCommunication)
-            {
-                Log.Logger.Information("Using local InStoreAppService for communication with the InStoreApp.");
-                services.AddSingleton<IInStoreAppService, InStoreAppServiceLocal>();
-            } else {
-                services.AddSingleton<IInStoreAppService, Api.PosSystem.Core.InStoreApp.InStoreAppService>();
-            }
+            services.AddSingleton<IInStoreAppService, InStoreAppServiceRouter>();
+            
             //add Sqlite Storage services and dependencies
             var databasePath = System.IO.Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.Personal),
