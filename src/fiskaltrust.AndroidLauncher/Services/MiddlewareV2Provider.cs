@@ -1,4 +1,5 @@
-﻿using fiskaltrust.AndroidLauncher.Services.middleware;
+﻿using fiskaltrust.AndroidLauncher.Constants;
+using fiskaltrust.AndroidLauncher.Services.middleware;
 using fiskaltrust.AndroidLauncher.Services.Queue;
 using fiskaltrust.AndroidLauncher.Signing;
 using fiskaltrust.storage.serialization.V0;
@@ -66,6 +67,10 @@ namespace fiskaltrust.AndroidLauncher.Services
             try
             {
                 var queueConfiguration = _configuration.ftQueues[0];
+                if (queueConfiguration.Package != SupportedQueues.Package_SQLite_Queue)
+                {
+                    throw new ArgumentException($"The Android launcher currently only supports the SQLite queue");
+                }
                 queueConfiguration.Configuration["sandbox"] = _isSandbox;
                 var scuConfiguration = _configuration.ftSignaturCreationDevices.FirstOrDefault();
 

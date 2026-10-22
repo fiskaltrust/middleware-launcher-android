@@ -56,16 +56,16 @@ namespace fiskaltrust.AndroidLauncher.Services.InStoreApp
 
         public bool Bind(Context context)
         {
-            Android.Util.Log.Info(LogTag, $"binding {InStoreAppService.Package}/{InStoreAppService.ServiceClass} ...");
+            Android.Util.Log.Info(LogTag, $"binding {InStoreAppContract.Package}/{InStoreAppContract.ServiceClass} ...");
 
             var intent = new Intent();
-            intent.SetComponent(new ComponentName(InStoreAppService.Package, InStoreAppService.ServiceClass));
+            intent.SetComponent(new ComponentName(InStoreAppContract.Package, InStoreAppContract.ServiceClass));
 
             _connectTcs ??= new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
             var ok = context.BindService(intent, this, Android.Content.Bind.AutoCreate);
             if (!ok)
             {
-                Report(LogPriority.Warn, "bindService returned false - is the InStore App installed? (and is the <queries> entry present?)");
+                Report(LogPriority.Info, "Could not bind to InStore App");
             }
             return ok;
         }

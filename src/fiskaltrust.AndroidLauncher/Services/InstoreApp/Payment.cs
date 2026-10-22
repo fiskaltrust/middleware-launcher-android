@@ -1,12 +1,13 @@
 ﻿using fiskaltrust.Api.PosSystem.Core.v2.Pay.Models;
 using fiskaltrust.ifPOS.v2;
 using System.Text.Json.Serialization;
-
 namespace fiskaltrust.Payment;
 
 public record PayResponseRequest(string operationId, int lifetime);
 
 public record PayRequestAcceptedResponse(string operationId, Guid queueId, Guid queueItemId);
+public record PayRequestNotAcceptedResponse(string operationId, PayRequestNotAcceptedReason reason);
+public record PayRequestNotAcceptedReason(NotAcceptedReasonCode code, string? message);
 
 public enum States
 {
@@ -17,7 +18,43 @@ public enum States
     [JsonPropertyName("failed")]
     failed
 }
+[JsonConverter(typeof(JsonStringEnumConverter<NotAcceptedReasonCode>))]
+public enum NotAcceptedReasonCode
+{
+    /// <summary>
+    /// Read side only: a code this version does not know yet (sent by a newer InStore App). Never sent.
+    /// </summary>
+    [JsonStringEnumMemberName("unknown")]
+    Unknown,
 
+    /// <summary>This device is not paired to a cashbox.</summary>
+    [JsonStringEnumMemberName("not_paired")]
+    NotPaired,
+
+    /// <summary>The cashbox id / access token do not match the cashbox this device is paired to.</summary>
+    [JsonStringEnumMemberName("unauthorized")]
+    Unauthorized,
+
+    /// <summary>The request is malformed (missing field or payload that is not a PaymentRequest).</summary>
+    [JsonStringEnumMemberName("invalid_request")]
+    InvalidRequest,
+
+    /// <summary>No payment method is configured on this device.</summary>
+    [JsonStringEnumMemberName("payment_not_configured")]
+    PaymentNotConfigured,
+
+    /// <summary>The requested payment protocol cannot be used on this device.</summary>
+    [JsonStringEnumMemberName("protocol_not_supported")]
+    ProtocolNotSupported,
+
+    /// <summary>The configured payment provider does not support this request (e.g. the action).</summary>
+    [JsonStringEnumMemberName("not_supported")]
+    NotSupported,
+
+    /// <summary>Unexpected failure while starting the payment, before it was accepted.</summary>
+    [JsonStringEnumMemberName("internal_error")]
+    InternalError
+}
 public class PayResponseState
 {
     public string operationId { get; set; } = string.Empty;
@@ -53,5 +90,7 @@ public class PayResponseState
     {
         return $"{operationId} {state} {error}";
     }
+   
+
 }
 
