@@ -84,7 +84,7 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             {
                 var request = PosSystemApiRequestExtensions.FromIntent(intent);
 
-                Log.Info(TAG, $"Processing request: {request.Method} {request.Path}");
+                Log.Info(TAG, $"Processing request: {request.Method} {request.GetPath()}");
 
                 var response = await SendRequestToServiceAsync(request).ConfigureAwait(false);
                 Respond(response);
