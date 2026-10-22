@@ -14,6 +14,14 @@ namespace fiskaltrust.AndroidLauncher.Activitites
         Name = "eu.fiskaltrust.androidlauncher.PosSystemAPI",
         Enabled = true,
         Exported = true)]
+    // Lets browser-based callers start this activity via an `intent://` link
+    // (scheme=fiskaltrust, host=possystemapi). The request itself is still read
+    // from the intent extras; the data URI is not used.
+    [IntentFilter(
+        new[] { Intent.ActionView },
+        Categories = new[] { Intent.CategoryDefault, Intent.CategoryBrowsable },
+        DataScheme = "fiskaltrust",
+        DataHost = "possystemapi")]
     public class PosSystemAPIActivity : Activity
     {
         private const string TAG = "PosSystemAPI";
@@ -59,7 +67,16 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             if (intent == null)
             {
                 Log.Error(TAG, "Intent is null");
-                FinishWithResponse(PosSystemApiResponse.Error(500, "Intent is null"));
+                Respond(PosSystemApiResponse.Error(500, "Intent is null"));
+                return;
+            }
+
+            var callbackUrl = intent.GetStringExtra(PosSystemAPIActivityIntentStatics.EXTRA_CALLBACK_URL);
+            if (!string.IsNullOrEmpty(callbackUrl) && !IsAllowedCallbackUrl(callbackUrl))
+            {
+                // Rejected before the request is executed so no side effects occur for a response that can't be delivered.
+                Log.Error(TAG, "Rejected callback URL: only https, or http for localhost, is allowed");
+                FinishWithResponse(PosSystemApiResponse.Error(400, "CallbackUrl must use https, or http for localhost"));
                 return;
             }
 
@@ -67,25 +84,25 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             {
                 var request = PosSystemApiRequestExtensions.FromIntent(intent);
 
-                Log.Info(TAG, $"Processing request: {request.Method} {request.Path}");
+                Log.Info(TAG, $"Processing request: {request.Method} {request.GetPath()}");
 
                 var response = await SendRequestToServiceAsync(request).ConfigureAwait(false);
-                FinishWithResponse(response);
+                Respond(response);
             }
             catch (ArgumentException ex)
             {
                 Log.Error(TAG, $"Invalid request: {ex.Message}");
-                FinishWithResponse(PosSystemApiResponse.Error(400, ex.Message));
+                Respond(PosSystemApiResponse.Error(400, ex.Message));
             }
             catch (TimeoutException ex)
             {
                 Log.Error(TAG, $"Request processing timeout: {ex}");
-                FinishWithResponse(PosSystemApiResponse.Error(500, $"Internal error: {ex.Message}"));
+                Respond(PosSystemApiResponse.Error(500, $"Internal error: {ex.Message}"));
             }
             catch (Exception ex)
             {
                 Log.Error(TAG, $"Request processing failed: {ex}");
-                FinishWithResponse(PosSystemApiResponse.Error(500, $"Internal error: {ex.Message}"));
+                Respond(PosSystemApiResponse.Error(500, $"Internal error: {ex.Message}"));
             }
         }
 
@@ -113,6 +130,30 @@ namespace fiskaltrust.AndroidLauncher.Activitites
             return await localBinder.HandleRequestAsync(request, SetProgressText).ConfigureAwait(false);
         }
 
+
+        /// <summary>
+        /// Allows https URLs, and http only for loopback hosts (localhost, 127.0.0.1, ::1).
+        /// Uses the parsed host, so tricks like http://localhost@evil.example are not treated as loopback.
+        /// </summary>
+        private static bool IsAllowedCallbackUrl(string callbackUrl)
+        {
+            if (!Uri.TryCreate(callbackUrl, UriKind.Absolute, out var uri))
+                return false;
+
+            return uri.Scheme == Uri.UriSchemeHttps
+                || (uri.Scheme == Uri.UriSchemeHttp && uri.IsLoopback);
+        }
+
+        private void Respond(PosSystemApiResponse response) {
+            var callbackUrl = Intent?.GetStringExtra(PosSystemAPIActivityIntentStatics.EXTRA_CALLBACK_URL);
+
+            if (!string.IsNullOrEmpty(callbackUrl))
+            {
+                FinishWithCallbackUrl(callbackUrl, response);
+            } else {
+                FinishWithResponse(response);
+            }
+        }
         /// <summary>
         /// Finishes the activity with a structured response using the DTO.
         /// Used for errors raised locally, before or instead of a service reply.
@@ -153,6 +194,71 @@ namespace fiskaltrust.AndroidLauncher.Activitites
                     Finish();
                 }
             });
+        }
+
+        /// <summary>
+        /// Redirects to the caller's callback URL with response data as query parameters.
+        /// Works like an OAuth redirect: the browser navigates back to the webapp with the response.
+        /// If the redirect cannot be started (e.g. the payload is too large for the intent),
+        /// a small 500 response is sent to the callback URL instead so the caller is not left waiting.
+        /// </summary>
+        private void FinishWithCallbackUrl(string callbackUrl, PosSystemApiResponse response)
+        {
+            RunOnUiThread(() =>
+            {
+                try
+                {
+                    if (!TryRedirectToCallbackUrl(callbackUrl, response))
+                    {
+                        TryRedirectToCallbackUrl(
+                            callbackUrl,
+                            PosSystemApiResponse.Error(500, "Failed to deliver the response to the callback URL"));
+                    }
+                }
+                finally
+                {
+                    Finish();
+                }
+            });
+        }
+
+        private bool TryRedirectToCallbackUrl(string callbackUrl, PosSystemApiResponse response)
+        {
+            try
+            {
+                var intentData = response.ToIntentData();
+
+                // Separate URL from hash fragment so query params are inserted before the hash.
+                // e.g. https://app.com/?foo=1#/route -> insert &StatusCode=... before #/route
+                var hashIndex = callbackUrl.IndexOf('#', StringComparison.Ordinal);
+                var urlPart = hashIndex >= 0 ? callbackUrl[..hashIndex] : callbackUrl;
+                var hashPart = hashIndex >= 0 ? callbackUrl[hashIndex..] : "";
+
+                var separator = urlPart.Contains('?', StringComparison.Ordinal) ? "&" : "?";
+                var redirectUrl = $"{urlPart}{separator}" +
+                    $"StatusCode={Uri.EscapeDataString(intentData.StatusCode)}" +
+                    $"&ContentBase64Url={Uri.EscapeDataString(intentData.ContentBase64Url)}" +
+                    $"&ContentTypeBase64Url={Uri.EscapeDataString(intentData.ContentTypeBase64Url)}";
+
+                if (!string.IsNullOrEmpty(intentData.HeadersBase64Url))
+                {
+                    redirectUrl += $"&HeaderJsonObjectBase64Url={Uri.EscapeDataString(intentData.HeadersBase64Url)}";
+                }
+
+                redirectUrl += hashPart;
+
+                Log.Info(TAG, $"Redirecting to callback URL with status {response.StatusCode}");
+
+                using var browserIntent = new Intent(Intent.ActionView, Android.Net.Uri.Parse(redirectUrl));
+                browserIntent.AddFlags(ActivityFlags.NewTask);
+                StartActivity(browserIntent);
+                return true;
+            }
+            catch (Exception ex) when (ex is InvalidOperationException or ArgumentException or Java.Lang.Exception)
+            {
+                Log.Error(TAG, $"Failed to redirect to callback URL: {ex}");
+                return false;
+            }
         }
 
         private void UnbindFromService()
