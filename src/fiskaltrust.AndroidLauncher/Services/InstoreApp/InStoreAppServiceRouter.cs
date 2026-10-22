@@ -34,9 +34,9 @@ public class InStoreAppServiceRouter : IInStoreAppService, IDisposable
                     return localResponse;
                 }
             }
-            catch (InStoreAppPaymentNotAcceptedException)
+            catch (InStoreAppPaymentNotAcceptedException ex)
             {
-                Log.Logger.Information("InStoreAppServiceLocal", "Local InStore App did not accept the pay request");                
+                Log.Logger.Information("InStoreAppServiceLocal", $"Local InStore App did not accept the pay request: {ex.Message}");                
             }
         }
        
