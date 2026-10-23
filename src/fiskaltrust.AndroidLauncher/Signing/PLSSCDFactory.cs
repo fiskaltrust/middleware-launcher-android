@@ -8,7 +8,8 @@ using fiskaltrust.Middleware.Interface.Client.Soap;
 using fiskaltrust.storage.serialization.V0;
 using Microsoft.Extensions.Logging;
 using fiskaltrust.Middleware.SCU.PL.PosNet;
-using fiskaltrust.Middleware.SCU.PL.PosNet.Android;
+using fiskaltrust.AndroidLauncher.Services.PosNet;
+using fiskaltrust.Middleware.SCU.PL.PosNet.Transport;
 using fiskaltrust.ifPOS.v2.pl;
 using fiskaltrust.ifPOS.v2;
 using System.Text.Json;
@@ -116,8 +117,9 @@ namespace fiskaltrust.AndroidLauncher.Signing
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddSingleton(loggerFactory);
             serviceCollection.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
-            // Lets a usbhost:// DeviceUrl open the printer through the Android USB host API.
-            serviceCollection.AddPosNetAndroidUsbHost(Android.App.Application.Context);
+            // The launcher owns the USB driver: a usbhost:// DeviceUrl is opened through the Android USB host API here,
+            // the SCU only speaks the POSNET protocol over the link it is given.
+            serviceCollection.AddSingleton<IPosNetUsbHostLinkFactory>(new AndroidUsbHostLinkFactory(Android.App.Application.Context));
 
             bootstrapper.Id = scuConfiguration!.Id;
             bootstrapper.Configuration = scuConfiguration.Configuration;
