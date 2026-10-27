@@ -22,6 +22,7 @@ namespace fiskaltrust.AndroidLauncher.Services
 
         private POSV2? _pos;
         private ServiceProvider? _scuServices;
+        private StoppablePLSSCD? _hostedScu;
 
         public POSV2? POSV2 => _pos;
 
@@ -41,10 +42,18 @@ namespace fiskaltrust.AndroidLauncher.Services
 
         public async Task StopAsync()
         {
+            // A running fiscal operation finishes first: requests are served outside the startup lock, so a
+            // restart can begin while a receipt is printing (StoppablePLSSCD).
+            if (_hostedScu is not null)
+            {
+                await _hostedScu.StopAsync();
+                _hostedScu = null;
+            }
             // Releases the SCU's connection to the device; over USB the claimed interface would otherwise
             // keep a restarted middleware from opening the printer again.
             _scuServices?.Dispose();
             _scuServices = null;
+            PLSSCDFactory.DisableUsbAttachedActivity();
 
             // MiddlewareProvider doesn't manage hosts directly, just helpers and wake locks
             //foreach (var helper in _helpers)
@@ -76,7 +85,8 @@ namespace fiskaltrust.AndroidLauncher.Services
 
                 await PLSSCDFactory.RequestUsbPermissionAsync(scuConfiguration);
                 _scuServices = PLSSCDFactory.CreateHostedScu(_loggerFactory, scuConfiguration);
-                var plSSCD = _scuServices?.GetRequiredService<fiskaltrust.ifPOS.v2.pl.IPLSSCD>()
+                _hostedScu = _scuServices is null ? null : new StoppablePLSSCD(_scuServices.GetRequiredService<fiskaltrust.ifPOS.v2.pl.IPLSSCD>());
+                fiskaltrust.ifPOS.v2.pl.IPLSSCD plSSCD = (fiskaltrust.ifPOS.v2.pl.IPLSSCD?)_hostedScu
                     ?? new SigningIPLSSCD(_cashboxId, _accessToken, new fiskaltrust.Middleware.Abstractions.ClientConfiguration
                     {
                         Url = _isSandbox ? Constants.Urls.SIGNING_PL_SANDBOX : Constants.Urls.SIGNING_PL_PRODUCTION
@@ -90,6 +100,8 @@ namespace fiskaltrust.AndroidLauncher.Services
             catch (Exception x)
             {
                 Log.Logger.Error(x, "Failed to create worker. cashboxid: {cashbox.id}", _cashboxId);
+                // A failed start leaves nothing behind: no claimed USB interface, no enabled attach handler.
+                await StopAsync();
                 throw;
             }
         }

@@ -97,6 +97,10 @@ internal class PosSystemAPIProvider {
             var loggerFactory = IPlatformApplication.Current?.Services.GetService<ILoggerFactory>() ?? LoggerFactory.Create(_ => { });
             var countryCode = Helpers.Configuration.GetQueueLocalization(configuration.ftQueues.First());
 
+            // The PL USB attach handler's enabled state outlives the process; only a PL cashbox with a
+            // PosNet printer over USB switches it back on (MiddlewareV2Provider.StartAsync).
+            Signing.PLSSCDFactory.DisableUsbAttachedActivity();
+
             _middlewareProvider = countryCode == "PL"
                 ? new MiddlewareV2Provider(cashboxId, accessToken, configuration, countryCode, isSandbox, loggerFactory)
                 : new MiddlewareProvider(cashboxId, accessToken, configuration, isSandbox, logLevel);

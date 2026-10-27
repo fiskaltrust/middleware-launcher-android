@@ -93,7 +93,9 @@ internal sealed class AndroidUsbHostLink : IPosNetUsbHostLink
         {
             var started = Environment.TickCount64;
             var read = Transfer(() => _connection.BulkTransfer(_bulkIn, _received, 0, _received.Length, timeoutMs));
-            if (read < 0 && Environment.TickCount64 - started < timeoutMs - TimeoutSlackMs)
+            // The slack is at most half the wait: for a short read (the transport drains with 10 ms) a
+            // fixed slack would leave no window in which an immediate failure could be told apart.
+            if (read < 0 && Environment.TickCount64 - started < timeoutMs - Math.Min(TimeoutSlackMs, timeoutMs / 2))
             {
                 throw new IOException(IsAttached
                     ? "Reading from the printer failed."

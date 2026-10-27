@@ -155,6 +155,14 @@ namespace fiskaltrust.AndroidLauncher.Signing
             }
         }
 
+        /// <summary>
+        /// Turns the PL USB attach handler off. Android keeps the component's enabled state across process
+        /// restarts, so it is switched off whenever a cashbox starts that is not a PL cashbox with a PosNet
+        /// printer over USB (that one switches it on in <see cref="RequestUsbPermissionAsync"/>), and when
+        /// the PL middleware stops.
+        /// </summary>
+        public static void DisableUsbAttachedActivity() => SetUsbAttachedActivityEnabled(false);
+
         private static void SetUsbAttachedActivityEnabled(bool enabled)
         {
             var context = Android.App.Application.Context;
