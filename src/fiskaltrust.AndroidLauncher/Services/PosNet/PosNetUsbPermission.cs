@@ -43,9 +43,12 @@ public static class PosNetUsbPermission
             return true;
         }
 
-        var action = $"{context.PackageName}.POSNET_USB_PERMISSION";
+        // Each request has its own action and request code: requests for two printers, or a late answer to
+        // a request that timed out, can then never complete another request.
+        var requestCode = Interlocked.Increment(ref s_requestCode);
+        var action = $"{context.PackageName}.POSNET_USB_PERMISSION.{requestCode}";
         var result = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
-        var receiver = new PermissionReceiver(result);
+        var receiver = new PermissionReceiver(result, device.DeviceName);
         var filter = new IntentFilter(action);
         // Android 14 refuses a runtime receiver that does not say whether it is exported.
         if (OperatingSystem.IsAndroidVersionAtLeast(33))
@@ -63,7 +66,7 @@ public static class PosNetUsbPermission
         var flags = OperatingSystem.IsAndroidVersionAtLeast(31) ? PendingIntentFlags.Mutable : 0;
         try
         {
-            manager.RequestPermission(device, PendingIntent.GetBroadcast(context, 0, intent, flags));
+            manager.RequestPermission(device, PendingIntent.GetBroadcast(context, requestCode, intent, flags));
             var answered = await Task.WhenAny(result.Task, Task.Delay(timeout ?? DefaultTimeout)).ConfigureAwait(false);
             return answered == result.Task && await result.Task.ConfigureAwait(false);
         }
@@ -73,9 +76,23 @@ public static class PosNetUsbPermission
         }
     }
 
-    private sealed class PermissionReceiver(TaskCompletionSource<bool> result) : BroadcastReceiver
+    private static int s_requestCode;
+
+    private sealed class PermissionReceiver(TaskCompletionSource<bool> result, string deviceName) : BroadcastReceiver
     {
         public override void OnReceive(Context? context, Intent? intent)
-            => result.TrySetResult(intent?.GetBooleanExtra(UsbManager.ExtraPermissionGranted, false) == true);
+        {
+            // The answer names the device it is for; one for another device is not this request's answer.
+            var answeredDevice = OperatingSystem.IsAndroidVersionAtLeast(33)
+                ? intent?.GetParcelableExtra(UsbManager.ExtraDevice, Java.Lang.Class.FromType(typeof(UsbDevice))) as UsbDevice
+#pragma warning disable CA1422 // the typed overload only exists from Android 13 on
+                : intent?.GetParcelableExtra(UsbManager.ExtraDevice) as UsbDevice;
+#pragma warning restore CA1422
+            if (answeredDevice is not null && answeredDevice.DeviceName != deviceName)
+            {
+                return;
+            }
+            result.TrySetResult(intent?.GetBooleanExtra(UsbManager.ExtraPermissionGranted, false) == true);
+        }
     }
 }
