@@ -116,7 +116,9 @@ def main():
         headers = {"x-cashbox-id": cashbox, "x-cashbox-accesstoken": token,
                    "x-operation-id": str(uuid.uuid4()), "Content-Type": "application/json"}
 
-        subprocess.run([adb, "-s", serial, "logcat", "-c"], capture_output=True)
+        # read only what is logged from now on; the log is not cleared, so diagnostics stay for later
+        now = subprocess.run([adb, "-s", serial, "shell", "date", "+%s"], capture_output=True, text=True).stdout.strip()
+        since = f"{int(now) - 1}.000"
         subprocess.run([adb, "-s", serial, "shell", "am", "start", "-W",
                         "-n", "eu.fiskaltrust.androidlauncher/eu.fiskaltrust.androidlauncher.PosSystemAPI",
                         "--es", "Method", "POST", "--es", "Path", "/v2/sign",
@@ -125,7 +127,7 @@ def main():
 
         response, other, deadline = None, None, time.time() + a.timeout
         while response is None and time.time() < deadline:
-            log = subprocess.run([adb, "-s", serial, "logcat", "-d", "-s", "PosSystemAPI"],
+            log = subprocess.run([adb, "-s", serial, "logcat", "-d", "-T", since, "-s", "PosSystemAPI"],
                                  capture_output=True, text=True, encoding="utf-8", errors="replace").stdout
             for l in log.splitlines():
                 if "Finishing with response: " in l:
