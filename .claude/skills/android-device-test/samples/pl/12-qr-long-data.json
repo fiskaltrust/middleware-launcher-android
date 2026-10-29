@@ -1,0 +1,40 @@
+{
+  "cbTerminalID": "02",
+  "cbReceiptReference": "QR-LONG",
+  "cbChargeItems": [
+    {
+      "Quantity": 1,
+      "Description": "Inne produkty",
+      "Amount": 100.0,
+      "VATRate": 23,
+      "ftChargeItemCase": 5786034805636333571,
+      "Currency": "PLN",
+      "ProductNumber": "999012"
+    }
+  ],
+  "cbPayItems": [
+    {
+      "Quantity": 1,
+      "Description": "KARTA Mastercard",
+      "Amount": 100.0,
+      "ftPayItemCase": 5786034805636333572,
+      "Currency": "PLN"
+    }
+  ],
+  "cbReceiptAmount": 100.0,
+  "ftReceiptCase": 5786034805636333569,
+  "Currency": "PLN",
+  "cbUser": "63",
+  "ftReceiptCaseData": {
+    "PL": {
+      "printout": {
+        "qrCode": {
+          "data": "https://example.com/r?k0=v000&k1=v001&k2=v002&k3=v003&k4=v004&k5=v005&k6=v006&k7=v007&k8=v008&k9=v009&k10=v010&k11=v011&k12=v012&k13=v013&k14=v014&k15=v015&k16=v016&k17=v017&k18=v018&k19=v019&k20=v020&k21=v021&k22=v022&k23=v023&k24=v024&k25=v025&k26=v026&k27=v027&k28=v028&k29=v029",
+          "pixelSize": 3,
+          "errorCorrection": 2
+        }
+      }
+    }
+  },
+  "ftCashBoxID": "{{ ftCashBoxID }}"
+}

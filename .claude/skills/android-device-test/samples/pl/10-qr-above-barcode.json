@@ -1,0 +1,42 @@
+{
+  "cbTerminalID": "02",
+  "cbReceiptReference": "QR-ABOVE",
+  "cbChargeItems": [
+    {
+      "Quantity": 1,
+      "Description": "Inne produkty",
+      "Amount": 100.0,
+      "VATRate": 23,
+      "ftChargeItemCase": 5786034805636333571,
+      "Currency": "PLN",
+      "ProductNumber": "999012"
+    }
+  ],
+  "cbPayItems": [
+    {
+      "Quantity": 1,
+      "Description": "KARTA Mastercard",
+      "Amount": 100.0,
+      "ftPayItemCase": 5786034805636333572,
+      "Currency": "PLN"
+    }
+  ],
+  "cbReceiptAmount": 100.0,
+  "ftReceiptCase": 5786034805636333569,
+  "Currency": "PLN",
+  "cbUser": "63",
+  "ftReceiptCaseData": {
+    "PL": {
+      "printout": {
+        "barcode": "20261027004000200031",
+        "qrCode": {
+          "data": "https://www2.hm.com/pl_pl/index.html",
+          "pixelSize": 4,
+          "errorCorrection": 1,
+          "position": "above"
+        }
+      }
+    }
+  },
+  "ftCashBoxID": "{{ ftCashBoxID }}"
+}
