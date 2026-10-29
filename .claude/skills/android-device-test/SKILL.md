@@ -96,6 +96,7 @@ python -I .claude/skills/android-device-test/scripts/send_receipt.py --out <resu
   was printed, then send only the requests after it.
 - The response is read from logcat, which cuts entries at about 4 KB. A longer response is saved as
   `raw` and reported as `NO VALID RESPONSE`; the receipt was still processed, so do not resend it.
+- A launcher error without a receipt response (e.g. wrong credentials) also stops the series.
 
 - **"The requested cashboxid or accesstoken do not match the currently running cashbox"**: the
   launcher keeps running the cashbox it was started with and refuses other credentials. Check the

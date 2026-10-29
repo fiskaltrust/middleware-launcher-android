@@ -156,6 +156,12 @@ def main():
             sys.exit(1)
         if "raw" in response:
             print(f"{name}: NO VALID RESPONSE | {redact(response['raw'])[:300]}")
+            reference = body.get("cbReceiptReference")
+            if not reference or f'"{reference}"' not in response["raw"]:
+                # a launcher error (e.g. wrong token) carries no reference: it would hit the next request
+                # too, and could be read again as that request's response
+                print("Stopping: the launcher failed before the Queue answered; fix that before sending more.")
+                sys.exit(1)
             continue
         state = response.get("ftState", 0)
         verdict = "ERROR" if state & 0xFFFF_FFFF == 0xEEEE_EEEE else "ok"
