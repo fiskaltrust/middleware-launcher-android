@@ -80,6 +80,7 @@ python -I .claude/skills/android-device-test/scripts/send_receipt.py --out <resu
 - Files may hold `"ftCashBoxID": "{{ ftCashBoxID }}"`; the script fills it in, sets `cbReceiptMoment`
   to now (`--keep-moment` to keep it) and appends a run suffix to `cbReceiptReference` and
   `cbPreviousReceiptReference`, so a return that references a sale in the same run still matches.
+- Results go to `<out>/<name>.json`; if that file exists, `<name>-2.json` and so on.
 - Each result file holds `{request, response}` with the cashbox id replaced by the placeholder again
   in both, so results can be shared. Never put the access token into a file you share or commit.
 - One line per request: `ftState`, `ok`/`ERROR` (`ftState & 0xFFFFFFFF == 0xEEEEEEEE`), the failure
@@ -89,7 +90,10 @@ python -I .claude/skills/android-device-test/scripts/send_receipt.py --out <resu
   not overtake a sale that is waiting for the printer.
 - A response counts only if its `cbReceiptReference` matches the request. If a request times out (e.g.
   during an unplug test), the script stops instead of sending the rest: the request may still be pending
-  in the queue. Check the device, then resend from where it stopped.
+  in the queue. **Do not resend the timed-out file**: it would get a new reference and be a second
+  sale, and both may print once the printer is back. Restore the printer, wait for the pending request
+  to finish (a `zero` receipt queues behind it and returns once it is done), check on paper whether it
+  was printed, then send only the requests after it.
 - The response is read from logcat, which cuts entries at about 4 KB. A longer response is saved as
   `raw` and reported as `NO VALID RESPONSE`; the receipt was still processed, so do not resend it.
 

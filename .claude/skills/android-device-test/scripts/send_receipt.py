@@ -140,7 +140,11 @@ def main():
         timed_out = response is None
         if timed_out:
             response = {"raw": f"no response within {a.timeout}s" + (f"; last other response: {other}" if other else "")}
-        with open(os.path.join(a.out, f"{name}.json"), "w", encoding="utf-8") as f:
+        path, i = os.path.join(a.out, f"{name}.json"), 1
+        while os.path.exists(path):  # never overwrite an earlier result (e.g. "zero zero", reruns)
+            i += 1
+            path = os.path.join(a.out, f"{name}-{i}.json")
+        with open(path, "w", encoding="utf-8") as f:
             # keep result files shareable
             f.write(redact(json.dumps({"request": body, "response": response}, indent=2, ensure_ascii=False)))
 
