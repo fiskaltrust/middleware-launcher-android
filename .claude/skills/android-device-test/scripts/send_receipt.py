@@ -46,7 +46,7 @@ def find_adb():
 
 
 def require(name):
-    value = os.environ.get(name)
+    value = (os.environ.get(name) or "").strip()  # a stray  (values set from Windows output) breaks the header
     if not value:
         sys.exit(f"{name} is not set")
     return value

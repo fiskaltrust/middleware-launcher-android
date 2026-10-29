@@ -97,6 +97,12 @@ python -I .claude/skills/android-device-test/scripts/send_receipt.py --out <resu
 - The response is read from logcat, which cuts entries at about 4 KB. A longer response is saved as
   `raw` and reported as `NO VALID RESPONSE`; the receipt was still processed, so do not resend it.
 
+- **"The requested cashboxid or accesstoken do not match the currently running cashbox"**: the
+  launcher keeps running the cashbox it was started with and refuses other credentials. Check the
+  values first: on Windows, a value captured from a command's output can end in ``. To switch to
+  (or restart) the cashbox in the env vars, send `/v2/echo` with body `{"Message":null}`; the launcher
+  restarts the middleware with the request's credentials.
+
 ### Sample requests
 
 - `samples/pl/`: POSNET (Poland) printouts — payment slips (`cbPayItemLines`, `Receipt`), `cbReceiptLines`,
