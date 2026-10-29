@@ -90,6 +90,8 @@ python -I .claude/skills/android-device-test/scripts/send_receipt.py --out <resu
 - A response counts only if its `cbReceiptReference` matches the request. If a request times out (e.g.
   during an unplug test), the script stops instead of sending the rest: the request may still be pending
   in the queue. Check the device, then resend from where it stopped.
+- The response is read from logcat, which cuts entries at about 4 KB. A longer response is saved as
+  `raw` and reported as `NO VALID RESPONSE`; the receipt was still processed, so do not resend it.
 
 ### Sample requests
 

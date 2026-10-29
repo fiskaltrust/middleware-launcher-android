@@ -83,7 +83,8 @@ def response_for(line, reference):
     try:
         response = json.loads(content)
     except json.JSONDecodeError:
-        return None
+        # logcat truncates long entries (~4 KB); keep the cut-off response if it is ours
+        return {"raw": line} if f'"{reference}"' in content else None
     return response if response.get("cbReceiptReference") == reference else None
 
 
