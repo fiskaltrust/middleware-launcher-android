@@ -80,13 +80,16 @@ python -I .claude/skills/android-device-test/scripts/send_receipt.py --out <resu
 - Files may hold `"ftCashBoxID": "{{ ftCashBoxID }}"`; the script fills it in, sets `cbReceiptMoment`
   to now (`--keep-moment` to keep it) and appends a run suffix to `cbReceiptReference` and
   `cbPreviousReceiptReference`, so a return that references a sale in the same run still matches.
-- Each result file holds `{request, response}` with the cashbox id replaced by the placeholder again,
-  so results can be shared. Never put the access token into a file you share or commit.
+- Each result file holds `{request, response}` with the cashbox id replaced by the placeholder again
+  in both, so results can be shared. Never put the access token into a file you share or commit.
 - One line per request: `ftState`, `ok`/`ERROR` (`ftState & 0xFFFFFFFF == 0xEEEEEEEE`), the failure
   signatures and the fiscal numbers.
 - Run long series in the background; each request waits up to `--timeout` seconds (default 240) for
   its response. Requests run one at a time: the queue processes them in order, so a zero receipt does
   not overtake a sale that is waiting for the printer.
+- A response counts only if its `cbReceiptReference` matches the request. If a request times out (e.g.
+  during an unplug test), the script stops instead of sending the rest: the request may still be pending
+  in the queue. Check the device, then resend from where it stopped.
 
 ### Sample requests
 

@@ -15,9 +15,12 @@ Environment:
 
 Request files may use the placeholder "{{ ftCashBoxID }}"; it is replaced. cbReceiptMoment is set to
 now unless --keep-moment is given. cbReceiptReference (and cbPreviousReceiptReference) get a run
-suffix so references stay unique across runs but still match each other within one run.
+suffix so references stay unique across runs but still match each other within one run. A response
+counts only if its cbReceiptReference matches the request's; if a request times out, the remaining ones
+are not sent, as the Queue would process them behind it anyway. The cashbox id is replaced with the
+placeholder in both request and response before the result is written.
 """
-import argparse, base64, datetime, json, os, shutil, subprocess, sys, time, uuid
+import argparse, base64, datetime, json, os, re, shutil, subprocess, sys, time, uuid
 
 sys.stdout.reconfigure(encoding="utf-8")
 
@@ -68,6 +71,22 @@ def expand(args):
                 yield os.path.splitext(os.path.basename(arg))[0], json.load(f)
 
 
+def response_for(line, reference):
+    """The parsed response in a logcat line if it belongs to the request with this reference.
+
+    A line without a JSON receipt response (the launcher failed before the Queue answered, e.g. a wrong
+    access token) is taken as is: it has no reference to match on.
+    """
+    _, sep, content = line.partition(" - Success - ")
+    if not sep:
+        return {"raw": line}
+    try:
+        response = json.loads(content)
+    except json.JSONDecodeError:
+        return None
+    return response if response.get("cbReceiptReference") == reference else None
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("requests", nargs="+")
@@ -83,6 +102,7 @@ def main():
     run = datetime.datetime.now().strftime("%H%M%S")
     os.makedirs(a.out, exist_ok=True)
     b64 = lambda s: base64.urlsafe_b64encode(s.encode()).decode()
+    redact = lambda s: re.sub(re.escape(cashbox), "{{ ftCashBoxID }}", s, flags=re.IGNORECASE)
 
     for name, body in expand(a.requests):
         body["ftCashBoxID"] = cashbox
@@ -102,27 +122,33 @@ def main():
                         "--es", "HeaderJsonObjectBase64Url", b64(json.dumps(headers)),
                         "--es", "BodyBase64Url", b64(json.dumps(body))], capture_output=True)
 
-        line, deadline = None, time.time() + a.timeout
-        while time.time() < deadline:
+        response, other, deadline = None, None, time.time() + a.timeout
+        while response is None and time.time() < deadline:
             log = subprocess.run([adb, "-s", serial, "logcat", "-d", "-s", "PosSystemAPI"],
                                  capture_output=True, text=True, encoding="utf-8", errors="replace").stdout
-            hits = [l for l in log.splitlines() if "Finishing with response: " in l]
-            if hits:
-                line = hits[-1].split("Finishing with response: ", 1)[1]
-                break
-            time.sleep(2)
+            for l in log.splitlines():
+                if "Finishing with response: " in l:
+                    line = l.split("Finishing with response: ", 1)[1]
+                    response = response_for(line, body.get("cbReceiptReference"))
+                    if response is not None:
+                        break
+                    other = line  # the response to an earlier request that timed out
+            else:
+                time.sleep(2)
 
-        if line is None:
-            response = {"raw": f"no response within {a.timeout}s"}
-        else:
-            _, sep, content = line.partition(" - Success - ")
-            response = json.loads(content) if sep else {"raw": line}
-        body["ftCashBoxID"] = "{{ ftCashBoxID }}"  # keep result files shareable
+        timed_out = response is None
+        if timed_out:
+            response = {"raw": f"no response within {a.timeout}s" + (f"; last other response: {other}" if other else "")}
         with open(os.path.join(a.out, f"{name}.json"), "w", encoding="utf-8") as f:
-            json.dump({"request": body, "response": response}, f, indent=2, ensure_ascii=False)
+            # keep result files shareable
+            f.write(redact(json.dumps({"request": body, "response": response}, indent=2, ensure_ascii=False)))
 
+        if timed_out:
+            print(f"{name}: NO RESPONSE | {redact(response['raw'])[:300]}")
+            print("Stopping: the request may still be pending in the Queue; check the device before sending more.")
+            sys.exit(1)
         if "raw" in response:
-            print(f"{name}: NO VALID RESPONSE | {response['raw'][:300]}")
+            print(f"{name}: NO VALID RESPONSE | {redact(response['raw'])[:300]}")
             continue
         state = response.get("ftState", 0)
         verdict = "ERROR" if state & 0xFFFF_FFFF == 0xEEEE_EEEE else "ok"
