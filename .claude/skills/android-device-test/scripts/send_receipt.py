@@ -74,8 +74,13 @@ def expand(args):
 
 
 def carries(text, reference):
-    """Whether a (possibly cut-off) JSON text holds this reference as a string value, escaped as JSON."""
-    return bool(reference) and any(json.dumps(reference, ensure_ascii=ascii) in text for ascii in (True, False))
+    """Whether a (possibly cut-off) JSON text has this cbReceiptReference, escaped as JSON.
+
+    Only the field itself counts: a return's cbPreviousReceiptReference holds the sale's reference too.
+    """
+    return bool(reference) and any(
+        re.search(r'"cbReceiptReference"\s*:\s*' + re.escape(json.dumps(reference, ensure_ascii=ascii)), text)
+        for ascii in (True, False))
 
 
 def response_for(line, reference):

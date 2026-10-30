@@ -33,7 +33,7 @@ adb -s <serial> shell dumpsys package eu.fiskaltrust.androidlauncher | grep vers
 
 ## 2. Get an APK
 
-**Local build** (needs the .NET SDK from `global.json`, the `android` workload, JDK 21, and initialised
+**Local build** (needs the .NET SDK from `global.json`, the `maui-android` workload, JDK 21, and initialised
 submodules: `git submodule update --init --recursive`):
 
 ```
