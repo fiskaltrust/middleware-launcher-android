@@ -61,7 +61,8 @@ adb -s <serial> shell dumpsys deviceidle whitelist +eu.fiskaltrust.androidlaunch
 ```
 
 - **`INSTALL_FAILED_UPDATE_INCOMPATIBLE` (signatures do not match)**: local builds and CI builds are
-  signed with different keys. Switching means `adb uninstall eu.fiskaltrust.androidlauncher`, which
+  signed with different keys. Switching means `adb -s <serial> uninstall eu.fiskaltrust.androidlauncher` (always with `-s`, so it
+  cannot hit another connected device), which
   **wipes the app's data: the queue's SQLite journal and the cashbox configuration**. Ask the user
   before uninstalling. Prefer staying on one kind of build for a test series.
 - After a fresh install the queue is not activated (responses carry `ftState ...0000_0001`): send the
