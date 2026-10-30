@@ -73,6 +73,11 @@ def expand(args):
                 yield os.path.splitext(os.path.basename(arg))[0], json.load(f)
 
 
+def carries(text, reference):
+    """Whether a (possibly cut-off) JSON text holds this reference as a string value, escaped as JSON."""
+    return bool(reference) and any(json.dumps(reference, ensure_ascii=ascii) in text for ascii in (True, False))
+
+
 def response_for(line, reference):
     """The parsed response in a logcat line if it belongs to the request with this reference.
 
@@ -86,7 +91,7 @@ def response_for(line, reference):
         response = json.loads(content)
     except json.JSONDecodeError:
         # logcat truncates long entries (~4 KB); keep the cut-off response if it is ours
-        return {"raw": line} if f'"{reference}"' in content else None
+        return {"raw": line} if carries(content, reference) else None
     return response if response.get("cbReceiptReference") == reference else None
 
 
@@ -154,13 +159,17 @@ def main():
         timed_out = response is None
         if timed_out:
             response = {"raw": f"no response within {a.timeout}s" + (f"; last other response: {other}" if other else "")}
-        path, i = os.path.join(a.out, f"{name}.json"), 1
-        while os.path.exists(path):  # never overwrite an earlier result (e.g. "zero zero", reruns)
-            i += 1
-            path = os.path.join(a.out, f"{name}-{i}.json")
-        with open(path, "w", encoding="utf-8") as f:
-            # keep result files shareable
-            f.write(redact(json.dumps({"request": body, "response": response}, indent=2, ensure_ascii=False)))
+        # never overwrite an earlier result (e.g. "zero zero", reruns, a parallel run): create exclusively
+        i = 1
+        while True:
+            path = os.path.join(a.out, f"{name}.json" if i == 1 else f"{name}-{i}.json")
+            try:
+                with open(path, "x", encoding="utf-8") as f:
+                    # keep result files shareable
+                    f.write(redact(json.dumps({"request": body, "response": response}, indent=2, ensure_ascii=False)))
+                break
+            except FileExistsError:
+                i += 1
 
         if timed_out:
             print(f"{name}: NO RESPONSE | {redact(response['raw'])[:300]}")
@@ -168,8 +177,7 @@ def main():
             sys.exit(1)
         if "raw" in response:
             print(f"{name}: NO VALID RESPONSE | {redact(response['raw'])[:300]}")
-            reference = body.get("cbReceiptReference")
-            if not reference or f'"{reference}"' not in response["raw"]:
+            if not carries(response["raw"], body.get("cbReceiptReference")):
                 # a launcher error (e.g. wrong token) carries no reference: it would hit the next request
                 # too, and could be read again as that request's response
                 print("Stopping: the launcher failed before the Queue answered; fix that before sending more.")
