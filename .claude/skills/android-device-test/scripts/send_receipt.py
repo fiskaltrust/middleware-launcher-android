@@ -5,7 +5,7 @@ read back from logcat (tag PosSystemAPI, line "Finishing with response: ..."). R
 are written side by side to <out>/<name>.json and a one-line summary is printed.
 
 Usage:
-    python -I send_receipt.py [--out DIR] [--keep-moment] [--timeout SEC] <file.json|dir|zero|daily|init> ...
+    python -I send_receipt.py [--out DIR] [--keep-moment] [--timeout SEC] [--run ID] <file.json|dir|zero|daily|init> ...
 
 Environment:
     ADB_SERIAL       device serial, e.g. <ip>:<port> for wireless adb (required)
@@ -15,12 +15,14 @@ Environment:
 
 Request files may use the placeholder "{{ ftCashBoxID }}"; it is replaced. cbReceiptMoment is set to
 now unless --keep-moment is given. cbReceiptReference (and cbPreviousReceiptReference) get a run
-suffix so references stay unique across runs but still match each other within one run. A response
+suffix so references stay unique across runs but still match each other within one run. The run id is
+printed first; pass it with --run to send the rest of a run that stopped, so a return still references
+the sale sent before the stop. A response
 counts only if its cbReceiptReference matches the request's; if a request times out, the remaining ones
 are not sent, as the Queue would process them behind it anyway. The cashbox id is replaced with the
 placeholder in both request and response before the result is written.
 """
-import argparse, base64, datetime, json, os, re, shutil, subprocess, sys, time, uuid
+import argparse, base64, datetime, json, os, re, secrets, shutil, subprocess, sys, time, uuid
 
 sys.stdout.reconfigure(encoding="utf-8")
 
@@ -94,13 +96,16 @@ def main():
     p.add_argument("--out", default="device-test-results")
     p.add_argument("--keep-moment", action="store_true")
     p.add_argument("--timeout", type=int, default=240, help="seconds to wait for each response")
+    p.add_argument("--run", help="run id to reuse, to continue a run that stopped (default: a new one)")
     a = p.parse_args()
 
     adb, serial = find_adb(), require("ADB_SERIAL")
     cashbox, token = require("FT_CASHBOX_ID"), require("FT_ACCESS_TOKEN")
     if ":" in serial:
         subprocess.run([adb, "connect", serial], capture_output=True)
-    run = datetime.datetime.now().strftime("%H%M%S")
+    # time plus random: two runs started in the same second must not share references
+    run = a.run or datetime.datetime.now().strftime("%H%M%S") + secrets.token_hex(2)
+    print(f"run {run}")
     os.makedirs(a.out, exist_ok=True)
     b64 = lambda s: base64.urlsafe_b64encode(s.encode()).decode()
     redact = lambda s: re.sub(re.escape(cashbox), "{{ ftCashBoxID }}", s, flags=re.IGNORECASE)
@@ -116,9 +121,17 @@ def main():
         headers = {"x-cashbox-id": cashbox, "x-cashbox-accesstoken": token,
                    "x-operation-id": str(uuid.uuid4()), "Content-Type": "application/json"}
 
-        # read only what is logged from now on; the log is not cleared, so diagnostics stay for later
+        # read only what is logged from now on; the log is not cleared, so diagnostics stay for later.
+        # The window starts a second early (logcat -T has whole seconds here), so responses already in
+        # it are noted before sending and never taken for this request's.
         now = subprocess.run([adb, "-s", serial, "shell", "date", "+%s"], capture_output=True, text=True).stdout.strip()
+        if not now.isdigit():
+            sys.exit(f"Cannot reach the device {serial}: check `adb devices` (the wireless debugging port may have changed).")
         since = f"{int(now) - 1}.000"
+        read_log = lambda: [l for l in subprocess.run([adb, "-s", serial, "logcat", "-d", "-T", since, "-s", "PosSystemAPI"],
+                                                      capture_output=True, text=True, encoding="utf-8", errors="replace").stdout.splitlines()
+                            if "Finishing with response: " in l]
+        earlier = set(read_log())
         subprocess.run([adb, "-s", serial, "shell", "am", "start", "-W",
                         "-n", "eu.fiskaltrust.androidlauncher/eu.fiskaltrust.androidlauncher.PosSystemAPI",
                         "--es", "Method", "POST", "--es", "Path", "/v2/sign",
@@ -127,15 +140,14 @@ def main():
 
         response, other, deadline = None, None, time.time() + a.timeout
         while response is None and time.time() < deadline:
-            log = subprocess.run([adb, "-s", serial, "logcat", "-d", "-T", since, "-s", "PosSystemAPI"],
-                                 capture_output=True, text=True, encoding="utf-8", errors="replace").stdout
-            for l in log.splitlines():
-                if "Finishing with response: " in l:
-                    line = l.split("Finishing with response: ", 1)[1]
-                    response = response_for(line, body.get("cbReceiptReference"))
-                    if response is not None:
-                        break
-                    other = line  # the response to an earlier request that timed out
+            for l in read_log():
+                if l in earlier:
+                    continue
+                line = l.split("Finishing with response: ", 1)[1]
+                response = response_for(line, body.get("cbReceiptReference"))
+                if response is not None:
+                    break
+                other = line  # the response to an earlier request that timed out
             else:
                 time.sleep(2)
 

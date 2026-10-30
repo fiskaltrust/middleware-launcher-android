@@ -94,7 +94,8 @@ python -I .claude/skills/android-device-test/scripts/send_receipt.py --out <resu
   in the queue. **Do not resend the timed-out file**: it would get a new reference and be a second
   sale, and both may print once the printer is back. Restore the printer, wait for the pending request
   to finish (a `zero` receipt queues behind it and returns once it is done), check on paper whether it
-  was printed, then send only the requests after it.
+  was printed, then send only the requests after it with the same run id (`--run <id>`, printed at the
+  start), so a return still references the sale sent before the stop.
 - The response is read from logcat, which cuts entries at about 4 KB. A longer response is saved as
   `raw` and reported as `NO VALID RESPONSE`; the receipt was still processed, so do not resend it.
 - A launcher error without a receipt response (e.g. wrong credentials) also stops the series.
