@@ -1,6 +1,9 @@
 ﻿using fiskaltrust.AndroidLauncher.Constants;
+using fiskaltrust.AndroidLauncher.Services.Helper;
 using fiskaltrust.AndroidLauncher.Services.middleware;
 using fiskaltrust.AndroidLauncher.Services.Queue;
+using fiskaltrust.ifPOS.v1;
+using fiskaltrust.Middleware.Abstractions;
 using fiskaltrust.storage.serialization.V0;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -18,6 +21,8 @@ namespace fiskaltrust.AndroidLauncher.Services
         private readonly bool _isSandbox;
         private readonly string _countryCode;
         private readonly ILoggerFactory _loggerFactory;
+        private readonly LogLevel _logLevel;
+        private readonly List<IHelper> _helpers = new();
 
         private POSV2? _pos;
 
@@ -27,7 +32,7 @@ namespace fiskaltrust.AndroidLauncher.Services
 
         public PackageConfiguration? QueueConfiguration { get; private set; }
 
-        public MiddlewareV2Provider(Guid cashboxId, string accessToken, ftCashBoxConfiguration configuration, string countryCode, bool isSandbox, ILoggerFactory loggerFactory)
+        public MiddlewareV2Provider(Guid cashboxId, string accessToken, ftCashBoxConfiguration configuration, string countryCode, bool isSandbox, ILoggerFactory loggerFactory, LogLevel logLevel)
         {
             _configuration = configuration;
             _cashboxId = cashboxId;
@@ -35,16 +40,24 @@ namespace fiskaltrust.AndroidLauncher.Services
             _countryCode = countryCode;
             _isSandbox = isSandbox;
             _loggerFactory = loggerFactory;
+            _logLevel = logLevel;
         }
 
         public async Task StopAsync()
         {
-            // MiddlewareProvider doesn't manage hosts directly, just helpers and wake locks
-            //foreach (var helper in _helpers)
-            //{
-            //    helper.StopBegin();
-            //    helper.StopEnd();
-            //}
+            foreach (var helper in _helpers)
+            {
+                try
+                {
+                    helper.StopBegin();
+                    helper.StopEnd();
+                }
+                catch (Exception x)
+                {
+                    Log.Logger.Warning(x, "Failed to stop helper. cashboxid: {cashbox.id}", _cashboxId);
+                }
+            }
+            _helpers.Clear();
         }
         public async Task StartAsync()
         {
@@ -67,12 +80,30 @@ namespace fiskaltrust.AndroidLauncher.Services
                 var queueProvider = new SQLiteQueueProvider();
                 _pos = queueProvider.CreatePOSV2(CashboxId, AccessToken, queueConfiguration, _configuration.ftSignaturCreationDevices.FirstOrDefault(), _countryCode, _loggerFactory);
                 Log.Logger.Information("Queue created. cashboxid: {cashbox.id}, queueId: {queue.id}", _cashboxId, queueConfiguration.Id);
-                // Helipad is v1-only (IPOS-based) and has no V2/POSV2 adapter yet, so it isn't wired up here. that have to be add later.
             }
             catch (Exception x)
             {
                 Log.Logger.Error(x, "Failed to create worker. cashboxid: {cashbox.id}", _cashboxId);
                 throw;
+            }
+
+            await InitializeHelipadHelperAsync();
+        }
+
+        private async Task InitializeHelipadHelperAsync()
+        {
+            // The upload to Helipad is not needed to sign receipts, so a failing helper must not stop the queue from starting.
+            try
+            {
+                var helipadHelperProvider = new HelipadHelperProvider();
+                var helper = await Task.Run(() => helipadHelperProvider.CreateHelper(_configuration, _accessToken, _isSandbox, _logLevel, new List<IPOS> { new POSV2JournalAdapter(_pos!) }));
+                helper.StartBegin();
+                helper.StartEnd();
+                _helpers.Add(helper);
+            }
+            catch (Exception x)
+            {
+                Log.Logger.Error(x, "Failed to start the Helipad helper; receipts will not be uploaded. cashboxid: {cashbox.id}", _cashboxId);
             }
         }
     }
