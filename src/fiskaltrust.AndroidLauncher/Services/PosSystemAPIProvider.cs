@@ -2,8 +2,10 @@ using fiskaltrust.AndroidLauncher.Constants;
 using fiskaltrust.AndroidLauncher.Enums;
 using fiskaltrust.AndroidLauncher.Exceptions;
 using fiskaltrust.AndroidLauncher.Helpers.Logging;
+using fiskaltrust.AndroidLauncher.Models;
 using fiskaltrust.AndroidLauncher.Notifications;
 using fiskaltrust.AndroidLauncher.Services.Configuration;
+using fiskaltrust.AndroidLauncher.Services.Helper;
 using fiskaltrust.AndroidLauncher.Services.InStoreApp;
 using fiskaltrust.AndroidLauncher.Services.POSSystemApiCore;
 using fiskaltrust.Api.PosSystem.Core;
@@ -23,6 +25,7 @@ internal class PosSystemAPIProvider {
     private SemaphoreSlim _startupLock = new(1);
     private PosSystemApiCore? _posSystemApiCore = null;
     private IMiddlewareProvider? _middlewareProvider = null;
+    private IHelipadUploader? _helipadUploader = null;
     private bool _running = false;
 
     public PosSystemAPIProvider(IConfigurationProvider configurationProvider, ILauncherStateNotifier stateNotifier)
@@ -96,12 +99,12 @@ internal class PosSystemAPIProvider {
         {
             var loggerFactory = IPlatformApplication.Current?.Services.GetService<ILoggerFactory>() ?? LoggerFactory.Create(_ => { });
             var countryCode = Helpers.Configuration.GetQueueLocalization(configuration.ftQueues.First());
+            var isV2Queue = countryCode == "PL";
 
-            _middlewareProvider = countryCode == "PL"
+            _middlewareProvider = isV2Queue
                 ? new MiddlewareV2Provider(cashboxId, accessToken, configuration, countryCode, isSandbox, loggerFactory)
                 : new MiddlewareProvider(cashboxId, accessToken, configuration, isSandbox, logLevel);
             await _middlewareProvider.StartAsync();
-
             var config = new POSSystemApiCoreConfiguration
             {
                 CashBoxId = cashboxId,
@@ -123,7 +126,25 @@ internal class PosSystemAPIProvider {
             var middlewareClient = _middlewareProvider.MiddlewareClient;
             services.AddSingleton(middlewareClient);
             services.AddSingleton<IInStoreAppService, InStoreAppServiceRouter>();
-            
+            if (isV2Queue)
+            {
+                services.AddSingleton<Helper.IHelipadService>(serviceProvider =>
+                    new Helper.HelipadService(
+                        serviceProvider.GetRequiredService<ILogger<Helper.HelipadService>>(),
+                        isSandbox));
+                services.AddSingleton<IHelipadUploader>(serviceProvider =>
+                    new Helper.HelipadUploader(
+                        serviceProvider.GetRequiredService<Helper.IHelipadService>(),
+                        serviceProvider.GetRequiredService<ILogger<Helper.HelipadUploader>>(),
+                        new CashBoxCredentials
+                        {
+                            CashBoxId = cashboxId,
+                            AccessToken = accessToken,
+                            QueueId = configuration.ftQueues.Single().Id
+                        },
+                        configuration,
+                        serviceProvider.GetRequiredService<PosSystemApiCore>()));
+            }
             //add Sqlite Storage services and dependencies
             var databasePath = System.IO.Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.Personal),
@@ -136,6 +157,11 @@ internal class PosSystemAPIProvider {
 
             var provider = services.BuildServiceProvider();
             _posSystemApiCore = provider.GetRequiredService<PosSystemApiCore>();
+            if (isV2Queue)
+            {
+                _helipadUploader = provider.GetRequiredService<IHelipadUploader>();
+                _helipadUploader.Start();
+            }
 
             _stateNotifier.Notify(LauncherState.Connected);
             _running = true;
@@ -186,6 +212,7 @@ internal class PosSystemAPIProvider {
 
         try
         {
+            _helipadUploader?.Stop();
             if ((_running || forceStop) && _middlewareProvider is not null)
             {
                 await _middlewareProvider.StopAsync();
@@ -195,6 +222,7 @@ internal class PosSystemAPIProvider {
         {
             _middlewareProvider = null;
             _posSystemApiCore = null;
+            _helipadUploader = null;
             _running = false;
         }
     }
