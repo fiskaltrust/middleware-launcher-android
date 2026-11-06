@@ -279,8 +279,11 @@ public partial class LogsPage : ContentPage
 		LogView.ItemsSource = _logLines;
 	}
 
+	private static readonly System.Text.RegularExpressions.Regex FullTimestamp = new(@"^\d{4}-\d{2}-\d{2} (\d{2}:\d{2}:\d{2})\.\d{3} [+-]\d{2}:\d{2}", System.Text.RegularExpressions.RegexOptions.Compiled);
+
 	private LogLineItem CreateLine(string text)
 	{
+		text = FullTimestamp.Replace(text, "$1", 1);
 		var display = text.Length > MaxDisplayedChars ? text[..MaxDisplayedChars] + "…" : text;
 		return new() { Text = display, IsBanded = _nextLineNumber++ % 2 == 1 };
 	}
