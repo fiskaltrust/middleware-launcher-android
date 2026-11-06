@@ -8,9 +8,15 @@ namespace fiskaltrust.AndroidLauncher.Helpers.Logging
     {
         public const Microsoft.Extensions.Logging.LogLevel DefaultLogLevel = Microsoft.Extensions.Logging.LogLevel.Information;
 
+        private static readonly Lazy<Serilog.ILogger> FileLogger = new(() => new LoggerConfiguration()
+            .MinimumLevel.Verbose()
+            .WriteTo.File(path: System.IO.Path.Combine(FileLoggerHelper.LogDirectory.FullName, FileLoggerHelper.LogFilename), rollingInterval: RollingInterval.Day, retainedFileCountLimit: 31, hooks: new StartupHeaderHooks())
+            .CreateLogger());
+
         public static void InitializeDefault()
         {
             Log.Logger = CreateBaseConfiguration(DefaultLogLevel).CreateLogger();
+            Log.Logger.Information("fiskaltrust.AndroidLauncher process started.");
         }
 
         public static void InitializeWithTelemetry(TelemetryConfiguration telemetryConfiguration, Microsoft.Extensions.Logging.LogLevel logLevel)
@@ -25,7 +31,7 @@ namespace fiskaltrust.AndroidLauncher.Helpers.Logging
             return new LoggerConfiguration()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
-                .WriteTo.File(path: System.IO.Path.Combine(FileLoggerHelper.LogDirectory.FullName, FileLoggerHelper.LogFilename), rollingInterval: RollingInterval.Day, retainedFileCountLimit: 31, shared: true)
+                .WriteTo.Logger(FileLogger.Value)
                 .WriteTo.Sink(new LogcatSink(AndroidLogger.TAG, logLevel));
         }
     }
