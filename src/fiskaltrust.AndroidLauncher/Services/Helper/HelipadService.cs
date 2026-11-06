@@ -5,6 +5,7 @@ using fiskaltrust.storage.serialization.V0;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
@@ -26,6 +27,40 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
             _logger = logger;
             _uploadClient = new HttpClient { BaseAddress = _baseAddress, Timeout = TimeSpan.FromMinutes(5) };
         }
+        public async Task UploadeQueuePLListAsync(CashBoxCredentials cashBoxCredentials, List<dynamic> data)
+        {
+            var url = $"api/service/queuepl";
+            foreach (var item in data)
+            {
+                try
+                {
+                    await UploadDataRequestAsync(cashBoxCredentials, url, item);
+                }
+                catch (HelipadException x)
+                {
+                   _logger.LogError(x, "Failed to execute UploadeQueueDEListAsync for cashbox id: {cashbox.id}, Data: {data}", cashBoxCredentials.CashBoxId, JsonConvert.SerializeObject(data));
+                    throw new HelipadException($"Something went wrong on {cashBoxCredentials.QueueId} upload.", x.StatusCode);
+                }
+            }
+        }
+        public async Task UploadSignatureCreationUnitPLListAsync(CashBoxCredentials cashBoxCredentials, List<dynamic> data)
+        {
+            var url = $"api/service/signaturcreationunitpl";
+
+            foreach (var item in data)
+            {
+                try
+                {
+                    await UploadDataRequestAsync(cashBoxCredentials, url, item);
+                }
+                catch (HelipadException x)
+                {
+                   _logger.LogError(x, "Failed to execute UploadSignatureCreationUnitATListAsync for cashbox id: {cashbox.id}, Data: {data}", cashBoxCredentials.CashBoxId, JsonConvert.SerializeObject(data));
+                    throw new HelipadException($"Something went wrong on pl signatureunit upload.", x.StatusCode);
+                }
+            }
+        }
+
         public async Task UploadQueueListAsync(CashBoxCredentials cashBoxCredentials, List<dynamic> data)
         {
             var url = $"api/service/queue";
@@ -42,6 +77,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
                 }
             }
         }
+
         public async Task<long> GetPointerAsync(CashBoxCredentials cashBoxCredentials, Guid queueId, string entityValue)
         {
            using (var httpClient = new HttpClient())

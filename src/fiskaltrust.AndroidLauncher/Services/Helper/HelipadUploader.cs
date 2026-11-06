@@ -73,24 +73,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
         {
 
             var recordCounts = GetRecordCounts(_helipadHelperConfiguration);
-            Dictionary<string, string> _headers = new Dictionary<string, string>
-                {
-                    { "x-cashbox-id", _cashBoxCredentials.CashBoxId.ToString() },
-                    { "x-cashbox-accesstoken", _cashBoxCredentials.AccessToken },
-                    { "x-operation-id", Guid.NewGuid().ToString() },
-                };
-            var request = new PosSystemApiRequest
-            {
-                Method = "POST",
-                PathAndQuery = "/v2/echo",
-                Headers = _headers,
-                Body = JsonConvert.SerializeObject(new EchoRequest() { Message = "Hello World!" }),
-            };
-
-            if (!(await _posSystemApiCore.HandleAsync(request).ConfigureAwait(false)).IsSuccess)
-            {
-                throw new Exception("Sending echo to middleware returned null.");
-            }
+            await TestwithEchoRequest().ConfigureAwait(false);
 
             try
             {
@@ -124,6 +107,29 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
                 recordCounts.StartRecordCount = NextRecordCount(recordCounts.StartRecordCount, largestPayload, _helipadHelperConfiguration.MaxUploadBytes, _helipadHelperConfiguration.MaxReadCount);
             }
         }
+
+        private async Task TestwithEchoRequest()
+            {
+                Dictionary<string, string> _headers = new Dictionary<string, string>
+                {
+                    { "x-cashbox-id", _cashBoxCredentials.CashBoxId.ToString() },
+                    { "x-cashbox-accesstoken", _cashBoxCredentials.AccessToken },
+                    { "x-operation-id", Guid.NewGuid().ToString() },
+                };
+                var request = new PosSystemApiRequest
+                {
+                    Method = "POST",
+                    PathAndQuery = "/v2/echo",
+                    Headers = _headers,
+                    Body = JsonConvert.SerializeObject(new EchoRequest() { Message = "Hello World!" }),
+                };
+
+                if (!(await _posSystemApiCore.HandleAsync(request).ConfigureAwait(false)).IsSuccess)
+                {
+                    throw new Exception("Sending echo to middleware returned null.");
+                }
+            }
+        
 
         /// <summary>
         /// Scales the record count so the largest payload of the run lands at half the upload limit. A fixed step
@@ -240,23 +246,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
         {
             var chunks = new List<byte[]>();
             long length = 0;
-            Dictionary<string, string> _headers = new Dictionary<string, string>
-                {
-                    { "x-cashbox-id", _cashBoxCredentials.CashBoxId.ToString() },
-                    { "x-cashbox-accesstoken", _cashBoxCredentials.AccessToken },
-                };
-            var request = new PosSystemApiRequest
-            {
-                Method = "POST",
-                PathAndQuery = "/v2/journal",
-                Headers = _headers,
-                Body = JsonConvert.SerializeObject(journalRequest),
-            };
-            var response = await _posSystemApiCore.HandleAsync(request);
-            if (response.Content is not ResponseBody.FileStream fileStream)
-            {
-                throw new Exception($"Unexpected journal response body type: {response.Content?.GetType().Name ?? "null"}");
-            }
+            ResponseBody.FileStream fileStream = await SendJournalRequest(journalRequest);
 
             await foreach (var chunk in fileStream.Chunks)
             {
@@ -284,6 +274,28 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
             }
             return new MemoryStream(buffer, writable: false);
         }
+            private async Task<ResponseBody.FileStream> SendJournalRequest(JournalRequest journalRequest)
+            {
+                Dictionary<string, string> _headers = new Dictionary<string, string>
+                {
+                    { "x-cashbox-id", _cashBoxCredentials.CashBoxId.ToString() },
+                    { "x-cashbox-accesstoken", _cashBoxCredentials.AccessToken },
+                };
+                var request = new PosSystemApiRequest
+                {
+                    Method = "POST",
+                    PathAndQuery = "/v2/journal",
+                    Headers = _headers,
+                    Body = JsonConvert.SerializeObject(journalRequest),
+                };
+                var response = await _posSystemApiCore.HandleAsync(request);
+                if (response.Content is not ResponseBody.FileStream fileStream)
+                {
+                    throw new Exception($"Unexpected journal response body type: {response.Content?.GetType().Name ?? "null"}");
+                }
+
+                return fileStream;
+            }
 
         public async Task UploadConfigurationEntities()
         {
@@ -306,11 +318,12 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
                 using (var sr = new StreamReader(stream))
                 using (var jr = new JsonTextReader(sr))
                 {
-                    var data = new JsonSerializer() { FloatParseHandling = FloatParseHandling.Decimal }.Deserialize<List<dynamic>>(jr);
-
+                    var data = new JsonSerializer() { FloatParseHandling = FloatParseHandling.Decimal }.Deserialize<WorkerConfiguration>(jr);
                     if (data != null)
                     {
-                        await _helipadService.UploadQueueListAsync(_cashBoxCredentials, data);
+                        await _helipadService.UploadQueueListAsync(_cashBoxCredentials, data.QueueList);
+                        await _helipadService.UploadeQueuePLListAsync(_cashBoxCredentials, data.QueuePLList);
+                        await _helipadService.UploadSignatureCreationUnitPLListAsync(_cashBoxCredentials, data.SignaturCreationUnitPLList);
                     }
                 }
             }
