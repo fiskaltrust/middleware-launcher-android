@@ -40,9 +40,9 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
 
             foreach (var dir in dirs)
             {
-                // The TSE only maps its files into a folder after a remount; empty leftovers (e.g. from another app using the TSE) make worm_init crash natively
-                var tseInfoFile = new FileInfo(Path.Combine(dir, "TSE_INFO.DAT"));
-                if (tseInfoFile.Exists && tseInfoFile.Length > 0)
+                // The TSE only maps its files into a folder after a remount; empty leftovers (e.g. from another app using the TSE) make worm_init crash natively,
+                // and an empty TSE_COMM.DAT makes every command fail with WORM_ERROR_INVALID_RESPONSE
+                if (IsMappedTseFile(dir, "TSE_INFO.DAT") && IsMappedTseFile(dir, "TSE_COMM.DAT"))
                 {
                     return dir;
                 }
@@ -55,6 +55,12 @@ namespace fiskaltrust.AndroidLauncher.Common.Services.SCU
             }
 
             throw new RemountRequiredException("First call to an uninitialized TSE; please either remount the SD card, or restart your device.");
+        }
+
+        private static bool IsMappedTseFile(string dir, string fileName)
+        {
+            var file = new FileInfo(Path.Combine(dir, fileName));
+            return file.Exists && file.Length > 0;
         }
     }
 }
