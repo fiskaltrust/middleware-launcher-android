@@ -28,6 +28,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Queue
             CopyMigrationsToDataDir(migrationsPath);
 
             queueConfiguration.Configuration["servicefolder"] = workingDir;
+            queueConfiguration.Configuration["launcherversion"] = ThisAssembly.AssemblyInformationalVersion;
             queueConfiguration.Configuration["migrationDirectory"] = migrationsPath;
 
             var bootstrapper = new PosBootstrapper

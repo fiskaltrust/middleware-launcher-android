@@ -3,7 +3,9 @@ using fiskaltrust.Api.PosSystem.Core.Interfaces;
 using fiskaltrust.Api.PosSystem.Core.Models;
 using fiskaltrust.Api.PosSystem.Signing;
 using fiskaltrust.ifPOS.v1;
+using fiskaltrust.ifPOS.v2;
 using System.Buffers;
+using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
 
@@ -23,7 +25,7 @@ namespace fiskaltrust.AndroidLauncher.Services
         public static MiddlewareClientAndroid FromV1(IPOS pos) => new(pos, null);
         public static MiddlewareClientAndroid FromV2(POSV2 posV2) => new(null, posV2);
 
-        public async Task<(EchoResponse?, string? error)> EchoAsync(MiddlewareRequestOptions requestOptions, EchoRequest request)
+        public async Task<(ifPOS.v1.EchoResponse?, string? error)> EchoAsync(MiddlewareRequestOptions requestOptions, ifPOS.v1.EchoRequest request)
         {
             try
             {
@@ -47,35 +49,6 @@ namespace fiskaltrust.AndroidLauncher.Services
                 return (null, ex.Message);
             }
         }
-
-        public async Task<(byte[]?, string? contentType, string? error)> JournalAsync(MiddlewareRequestOptions requestOptions, JournalRequest request)
-        {
-            List<JournalResponse> response;
-            try
-            {
-                response = await _pos.JournalAsync(request).ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            var Bytes = response.SelectMany(x => x.Chunk).ToArray();
-            var content = Encoding.UTF8.GetString(Bytes);
-            if (content.StartsWith("<?xml"))
-                return (Bytes, contentType: "application/xml", null);
-            return (Bytes, contentType: "application/json", null);
-        }
-        public async Task<(byte[]?, string? contentType, string? error)> JournalV2Async(MiddlewareRequestOptions requestOptions, ifPOS.v2.JournalRequest request)
-        {
-            var response = await JournalResponsesAsync(request).ToListAsync();
-
-            var Bytes = response.SelectMany(x => x.Chunk).ToArray();
-            var content = Encoding.UTF8.GetString(Bytes);
-            if (content.StartsWith("<?xml"))
-                return (Bytes, contentType: "application/xml", null);
-            return (Bytes, contentType: "application/json", null);
-        }
-
         public async Task<(ifPOS.v1.ReceiptResponse?, string? error)> SignAsync(MiddlewareRequestOptions requestOptions, ifPOS.v1.ReceiptRequest request)
         {
             try
@@ -103,10 +76,26 @@ namespace fiskaltrust.AndroidLauncher.Services
             }
         }
 
-        private async IAsyncEnumerable<JournalResponse> JournalResponsesAsync(ifPOS.v2.JournalRequest request)
+        public async Task<(IAsyncEnumerable<ifPOS.v1.JournalResponse>? data, string? contentType, string? error)> JournalAsync(MiddlewareRequestOptions requestOptions, ifPOS.v1.JournalRequest request)
         {
-            var (_, pipeReader) = await _posV2.Journal(JsonSerializer.Serialize(request));
+            try
+            {
+                return (_pos.JournalAsync(request), "application/octet-stream", null);
+            }
+            catch (Exception ex)
+            {
+                return (null, null, ex.Message);
+            }
+        }
 
+        private async Task<(ContentType contentType, IAsyncEnumerable<ifPOS.v1.JournalResponse> response)> JournalResponsesAsync(ifPOS.v2.JournalRequest request)
+        {
+            var (contentType, pipeReader) = await _posV2.Journal(JsonSerializer.Serialize(request)).ConfigureAwait(false);
+            return (contentType, ReadJournalResponsesAsync(pipeReader));
+        }
+
+        private static async IAsyncEnumerable<ifPOS.v1.JournalResponse> ReadJournalResponsesAsync(System.IO.Pipelines.PipeReader pipeReader)
+        {
             try
             {
                 while (true)
@@ -116,7 +105,7 @@ namespace fiskaltrust.AndroidLauncher.Services
 
                     if (!buffer.IsEmpty)
                     {
-                        yield return new JournalResponse
+                        yield return new ifPOS.v1.JournalResponse
                         {
                             Chunk = buffer.ToArray().ToList()
                         };
@@ -136,6 +125,19 @@ namespace fiskaltrust.AndroidLauncher.Services
             finally
             {
                 await pipeReader.CompleteAsync();
+            }
+        }
+
+        public async Task<(IAsyncEnumerable<ifPOS.v1.JournalResponse>? data, string? contentType, string? error)> JournalV2Async(MiddlewareRequestOptions requestOptions, ifPOS.v2.JournalRequest request)
+        {
+            try
+            {
+                var (contentType, responses) = await JournalResponsesAsync(request);
+                return (responses, contentType.MediaType, null);
+            }
+            catch (Exception ex)
+            {
+                return (null, null, ex.Message);
             }
         }
     }
