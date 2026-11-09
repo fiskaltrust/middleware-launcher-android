@@ -60,26 +60,7 @@ internal class PosSystemAPIProvider {
     private async Task Start(Guid cashboxId, string accessToken, Action<string>? progressReporter = null) {
 
         progressReporter?.Invoke(ActivityStages.STAGE_GETTING_CONFIGURATION);
-        var (configuration, isSandbox) = await _configurationProvider.GetCashboxConfigurationAsync(cashboxId, accessToken);
-
-        bool localInstoreAppCommunication = false;
-        {
-            var helperConfigurations = configuration?.helpers
-            ?.Where(h => h.Package == "fiskaltrust.Middleware.Helper.LocalPosSystemApi");
-
-            if (helperConfigurations?.Count() > 1)
-            {
-                throw new InvalidOperationException($"Multiple LocalPosSystemApi helpers found in the cashbox. Only one helper per cashbox is allowed.");
-            }
-
-            if (helperConfigurations?.Count() == 1) {
-                localInstoreAppCommunication = helperConfigurations
-                    .First()
-                    .Configuration
-                    .TryGetValue("UseLocalInstoreAppCommunication", out var useLocalInstoreAppCommunication)
-                    && string.Equals(useLocalInstoreAppCommunication.ToString(), "true", StringComparison.CurrentCultureIgnoreCase);
-            }
-        }
+        var (configuration, isSandbox) = await _configurationProvider.GetCashboxConfigurationAsync(cashboxId, accessToken);      
 
         progressReporter?.Invoke(ActivityStages.STAGE_STARTING_MIDDLEWARE);
         var middlewareTelemetryInitializer = new MiddlewareTelemetryInitializer("fiskaltrust.AndroidLauncher", VersionTracking.CurrentVersion, cashboxId);
