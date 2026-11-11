@@ -17,20 +17,21 @@ namespace fiskaltrust.AndroidLauncher.Services.Configuration
             _localConfigurationProvider = localConfigurationProvider;
         }
 
-        public async Task<(ftCashBoxConfiguration configuration, bool isSandbox)> GetCashboxConfigurationAsync(Guid cashboxId, string accessToken)
+        public async Task<(ftCashBoxConfiguration configuration, string configurationJson, bool isSandbox)> GetCashboxConfigurationAsync(Guid cashboxId, string accessToken)
         {
             ftCashBoxConfiguration configuration;
+            string configurationJson;
             bool isSandbox;
             try
             {
-                (configuration, isSandbox) = await _configurationProvider.GetCashboxConfigurationAsync(cashboxId, accessToken);
+                (configuration, configurationJson, isSandbox) = await _configurationProvider.GetCashboxConfigurationAsync(cashboxId, accessToken);
                 await _localConfigurationProvider.PersistAsync(cashboxId, accessToken, configuration, isSandbox);
             }
             catch (Exception e)
             {
                 try
                 {
-                    (configuration, isSandbox) = await _localConfigurationProvider.GetCashboxConfigurationAsync(cashboxId, accessToken);
+                    (configuration, configurationJson, isSandbox) = await _localConfigurationProvider.GetCashboxConfigurationAsync(cashboxId, accessToken);
                 }
                 catch
                 {
@@ -39,7 +40,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Configuration
                 }
             }
 
-            return (configuration, isSandbox);
+            return (configuration, configurationJson, isSandbox);
         }
     }
 }

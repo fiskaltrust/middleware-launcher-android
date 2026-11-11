@@ -23,7 +23,11 @@ internal class PosSystemAPIProvider {
     private SemaphoreSlim _startupLock = new(1);
     private PosSystemApiCore? _posSystemApiCore = null;
     private IMiddlewareProvider? _middlewareProvider = null;
+    private IHost? _host = null;
     private bool _running = false;
+
+    private const string MessageBusSandboxUri = "gateway-sandbox.fiskaltrust.eu/mqtt";
+    private const string MessageBusProductionUri = "gateway.fiskaltrust.eu/mqtt";
 
     public PosSystemAPIProvider(IConfigurationProvider configurationProvider, ILauncherStateNotifier stateNotifier)
     {
@@ -57,7 +61,7 @@ internal class PosSystemAPIProvider {
     private async Task Start(Guid cashboxId, string accessToken, Action<string>? progressReporter = null) {
 
         progressReporter?.Invoke(ActivityStages.STAGE_GETTING_CONFIGURATION);
-        var (configuration, isSandbox) = await _configurationProvider.GetCashboxConfigurationAsync(cashboxId, accessToken);
+        var (configuration, configurationJson, isSandbox) = await _configurationProvider.GetCashboxConfigurationAsync(cashboxId, accessToken);
 
         bool localInstoreAppCommunication = false;
         {
@@ -102,28 +106,28 @@ internal class PosSystemAPIProvider {
                 : new MiddlewareProvider(cashboxId, accessToken, configuration, isSandbox, logLevel);
             await _middlewareProvider.StartAsync();
 
-            var config = new POSSystemApiCoreConfiguration
-            {
-                CashBoxId = cashboxId,
-                AccessToken = accessToken,
-                Configuration = Newtonsoft.Json.JsonConvert.SerializeObject(configuration),
-                AppEnvironment = isSandbox ? AppEnvironments.Sandbox : AppEnvironments.Production,
-                LauncherEnvironment = LauncherEnvironments.Local
-            };
-
             progressReporter?.Invoke(ActivityStages.STAGE_STARTING_CORE);
-            var bootstrapper = new POSCoreBootstrapper();
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(config);
-            bootstrapper.Configuration = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
 
-            var services = new ServiceCollection();
-            await bootstrapper.ConfigureServices(services);
+            var builder = Host.CreateEmptyApplicationBuilder(new HostApplicationBuilderSettings { DisableDefaults = true });
+            var services = builder.Services;
+            services.AddLogging();
+            services.AddSingleton(loggerFactory);
 
+            services.AddOptions<PosSystemApiCoreOptions>().Configure(o =>
+            {
+                o.Sandbox = isSandbox;
+                o.LauncherEnvironment = LauncherEnvironments.Local;
+                o.MessageBusUri = isSandbox ? MessageBusSandboxUri : MessageBusProductionUri;
+            });
+
+            services.AddPosSystemApiCoreForLocal();
+            services.AddSingleton<IMiddlewareConfigurationService>(
+                new AndroidMiddlewareConfigurationService(cashboxId, accessToken, configurationJson));
 
             var middlewareClient = _middlewareProvider.MiddlewareClient;
             services.AddSingleton(middlewareClient);
             services.AddSingleton<IInStoreAppService, InStoreAppServiceRouter>();
-            
+
             //add Sqlite Storage services and dependencies
             var databasePath = System.IO.Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.Personal),
@@ -134,8 +138,11 @@ internal class PosSystemAPIProvider {
             CopyPosMigrationsToDataDir(migrationsPath);
             services.AddSingleton<IStorageFactory, StorageFactory>( _ => new StorageFactory(loggerFactory, databasePath));
 
-            var provider = services.BuildServiceProvider();
-            _posSystemApiCore = provider.GetRequiredService<PosSystemApiCore>();
+            _host = builder.Build();
+            // Starts the hosted services registered by the core (e.g. the MQTT client).
+            await _host.StartAsync();
+
+            _posSystemApiCore = _host.Services.GetRequiredService<PosSystemApiCore>();
 
             _stateNotifier.Notify(LauncherState.Connected);
             _running = true;
@@ -186,6 +193,18 @@ internal class PosSystemAPIProvider {
 
         try
         {
+            if (_host is not null)
+            {
+                try
+                {
+                    await _host.StopAsync();
+                }
+                catch (Exception ex)
+                {
+                    Log.Logger.Warning(ex, "Failed to stop the PosSystemApi host.");
+                }
+            }
+
             if ((_running || forceStop) && _middlewareProvider is not null)
             {
                 await _middlewareProvider.StopAsync();
@@ -193,6 +212,8 @@ internal class PosSystemAPIProvider {
         }
         finally
         {
+            _host?.Dispose();
+            _host = null;
             _middlewareProvider = null;
             _posSystemApiCore = null;
             _running = false;

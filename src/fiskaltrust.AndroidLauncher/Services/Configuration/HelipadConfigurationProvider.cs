@@ -6,20 +6,23 @@ namespace fiskaltrust.AndroidLauncher.Services.Configuration
 {
     public class HelipadConfigurationProvider : IConfigurationProvider
     {
-        public async Task<(ftCashBoxConfiguration configuration, bool isSandbox)> GetCashboxConfigurationAsync(Guid cashboxId, string accessToken)
+        public async Task<(ftCashBoxConfiguration configuration, string configurationJson, bool isSandbox)> GetCashboxConfigurationAsync(Guid cashboxId, string accessToken)
         {
             {
                 var productionResult = await GetConfigurationAsync(cashboxId, accessToken, false);
                 if (productionResult.IsSuccessStatusCode)
                 {
-                    return (await ParseResponse(productionResult), false);
+                    var content = await productionResult.Content.ReadAsStringAsync();
+                    return (await ParseResponse(content), content, false);
                 }
             }
 
             {
                 var sandboxResult = await GetConfigurationAsync(cashboxId, accessToken, true);
                 sandboxResult.EnsureSuccessStatusCode();
-                return (await ParseResponse(sandboxResult), true);
+                var content = await sandboxResult.Content.ReadAsStringAsync();
+
+                return (await ParseResponse(content), content, true);
             }
         }
 
@@ -34,9 +37,8 @@ namespace fiskaltrust.AndroidLauncher.Services.Configuration
             return result;
         }
 
-        private async Task<ftCashBoxConfiguration> ParseResponse(HttpResponseMessage result)
+        private async Task<ftCashBoxConfiguration> ParseResponse(string content)
         {
-            var content = await result.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<ftCashBoxConfiguration>(content);
         }
     }
