@@ -22,6 +22,9 @@
 
 		<SupportedOSPlatformVersion>24.0</SupportedOSPlatformVersion>
 
+		<!-- The .NET default leaves out android-arm; 32-bit POS terminals (e.g. RK3288-based) need it. -->
+		<RuntimeIdentifiers>android-arm;android-arm64;android-x64</RuntimeIdentifiers>
+
 		<!-- Default Android HTTP handler doesn't send the Basic Auth header, breaking cloud AT SCU signing (401). Do not remove without re-testing AT signing. https://github.com/dotnet/runtime/issues/81839 -->
 		<AndroidHttpClientHandlerType>System.Net.Http.SocketsHttpHandler, System.Net.Http</AndroidHttpClientHandlerType>
 	</PropertyGroup>
