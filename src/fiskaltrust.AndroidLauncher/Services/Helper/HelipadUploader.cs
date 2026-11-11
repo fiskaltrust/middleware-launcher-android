@@ -8,7 +8,6 @@ using fiskaltrust.ifPOS.v2.Cases;
 using fiskaltrust.storage.serialization.V0;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System.Diagnostics;
 using System.Net;
 using System.Runtime.CompilerServices;
 using System.Timers;
@@ -20,7 +19,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
     {
         private readonly IHelipadService _helipadService;
         private readonly ILogger<HelipadUploader> _logger;
-        private System.Timers.Timer _uploadTimer = null;
+        private System.Timers.Timer? _uploadTimer;
 
         private readonly Dictionary<JournalType, string> _readEntities = new Dictionary<JournalType, string> {
             { JournalType.ActionJournal, "actionjournal" },
@@ -32,9 +31,9 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
         private readonly HelipadHelperConfiguration _helipadHelperConfiguration;
         private readonly PosSystemApiCore _posSystemApiCore;
       
-        private AdaptiveRecordCounts RecordCounts;
+        private AdaptiveRecordCounts? _recordCounts;
 
-        public HelipadUploader(IHelipadService helipadService, ILogger<HelipadUploader> logger, CashBoxCredentials cashBoxCredentials, ftCashBoxConfiguration configuration, PosSystemApiCore posSystemApiCore)//IMiddlewareCache middlewareCache, CloudCashboxMetrics metrics
+        public HelipadUploader(IHelipadService helipadService, ILogger<HelipadUploader> logger, CashBoxCredentials cashBoxCredentials, ftCashBoxConfiguration configuration, PosSystemApiCore posSystemApiCore)
         {
             _helipadService = helipadService;
             _logger = logger;
@@ -73,24 +72,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
         {
 
             var recordCounts = GetRecordCounts(_helipadHelperConfiguration);
-            Dictionary<string, string> _headers = new Dictionary<string, string>
-                {
-                    { "x-cashbox-id", _cashBoxCredentials.CashBoxId.ToString() },
-                    { "x-cashbox-accesstoken", _cashBoxCredentials.AccessToken },
-                    { "x-operation-id", Guid.NewGuid().ToString() },
-                };
-            var request = new PosSystemApiRequest
-            {
-                Method = "POST",
-                PathAndQuery = "/v2/echo",
-                Headers = _headers,
-                Body = JsonConvert.SerializeObject(new EchoRequest() { Message = "Hello World!" }),
-            };
-
-            if (!(await _posSystemApiCore.HandleAsync(request).ConfigureAwait(false)).IsSuccess)
-            {
-                throw new Exception("Sending echo to middleware returned null.");
-            }
+            await SendEchoRequestAsync().ConfigureAwait(false);
 
             try
             {
@@ -125,6 +107,28 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
             }
         }
 
+        private async Task SendEchoRequestAsync()
+        {
+            var headers = new Dictionary<string, string>
+            {
+                { "x-cashbox-id", _cashBoxCredentials.CashBoxId.ToString() },
+                { "x-cashbox-accesstoken", _cashBoxCredentials.AccessToken },
+                { "x-operation-id", Guid.NewGuid().ToString() },
+            };
+            var request = new PosSystemApiRequest
+            {
+                Method = "POST",
+                PathAndQuery = "/v2/echo",
+                Headers = headers,
+                Body = JsonConvert.SerializeObject(new EchoRequest { Message = "Hello World!" }),
+            };
+
+            if (!(await _posSystemApiCore.HandleAsync(request).ConfigureAwait(false)).IsSuccess)
+            {
+                throw new Exception("Sending echo to PosSystem api returned null.");
+            }
+        }
+
         /// <summary>
         /// Scales the record count so the largest payload of the run lands at half the upload limit. A fixed step
         /// (+50) against the quartering on an oversized payload oscillates for any record size above a few hundred
@@ -146,14 +150,15 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
         /// </summary>
         private AdaptiveRecordCounts GetRecordCounts(HelipadHelperConfiguration configuration)
         {
-            if (RecordCounts == null)
+            if (_recordCounts == null)
             {
-                RecordCounts = AdaptiveRecordCounts.FromConfiguration(configuration);
+                _recordCounts = AdaptiveRecordCounts.FromConfiguration(configuration);
             }
-            else {
-                RecordCounts = RecordCounts.IsSeededFrom(configuration) ? RecordCounts.ClampTo(configuration) : AdaptiveRecordCounts.FromConfiguration(configuration);
+            else
+            {
+                _recordCounts = _recordCounts.IsSeededFrom(configuration) ? _recordCounts.ClampTo(configuration) : AdaptiveRecordCounts.FromConfiguration(configuration);
             }
-            return RecordCounts;
+            return _recordCounts;
         }
 
         public async Task<long> UploadEntityAsync(KeyValuePair<JournalType, string> entity, int startRecordCount, Action<int> setRecordCount)
@@ -240,23 +245,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
         {
             var chunks = new List<byte[]>();
             long length = 0;
-            Dictionary<string, string> _headers = new Dictionary<string, string>
-                {
-                    { "x-cashbox-id", _cashBoxCredentials.CashBoxId.ToString() },
-                    { "x-cashbox-accesstoken", _cashBoxCredentials.AccessToken },
-                };
-            var request = new PosSystemApiRequest
-            {
-                Method = "POST",
-                PathAndQuery = "/v2/journal",
-                Headers = _headers,
-                Body = JsonConvert.SerializeObject(journalRequest),
-            };
-            var response = await _posSystemApiCore.HandleAsync(request);
-            if (response.Content is not ResponseBody.FileStream fileStream)
-            {
-                throw new Exception($"Unexpected journal response body type: {response.Content?.GetType().Name ?? "null"}");
-            }
+            ResponseBody.FileStream fileStream = await SendJournalRequest(journalRequest);
 
             await foreach (var chunk in fileStream.Chunks)
             {
@@ -284,14 +273,31 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
             }
             return new MemoryStream(buffer, writable: false);
         }
+            private async Task<ResponseBody.FileStream> SendJournalRequest(JournalRequest journalRequest)
+            {
+            var headers = new Dictionary<string, string>
+            {
+                { "x-cashbox-id", _cashBoxCredentials.CashBoxId.ToString() },
+                { "x-cashbox-accesstoken", _cashBoxCredentials.AccessToken },
+            };
+            var request = new PosSystemApiRequest
+            {
+                Method = "POST",
+                PathAndQuery = "/v2/journal",
+                Headers = headers,
+                Body = JsonConvert.SerializeObject(journalRequest),
+            };
+            var response = await _posSystemApiCore.HandleAsync(request);
+            if (response.Content is not ResponseBody.FileStream fileStream)
+            {
+                throw new Exception($"Unexpected journal response body type: {response.Content?.GetType().Name ?? "null"}");
+            }
+
+            return fileStream;
+        }
 
         public async Task UploadConfigurationEntities()
         {
-            var serializer = new JsonSerializer()
-            {
-                FloatParseHandling = FloatParseHandling.Decimal
-            };
-
             var request = new JournalRequest()
             {
                 ftJournalType = JournalType.Configuration,
@@ -306,11 +312,12 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
                 using (var sr = new StreamReader(stream))
                 using (var jr = new JsonTextReader(sr))
                 {
-                    var data = new JsonSerializer() { FloatParseHandling = FloatParseHandling.Decimal }.Deserialize<List<dynamic>>(jr);
-
+                    var data = new JsonSerializer() { FloatParseHandling = FloatParseHandling.Decimal }.Deserialize<WorkerConfiguration>(jr);
                     if (data != null)
                     {
-                        await _helipadService.UploadQueueListAsync(_cashBoxCredentials, data);
+                        await _helipadService.UploadQueueListAsync(_cashBoxCredentials, data.QueueList);
+                        await _helipadService.UploadeQueuePLListAsync(_cashBoxCredentials, data.QueuePLList);
+                        await _helipadService.UploadSignatureCreationUnitPLListAsync(_cashBoxCredentials, data.SignaturCreationUnitPLList);
                     }
                 }
             }
