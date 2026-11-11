@@ -7,5 +7,9 @@
         
         public const string POSSYSTEM_API_SANDBOX = "https://possystem-api-sandbox.fiskaltrust.eu/";
         public const string POSSYSTEM_API_PRODUCTION = "https://possystem-api.fiskaltrust.eu/";
+
+        // PL signing service, used when no SCU is hosted in the app. The sandbox serves a fake register.
+        public const string SIGNING_PL_SANDBOX = "https://signing-sandbox.fiskaltrust.pl/sandbox/v2/";
+        public const string SIGNING_PL_PRODUCTION = "https://signing.fiskaltrust.pl/v2/";
     }
 }
