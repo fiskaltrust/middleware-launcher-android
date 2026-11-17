@@ -56,8 +56,13 @@ internal class PosSystemAPIProvider {
 
     private async Task Start(Guid cashboxId, string accessToken, Action<string>? progressReporter = null) {
 
+        StartupInfo.CashboxId = cashboxId;
+        StartupInfo.IsSandbox = null;
+        StartupInfo.LogCashboxId();
+
         progressReporter?.Invoke(ActivityStages.STAGE_GETTING_CONFIGURATION);
         var (configuration, isSandbox) = await _configurationProvider.GetCashboxConfigurationAsync(cashboxId, accessToken);
+        StartupInfo.IsSandbox = isSandbox;
 
         bool localInstoreAppCommunication = false;
         {
@@ -87,9 +92,9 @@ internal class PosSystemAPIProvider {
         var logLevel = Microsoft.Extensions.Logging.LogLevel.Information;
         LauncherLogging.InitializeWithTelemetry(telemetryConfiguration, logLevel);
 
-        Log.Logger.Information("Starting the fiskaltrust.Middleware...");
+        StartupInfo.LogSandbox();
 
-        Log.Logger.Debug($"CashBox ID: {cashboxId}, IsSandbox: {isSandbox}");
+        Log.Logger.Information("Starting the fiskaltrust.Middleware...");
 
 
         try
