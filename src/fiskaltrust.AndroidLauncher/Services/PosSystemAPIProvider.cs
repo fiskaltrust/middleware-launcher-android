@@ -11,6 +11,7 @@ using fiskaltrust.Api.PosSystem.Core.Interfaces;
 using fiskaltrust.Api.PosSystem.Core.Models;
 using fiskaltrust.Api.PosSystem.Local;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 
