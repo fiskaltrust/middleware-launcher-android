@@ -12,7 +12,9 @@ using fiskaltrust.Api.PosSystem.Core;
 using fiskaltrust.Api.PosSystem.Core.Interfaces;
 using fiskaltrust.Api.PosSystem.Core.Models;
 using fiskaltrust.Api.PosSystem.Local;
+using fiskaltrust.CloudCashbox.Services;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 
@@ -25,8 +27,13 @@ internal class PosSystemAPIProvider {
     private SemaphoreSlim _startupLock = new(1);
     private PosSystemApiCore? _posSystemApiCore = null;
     private IMiddlewareProvider? _middlewareProvider = null;
+    private IHost? _host = null;
     private IHelipadUploader? _helipadUploader = null;
     private bool _running = false;
+    private int _inFlight = 0;
+
+    private const string MessageBusSandboxUri = "gateway-sandbox.fiskaltrust.eu/mqtt";
+    private const string MessageBusProductionUri = "gateway.fiskaltrust.eu/mqtt";
 
     public PosSystemAPIProvider(IConfigurationProvider configurationProvider, ILauncherStateNotifier stateNotifier)
     {
@@ -34,7 +41,28 @@ internal class PosSystemAPIProvider {
         _stateNotifier = stateNotifier;
     }
 
-    public async Task<PosSystemApiCore> Get(Guid cashboxId, string accessToken, Action<string>? progressReporter = null)
+    /// <summary>
+    /// Handles the request with the running core, starting it if needed. The request counts as in flight for its
+    /// whole duration, so <see cref="Restart"/> cannot dispose the host (and with it the in-store app response
+    /// handlers) underneath it.
+    /// </summary>
+    public async Task<PosSystemApiResponse> HandleAsync(PosSystemApiRequest request, Action<string>? progressReporter = null)
+    {
+        // Incremented before Get so that a restart holding the startup lock sees requests that are still queued.
+        Interlocked.Increment(ref _inFlight);
+        try
+        {
+            var core = await Get(request.CashBoxId!.Value, request.AccessToken, progressReporter).ConfigureAwait(false);
+            progressReporter?.Invoke(ActivityStages.STAGE_PROCESSING_REQUEST);
+            return await core.HandleAsync(request).ConfigureAwait(false);
+        }
+        finally
+        {
+            Interlocked.Decrement(ref _inFlight);
+        }
+    }
+
+    private async Task<PosSystemApiCore> Get(Guid cashboxId, string accessToken, Action<string>? progressReporter = null)
     {
         try
         {
@@ -60,7 +88,7 @@ internal class PosSystemAPIProvider {
     private async Task Start(Guid cashboxId, string accessToken, Action<string>? progressReporter = null) {
 
         progressReporter?.Invoke(ActivityStages.STAGE_GETTING_CONFIGURATION);
-        var (configuration, isSandbox) = await _configurationProvider.GetCashboxConfigurationAsync(cashboxId, accessToken);      
+        var (configuration, configurationJson, isSandbox) = await _configurationProvider.GetCashboxConfigurationAsync(cashboxId, accessToken);
 
         progressReporter?.Invoke(ActivityStages.STAGE_STARTING_MIDDLEWARE);
         var middlewareTelemetryInitializer = new MiddlewareTelemetryInitializer("fiskaltrust.AndroidLauncher", VersionTracking.CurrentVersion, cashboxId);
@@ -86,23 +114,24 @@ internal class PosSystemAPIProvider {
                 ? new MiddlewareV2Provider(cashboxId, accessToken, configuration, countryCode, isSandbox, loggerFactory)
                 : new MiddlewareProvider(cashboxId, accessToken, configuration, isSandbox, logLevel);
             await _middlewareProvider.StartAsync();
-            var config = new POSSystemApiCoreConfiguration
-            {
-                CashBoxId = cashboxId,
-                AccessToken = accessToken,
-                Configuration = Newtonsoft.Json.JsonConvert.SerializeObject(configuration),
-                AppEnvironment = isSandbox ? AppEnvironments.Sandbox : AppEnvironments.Production,
-                LauncherEnvironment = LauncherEnvironments.Local
-            };
 
             progressReporter?.Invoke(ActivityStages.STAGE_STARTING_CORE);
-            var bootstrapper = new POSCoreBootstrapper();
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(config);
-            bootstrapper.Configuration = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
 
-            var services = new ServiceCollection();
-            await bootstrapper.ConfigureServices(services);
+            var builder = Host.CreateEmptyApplicationBuilder(new HostApplicationBuilderSettings { DisableDefaults = true });
+            var services = builder.Services;
+            services.AddLogging();
+            services.AddSingleton(loggerFactory);
 
+            services.AddOptions<PosSystemApiCoreOptions>().Configure(o =>
+            {
+                o.Sandbox = isSandbox;
+                o.LauncherEnvironment = LauncherEnvironments.Local;
+                o.MessageBusUri = isSandbox ? MessageBusSandboxUri : MessageBusProductionUri;
+            });
+
+            services.AddPosSystemApiCoreForLocal();
+            services.AddSingleton<IMiddlewareConfigurationService>(
+                new AndroidMiddlewareConfigurationService(cashboxId, accessToken, configurationJson));
 
             var middlewareClient = _middlewareProvider.MiddlewareClient;
             services.AddSingleton(middlewareClient);
@@ -125,6 +154,7 @@ internal class PosSystemAPIProvider {
                         },
                         configuration,
                         serviceProvider.GetRequiredService<PosSystemApiCore>()));
+                services.AddHostedService<HelipadUploaderHostedService>();
             }
             //add Sqlite Storage services and dependencies
             var databasePath = System.IO.Path.Combine(
@@ -136,14 +166,12 @@ internal class PosSystemAPIProvider {
             CopyPosMigrationsToDataDir(migrationsPath);
             services.AddSingleton<IStorageFactory, StorageFactory>( _ => new StorageFactory(loggerFactory, databasePath));
 
-            var provider = services.BuildServiceProvider();
-            _posSystemApiCore = provider.GetRequiredService<PosSystemApiCore>();
-            if (isV2Queue)
-            {
-                _helipadUploader = provider.GetRequiredService<IHelipadUploader>();
-                _helipadUploader.Start();
-            }
+            _host = builder.Build();
+            // Starts the hosted services registered by the core (e.g. the MQTT client).
+            await _host.StartAsync().ConfigureAwait(false);
 
+            _posSystemApiCore = _host.Services.GetRequiredService<PosSystemApiCore>();            
+           
             _stateNotifier.Notify(LauncherState.Connected);
             _running = true;
         }
@@ -193,7 +221,18 @@ internal class PosSystemAPIProvider {
 
         try
         {
-            _helipadUploader?.Stop();
+            if (_host is not null)
+            {
+                try
+                {
+                    await _host.StopAsync();
+                }
+                catch (Exception ex)
+                {
+                    Log.Logger.Warning(ex, "Failed to stop the PosSystemApi host.");
+                }
+            }
+
             if ((_running || forceStop) && _middlewareProvider is not null)
             {
                 await _middlewareProvider.StopAsync();
@@ -201,6 +240,8 @@ internal class PosSystemAPIProvider {
         }
         finally
         {
+            _host?.Dispose();
+            _host = null;
             _middlewareProvider = null;
             _posSystemApiCore = null;
             _helipadUploader = null;
@@ -208,13 +249,22 @@ internal class PosSystemAPIProvider {
         }
     }
 
-    public async Task Restart(Guid cashboxId, string accessToken, Action<string>? progressReporter = null)
+
+    /// <returns>False if the restart was refused because requests are still in progress.</returns>
+    public async Task<bool> Restart(Guid cashboxId, string accessToken, Action<string>? progressReporter = null)
     {
         try
         {
             await _startupLock.WaitAsync();
+            if (Volatile.Read(ref _inFlight) > 0)
+            {
+                Log.Logger.Warning("Refusing to restart the PosSystemApi while requests are in progress.");
+                return false;
+            }
+
             await Stop();
             await Start(cashboxId, accessToken, progressReporter);
+            return true;
         }
         finally
         {

@@ -30,7 +30,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
         private readonly CashBoxCredentials _cashBoxCredentials;
         private readonly HelipadHelperConfiguration _helipadHelperConfiguration;
         private readonly PosSystemApiCore _posSystemApiCore;
-      
+
         private AdaptiveRecordCounts? _recordCounts;
 
         public HelipadUploader(IHelipadService helipadService, ILogger<HelipadUploader> logger, CashBoxCredentials cashBoxCredentials, ftCashBoxConfiguration configuration, PosSystemApiCore posSystemApiCore)
@@ -211,20 +211,21 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
         {
             var pointer = await _helipadService.GetPointerAsync(_cashBoxCredentials, _cashBoxCredentials.QueueId, entity.Value).ConfigureAwait(false);
 
-            var request = new JournalRequest()
+            var journalRequest = new JournalRequest()
             {
                 ftJournalType = entity.Key,
                 From = pointer + 1,
                 To = -startRecordCount
             };
+            var byteStream = await SendJournalRequest(journalRequest);
 
             // A single record cannot be split, so the configured limit (a guess at Helipad's) is not applied to it and
             // Helipad decides; the hard ceiling only guards against a runaway export, e.g. a middleware that ignores
             // the requested record count.
-            using var stream = await ReadJournalAsync(request, startRecordCount <= 1 ? HelipadHelperConfiguration.MaxUploadBytesCeiling : _helipadHelperConfiguration.MaxUploadBytes).ConfigureAwait(false);
+            using var stream = byteStream.Content;
             // Read before the upload: the service hands the stream to an HttpRequestMessage that disposes it.
             var payloadBytes = stream.Length;
-            
+
             if (payloadBytes == 0)
             {
                 return 0;
@@ -234,47 +235,10 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
             return payloadBytes;
         }
 
-        /// <summary>
-        /// Reads the journal chunk by chunk and stops as soon as the payload would exceed <paramref name="maxBytes"/>,
-        /// so a cashbox with a large backlog can never pull an unbounded amount of data into memory. The caller is
-        /// expected to retry with a smaller record count. The chunks are joined into one exactly sized buffer at the
-        /// end; writing them into a growing <see cref="MemoryStream"/> would allocate about twice the payload again
-        /// in doubling steps on the large object heap.
-        /// </summary>
-        internal async Task<MemoryStream> ReadJournalAsync(ifPOS.v2.JournalRequest journalRequest, long maxBytes)
+
+
+        private async Task<ResponseBody.ByteStream> SendJournalRequest(JournalRequest journalRequest)
         {
-            var chunks = new List<byte[]>();
-            long length = 0;
-            ResponseBody.FileStream fileStream = await SendJournalRequest(journalRequest);
-
-            await foreach (var chunk in fileStream.Chunks)
-            {
-                if (chunk is null || chunk.Length == 0)
-                {
-                    continue;
-                }
-
-                if (length + chunk.Length > maxBytes)
-                {
-                    throw new JournalTooLargeException(journalRequest.ftJournalType, length + chunk.Length, maxBytes);
-                }
-
-                chunks.Add(chunk);
-                length += chunk.Length;
-            }
-
-
-            var buffer = new byte[length];
-            var offset = 0;
-            foreach (var chunk in chunks)
-            {
-                chunk.CopyTo(buffer, offset);
-                offset += chunk.Length;
-            }
-            return new MemoryStream(buffer, writable: false);
-        }
-            private async Task<ResponseBody.FileStream> SendJournalRequest(JournalRequest journalRequest)
-            {
             var headers = new Dictionary<string, string>
             {
                 { "x-cashbox-id", _cashBoxCredentials.CashBoxId.ToString() },
@@ -288,7 +252,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
                 Body = JsonConvert.SerializeObject(journalRequest),
             };
             var response = await _posSystemApiCore.HandleAsync(request);
-            if (response.Content is not ResponseBody.FileStream fileStream)
+            if (response.Content is not ResponseBody.ByteStream fileStream)
             {
                 throw new Exception($"Unexpected journal response body type: {response.Content?.GetType().Name ?? "null"}");
             }
@@ -298,16 +262,17 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
 
         public async Task UploadConfigurationEntities()
         {
-            var request = new JournalRequest()
+            var journalRequest = new ifPOS.v2.JournalRequest()
             {
                 ftJournalType = JournalType.Configuration,
                 From = 0,
                 To = 0,
             };
+            var byteStream = await SendJournalRequest(journalRequest);
 
             // The configuration journal is always exported as a whole (From = 0, To = 0), so there is no record count
             // that could be reduced on retry. It is not subject to the upload limit.
-            using (var stream = await ReadJournalAsync(request, long.MaxValue))
+            using (var stream = byteStream.Content)
             {
                 using (var sr = new StreamReader(stream))
                 using (var jr = new JsonTextReader(sr))

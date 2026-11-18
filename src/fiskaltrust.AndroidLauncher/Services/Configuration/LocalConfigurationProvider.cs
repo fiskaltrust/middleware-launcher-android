@@ -23,7 +23,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Configuration
             return (await SecureStorage.GetAsync(SETTING_USED)) == null;
         }
 
-        public async Task<(ftCashBoxConfiguration configuration, bool isSandbox)> GetCashboxConfigurationAsync(Guid cashboxId, string accessToken)
+        public async Task<(ftCashBoxConfiguration configuration, string configurationJson, bool isSandbox)> GetCashboxConfigurationAsync(Guid cashboxId, string accessToken)
         {
             var configuration = await SecureStorage.GetAsync($"{SETTING_CASHBOX_KEY_PREFIX}{cashboxId}");
             var isSandboxString = await SecureStorage.GetAsync($"{SETTING_SANDBOX_KEY_PREFIX}{cashboxId}");
@@ -35,7 +35,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Configuration
             {
                 throw new ConfigurationNotFoundException("Access token does not match the stored configuration.");
             }
-            return (JsonConvert.DeserializeObject<ftCashBoxConfiguration>(configuration), isSandbox);
+            return (JsonConvert.DeserializeObject<ftCashBoxConfiguration>(configuration), configuration, isSandbox);
         }
 
         public async Task PersistAsync(Guid cashboxId, string accessToken, ftCashBoxConfiguration configuration, bool isSandbox)
