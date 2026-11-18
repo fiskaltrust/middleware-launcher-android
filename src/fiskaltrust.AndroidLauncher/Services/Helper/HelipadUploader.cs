@@ -20,6 +20,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
         private readonly IHelipadService _helipadService;
         private readonly ILogger<HelipadUploader> _logger;
         private System.Timers.Timer? _uploadTimer;
+        private TaskCompletionSource? _currentRun = null;
 
         private readonly Dictionary<JournalType, string> _readEntities = new Dictionary<JournalType, string> {
             { JournalType.ActionJournal, "actionjournal" },
@@ -54,10 +55,31 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
             _uploadTimer.Start();
         }
 
-        public void Stop() => _uploadTimer?.Stop();
+        /// <summary>
+        /// Stops scheduling new runs and, if a run is still in progress, waits until it has finished, so the caller
+        /// does not tear down the middleware the run is reading from. <paramref name="cancellationToken"/> bounds the
+        /// wait (e.g. the host's shutdown timeout); when it fires an <see cref="OperationCanceledException"/> is thrown.
+        /// </summary>
+        public async Task Stop(CancellationToken cancellationToken = default)
+        {
+            _uploadTimer?.Stop();
+            _uploadTimer = null;
+
+            if (_currentRun is not null && !_currentRun.Task.IsCompleted)
+            {
+                _logger.LogInformation("Waiting for the Helipad upload in progress to finish. cashboxid: {cashbox.id}, queueid: {queue.id}", _cashBoxCredentials.CashBoxId, _cashBoxCredentials.QueueId);
+                await _currentRun.Task.WaitAsync(cancellationToken).ConfigureAwait(false);
+            }
+        }
 
         private async void UploadTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            // Stop() has already run: Timer.Stop() does not cancel a tick that was already queued on the thread pool, so
+            // such a late tick must not start a new run that Stop() no longer waits for.
+            if (_uploadTimer == null) return;
+
+            _currentRun = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+
             try
             {
                 await ProcessUpload().ConfigureAwait(false);
@@ -66,7 +88,11 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
             {
                 _logger.LogError(x, "Failed to process upload for cashboxid: {cashbox.id}, queueid: {queue.id}", _cashBoxCredentials.CashBoxId, _cashBoxCredentials.QueueId);
             }
-            _uploadTimer.Start();
+            finally
+            {
+                _currentRun.TrySetResult();
+            }
+            _uploadTimer?.Start();
         }
         public async Task ProcessUpload()
         {
@@ -211,18 +237,17 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
         {
             var pointer = await _helipadService.GetPointerAsync(_cashBoxCredentials, _cashBoxCredentials.QueueId, entity.Value).ConfigureAwait(false);
 
-            var journalRequest = new JournalRequest()
+            var request = new JournalRequest()
             {
                 ftJournalType = entity.Key,
                 From = pointer + 1,
                 To = -startRecordCount
             };
-            var byteStream = await SendJournalRequest(journalRequest);
 
             // A single record cannot be split, so the configured limit (a guess at Helipad's) is not applied to it and
             // Helipad decides; the hard ceiling only guards against a runaway export, e.g. a middleware that ignores
             // the requested record count.
-            using var stream = byteStream.Content;
+            using var stream = await ReadJournalAsync(request, startRecordCount <= 1 ? HelipadHelperConfiguration.MaxUploadBytesCeiling : _helipadHelperConfiguration.MaxUploadBytes).ConfigureAwait(false);
             // Read before the upload: the service hands the stream to an HttpRequestMessage that disposes it.
             var payloadBytes = stream.Length;
 
@@ -233,6 +258,29 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
 
             await _helipadService.UploadDataAsync(stream, _cashBoxCredentials, _cashBoxCredentials.QueueId, entity.Value).ConfigureAwait(false);
             return payloadBytes;
+        }
+        internal async Task<MemoryStream> ReadJournalAsync(ifPOS.v2.JournalRequest journalRequest, long maxBytes)
+        {
+            var byteStream = await SendJournalRequest(journalRequest);
+
+            using var stream = new MemoryStream();
+            using (var source = byteStream.Content)
+            {
+                var chunk = new byte[81920];
+                long length = 0;
+                int read;
+                while ((read = await source.ReadAsync(chunk).ConfigureAwait(false)) > 0)
+                {
+                    if (length + read > maxBytes)
+                    {
+                        throw new JournalTooLargeException(journalRequest.ftJournalType, length + read, maxBytes);
+                    }
+                    stream.Write(chunk, 0, read);
+                    length += read;
+                }
+            }
+            stream.Position = 0;
+            return stream;
         }
 
 
@@ -268,11 +316,10 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
                 From = 0,
                 To = 0,
             };
-            var byteStream = await SendJournalRequest(journalRequest);
 
             // The configuration journal is always exported as a whole (From = 0, To = 0), so there is no record count
             // that could be reduced on retry. It is not subject to the upload limit.
-            using (var stream = byteStream.Content)
+            using (var stream = await ReadJournalAsync(journalRequest, long.MaxValue).ConfigureAwait(false))
             {
                 using (var sr = new StreamReader(stream))
                 using (var jr = new JsonTextReader(sr))
@@ -280,9 +327,9 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
                     var data = new JsonSerializer() { FloatParseHandling = FloatParseHandling.Decimal }.Deserialize<WorkerConfiguration>(jr);
                     if (data != null)
                     {
-                        await _helipadService.UploadQueueListAsync(_cashBoxCredentials, data.QueueList);
-                        await _helipadService.UploadeQueuePLListAsync(_cashBoxCredentials, data.QueuePLList);
-                        await _helipadService.UploadSignatureCreationUnitPLListAsync(_cashBoxCredentials, data.SignaturCreationUnitPLList);
+                        await _helipadService.UploadQueueListAsync(_cashBoxCredentials, data.QueueList).ConfigureAwait(false);
+                        await _helipadService.UploadeQueuePLListAsync(_cashBoxCredentials, data.QueuePLList).ConfigureAwait(false);
+                        await _helipadService.UploadSignatureCreationUnitPLListAsync(_cashBoxCredentials, data.SignaturCreationUnitPLList).ConfigureAwait(false);
                     }
                 }
             }
