@@ -12,7 +12,6 @@ using fiskaltrust.Api.PosSystem.Core;
 using fiskaltrust.Api.PosSystem.Core.Interfaces;
 using fiskaltrust.Api.PosSystem.Core.Models;
 using fiskaltrust.Api.PosSystem.Local;
-using fiskaltrust.CloudCashbox.Services;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -28,7 +27,6 @@ internal class PosSystemAPIProvider {
     private PosSystemApiCore? _posSystemApiCore = null;
     private IMiddlewareProvider? _middlewareProvider = null;
     private IHost? _host = null;
-    private IHelipadUploader? _helipadUploader = null;
     private bool _running = false;
     private int _inFlight = 0;
 
@@ -142,7 +140,7 @@ internal class PosSystemAPIProvider {
                     new Helper.HelipadService(
                         serviceProvider.GetRequiredService<ILogger<Helper.HelipadService>>(),
                         isSandbox));
-                services.AddSingleton<IHelipadUploader>(serviceProvider =>
+                services.AddHostedService(serviceProvider =>
                     new Helper.HelipadUploader(
                         serviceProvider.GetRequiredService<Helper.IHelipadService>(),
                         serviceProvider.GetRequiredService<ILogger<Helper.HelipadUploader>>(),
@@ -154,7 +152,6 @@ internal class PosSystemAPIProvider {
                         },
                         configuration,
                         serviceProvider.GetRequiredService<PosSystemApiCore>()));
-                services.AddHostedService<HelipadUploaderHostedService>();
             }
             //add Sqlite Storage services and dependencies
             var databasePath = System.IO.Path.Combine(
@@ -244,7 +241,6 @@ internal class PosSystemAPIProvider {
             _host = null;
             _middlewareProvider = null;
             _posSystemApiCore = null;
-            _helipadUploader = null;
             _running = false;
         }
     }

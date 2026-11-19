@@ -6,21 +6,27 @@ using fiskaltrust.Api.PosSystem.Core.Models;
 using fiskaltrust.ifPOS.v2;
 using fiskaltrust.ifPOS.v2.Cases;
 using fiskaltrust.storage.serialization.V0;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net;
 using System.Runtime.CompilerServices;
-using System.Timers;
 
 [assembly: InternalsVisibleTo("fiskaltrust.CloudCashbox.UnitTest")]
 namespace fiskaltrust.AndroidLauncher.Services.Helper
 {
-    public class HelipadUploader : IHelipadUploader
+    /// <summary>
+    /// Uploads the journals to Helipad every 30 seconds, counted from the end of the previous run, so runs never
+    /// overlap. When the host stops, <see cref="BackgroundService.StopAsync"/> cancels <c>stoppingToken</c> and waits
+    /// (bounded by the host's shutdown timeout) until <see cref="ExecuteAsync"/> has returned, i.e. until the run in
+    /// progress and the final upload have finished, so the host is not torn down underneath them.
+    /// </summary>
+    public class HelipadUploader : BackgroundService
     {
+        private static readonly TimeSpan UploadInterval = TimeSpan.FromSeconds(30);
+
         private readonly IHelipadService _helipadService;
         private readonly ILogger<HelipadUploader> _logger;
-        private System.Timers.Timer? _uploadTimer;
-        private TaskCompletionSource? _currentRun = null;
 
         private readonly Dictionary<JournalType, string> _readEntities = new Dictionary<JournalType, string> {
             { JournalType.ActionJournal, "actionjournal" },
@@ -44,67 +50,39 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
             _posSystemApiCore = posSystemApiCore;
         }
 
-        public void Start()
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _uploadTimer = new System.Timers.Timer
+            try
             {
-                AutoReset = false,
-                Interval = 30 * 1000
-            };
-            _uploadTimer.Elapsed += UploadTimer_Elapsed;
-            _uploadTimer.Start();
-        }
-
-        /// <summary>
-        /// Stops scheduling new runs and, if a run is still in progress, waits until it has finished, so the caller
-        /// does not tear down the middleware the run is reading from. <paramref name="cancellationToken"/> bounds the
-        /// wait (e.g. the host's shutdown timeout); when it fires an <see cref="OperationCanceledException"/> is thrown.
-        /// </summary>
-        public async Task Stop(CancellationToken cancellationToken = default)
-        {
-            _uploadTimer?.Stop();
-            _uploadTimer = null;
-            _logger.LogInformation("Waiting for the Helipad upload to finish. cashboxid: {cashbox.id}, queueid: {queue.id}", _cashBoxCredentials.CashBoxId, _cashBoxCredentials.QueueId);
-            if (_currentRun is not null && !_currentRun.Task.IsCompleted)
-            {
-                await _currentRun.Task.WaitAsync(cancellationToken).ConfigureAwait(false);
-            }
-            else 
-            {
-                try
+                while (true)
                 {
-                    await ProcessUpload().ConfigureAwait(false);
-                }
-                catch (Exception x)
-                {
-                    _logger.LogError(x, "Failed to process upload for cashboxid: {cashbox.id}, queueid: {queue.id}", _cashBoxCredentials.CashBoxId, _cashBoxCredentials.QueueId);
+                    await Task.Delay(UploadInterval, stoppingToken).ConfigureAwait(false);
+                    await RunUploadAsync().ConfigureAwait(false);
                 }
             }
+            catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
+            {
+                // The host is stopping; the delay was cancelled, never a run in progress.
+            }
 
+            // Upload what was signed since the last run before the host goes down.
+            _logger.LogInformation("Helipad uploader is stopping, running a final upload. cashboxid: {cashbox.id}, queueid: {queue.id}", _cashBoxCredentials.CashBoxId, _cashBoxCredentials.QueueId);
+            await RunUploadAsync().ConfigureAwait(false);
         }
 
-        private async void UploadTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private async Task RunUploadAsync()
         {
-            // Stop() has already run: Timer.Stop() does not cancel a tick that was already queued on the thread pool, so
-            // such a late tick must not start a new run that Stop() no longer waits for.
-            if (_uploadTimer == null) return;
-
-            _currentRun = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-
             try
             {
                 await ProcessUpload().ConfigureAwait(false);
             }
             catch (Exception x)
             {
+                // Must not escape: an unhandled exception in ExecuteAsync stops the whole host.
                 _logger.LogError(x, "Failed to process upload for cashboxid: {cashbox.id}, queueid: {queue.id}", _cashBoxCredentials.CashBoxId, _cashBoxCredentials.QueueId);
             }
-            finally
-            {
-                _currentRun.TrySetResult();
-            }
-            _uploadTimer?.Start();
         }
+
         public async Task ProcessUpload()
         {
 
