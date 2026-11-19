@@ -274,7 +274,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
         {
             var byteStream = await SendJournalRequest(journalRequest);
 
-            using var stream = new MemoryStream();
+            var stream = new MemoryStream();
             using (var source = byteStream.Content)
             {
                 var chunk = new byte[81920];
