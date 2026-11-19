@@ -39,7 +39,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
             _helipadService = helipadService;
             _logger = logger;
             _cashBoxCredentials = cashBoxCredentials;
-            var helipadhelperConfigurations = configuration?.helpers.FirstOrDefault(x => x.Package == HelperPackages.Helipad)?.Configuration;
+            var helipadhelperConfigurations = configuration?.helpers?.FirstOrDefault(x => x.Package == HelperPackages.Helipad)?.Configuration;
             _helipadHelperConfiguration = HelipadHelperConfiguration.FromDictionary(helipadhelperConfigurations);
             _posSystemApiCore = posSystemApiCore;
         }
