@@ -339,7 +339,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
                     if (data != null)
                     {
                         await _helipadService.UploadQueueListAsync(_cashBoxCredentials, data.QueueList).ConfigureAwait(false);
-                        await _helipadService.UploadeQueuePLListAsync(_cashBoxCredentials, data.QueuePLList).ConfigureAwait(false);
+                        await _helipadService.UploadQueuePLListAsync(_cashBoxCredentials, data.QueuePLList).ConfigureAwait(false);
                         await _helipadService.UploadSignatureCreationUnitPLListAsync(_cashBoxCredentials, data.SignaturCreationUnitPLList).ConfigureAwait(false);
                     }
                 }
