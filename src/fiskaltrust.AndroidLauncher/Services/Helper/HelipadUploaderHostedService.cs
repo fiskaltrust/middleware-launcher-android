@@ -26,12 +26,17 @@ namespace fiskaltrust.CloudCashbox.Services
             return Task.CompletedTask;
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
+        public async Task StopAsync(CancellationToken cancellationToken)
         {
-            _helipadUploader.Stop();
             _logger.LogTrace("Helipad Uploader Hosted Service is stopping.");
-
-            return Task.CompletedTask;
+            try
+            {
+                await _helipadUploader.Stop(cancellationToken).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                _logger.LogWarning("Helipad upload still running after the shutdown timeout; stopping without waiting for it.");
+            }
         }
     }
 }

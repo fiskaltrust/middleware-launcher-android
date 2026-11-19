@@ -64,12 +64,23 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
         {
             _uploadTimer?.Stop();
             _uploadTimer = null;
-
+            _logger.LogInformation("Waiting for the Helipad upload to finish. cashboxid: {cashbox.id}, queueid: {queue.id}", _cashBoxCredentials.CashBoxId, _cashBoxCredentials.QueueId);
             if (_currentRun is not null && !_currentRun.Task.IsCompleted)
             {
-                _logger.LogInformation("Waiting for the Helipad upload in progress to finish. cashboxid: {cashbox.id}, queueid: {queue.id}", _cashBoxCredentials.CashBoxId, _cashBoxCredentials.QueueId);
                 await _currentRun.Task.WaitAsync(cancellationToken).ConfigureAwait(false);
             }
+            else 
+            {
+                try
+                {
+                    await ProcessUpload().ConfigureAwait(false);
+                }
+                catch (Exception x)
+                {
+                    _logger.LogError(x, "Failed to process upload for cashboxid: {cashbox.id}, queueid: {queue.id}", _cashBoxCredentials.CashBoxId, _cashBoxCredentials.QueueId);
+                }
+            }
+
         }
 
         private async void UploadTimer_Elapsed(object sender, ElapsedEventArgs e)
