@@ -27,7 +27,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
             _logger = logger;
             _uploadClient = new HttpClient { BaseAddress = _baseAddress, Timeout = TimeSpan.FromMinutes(5) };
         }
-        public async Task UploadeQueuePLListAsync(CashBoxCredentials cashBoxCredentials, List<dynamic> data)
+        public async Task UploadQueuePLListAsync(CashBoxCredentials cashBoxCredentials, List<dynamic> data)
         {
             var url = $"api/service/queuepl";
             foreach (var item in data)
