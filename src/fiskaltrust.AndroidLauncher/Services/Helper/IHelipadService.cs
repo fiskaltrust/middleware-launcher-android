@@ -5,7 +5,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
 {
     public interface IHelipadService
     {
-        Task UploadeQueuePLListAsync(CashBoxCredentials cashBoxCredentials, List<dynamic> data);
+        Task UploadQueuePLListAsync(CashBoxCredentials cashBoxCredentials, List<dynamic> data);
         Task UploadQueueListAsync(CashBoxCredentials cashBoxCredentials, List<dynamic> data);
         Task UploadSignatureCreationUnitPLListAsync(CashBoxCredentials cashBoxCredentials, List<dynamic> data);
 
