@@ -162,7 +162,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
 
             if (!(await _posSystemApiCore.HandleAsync(request).ConfigureAwait(false)).IsSuccess)
             {
-                throw new Exception("Sending echo to PosSystem api returned null.");
+                throw new Exception("Sending echo to PosSystem api is not successful.");
             }
         }
 
@@ -202,7 +202,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
         {
             try
             {
-                return await UploadEntity(entity, startRecordCount);
+                return await UploadEntity(entity, startRecordCount).ConfigureAwait(false);
             }
             catch (Exception x) when (x is JournalTooLargeException or HelipadException { StatusCode: HttpStatusCode.RequestEntityTooLarge })
             {
@@ -230,16 +230,12 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
                 // A single record was refused (by Helipad, or by the runaway ceiling). Retrying cannot make it
                 // smaller and the pointer stays in front of it, so the entity is blocked until the record or the
                 // limit changes. Pin the count at 1 so the other entities' successes do not grow it and trigger a
-                // shrink cycle every run, count it, and do not requeue: the next sign request re-queues the cashbox
-                // anyway.
+                // shrink cycle every run.
                 _logger.LogError("A single record of entity ({EntityKey}, {EntityValue}) is too large to upload and blocks the entity. cashboxid: {cashbox.id}, queueid: {queue.id}", entity.Key, entity.Value, _cashBoxCredentials.CashBoxId, _cashBoxCredentials.QueueId);
                 setRecordCount(1);
                 return;
             }
             setRecordCount(ShrinkRecordCountForOversizedPayload(startRecordCount));
-
-            // Nothing was uploaded, so the pointer did not move and nobody else will schedule this cashbox again.
-            // Requeue it explicitly so the next run retries with the smaller batch.
         }
 
         internal static int ShrinkRecordCountForOversizedPayload(int recordCount) => Math.Max(1, recordCount / 4);
@@ -272,9 +268,9 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
         }
         internal async Task<MemoryStream> ReadJournalAsync(ifPOS.v2.JournalRequest journalRequest, long maxBytes)
         {
-            var byteStream = await SendJournalRequest(journalRequest);
+            var byteStream = await SendJournalRequest(journalRequest).ConfigureAwait(false);
 
-            using var stream = new MemoryStream();
+            var stream = new MemoryStream();
             using (var source = byteStream.Content)
             {
                 var chunk = new byte[81920];
@@ -310,7 +306,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
                 Headers = headers,
                 Body = JsonConvert.SerializeObject(journalRequest),
             };
-            var response = await _posSystemApiCore.HandleAsync(request);
+            var response = await _posSystemApiCore.HandleAsync(request).ConfigureAwait(false);
             if (response.Content is not ResponseBody.ByteStream fileStream)
             {
                 throw new Exception($"Unexpected journal response body type: {response.Content?.GetType().Name ?? "null"}");
@@ -329,20 +325,21 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
             };
 
             // The configuration journal is always exported as a whole (From = 0, To = 0), so there is no record count
-            // that could be reduced on retry. It is not subject to the upload limit.
-            using (var stream = await ReadJournalAsync(journalRequest, long.MaxValue).ConfigureAwait(false))
+            // that could be reduced on retry. It is not subject to the upload limit, and is deserialized straight from
+            // the journal stream instead of being copied into memory first.
+            var byteStream = await SendJournalRequest(journalRequest).ConfigureAwait(false);
+            WorkerConfiguration? data;
+            using (var sr = new StreamReader(byteStream.Content))
+            using (var jr = new JsonTextReader(sr))
             {
-                using (var sr = new StreamReader(stream))
-                using (var jr = new JsonTextReader(sr))
-                {
-                    var data = new JsonSerializer() { FloatParseHandling = FloatParseHandling.Decimal }.Deserialize<WorkerConfiguration>(jr);
-                    if (data != null)
-                    {
-                        await _helipadService.UploadQueueListAsync(_cashBoxCredentials, data.QueueList).ConfigureAwait(false);
-                        await _helipadService.UploadQueuePLListAsync(_cashBoxCredentials, data.QueuePLList).ConfigureAwait(false);
-                        await _helipadService.UploadSignatureCreationUnitPLListAsync(_cashBoxCredentials, data.SignaturCreationUnitPLList).ConfigureAwait(false);
-                    }
-                }
+                data = new JsonSerializer() { FloatParseHandling = FloatParseHandling.Decimal }.Deserialize<WorkerConfiguration>(jr);
+            }
+
+            if (data != null)
+            {
+                await _helipadService.UploadQueueListAsync(_cashBoxCredentials, data.QueueList).ConfigureAwait(false);
+                await _helipadService.UploadQueuePLListAsync(_cashBoxCredentials, data.QueuePLList).ConfigureAwait(false);
+                await _helipadService.UploadSignatureCreationUnitPLListAsync(_cashBoxCredentials, data.SignaturCreationUnitPLList).ConfigureAwait(false);
             }
         }
     }
