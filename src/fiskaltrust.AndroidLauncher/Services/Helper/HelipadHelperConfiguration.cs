@@ -45,7 +45,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Helper
 
             if (configuration.ContainsKey("maxuploadbytes"))
             {
-                if (long.TryParse(configuration["maxuploadbytes"].ToString(), out var maxUploadBytes) && maxUploadBytes > 0)
+                if (long.TryParse(configuration["maxuploadbytes"]?.ToString(), out var maxUploadBytes) && maxUploadBytes > 0)
                 {
                     helipadHelperConfiguration.MaxUploadBytes = Math.Min(maxUploadBytes, MaxUploadBytesCeiling);
                 }
