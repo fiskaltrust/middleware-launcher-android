@@ -28,7 +28,6 @@ internal class PosSystemAPIProvider {
     private IMiddlewareProvider? _middlewareProvider = null;
     private IHost? _host = null;
     private bool _running = false;
-    private int _inFlight = 0;
 
     private const string MessageBusSandboxUri = "gateway-sandbox.fiskaltrust.eu/mqtt";
     private const string MessageBusProductionUri = "gateway.fiskaltrust.eu/mqtt";
@@ -39,28 +38,7 @@ internal class PosSystemAPIProvider {
         _stateNotifier = stateNotifier;
     }
 
-    /// <summary>
-    /// Handles the request with the running core, starting it if needed. The request counts as in flight for its
-    /// whole duration, so <see cref="Restart"/> cannot dispose the host (and with it the in-store app response
-    /// handlers) underneath it.
-    /// </summary>
-    public async Task<PosSystemApiResponse> HandleAsync(PosSystemApiRequest request, Action<string>? progressReporter = null)
-    {
-        // Incremented before Get so that a restart holding the startup lock sees requests that are still queued.
-        Interlocked.Increment(ref _inFlight);
-        try
-        {
-            var core = await Get(request.CashBoxId!.Value, request.AccessToken, progressReporter).ConfigureAwait(false);
-            progressReporter?.Invoke(ActivityStages.STAGE_PROCESSING_REQUEST);
-            return await core.HandleAsync(request).ConfigureAwait(false);
-        }
-        finally
-        {
-            Interlocked.Decrement(ref _inFlight);
-        }
-    }
-
-    private async Task<PosSystemApiCore> Get(Guid cashboxId, string accessToken, Action<string>? progressReporter = null)
+    public async Task<PosSystemApiCore> Get(Guid cashboxId, string accessToken, Action<string>? progressReporter = null)
     {
         try
         {
@@ -245,22 +223,13 @@ internal class PosSystemAPIProvider {
         }
     }
 
-
-    /// <returns>False if the restart was refused because requests are still in progress.</returns>
-    public async Task<bool> Restart(Guid cashboxId, string accessToken, Action<string>? progressReporter = null)
+    public async Task Restart(Guid cashboxId, string accessToken, Action<string>? progressReporter = null)
     {
         try
         {
             await _startupLock.WaitAsync();
-            if (Volatile.Read(ref _inFlight) > 0)
-            {
-                Log.Logger.Warning("Refusing to restart the PosSystemApi while requests are in progress.");
-                return false;
-            }
-
             await Stop();
             await Start(cashboxId, accessToken, progressReporter);
-            return true;
         }
         finally
         {

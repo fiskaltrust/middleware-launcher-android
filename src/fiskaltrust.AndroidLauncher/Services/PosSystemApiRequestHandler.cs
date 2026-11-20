@@ -71,17 +71,15 @@ namespace fiskaltrust.AndroidLauncher.Services
                 if (echoRequest?.Message == null)
                 {
                     Log.Info(TAG, "Detected /v2/echo request with null Message - triggering service restart");
-                    var restarted = await _posSystemAPIProvider.Restart(request.CashBoxId!.Value, request.AccessToken, progressReporter);
-                    if (!restarted)
-                    {
-                        return PosSystemApiResponse.Error(409, "Cannot restart while other requests are in progress. Retry once they have completed.");
-                    }
+                    await _posSystemAPIProvider.Restart(request.CashBoxId!.Value, request.AccessToken, progressReporter);
                 }
             }
 
             try
             {
-                return await _posSystemAPIProvider.HandleAsync(request, progressReporter).ConfigureAwait(false);
+                var core = await _posSystemAPIProvider.Get(request.CashBoxId!.Value, request.AccessToken, progressReporter).ConfigureAwait(false);
+                progressReporter?.Invoke(ActivityStages.STAGE_PROCESSING_REQUEST);
+                return await core.HandleAsync(request).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
