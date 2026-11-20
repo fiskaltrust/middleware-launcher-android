@@ -3,7 +3,11 @@ using fiskaltrust.Api.PosSystem.Core.Interfaces;
 using fiskaltrust.Api.PosSystem.Core.Models;
 using fiskaltrust.Api.PosSystem.Signing;
 using fiskaltrust.ifPOS.v1;
+using fiskaltrust.ifPOS.v2;
 using System.Buffers;
+using System.IO.Pipelines;
+using System.Net.Mime;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 
@@ -23,7 +27,7 @@ namespace fiskaltrust.AndroidLauncher.Services
         public static MiddlewareClientAndroid FromV1(IPOS pos) => new(pos, null);
         public static MiddlewareClientAndroid FromV2(POSV2 posV2) => new(null, posV2);
 
-        public async Task<(EchoResponse?, string? error)> EchoAsync(MiddlewareRequestOptions requestOptions, EchoRequest request)
+        public async Task<(ifPOS.v1.EchoResponse?, string? error)> EchoAsync(MiddlewareRequestOptions requestOptions, ifPOS.v1.EchoRequest request)
         {
             try
             {
@@ -47,35 +51,6 @@ namespace fiskaltrust.AndroidLauncher.Services
                 return (null, ex.Message);
             }
         }
-
-        public async Task<(byte[]?, string? contentType, string? error)> JournalAsync(MiddlewareRequestOptions requestOptions, JournalRequest request)
-        {
-            List<JournalResponse> response;
-            try
-            {
-                response = await _pos.JournalAsync(request).ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            var Bytes = response.SelectMany(x => x.Chunk).ToArray();
-            var content = Encoding.UTF8.GetString(Bytes);
-            if (content.StartsWith("<?xml"))
-                return (Bytes, contentType: "application/xml", null);
-            return (Bytes, contentType: "application/json", null);
-        }
-        public async Task<(byte[]?, string? contentType, string? error)> JournalV2Async(MiddlewareRequestOptions requestOptions, ifPOS.v2.JournalRequest request)
-        {
-            var response = await JournalResponsesAsync(request).ToListAsync();
-
-            var Bytes = response.SelectMany(x => x.Chunk).ToArray();
-            var content = Encoding.UTF8.GetString(Bytes);
-            if (content.StartsWith("<?xml"))
-                return (Bytes, contentType: "application/xml", null);
-            return (Bytes, contentType: "application/json", null);
-        }
-
         public async Task<(ifPOS.v1.ReceiptResponse?, string? error)> SignAsync(MiddlewareRequestOptions requestOptions, ifPOS.v1.ReceiptRequest request)
         {
             try
@@ -103,39 +78,58 @@ namespace fiskaltrust.AndroidLauncher.Services
             }
         }
 
-        private async IAsyncEnumerable<JournalResponse> JournalResponsesAsync(ifPOS.v2.JournalRequest request)
+        public Task<(Stream? data, string? contentType, string? error)> JournalAsync(MiddlewareRequestOptions requestOptions, ifPOS.v1.JournalRequest request)
         {
-            var (_, pipeReader) = await _posV2.Journal(JsonSerializer.Serialize(request));
+            // Returns right away: a background task pumps the middleware's chunks into the pipe while the caller reads
+            // the other end. The pipe pauses the writer once ~64 KB are unread, so only a few chunks are ever in memory.
+            var pipe = new Pipe();
+            _ = Task.Run(() => PumpJournalAsync(request, pipe.Writer));
+            return Task.FromResult<(Stream?, string?, string?)>((pipe.Reader.AsStream(), "application/octet-stream", null));
+        }
 
+        private async Task PumpJournalAsync(ifPOS.v1.JournalRequest request, PipeWriter writer)
+        {
             try
             {
-                while (true)
+                await foreach (var response in _pos.JournalAsync(request).ConfigureAwait(false))
                 {
-                    var result = await pipeReader.ReadAsync();
-                    var buffer = result.Buffer;
-
-                    if (!buffer.IsEmpty)
+                    if (response?.Chunk is not { Count: > 0 } chunk)
                     {
-                        yield return new JournalResponse
-                        {
-                            Chunk = buffer.ToArray().ToList()
-                        };
+                        continue;
                     }
 
-                    // Mark the whole buffer as consumed. Advancing only the "examined" position keeps the bytes in the
-                    // pipe, so every following read would hand out the same data again and the journal would be
-                    // uploaded as a sequence of ever-growing duplicates.
-                    pipeReader.AdvanceTo(buffer.End);
+                    // Copies straight from the list's backing array into the pipe's buffer, no ToArray() in between.
+                    writer.Write(CollectionsMarshal.AsSpan(chunk));
 
-                    if (result.IsCompleted)
+                    // Waits here while the reader is behind (back-pressure). IsCompleted means the reader disposed the
+                    // stream, so stop pulling from the middleware.
+                    var flush = await writer.FlushAsync().ConfigureAwait(false);
+                    if (flush.IsCompleted)
                     {
                         break;
                     }
                 }
+                await writer.CompleteAsync().ConfigureAwait(false);
             }
-            finally
+            catch (Exception ex)
             {
-                await pipeReader.CompleteAsync();
+                // The reader gets this exception from its next Read on the stream.
+                await writer.CompleteAsync(ex).ConfigureAwait(false);
+            }
+        }
+
+        public async Task<(Stream? data, string? contentType, string? error)> JournalV2Async(MiddlewareRequestOptions requestOptions, ifPOS.v2.JournalRequest request)
+        {
+            try
+            {
+                var (contentType, pipeReader) = await _posV2.Journal(JsonSerializer.Serialize(request)).ConfigureAwait(false);
+                // AsStream() advances the reader past every byte it returns and completes the reader when the stream
+                // is disposed, so no manual AdvanceTo/CompleteAsync is needed.
+                return (pipeReader.AsStream(), contentType.MediaType, null);
+            }
+            catch (Exception ex)
+            {
+                return (null, null, ex.Message);
             }
         }
     }

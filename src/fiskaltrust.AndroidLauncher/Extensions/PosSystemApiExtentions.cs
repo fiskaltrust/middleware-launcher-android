@@ -97,8 +97,19 @@ namespace fiskaltrust.AndroidLauncher.Extensions
                     contentBase64Url = Base64UrlHelper.Encode(text.Value);
                     break;
 
-                case ResponseBody.File file:
-                    contentBase64Url = Base64UrlHelper.EncodeBytes(file.Content);
+                case ResponseBody.Bytes bytes:
+                    contentBase64Url = Base64UrlHelper.EncodeBytes(bytes.Content);
+                    break;
+
+                case ResponseBody.ByteStream byteStream:
+                    // An intent extra is one string, so the stream (e.g. a journal) has to be read to the end here.
+                    // The stream is single-use: it is consumed and disposed, so a response can only be encoded once.
+                    using (var stream = byteStream.Content)
+                    using (var buffer = new MemoryStream())
+                    {
+                        stream.CopyTo(buffer);
+                        contentBase64Url = Base64UrlHelper.EncodeBytes(buffer.ToArray());
+                    }
                     break;
 
                 default:

@@ -2,8 +2,10 @@ using fiskaltrust.AndroidLauncher.Constants;
 using fiskaltrust.AndroidLauncher.Enums;
 using fiskaltrust.AndroidLauncher.Exceptions;
 using fiskaltrust.AndroidLauncher.Helpers.Logging;
+using fiskaltrust.AndroidLauncher.Models;
 using fiskaltrust.AndroidLauncher.Notifications;
 using fiskaltrust.AndroidLauncher.Services.Configuration;
+using fiskaltrust.AndroidLauncher.Services.Helper;
 using fiskaltrust.AndroidLauncher.Services.InStoreApp;
 using fiskaltrust.AndroidLauncher.Services.POSSystemApiCore;
 using fiskaltrust.Api.PosSystem.Core;
@@ -11,6 +13,7 @@ using fiskaltrust.Api.PosSystem.Core.Interfaces;
 using fiskaltrust.Api.PosSystem.Core.Models;
 using fiskaltrust.Api.PosSystem.Local;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 
@@ -23,7 +26,11 @@ internal class PosSystemAPIProvider {
     private SemaphoreSlim _startupLock = new(1);
     private PosSystemApiCore? _posSystemApiCore = null;
     private IMiddlewareProvider? _middlewareProvider = null;
+    private IHost? _host = null;
     private bool _running = false;
+
+    private const string MessageBusSandboxUri = "gateway-sandbox.fiskaltrust.eu/mqtt";
+    private const string MessageBusProductionUri = "gateway.fiskaltrust.eu/mqtt";
 
     public PosSystemAPIProvider(IConfigurationProvider configurationProvider, ILauncherStateNotifier stateNotifier)
     {
@@ -61,27 +68,7 @@ internal class PosSystemAPIProvider {
         StartupInfo.LogCashboxId();
 
         progressReporter?.Invoke(ActivityStages.STAGE_GETTING_CONFIGURATION);
-        var (configuration, isSandbox) = await _configurationProvider.GetCashboxConfigurationAsync(cashboxId, accessToken);
-        StartupInfo.IsSandbox = isSandbox;
-
-        bool localInstoreAppCommunication = false;
-        {
-            var helperConfigurations = configuration?.helpers
-            ?.Where(h => h.Package == "fiskaltrust.Middleware.Helper.LocalPosSystemApi");
-
-            if (helperConfigurations?.Count() > 1)
-            {
-                throw new InvalidOperationException($"Multiple LocalPosSystemApi helpers found in the cashbox. Only one helper per cashbox is allowed.");
-            }
-
-            if (helperConfigurations?.Count() == 1) {
-                localInstoreAppCommunication = helperConfigurations
-                    .First()
-                    .Configuration
-                    .TryGetValue("UseLocalInstoreAppCommunication", out var useLocalInstoreAppCommunication)
-                    && string.Equals(useLocalInstoreAppCommunication.ToString(), "true", StringComparison.CurrentCultureIgnoreCase);
-            }
-        }
+        var (configuration, configurationJson, isSandbox) = await _configurationProvider.GetCashboxConfigurationAsync(cashboxId, accessToken);
 
         progressReporter?.Invoke(ActivityStages.STAGE_STARTING_MIDDLEWARE);
         var middlewareTelemetryInitializer = new MiddlewareTelemetryInitializer("fiskaltrust.AndroidLauncher", VersionTracking.CurrentVersion, cashboxId);
@@ -101,34 +88,53 @@ internal class PosSystemAPIProvider {
         {
             var loggerFactory = IPlatformApplication.Current?.Services.GetService<ILoggerFactory>() ?? LoggerFactory.Create(_ => { });
             var countryCode = Helpers.Configuration.GetQueueLocalization(configuration.ftQueues.First());
+            var isV2Queue = countryCode == "PL";
 
-            _middlewareProvider = countryCode == "PL"
+            _middlewareProvider = isV2Queue
                 ? new MiddlewareV2Provider(cashboxId, accessToken, configuration, countryCode, isSandbox, loggerFactory)
                 : new MiddlewareProvider(cashboxId, accessToken, configuration, isSandbox, logLevel);
             await _middlewareProvider.StartAsync();
 
-            var config = new POSSystemApiCoreConfiguration
-            {
-                CashBoxId = cashboxId,
-                AccessToken = accessToken,
-                Configuration = Newtonsoft.Json.JsonConvert.SerializeObject(configuration),
-                AppEnvironment = isSandbox ? AppEnvironments.Sandbox : AppEnvironments.Production,
-                LauncherEnvironment = LauncherEnvironments.Local
-            };
-
             progressReporter?.Invoke(ActivityStages.STAGE_STARTING_CORE);
-            var bootstrapper = new POSCoreBootstrapper();
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(config);
-            bootstrapper.Configuration = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
 
-            var services = new ServiceCollection();
-            await bootstrapper.ConfigureServices(services);
+            var builder = Host.CreateEmptyApplicationBuilder(new HostApplicationBuilderSettings { DisableDefaults = true });
+            var services = builder.Services;
+            services.AddLogging();
+            services.AddSingleton(loggerFactory);
 
+            services.AddOptions<PosSystemApiCoreOptions>().Configure(o =>
+            {
+                o.Sandbox = isSandbox;
+                o.LauncherEnvironment = LauncherEnvironments.Local;
+                o.MessageBusUri = isSandbox ? MessageBusSandboxUri : MessageBusProductionUri;
+            });
+
+            services.AddPosSystemApiCoreForLocal();
+            services.AddSingleton<IMiddlewareConfigurationService>(
+                new AndroidMiddlewareConfigurationService(cashboxId, accessToken, configurationJson));
 
             var middlewareClient = _middlewareProvider.MiddlewareClient;
             services.AddSingleton(middlewareClient);
             services.AddSingleton<IInStoreAppService, InStoreAppServiceRouter>();
-            
+            if (isV2Queue)
+            {
+                services.AddSingleton<Helper.IHelipadService>(serviceProvider =>
+                    new Helper.HelipadService(
+                        serviceProvider.GetRequiredService<ILogger<Helper.HelipadService>>(),
+                        isSandbox));
+                services.AddHostedService(serviceProvider =>
+                    new Helper.HelipadUploader(
+                        serviceProvider.GetRequiredService<Helper.IHelipadService>(),
+                        serviceProvider.GetRequiredService<ILogger<Helper.HelipadUploader>>(),
+                        new CashBoxCredentials
+                        {
+                            CashBoxId = cashboxId,
+                            AccessToken = accessToken,
+                            QueueId = configuration.ftQueues.Single().Id
+                        },
+                        configuration,
+                        serviceProvider.GetRequiredService<PosSystemApiCore>()));
+            }
             //add Sqlite Storage services and dependencies
             var databasePath = System.IO.Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.Personal),
@@ -139,9 +145,12 @@ internal class PosSystemAPIProvider {
             CopyPosMigrationsToDataDir(migrationsPath);
             services.AddSingleton<IStorageFactory, StorageFactory>( _ => new StorageFactory(loggerFactory, databasePath));
 
-            var provider = services.BuildServiceProvider();
-            _posSystemApiCore = provider.GetRequiredService<PosSystemApiCore>();
+            _host = builder.Build();
+            // Starts the hosted services registered by the core (e.g. the MQTT client).
+            await _host.StartAsync().ConfigureAwait(false);
 
+            _posSystemApiCore = _host.Services.GetRequiredService<PosSystemApiCore>();            
+           
             _stateNotifier.Notify(LauncherState.Connected);
             _running = true;
         }
@@ -191,6 +200,18 @@ internal class PosSystemAPIProvider {
 
         try
         {
+            if (_host is not null)
+            {
+                try
+                {
+                    await _host.StopAsync();
+                }
+                catch (Exception ex)
+                {
+                    Log.Logger.Warning(ex, "Failed to stop the PosSystemApi host.");
+                }
+            }
+
             if ((_running || forceStop) && _middlewareProvider is not null)
             {
                 await _middlewareProvider.StopAsync();
@@ -198,6 +219,8 @@ internal class PosSystemAPIProvider {
         }
         finally
         {
+            _host?.Dispose();
+            _host = null;
             _middlewareProvider = null;
             _posSystemApiCore = null;
             _running = false;
