@@ -8,6 +8,11 @@ on:
     branches: [main]
 
   workflow_dispatch:
+    inputs:
+      play_internal:
+        description: "Upload this build to Google Play internal testing (works from any branch)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -120,7 +125,7 @@ jobs:
 
   release:
     needs: [buildAndroid, smoke-tests]
-    if: startsWith(github.ref, 'refs/tags/') || github.ref_name == 'main'
+    if: startsWith(github.ref, 'refs/tags/') || github.ref_name == 'main' || inputs.play_internal
     runs-on: ubuntu-latest
     env:
       RELEASE_VERSION: ${{ needs.buildAndroid.outputs.release_version }}
@@ -160,7 +165,7 @@ jobs:
           az storage blob upload --account-name ${{vars.storageaccountname}} --account-key ${{secrets.storageaccountkey}} --container-name downloads --file ${{ steps.artifacts.outputs.aab }} --name android/fiskaltrust-middleware-launcher-android/preview/eu.fiskaltrust.androidlauncher-Signed.aab --overwrite
 
       # Google Play track per trigger:
-      #   push to main      -> internal testing
+      #   push to main, or manual run with "play_internal" ticked (any branch) -> internal testing
       #   prerelease tag    -> closed testing (alpha)
       #   release tag       -> production, as a draft that is rolled out manually in the Play Console
       - name: Select Google Play track
