@@ -29,6 +29,23 @@
 		<AndroidHttpClientHandlerType>System.Net.Http.SocketsHttpHandler, System.Net.Http</AndroidHttpClientHandlerType>
 	</PropertyGroup>
 
+	<!--
+		Android versionCode. NBGV packs major/minor/build into it (NBGV_SetVersionForMauiAndroid), but version.json
+		keeps the git height in the prerelease tag ("2.0.0-beta.{height}"), so the build number is always 0 and every
+		build got the same versionCode (33554432). MDM tools (and Play) only roll out an APK whose versionCode is
+		higher than the installed one, so the git height is added to make each commit's build an upgrade.
+		Only AfterTargets: NBGV's target already runs before _GetAndroidPackageName, and a BeforeTargets of our own
+		would be ordered ahead of it (this project is read before the NuGet-imported targets).
+	-->
+	<Target Name="FtAddGitHeightToAndroidVersionCode"
+	        AfterTargets="NBGV_SetVersionForMauiAndroid"
+	        Condition="'$(TargetPlatformIdentifier)' == 'android'">
+		<PropertyGroup Condition="'$(BuildNumber)' == '0' and '$(GitVersionHeight)' != ''">
+			<ApplicationVersion>$([MSBuild]::Add($(ApplicationVersion), $(GitVersionHeight)))</ApplicationVersion>
+		</PropertyGroup>
+		<Message Importance="high" Text="Android versionCode $(ApplicationVersion) (versionName $(ApplicationDisplayVersion))" />
+	</Target>
+
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
 		<EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
 	</PropertyGroup>

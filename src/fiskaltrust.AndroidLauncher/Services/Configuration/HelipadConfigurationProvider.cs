@@ -6,6 +6,12 @@ namespace fiskaltrust.AndroidLauncher.Services.Configuration
 {
     public class HelipadConfigurationProvider : IConfigurationProvider
     {
+        // The configuration is fetched on every middleware start, before the first receipt is answered, and the
+        // stored configuration is the fallback (ConfigurationProvider). Without a limit, a network that drops
+        // packets (a store firewall, a captive portal) held the POS for the HttpClient default of 100 s per call,
+        // production and sandbox, before that fallback was used.
+        private static readonly TimeSpan RequestTimeout = TimeSpan.FromSeconds(20);
+
         public async Task<(ftCashBoxConfiguration configuration, bool isSandbox)> GetCashboxConfigurationAsync(Guid cashboxId, string accessToken)
         {
             {
@@ -26,7 +32,7 @@ namespace fiskaltrust.AndroidLauncher.Services.Configuration
         private async Task<HttpResponseMessage> GetConfigurationAsync(Guid cashboxId, string accessToken, bool isSandbox)
         {
             var helipadUrl = isSandbox ? Urls.HELIPAD_SANDBOX : Urls.HELIPAD_PRODUCTION;
-            using var httpClient = new HttpClient { BaseAddress = new Uri(helipadUrl) };
+            using var httpClient = new HttpClient { BaseAddress = new Uri(helipadUrl), Timeout = RequestTimeout };
             httpClient.DefaultRequestHeaders.Add("cashboxid", cashboxId.ToString());
             httpClient.DefaultRequestHeaders.Add("accesstoken", accessToken);
 

@@ -65,6 +65,17 @@ namespace fiskaltrust.AndroidLauncher.Services
 
         private async Task<PosSystemApiResponse> MakeLocalRequestAsync(PosSystemApiRequest request, Action<string>? progressReporter)
         {
+            // Without these headers the local middleware cannot pick its cashbox; answer that plainly instead of
+            // failing later with a NullReferenceException-style 500.
+            if (request.CashBoxId is null)
+            {
+                return PosSystemApiResponse.Error(400, "The x-cashbox-id header is missing or not a GUID.");
+            }
+            if (string.IsNullOrEmpty(request.AccessToken))
+            {
+                return PosSystemApiResponse.Error(400, "The x-cashbox-accesstoken header is missing.");
+            }
+
             if (string.Equals(request.GetPath(), "/v2/echo", StringComparison.OrdinalIgnoreCase))
             {
                 var echoRequest = JsonSerializer.Deserialize<EchoRequest>(request.Body ?? "");
