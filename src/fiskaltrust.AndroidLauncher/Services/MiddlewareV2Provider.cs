@@ -66,12 +66,12 @@ namespace fiskaltrust.AndroidLauncher.Services
                 }
                 var queueProvider = new SQLiteQueueProvider();
                 _pos = queueProvider.CreatePOSV2(CashboxId, AccessToken, queueConfiguration, _configuration.ftSignaturCreationDevices.FirstOrDefault(), _countryCode, _loggerFactory);
-                Log.Logger.Information("Queue created. cashboxid: {cashbox.id}, queueId: {queue.id}", _cashboxId, queueConfiguration.Id);
+                Log.Logger.Information("Queue created. cashboxid: {CashboxId}, queueId: {QueueId}", _cashboxId, queueConfiguration.Id);
                 // Helipad is v1-only (IPOS-based) and has no V2/POSV2 adapter yet, so it isn't wired up here. that have to be add later.
             }
             catch (Exception x)
             {
-                Log.Logger.Error(x, "Failed to create worker. cashboxid: {cashbox.id}", _cashboxId);
+                Log.Logger.Error(x, "Failed to create worker. cashboxid: {CashboxId}", _cashboxId);
                 throw;
             }
         }
