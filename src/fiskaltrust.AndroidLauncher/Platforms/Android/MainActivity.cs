@@ -25,7 +25,23 @@ public class MainActivity : MauiAppCompatActivity
         }
         base.OnCreate(savedInstanceState);
         ApplySystemBarColors();
+        RequestNotificationPermission();
     }
+
+    /// <summary>
+    /// Since Android 13 (API 33) notifications need a runtime permission. Without it Android still runs the
+    /// foreground service but hides its status notification, so ask for it when the launcher UI is opened.
+    /// </summary>
+    private void RequestNotificationPermission()
+    {
+        if (!OperatingSystem.IsAndroidVersionAtLeast(33))
+            return;
+
+        if (CheckSelfPermission(Android.Manifest.Permission.PostNotifications) != Permission.Granted)
+            RequestPermissions(new[] { Android.Manifest.Permission.PostNotifications }, NotificationPermissionRequestCode);
+    }
+
+    private const int NotificationPermissionRequestCode = 4711;
 
     public override void OnConfigurationChanged(Android.Content.Res.Configuration newConfig)
     {
