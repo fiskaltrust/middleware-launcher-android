@@ -158,7 +158,7 @@ jobs:
             ${{ steps.artifacts.outputs.aab }}
 
       - name: Upload artifacts to Azure Storage
-        if: "github.ref_name == 'main'"
+        #if: "github.ref_name == 'main'"
         shell: bash
         run: |
           az storage blob upload --account-name ${{vars.storageaccountname}} --account-key ${{secrets.storageaccountkey}} --container-name downloads --file ${{ steps.artifacts.outputs.apk }} --name android/fiskaltrust-middleware-launcher-android/preview/${{env.RELEASE_VERSION}}/eu.fiskaltrust.androidlauncher-Signed-${{env.RELEASE_VERSION}}.apk
