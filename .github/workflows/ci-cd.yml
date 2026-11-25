@@ -74,8 +74,9 @@ jobs:
           fi
 
           # Android versionCode must strictly increase for every Google Play upload.
-          # Same YYDDDXXX scheme as the legacy launcher, so new builds always exceed its version codes.
-          VERSION_CODE="$(date -u +%y%j)$(printf "%03d" $((GITHUB_RUN_NUMBER % 1000)))"
+          # Format 1YYDDDXXX (year, day of year, run number). The leading 1 keeps it above the legacy
+          # launcher's YYDDDXXX codes and above 33554432, the code of the first manually published 2.0.0 build.
+          VERSION_CODE="1$(date -u +%y%j)$(printf "%03d" $((GITHUB_RUN_NUMBER % 1000)))"
 
           echo "Release Version: ${RELEASE_VERSION}"
           echo "Version Code: ${VERSION_CODE}"
@@ -104,6 +105,7 @@ jobs:
             -c ${{env.BUILD_CONFIGURATION}} \
             -p:AndroidEnableR8=true \
             -p:AndroidLinkTool=r8 \
+            -p:NBGV_SetMauiVersionProperties=false \
             -p:ApplicationVersion=${{ steps.version.outputs.version_code }} \
             -p:ApplicationDisplayVersion=${{ steps.version.outputs.release_version }} \
             -p:AndroidSigningKeyPass="${{secrets.SIGNING_KEY_PASSWORD}}" \
